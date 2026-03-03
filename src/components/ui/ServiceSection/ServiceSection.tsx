@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -53,7 +53,24 @@ const MENU_ITEMS = [
 export default function ServiceSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
-  const [activeIndex, setActiveIndex] = useState(0);
+  const menuRef = useRef<HTMLUListElement>(null);
+  const activeIndexRef = useRef(0);
+
+  // DOM直接操作でアクティブメニューを切り替え（React再レンダリングを回避）
+  const updateActiveMenu = useCallback((newIndex: number) => {
+    if (activeIndexRef.current === newIndex) return;
+    const menu = menuRef.current;
+    if (!menu) return;
+
+    const items = menu.children;
+    const prevItem = items[activeIndexRef.current];
+    const nextItem = items[newIndex];
+
+    if (prevItem) prevItem.className = styles.menuItem;
+    if (nextItem) nextItem.className = styles.menuItemActive;
+
+    activeIndexRef.current = newIndex;
+  }, []);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -67,25 +84,29 @@ export default function ServiceSection() {
       return -(track.scrollWidth - rightWidth);
     };
 
+    // GPU合成レイヤーに昇格
+    gsap.set(track, { force3D: true });
+
     const tween = gsap.to(track, {
       x: getScrollAmount,
       ease: 'none',
+      force3D: true,
       scrollTrigger: {
         trigger: section,
         start: 'top top',
         end: () => `+=${Math.max(track.scrollWidth, window.innerWidth)}`,
         pin: true,
-        scrub: 1,
+        scrub: 1.2, // 滑らかな追従スクロール
         invalidateOnRefresh: true,
         onUpdate: (self) => {
-          // スクロール進行率からアクティブなカードを計算
+          // スクロール進行率からアクティブなメニューを計算（DOM直接操作）
           const progress = self.progress;
-          const cardCount = SERVICE_CARDS.length;
+          const menuCount = MENU_ITEMS.length;
           const newIndex = Math.min(
-            Math.floor(progress * cardCount),
-            cardCount - 1
+            Math.floor(progress * menuCount),
+            menuCount - 1
           );
-          setActiveIndex(newIndex);
+          updateActiveMenu(newIndex);
         },
       },
     });
@@ -94,7 +115,7 @@ export default function ServiceSection() {
       tween.scrollTrigger?.kill();
       tween.kill();
     };
-  }, []);
+  }, [updateActiveMenu]);
 
   return (
     <section className={styles.service} ref={sectionRef}>
@@ -131,12 +152,12 @@ export default function ServiceSection() {
               <p>構想からリリースまで一気通貫で進めます。</p>
             </div>
 
-            <ul className={styles.menuList}>
+            <ul className={styles.menuList} ref={menuRef}>
               {MENU_ITEMS.map((item, index) => (
                 <li
                   key={item}
                   className={
-                    activeIndex === index ? styles.menuItemActive : styles.menuItem
+                    index === 0 ? styles.menuItemActive : styles.menuItem
                   }
                 >
                   <span>{item}</span>

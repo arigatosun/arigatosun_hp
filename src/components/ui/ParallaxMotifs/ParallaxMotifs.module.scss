@@ -12,11 +12,12 @@
 .svg {
   position: absolute;
   // Figmaデータ: Group 111のY=1708px、ヒーロー約1100px → アバウトセクション内約600px地点
-  top: calc(100vh + 884px);
+  top: calc(100vh + 904px);
   left: 50%;
   // 1920pxベースのデザインを現在のビューポート幅にスケール
   width: 100vw;
   height: auto;
   transform: translateX(-50%);
   overflow: visible;
+  will-change: transform; // GPU合成レイヤーでスムーズにアニメーション
 }

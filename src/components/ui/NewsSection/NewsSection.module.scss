@@ -1,0 +1,234 @@
+@use '@/styles/fluid' as *;
+
+.news {
+  position: relative;
+  padding-left: 200px;
+  @include fluid(padding-right, 20, 80);
+  @include fluid(padding-top, 60, 120);
+  @include fluid(padding-bottom, 60, 120);
+}
+
+.inner {
+  display: flex;
+  gap: 140px;
+  align-items: flex-start;
+}
+
+// ── 左側 ──
+.left {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  margin-bottom: 240px;
+}
+
+.titleLogo {
+  display: flex;
+}
+
+.titleLogoImage {
+  width: auto;
+  height: auto;
+}
+
+.label {
+  margin-top: 16px;
+  color: #808080;
+  font-family: var(--font-en);
+  font-size: 20px;
+  font-weight: var(--font-weight-light);
+  font-style: normal;
+  line-height: 24px;
+  letter-spacing: 2.6px;
+}
+
+// ── カテゴリメニュー ──
+.categoryList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  margin-bottom: 56px;
+}
+
+.categoryItem,
+.categoryItemActive {
+  display: block;
+  font-family: var(--font-en);
+  font-size: 20px;
+  font-weight: var(--font-weight-light);
+  font-style: normal;
+  line-height: 24px;
+  letter-spacing: 2.6px;
+  cursor: pointer;
+
+  span {
+    display: inline;
+    padding: 5px 12px;
+    transition: all var(--transition-base);
+  }
+}
+
+.categoryItem {
+  span {
+    color: #808080;
+    background-color: transparent;
+  }
+
+  &:hover span {
+    color: #FFF;
+    background-color: var(--color-primary);
+  }
+}
+
+.categoryItemActive {
+  span {
+    color: #FFF;
+    background-color: var(--color-primary);
+  }
+}
+
+.buttonWrap {
+  display: flex;
+}
+
+// ── 右側: 記事リスト ──
+.right {
+  flex: 1;
+  min-width: 0;
+  padding-top: 20px;
+}
+
+// ── 各記事 ──
+.article {
+  display: flex;
+  align-items: flex-start;
+  gap: 56px;
+  padding: 24px 20px;
+  margin: -24px -20px; // paddingの分だけ外側に広げて装飾ラインとの整合性を保つ
+  border-radius: 8px;
+  transition:
+    background-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    box-shadow 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.95);
+    transform: translateX(8px);
+    box-shadow:
+      0 4px 24px rgba(0, 0, 0, 0.06),
+      0 12px 40px rgba(0, 0, 0, 0.04);
+
+    .articleTitle {
+      color: var(--color-primary);
+    }
+
+    .articleDate,
+    .articleTag {
+      color: var(--color-black);
+    }
+
+    .thumbnailImage {
+      transform: scale(1.06);
+    }
+
+    // タイトル下にアクセントラインが伸びる
+    .articleTitle::after {
+      transform: scaleX(1);
+    }
+  }
+}
+
+.articleContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.articleTitle {
+  color: var(--color-black);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  font-size: 20px;
+  font-style: normal;
+  font-weight: var(--font-weight-regular);
+  line-height: 38px;
+  letter-spacing: 3.2px;
+  transition: color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  position: relative;
+  padding-bottom: 4px;
+
+  // アクセントライン（ホバー時に左→右に伸びる）
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60px;
+    height: 2px;
+    background-color: var(--color-primary);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.1s;
+  }
+}
+
+.articleMeta {
+  margin-top: 32px;
+  display: flex;
+  align-items: baseline;
+  gap: 32px;
+}
+
+.articleDate {
+  color: #808080;
+  font-family: var(--font-en);
+  font-size: 20px;
+  font-style: normal;
+  font-weight: var(--font-weight-light);
+  line-height: 24px;
+  letter-spacing: 2.6px;
+  transition: color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.articleTag {
+  color: #808080;
+  font-family: var(--font-en);
+  font-size: 20px;
+  font-style: normal;
+  font-weight: var(--font-weight-light);
+  line-height: 24px;
+  letter-spacing: 2.6px;
+  transition: color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+// ── サムネイル ──
+.articleThumbnail {
+  flex-shrink: 0;
+  width: 300px;
+  aspect-ratio: 300 / 169;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.thumbnailImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+// ── 装飾ライン ──
+.articleDivider {
+  width: 100%;
+  height: 1px;
+  margin-top: 40px;
+  background: #808080;
+  opacity: 0.3;
+}
+
+// ── 記事間のスペーサー ──
+.articleSpacer {
+  height: 70px;
+}

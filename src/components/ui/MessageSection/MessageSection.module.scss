@@ -1,0 +1,54 @@
+.message {
+  margin-top: 410px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+// ── RISE WITH THANKS. ──
+.heading {
+  text-align: center;
+  font-family: var(--font-en);
+  font-size: 44px;
+  font-style: normal;
+  font-weight: var(--font-weight-light);
+  line-height: 50.688px;
+  letter-spacing: 10.56px;
+}
+
+// ── メッセージ本文 ──
+.body {
+  margin-top: 140px;
+  width: 1210.44px;
+  max-width: 100%;
+  text-align: center;
+}
+
+.textRed {
+  color: var(--color-primary);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  font-size: 26px;
+  font-style: normal;
+  font-weight: var(--font-weight-regular);
+  line-height: 74px;
+  letter-spacing: 4.68px;
+}
+
+.textMixed {
+  margin-top: 100px;
+  font-family: 'Noto Sans JP', var(--font-jp);
+  font-size: 26px;
+  font-style: normal;
+  font-weight: var(--font-weight-regular);
+  line-height: 74px;
+  letter-spacing: 4.68px;
+}
+
+// ── カラー ──
+.red {
+  color: var(--color-primary);
+}
+
+.white {
+  color: #FFF;
+}

@@ -136,7 +136,8 @@
 // ── 右側（カードエリア） ──
 .right {
   flex: 1;
-  overflow: hidden; // 左側にはみ出さないようクリッピング
+  min-width: 0; // overflow:visibleのflex itemはmin-width:autoでコンテンツ幅に広がるため必須
+  overflow: visible; // カードが左側コンテンツの上をスクロールして通過するのを許容
   display: flex;
   align-items: center;
 }
@@ -145,4 +146,5 @@
   display: flex;
   gap: 1.67vw; // 1920px時 = 32px相当
   padding-right: 10.4vw; // 1920px時 = 200px相当
+  will-change: transform; // GPU合成レイヤーで滑らかな横スクロール
 }

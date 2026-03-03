@@ -1,0 +1,234 @@
+@use '@/styles/fluid' as *;
+
+.works {
+  position: relative;
+  padding-left: 200px;
+  @include fluid(padding-right, 20, 80);
+  @include fluid(padding-top, 60, 120);
+  @include fluid(padding-bottom, 60, 120);
+}
+
+// ── ヘッダー ──
+.header {
+  margin-bottom: 120px;
+}
+
+.titleLogo {
+  display: flex;
+}
+
+.titleLogoImage {
+  width: auto;
+  height: auto;
+}
+
+.label {
+  margin-top: 16px;
+  color: #808080;
+  font-family: var(--font-en);
+  font-size: 20px;
+  font-weight: var(--font-weight-light);
+  font-style: normal;
+  line-height: 24px;
+  letter-spacing: 2.6px;
+}
+
+// ── 実績アイテム ──
+.itemsList {
+  display: flex;
+  flex-direction: column;
+}
+
+.item {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.itemSpaced {
+  margin-top: 180px;
+}
+
+// ── 左側テキスト ──
+.itemLeft {
+  flex: 1;
+  min-width: 0;
+}
+
+.client {
+  color: #808080;
+  font-family: var(--font-en);
+  font-size: 16px;
+  font-style: normal;
+  font-weight: var(--font-weight-light);
+  line-height: 24px;
+  letter-spacing: 2.08px;
+}
+
+.itemTitle {
+  margin-top: 36px;
+  color: var(--color-black);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  font-size: 24px;
+  font-style: normal;
+  font-weight: var(--font-weight-regular);
+  line-height: 48px;
+  letter-spacing: 3.12px;
+}
+
+// ── 横ライン装飾 ──
+.divider {
+  margin-top: 40px;
+  width: 52px;
+  height: 1px;
+  background: var(--color-black);
+}
+
+// ── 詳細情報 ──
+.detailsList {
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.detailRow {
+  display: flex;
+  align-items: baseline;
+}
+
+.detailLabel {
+  color: #808080;
+  font-family: var(--font-en);
+  font-size: 16px;
+  font-style: normal;
+  font-weight: var(--font-weight-light);
+  line-height: 24px;
+  letter-spacing: 2.08px;
+  flex-shrink: 0;
+}
+
+.detailValue {
+  color: #808080;
+  font-family: 'Noto Sans JP', var(--font-jp);
+  font-size: 16px;
+  font-style: normal;
+  font-weight: var(--font-weight-regular);
+  line-height: 32px;
+  letter-spacing: 2.08px;
+}
+
+// ── 右側画像 ──
+.itemRight {
+  flex-shrink: 0;
+  margin-top: -60px; // 画像を上にオフセット
+}
+
+.imageWrap {
+  position: relative;
+}
+
+.workImage {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  display: block;
+}
+
+// ── VIEW MORE ボタン ──
+.viewMore,
+.viewMoreLeft {
+  position: absolute;
+  top: 465px;
+  z-index: 2;
+  display: inline-flex;
+  cursor: pointer;
+  transition: opacity var(--transition-base);
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.viewMore {
+  right: 192px;
+}
+
+.viewMoreLeft {
+  left: 80px;
+}
+
+.viewMoreText {
+  display: inline;
+  color: #FFF;
+  font-family: var(--font-en);
+  font-size: 28px;
+  font-style: normal;
+  font-weight: var(--font-weight-light);
+  line-height: 24px;
+  letter-spacing: 3.64px;
+  padding: 4px 6px;
+  background-color: var(--color-primary);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  // 赤塗りは左→右アニメーションで表示
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+// スクロールで表示されたら左→右に赤塗りが広がる
+.viewMoreRevealed {
+  clip-path: inset(0 0 0 0);
+}
+
+// ── 下部フッター（キャラクター + テキスト + ボタン） ──
+.footer {
+  margin-top: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+}
+
+.footerCharacter {
+  flex-shrink: 0;
+}
+
+.characterImage {
+  width: auto;
+  height: auto;
+  max-height: 180px;
+}
+
+.footerText {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.footerServices {
+  color: #808080;
+  text-align: right;
+  font-family: var(--font-en);
+  font-size: 14px;
+  font-style: normal;
+  font-weight: var(--font-weight-light);
+  line-height: 24px;
+  letter-spacing: 1.82px;
+}
+
+.footerCopyright {
+  margin-top: 12px;
+  color: #808080;
+  text-align: right;
+  font-family: var(--font-en);
+  font-size: 14px;
+  font-style: normal;
+  font-weight: var(--font-weight-light);
+  line-height: 21px;
+  letter-spacing: 1.82px;
+}
+
+.footerButton {
+  flex-shrink: 0;
+}

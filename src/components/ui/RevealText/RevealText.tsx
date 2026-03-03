@@ -21,7 +21,11 @@ export default function RevealText({ children, className }: RevealTextProps) {
 
     isPlayingRef.current = true;
     const line = queueRef.current.shift()!;
-    line.classList.add(styles.revealed);
+
+    // requestAnimationFrameでブラウザの描画タイミングに同期
+    requestAnimationFrame(() => {
+      line.classList.add(styles.revealed);
+    });
 
     // 次の行を一定間隔後にアニメーション
     setTimeout(() => playNext(), 600);

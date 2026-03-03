@@ -1,0 +1,60 @@
+.wrapper {
+  position: relative;
+  margin-top: 380px;
+}
+
+// ── アリガトクン（後日3Dに差し替え） ──
+.character {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: calc(50% - 180px);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.characterImage {
+  width: auto;
+  height: 180px;
+}
+
+// ── ロゴスライダー ──
+.slider {
+  overflow: hidden;
+  width: 100%;
+}
+
+.track {
+  display: flex;
+  gap: 100px;
+  width: max-content;
+  animation: scrollLoop 60s linear infinite;
+}
+
+.logoItem {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.logoImage {
+  width: 864.633px;
+  height: 187.796px;
+  opacity: 0.4;
+  filter: grayscale(100%);
+  transition: opacity 0.4s ease, filter 0.4s ease;
+
+  &:hover {
+    opacity: 1;
+    filter: grayscale(0%);
+  }
+}
+
+@keyframes scrollLoop {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-50% - 50px));
+  }
+}

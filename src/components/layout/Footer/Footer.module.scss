@@ -1,75 +1,220 @@
 @use '@/styles/fluid' as *;
-@use '@/styles/breakpoints' as *;
 
 .footer {
-  background-color: var(--color-black);
-  color: var(--color-white);
-  @include fluid(padding-top, 40, 80);
-  @include fluid(padding-bottom, 20, 40);
+  position: relative;
+  margin-top: 120px;
+  overflow: hidden;
 }
 
-.inner {
-  max-width: 1200px;
-  margin: 0 auto;
-  @include fluid(padding-left, 20, 40);
-  @include fluid(padding-right, 20, 40);
+// ── 背景マスクオーバーレイ ──
+.maskOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
 }
 
-.brand {
-  @include fluid(margin-bottom, 24, 40);
+.maskImage {
+  object-fit: cover;
+  object-position: top center;
 }
 
-.companyName {
-  @include fluid(font-size, 18, 24);
-  font-weight: var(--font-weight-bold);
-  @include fluid(margin-bottom, 4, 8);
-}
-
-.tagline {
-  @include fluid(font-size, 12, 14);
-  font-family: var(--font-en);
-  letter-spacing: 0.1em;
-  color: var(--color-gray-400);
-}
-
-.nav {
-  @include fluid(margin-bottom, 24, 40);
-}
-
-.navList {
+// ── CONTACT US ボタンエリア ──
+.contactArea {
+  position: relative;
+  z-index: 1;
   display: flex;
-  flex-wrap: wrap;
-  gap: 16px 24px;
+  justify-content: center;
+  padding-top: 200px;
+  padding-bottom: 160px;
+}
+
+// ── メインコンテンツ ──
+.content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  padding-left: 200px;
+  padding-right: 200px;
+}
+
+// ── 左側: ロゴ + ナビゲーション ──
+.left {
+  display: flex;
+  flex-direction: column;
+}
+
+.logoWrap {
+  margin-bottom: 60px;
+}
+
+.footerLogo {
+  width: auto;
+  height: auto;
+}
+
+.mainMenu {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
   list-style: none;
+}
 
-  a {
-    @include fluid(font-size, 12, 13);
-    font-family: var(--font-en);
-    letter-spacing: 0.08em;
-    color: var(--color-gray-300);
-    transition: color var(--transition-fast);
+.mainMenuItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #FFF;
+  font-family: var(--font-en);
+  font-size: 20px;
+  font-style: normal;
+  font-weight: var(--font-weight-light);
+  line-height: normal;
+  letter-spacing: 2.4px;
+  transition: color var(--transition-base);
 
-    &:hover {
-      color: var(--color-white);
-      opacity: 1;
-    }
+  &:hover {
+    color: var(--color-primary);
   }
 }
 
-.info {
-  @include fluid(margin-bottom, 24, 40);
+.externalIcon {
+  flex-shrink: 0;
 }
 
-.address {
-  @include fluid(font-size, 11, 12);
+.subMenu {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  list-style: none;
+  margin-top: 24px;
+}
+
+.subMenuItem {
+  color: #808080;
   font-family: var(--font-en);
-  color: var(--color-gray-500);
-  line-height: 1.8;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: var(--font-weight-light);
+  line-height: normal;
+  letter-spacing: 2.16px;
+  transition: color var(--transition-base);
+
+  &:hover {
+    color: var(--color-white);
+  }
+}
+
+// ── 右側: CREATIVE PROJECTS ──
+.right {
+  display: flex;
+  flex-direction: column;
+}
+
+.projectsTitle {
+  color: #FFF;
+  font-family: var(--font-en);
+  font-size: 24px;
+  font-style: normal;
+  font-weight: var(--font-weight-light);
+  line-height: normal;
+  letter-spacing: 2.88px;
+  margin-bottom: 20px;
+}
+
+.projectImages {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.projectImageWrap {
+  position: relative;
+  overflow: hidden;
+  border-radius: 4px;
+
+  // ホバー時のオーバーレイ光彩
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.15) 50%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    transform: skewX(-20deg);
+    transition: none;
+    z-index: 1;
+  }
+
+  &:hover::after {
+    animation: shimmer 0.8s ease-out forwards;
+  }
+
+  &:hover .projectImage {
+    transform: scale(1.04);
+    filter: brightness(1.15);
+    box-shadow: 0 8px 32px rgba(218, 39, 25, 0.3), 0 4px 16px rgba(0, 0, 0, 0.4);
+  }
+}
+
+.projectImage {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              filter 0.5s ease,
+              box-shadow 0.5s ease;
+}
+
+@keyframes shimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 150%;
+  }
+}
+
+// ── 最下部 ──
+.bottom {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 70px;
+  margin-top: 120px;
+  padding-bottom: 50px;
+}
+
+.companyName {
+  color: #808080;
+  text-align: right;
+  font-family: var(--font-en);
+  font-size: 14px;
+  font-style: normal;
+  font-weight: var(--font-weight-light);
+  line-height: 24px;
+  letter-spacing: 1.82px;
 }
 
 .copyright {
-  @include fluid(font-size, 10, 11);
+  color: #FFF;
+  text-align: right;
   font-family: var(--font-en);
-  color: var(--color-gray-600);
-  letter-spacing: 0.05em;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: var(--font-weight-light);
+  line-height: 24px;
+  letter-spacing: 1.82px;
 }
