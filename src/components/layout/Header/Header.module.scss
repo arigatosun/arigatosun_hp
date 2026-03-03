@@ -1,0 +1,225 @@
+@use '@/styles/fluid' as *;
+@use '@/styles/breakpoints' as *;
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: var(--z-header);
+  background-color: var(--color-white);
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  @include fluid(padding-top, 16, 24);
+  @include fluid(padding-bottom, 16, 24);
+  @include fluid(padding-left, 20, 40);
+  @include fluid(padding-right, 20, 40);
+
+  @include pc {
+    justify-content: center;
+  }
+}
+
+// ── PC ナビゲーション ──
+.navList {
+  display: none;
+  align-items: center;
+  gap: 68px;
+  list-style: none;
+
+  @include pc {
+    display: flex;
+  }
+}
+
+.navLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--color-black);
+  font-family: var(--font-en);
+  font-size: 14px;
+  font-weight: var(--font-weight-light);
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: 1.12px;
+  transition: color var(--transition-base);
+
+  &:hover {
+    color: var(--color-primary);
+  }
+}
+
+.active {
+  color: var(--color-primary);
+}
+
+// ── SERVICE ドロップダウン ──
+.hasDropdown {
+  position: relative;
+
+  &:hover .dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(8px);
+  padding-top: 16px;
+  list-style: none;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--transition-base),
+    visibility var(--transition-base),
+    transform var(--transition-base);
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 16px;
+  }
+}
+
+.dropdownLink {
+  display: block;
+  white-space: nowrap;
+  padding: 5px 28px;
+  color: var(--color-black);
+  font-family: var(--font-en);
+  font-size: 14px;
+  font-weight: var(--font-weight-light);
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: 1.4px;
+  text-align: center;
+  background-color: var(--color-white);
+  transition:
+    background-color var(--transition-base),
+    color var(--transition-base);
+
+  &:hover {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+  }
+}
+
+.externalIcon {
+  margin-left: 2px;
+  transform: translateY(1px);
+}
+
+// ── ロゴ ──
+.logo {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+// ── モバイルロゴ（PC時は非表示） ──
+.mobileLogo {
+  display: flex;
+  align-items: center;
+
+  @include pc {
+    display: none;
+  }
+}
+
+// ── モバイルメニューボタン ──
+.menuButton {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  width: 32px;
+  height: 32px;
+
+  @include pc {
+    display: none;
+  }
+}
+
+.menuLine {
+  display: block;
+  width: 100%;
+  height: 1.5px;
+  background-color: var(--color-black);
+  transition: transform var(--transition-base), opacity var(--transition-base);
+}
+
+.menuOpen {
+  .menuLine {
+    &:nth-child(1) {
+      transform: rotate(45deg) translate(5px, 5px);
+    }
+    &:nth-child(2) {
+      opacity: 0;
+    }
+    &:nth-child(3) {
+      transform: rotate(-45deg) translate(5px, -5px);
+    }
+  }
+}
+
+// ── モバイルメニュー ──
+.mobileMenu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: var(--color-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--transition-base), visibility var(--transition-base);
+  z-index: calc(var(--z-header) - 1);
+
+  @include pc {
+    display: none;
+  }
+}
+
+.mobileMenuOpen {
+  opacity: 1;
+  visibility: visible;
+}
+
+.mobileNavList {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  list-style: none;
+}
+
+.mobileNavLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--color-black);
+  font-family: var(--font-en);
+  font-size: 16px;
+  font-weight: var(--font-weight-light);
+  letter-spacing: 1.12px;
+  transition: color var(--transition-base);
+
+  &:hover {
+    color: var(--color-primary);
+  }
+}

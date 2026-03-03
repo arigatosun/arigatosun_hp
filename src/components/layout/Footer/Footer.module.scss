@@ -1,0 +1,75 @@
+@use '@/styles/fluid' as *;
+@use '@/styles/breakpoints' as *;
+
+.footer {
+  background-color: var(--color-black);
+  color: var(--color-white);
+  @include fluid(padding-top, 40, 80);
+  @include fluid(padding-bottom, 20, 40);
+}
+
+.inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  @include fluid(padding-left, 20, 40);
+  @include fluid(padding-right, 20, 40);
+}
+
+.brand {
+  @include fluid(margin-bottom, 24, 40);
+}
+
+.companyName {
+  @include fluid(font-size, 18, 24);
+  font-weight: var(--font-weight-bold);
+  @include fluid(margin-bottom, 4, 8);
+}
+
+.tagline {
+  @include fluid(font-size, 12, 14);
+  font-family: var(--font-en);
+  letter-spacing: 0.1em;
+  color: var(--color-gray-400);
+}
+
+.nav {
+  @include fluid(margin-bottom, 24, 40);
+}
+
+.navList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 24px;
+  list-style: none;
+
+  a {
+    @include fluid(font-size, 12, 13);
+    font-family: var(--font-en);
+    letter-spacing: 0.08em;
+    color: var(--color-gray-300);
+    transition: color var(--transition-fast);
+
+    &:hover {
+      color: var(--color-white);
+      opacity: 1;
+    }
+  }
+}
+
+.info {
+  @include fluid(margin-bottom, 24, 40);
+}
+
+.address {
+  @include fluid(font-size, 11, 12);
+  font-family: var(--font-en);
+  color: var(--color-gray-500);
+  line-height: 1.8;
+}
+
+.copyright {
+  @include fluid(font-size, 10, 11);
+  font-family: var(--font-en);
+  color: var(--color-gray-600);
+  letter-spacing: 0.05em;
+}

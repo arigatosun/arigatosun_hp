@@ -1,0 +1,123 @@
+.card {
+  position: relative;
+  // 1920px基準のvw換算（630/1920 = 32.8vw, 860/1920 = 44.8vw）
+  width: 32.8vw;
+  height: 44.8vw;
+  flex-shrink: 0;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.bgImage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+  opacity: 0.15;
+}
+
+.gradient {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.85;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.50) 0%, #000 62.02%);
+  background-blend-mode: multiply;
+  mix-blend-mode: multiply;
+  z-index: 2;
+}
+
+.content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  padding: 260px 52px 90px;
+}
+
+// カード上部のVIEWボタン（赤背景は各行の文字背面のみ）
+.viewButton {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  color: #FFF;
+  font-family: var(--font-en);
+  font-size: 28px;
+  font-weight: var(--font-weight-light);
+  font-style: normal;
+  line-height: 26px;
+  letter-spacing: 3.64px;
+  cursor: pointer;
+  transition: opacity var(--transition-base);
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.viewButtonLine {
+  display: inline;
+  background-color: var(--color-primary);
+  padding: 8px 12px;
+  // インラインで文字幅に合わせた赤塗り
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+// VIEWボタンとラベル群の間のスペース
+.info {
+  display: flex;
+  flex-direction: column;
+  margin-top: 240px;
+}
+
+.categoryLabel {
+  color: #FFF;
+  font-family: 'Noto Sans JP', var(--font-jp);
+  font-size: 16px;
+  font-weight: var(--font-weight-regular);
+  font-style: normal;
+  line-height: 32px;
+  letter-spacing: 2.08px;
+}
+
+.cardTitle {
+  margin-top: 19px;
+  color: #FFF;
+  font-family: var(--font-en);
+  font-size: 34px;
+  font-weight: var(--font-weight-light);
+  font-style: normal;
+  line-height: 24px;
+  letter-spacing: 4.42px;
+}
+
+.cardDescription {
+  margin-top: 19px;
+  color: #FFF;
+  font-family: 'Noto Sans JP', var(--font-jp);
+  font-size: 16px;
+  font-weight: var(--font-weight-regular);
+  font-style: normal;
+  line-height: 30px;
+  letter-spacing: 2.08px;
+}

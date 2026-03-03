@@ -1,0 +1,61 @@
+// ============================================
+// デザイントークン — CSS変数定義
+// ============================================
+// Figmaデザインから抽出したカラー・フォント・スペーシング等を管理
+// ============================================
+
+@use 'fluid' as *;
+
+:root {
+  // ── カラーパレット ──
+  --color-primary: #DA2719;       // アリガトサン ブランドレッド（Figma実測値）
+  --color-primary-dark: #B82010;
+  --color-black: #140700;         // テキストブラック（Figma実測値）
+  --color-white: #FFFFFF;
+  --color-gray-100: #F5F5F5;
+  --color-gray-200: #E5E5E5;
+  --color-gray-300: #D4D4D4;
+  --color-gray-400: #A3A3A3;
+  --color-gray-500: #737373;
+  --color-gray-600: #525252;
+  --color-gray-700: #404040;
+  --color-gray-800: #262626;
+  --color-gray-900: #171717;
+
+  // ── 背景・テキスト ──
+  --color-bg: #F5F6F7;
+  --color-text: var(--color-black);
+  --color-text-muted: var(--color-gray-500);
+
+  // ── フォント ──
+  // Adobe Fonts (TypeKit) CDN経由で読み込み: https://use.typekit.net/vpb8rae.css
+  --font-primary: 'mozaic-geo-variable', 'Noto Sans JP', 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+  --font-en: 'mozaic-geo-variable', 'Helvetica Neue', Arial, sans-serif;
+  --font-jp: 'Noto Sans JP', 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  // ── フォントウェイト ──
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+  --font-weight-black: 900;
+
+  // ── ボーダー ──
+  --border-radius-sm: 4px;
+  --border-radius-md: 8px;
+  --border-radius-lg: 16px;
+  --border-radius-full: 9999px;
+
+  // ── トランジション ──
+  --transition-fast: 150ms ease;
+  --transition-base: 300ms ease;
+  --transition-slow: 500ms ease;
+
+  // ── z-index管理 ──
+  --z-base: 0;
+  --z-header: 100;
+  --z-overlay: 200;
+  --z-modal: 300;
+  --z-toast: 400;
+}

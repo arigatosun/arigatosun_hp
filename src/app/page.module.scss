@@ -1,0 +1,202 @@
+@use '@/styles/fluid' as *;
+@use '@/styles/breakpoints' as *;
+
+.page {
+  position: relative; // ParallaxMotifsのcontaining block（absolute配置の基準）
+  padding-top: 80px; // Header分のオフセット
+  overflow-x: clip; // 横スクロール防止（赤モチーフの左右はみ出し対策）
+}
+
+// ── ヒーローセクション ──
+.hero {
+  position: relative;
+  z-index: 6; // 赤モチーフ(z-index:5)の上にコンテンツを表示
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.heroContent {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 250px;
+}
+
+.heroLogo {
+  display: flex;
+  justify-content: center;
+}
+
+.heroLogoImage {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+}
+
+.heroLabels {
+  margin-top: 56px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 32px;
+  list-style: none;
+  color: var(--color-black);
+  text-align: right;
+  font-family: var(--font-en);
+  font-size: 20px;
+  font-weight: var(--font-weight-light);
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: 2.6px;
+}
+
+// ── ヒーロー右下情報 ──
+.heroInfo {
+  position: absolute;
+  top: calc(80px + 710px); // Header高さ + 710px
+  right: 60px;
+  z-index: 2;
+  text-align: right;
+}
+
+.heroInfoTitle {
+  color: #808080;
+  font-family: var(--font-en);
+  font-size: 20px;
+  font-weight: var(--font-weight-light);
+  font-style: normal;
+  line-height: 24px;
+  letter-spacing: 2.4px;
+  margin-bottom: 8px;
+}
+
+.heroInfoBody {
+  color: #808080;
+  font-family: var(--font-en);
+  font-size: 14px;
+  font-weight: var(--font-weight-light);
+  font-style: normal;
+  line-height: 24px;
+  letter-spacing: 1.82px;
+}
+
+.heroInfoCopyright {
+  color: var(--color-black);
+  font-family: var(--font-en);
+  font-size: 14px;
+  font-weight: var(--font-weight-light);
+  font-style: normal;
+  line-height: 24px;
+  letter-spacing: 1.82px;
+}
+
+// 3Dシーン配置用
+.heroScene {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+// ── セクション共通 ──
+.sectionHeader {
+  @include fluid(margin-bottom, 24, 48);
+}
+
+.sectionTitle {
+  @include fluid(font-size, 24, 40);
+  font-weight: var(--font-weight-black);
+}
+
+.sectionLabel {
+  @include fluid(font-size, 11, 13);
+  font-family: var(--font-en);
+  letter-spacing: 0.1em;
+  color: var(--color-text-muted);
+  @include fluid(margin-top, 2, 4);
+}
+
+// ── アバウトセクション ──
+.about {
+  position: relative;
+  z-index: 6; // 赤モチーフ(z-index:5)の上にテキストを表示
+  @include fluid(padding-top, 60, 120);
+  padding-bottom: 0;
+  padding-left: 200px;
+  @include fluid(padding-right, 20, 80);
+}
+
+.aboutHeader {
+  margin-bottom: 48px;
+}
+
+.aboutTitle {
+  display: flex;
+}
+
+.aboutTitleImage {
+  width: auto;
+  height: auto;
+}
+
+.aboutLabel {
+  margin-top: 20px;
+  color: #808080;
+  font-family: var(--font-en);
+  font-size: 20px;
+  font-weight: var(--font-weight-light);
+  font-style: normal;
+  line-height: 24px;
+  letter-spacing: 2.6px;
+}
+
+.aboutContent {
+  width: 100%;
+}
+
+.aboutHeading {
+  margin-top: 116px;
+  color: var(--color-black);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  font-size: 38px;
+  font-weight: var(--font-weight-regular);
+  font-style: normal;
+  line-height: 88px;
+  letter-spacing: 30.4px;
+  margin-bottom: 48px;
+}
+
+.aboutMessage {
+  color: var(--color-black);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  font-size: 24px;
+  font-weight: var(--font-weight-regular);
+  font-style: normal;
+  line-height: 70px;
+  letter-spacing: 4.32px;
+}
+
+.aboutBlock {
+  margin-bottom: 100px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.aboutLastRow {
+  display: flex;
+  align-items: flex-end;
+  gap: 60px;
+
+  > a {
+    margin-bottom: 110px;
+  }
+}
+
+// ── サービスセクション（ServiceSection コンポーネントに移行済み） ──

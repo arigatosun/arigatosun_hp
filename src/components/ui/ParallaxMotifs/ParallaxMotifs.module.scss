@@ -1,0 +1,22 @@
+.container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  bottom: 0; // height: 100%ではなくbottom: 0でページ全体をカバー
+  pointer-events: none;
+  z-index: 5; // 装飾マスク(z-index:4)の上、セクションコンテンツ(z-index:6)の下
+  overflow: visible; // パララックスで上下にはみ出しても表示
+}
+
+.svg {
+  position: absolute;
+  // Figmaデータ: Group 111のY=1708px、ヒーロー約1100px → アバウトセクション内約600px地点
+  top: calc(100vh + 884px);
+  left: 50%;
+  // 1920pxベースのデザインを現在のビューポート幅にスケール
+  width: 100vw;
+  height: auto;
+  transform: translateX(-50%);
+  overflow: visible;
+}

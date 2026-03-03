@@ -1,0 +1,59 @@
+// ============================================
+// タイポグラフィ — Fluid Typography定義
+// ============================================
+// Figmaデザインの各テキストスタイルに対応するクラスを提供
+// ============================================
+
+@use 'fluid' as *;
+
+// 見出し
+.heading-1 {
+  @include fluid(font-size, 28, 56);
+  @include fluid(line-height, 36, 68);
+  font-weight: var(--font-weight-black);
+  letter-spacing: 0.02em;
+}
+
+.heading-2 {
+  @include fluid(font-size, 24, 40);
+  @include fluid(line-height, 32, 52);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.02em;
+}
+
+.heading-3 {
+  @include fluid(font-size, 20, 32);
+  @include fluid(line-height, 28, 42);
+  font-weight: var(--font-weight-bold);
+}
+
+// 小見出し（英語ラベル: ABOUT, SERVICE 等）
+.subtitle {
+  @include fluid(font-size, 11, 14);
+  @include fluid(line-height, 16, 20);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-family: var(--font-en);
+}
+
+// 本文
+.body-text {
+  @include fluid(font-size, 14, 16);
+  @include fluid(line-height, 24, 30);
+  font-weight: var(--font-weight-regular);
+}
+
+.body-text-sm {
+  @include fluid(font-size, 12, 14);
+  @include fluid(line-height, 20, 24);
+  font-weight: var(--font-weight-regular);
+}
+
+// キャプション
+.caption {
+  @include fluid(font-size, 10, 12);
+  @include fluid(line-height, 16, 18);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-text-muted);
+}

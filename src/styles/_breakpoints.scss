@@ -1,0 +1,45 @@
+// ============================================
+// ブレイクポイント — レイアウト切り替え用
+// ============================================
+// clamp()ではカバーできないレイアウト構造の変更
+// （カラム切り替え、表示/非表示等）に使用する。
+// フォントサイズや余白には @include fluid() を優先して使うこと。
+// ============================================
+
+$breakpoint-sm: 480px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 1024px;
+$breakpoint-xl: 1200px;
+$breakpoint-2xl: 1440px;
+
+@mixin sp {
+  @media (max-width: #{$breakpoint-md - 1px}) {
+    @content;
+  }
+}
+
+@mixin tab {
+  @media (min-width: #{$breakpoint-md}) and (max-width: #{$breakpoint-lg - 1px}) {
+    @content;
+  }
+}
+
+@mixin pc {
+  @media (min-width: #{$breakpoint-lg}) {
+    @content;
+  }
+}
+
+// 任意のmin-widthで使える汎用mixin
+@mixin min($width) {
+  @media (min-width: #{$width}) {
+    @content;
+  }
+}
+
+// 任意のmax-widthで使える汎用mixin
+@mixin max($width) {
+  @media (max-width: #{$width}) {
+    @content;
+  }
+}

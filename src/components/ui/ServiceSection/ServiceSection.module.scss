@@ -1,0 +1,148 @@
+@use '@/styles/fluid' as *;
+
+.service {
+  position: relative;
+  margin-top: 370px; // アバウトセクションとの余白
+  overflow-x: clip; // 横スクロールバー防止
+  overflow-y: visible; // 装飾マスクのはみ出しを許容
+}
+
+// ── 装飾マスク ──
+// vw基準でオフセットし、画面サイズに応じて比率を保つ
+.decoTop {
+  position: absolute;
+  top: -17.6vw; // 1920px時 = -340px相当
+  left: 0;
+  width: 100%;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.decoBottom {
+  position: absolute;
+  bottom: -18.35vw; // 1920px時 = -355px相当
+  left: 0;
+  width: 100%;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.decoImage {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+// ── メインレイアウト ──
+.inner {
+  display: flex;
+  min-height: 100vh;
+  position: relative;
+}
+
+// ── 左側（sticky） ──
+.left {
+  width: 45%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  padding-left: 8.3vw; // 1920px時 = 160px相当
+  padding-right: 3.1vw; // 1920px時 = 60px相当
+}
+
+.leftContent {
+  display: flex;
+  flex-direction: column;
+}
+
+.titleLogo {
+  display: flex;
+}
+
+.titleLogoImage {
+  width: auto;
+  height: auto;
+}
+
+.label {
+  margin-top: 16px;
+  color: #808080;
+  font-family: var(--font-en);
+  font-size: 20px;
+  font-weight: var(--font-weight-light);
+  font-style: normal;
+  line-height: 24px;
+  letter-spacing: 2.6px;
+}
+
+.description {
+  margin-top: 48px;
+  color: var(--color-black);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  font-size: 24px;
+  font-weight: var(--font-weight-regular);
+  font-style: normal;
+  line-height: 52px;
+  letter-spacing: 3.12px;
+}
+
+// ── メニューリスト ──
+.menuList {
+  margin-top: 48px;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  margin-bottom: 48px;
+}
+
+.menuItem,
+.menuItemActive {
+  display: block;
+  font-family: var(--font-en);
+  font-size: 20px;
+  font-weight: var(--font-weight-light);
+  font-style: normal;
+  line-height: 24px;
+  letter-spacing: 2.6px;
+  cursor: pointer;
+
+  span {
+    display: inline;
+    padding: 5px 12px;
+    transition: all var(--transition-base);
+  }
+}
+
+.menuItem {
+  span {
+    color: #808080;
+    background-color: transparent;
+  }
+
+  &:hover span {
+    color: #FFF;
+    background-color: var(--color-primary);
+  }
+}
+
+.menuItemActive {
+  span {
+    color: #FFF;
+    background-color: var(--color-primary);
+  }
+}
+
+// ── 右側（カードエリア） ──
+.right {
+  flex: 1;
+  overflow: hidden; // 左側にはみ出さないようクリッピング
+  display: flex;
+  align-items: center;
+}
+
+.cardsTrack {
+  display: flex;
+  gap: 1.67vw; // 1920px時 = 32px相当
+  padding-right: 10.4vw; // 1920px時 = 200px相当
+}

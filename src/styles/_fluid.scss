@@ -1,0 +1,71 @@
+// ============================================
+// Fluid Design System — clamp() 自動生成 mixin
+// ============================================
+// Figmaのpx値をそのまま入力するだけで、
+// ビューポートに応じた滑らかなスケーリングを実現する。
+//
+// 使い方:
+//   @include fluid(font-size, 16, 24);
+//     → font-size: clamp(1rem, 0.818rem + 0.909vw, 1.5rem);
+//
+//   @include fluid(margin-bottom, 20, 40, 375, 1440);
+//     → カスタムビューポート範囲で計算
+// ============================================
+
+// デフォルトのビューポート範囲（px）
+$fluid-min-viewport: 320 !default;
+$fluid-max-viewport: 1200 !default;
+
+// ベースフォントサイズ（rem計算用）
+$fluid-base-font-size: 16 !default;
+
+// px → rem 変換関数
+@function px-to-rem($px) {
+  @return calc($px / $fluid-base-font-size) * 1rem;
+}
+
+// clamp()値を計算する関数
+// $min-value: 最小値（px）— モバイルでのデザイン値
+// $max-value: 最大値（px）— PCでのデザイン値
+// $min-vw: 最小ビューポート幅（px）
+// $max-vw: 最大ビューポート幅（px）
+@function fluid-value($min-value, $max-value, $min-vw: $fluid-min-viewport, $max-vw: $fluid-max-viewport) {
+  $min-rem: px-to-rem($min-value);
+  $max-rem: px-to-rem($max-value);
+
+  // 傾き（slope）の計算
+  $slope: calc(($max-value - $min-value) / ($max-vw - $min-vw));
+
+  // vw係数（%）
+  $slope-vw: $slope * 100;
+
+  // y切片（rem）
+  $intercept: px-to-rem($min-value - $slope * $min-vw);
+
+  @return clamp(#{$min-rem}, #{$intercept} + #{$slope-vw}vw, #{$max-rem});
+}
+
+// メインmixin
+// $property: CSSプロパティ名（font-size, padding, gap 等）
+// $min: 最小値（px）
+// $max: 最大値（px）
+// $min-vw: 最小ビューポート幅（px）— オプション
+// $max-vw: 最大ビューポート幅（px）— オプション
+@mixin fluid($property, $min, $max, $min-vw: $fluid-min-viewport, $max-vw: $fluid-max-viewport) {
+  #{$property}: fluid-value($min, $max, $min-vw, $max-vw);
+}
+
+// 複数プロパティ一括指定
+// 使い方:
+//   @include fluid-props((
+//     font-size: (16, 24),
+//     line-height: (24, 36),
+//     margin-bottom: (12, 20)
+//   ));
+@mixin fluid-props($props) {
+  @each $property, $values in $props {
+    $min: nth($values, 1);
+    $max: nth($values, 2);
+    @include fluid($property, $min, $max);
+  }
+}
