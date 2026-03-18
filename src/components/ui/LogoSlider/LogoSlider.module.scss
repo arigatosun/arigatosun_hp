@@ -1,21 +1,9 @@
+@use '@/styles/fluid' as *;
+@use '@/styles/breakpoints' as *;
+
 .wrapper {
   position: relative;
-  margin-top: 380px;
-}
-
-// ── アリガトクン（後日3Dに差し替え） ──
-.character {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: calc(50% - 180px);
-  z-index: 2;
-  pointer-events: none;
-}
-
-.characterImage {
-  width: auto;
-  height: 180px;
+  @include fluid(margin-top, 120, 380);
 }
 
 // ── ロゴスライダー ──
@@ -26,7 +14,7 @@
 
 .track {
   display: flex;
-  gap: 100px;
+  @include fluid(gap, 40, 100);
   width: max-content;
   animation: scrollLoop 60s linear infinite;
 }
@@ -38,8 +26,8 @@
 }
 
 .logoImage {
-  width: 864.633px;
-  height: 187.796px;
+  @include fluid(width, 300, 865);
+  @include fluid(height, 65, 188);
   opacity: 0.4;
   filter: grayscale(100%);
   transition: opacity 0.4s ease, filter 0.4s ease;

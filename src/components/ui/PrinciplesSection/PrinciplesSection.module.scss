@@ -1,0 +1,295 @@
+@use '@/styles/fluid' as *;
+@use '@/styles/breakpoints' as *;
+
+.section {
+  @include fluid(padding-left, 20, 200);
+  @include fluid(padding-right, 20, 200);
+}
+
+// ── セクションタイトル ──
+.header {
+  display: flex;
+  align-items: center;
+  @include fluid(gap, 10, 20);
+}
+
+.headerLogo {
+  width: auto;
+  height: auto;
+}
+
+.headerText {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.headerTitle {
+  color: var(--color-black);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  @include fluid(font-size, 16, 28);
+  font-weight: 500;
+  line-height: 1.2;
+  @include fluid(letter-spacing, 5, 11.2);
+}
+
+.headerSub {
+  color: #808080;
+  font-family: var(--font-en);
+  @include fluid(font-size, 12, 16);
+  font-weight: var(--font-weight-light);
+  line-height: 24px;
+  @include fluid(letter-spacing, 1, 2.08);
+}
+
+// ── メインコンテンツ ──
+.content {
+  display: flex;
+  @include fluid(gap, 45, 150);
+  @include fluid(margin-top, 24, 60);
+
+  @include sp {
+    flex-direction: column;
+  }
+}
+
+// ── 左側: ヒートマップダイアグラム ──
+.mapArea {
+  position: relative;
+  flex-shrink: 0;
+  align-self: flex-start;       // flex stretchによる引き伸ばしを防止（高さ=画像高さを維持）
+  @include fluid(margin-top, 28, 80);
+
+  @include sp {
+    margin-top: 0;
+    width: 100%;
+    align-self: stretch;
+  }
+}
+
+.mapImage {
+  width: auto;
+  height: auto;
+
+  @include sp {
+    width: 100%;
+    height: auto;
+  }
+}
+
+// テキストラベル - 横並び
+.mapLabels {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  left: 100px;
+  top: calc(50% + 4px);
+  transform: translateY(-50%);
+  z-index: 2;
+
+  @include sp {
+    left: 16.7%;
+    top: calc(50% + 0.87%);
+  }
+}
+
+.mapLabel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.mapLabelClient {
+  margin-left: 90px;
+
+  @include sp {
+    margin-left: 15%;
+  }
+}
+
+.mapLabelSociety {
+  margin-left: 125px;
+
+  @include sp {
+    margin-left: 20.8%;
+  }
+}
+
+.mapLabelJa {
+  color: var(--color-black);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  @include fluid(font-size, 14, 18);
+  font-weight: var(--font-weight-regular);
+  line-height: 1.2;
+  @include fluid(letter-spacing, 2.5, 5.04);
+}
+
+.mapLabelEn {
+  color: #808080;
+  text-align: center;
+  font-family: var(--font-en);
+  @include fluid(font-size, 10, 12.6);
+  font-weight: var(--font-weight-light);
+  line-height: 1.4;
+  letter-spacing: 1.638px;
+  margin-top: 4px;
+}
+
+// ── ヒートマップグロー効果 ──
+// 内側から累積的に3層重ねて広がる
+// align-self: flex-startにより mapArea高さ = 画像高さ(460px) を保証
+.heatmapGlow {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+// 仲間: 内側のコアグロー
+.glow1 {
+  width: 340px;
+  height: 260px;
+  left: -30px;
+  top: calc(50% + 4px);
+  transform: translateY(-50%);
+  background: radial-gradient(
+    ellipse 65% 50%,
+    rgba(218, 39, 25, 0.75) 0%,
+    rgba(218, 39, 25, 0.6) 20%,
+    rgba(218, 39, 25, 0.4) 38%,
+    rgba(218, 39, 25, 0.15) 55%,
+    rgba(218, 39, 25, 0.03) 70%,
+    transparent 80%
+  );
+  filter: blur(6px);
+  opacity: 0;
+
+  @include sp {
+    width: 56.7%;
+    height: 56.5%;
+    left: -5%;
+    top: calc(50% + 0.87%);
+  }
+}
+
+// お客様: 中間サイズのグロー（スクロールで表示）
+.glow2 {
+  width: 440px;
+  height: 360px;
+  left: 10px;
+  top: calc(50% + 4px);
+  transform: translateY(-50%);
+  background: radial-gradient(
+    ellipse,
+    rgba(218, 39, 25, 0.55) 0%,
+    rgba(218, 39, 25, 0.35) 28%,
+    rgba(218, 39, 25, 0.15) 48%,
+    rgba(218, 39, 25, 0.04) 65%,
+    transparent 78%
+  );
+  filter: blur(8px);
+  opacity: 0;
+
+  @include sp {
+    width: 73.3%;
+    height: 78.3%;
+    left: 1.7%;
+    top: calc(50% + 0.87%);
+  }
+}
+
+// 社会: 最大グロー（スクロールで表示）
+.glow3 {
+  width: 480px;
+  height: 400px;
+  left: 160px;
+  top: calc(50% + 4px);
+  transform: translateY(-50%);
+  background: radial-gradient(
+    ellipse,
+    rgba(218, 39, 25, 0.65) 0%,
+    rgba(218, 39, 25, 0.45) 22%,
+    rgba(218, 39, 25, 0.25) 42%,
+    rgba(218, 39, 25, 0.06) 62%,
+    transparent 78%
+  );
+  filter: blur(8px);
+  opacity: 0;
+
+  @include sp {
+    width: 80%;
+    height: 87%;
+    left: 26.7%;
+    top: calc(50% + 0.87%);
+  }
+}
+
+// ── 右側: 原則リスト ──
+.principlesList {
+  display: flex;
+  flex-direction: column;
+  @include fluid(gap, 20, 50);
+  padding-top: 0;
+  position: relative;
+  @include fluid(top, -24, -60);
+
+  @include sp {
+    top: 0;
+  }
+}
+
+.principleHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.principleHeadLeft {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.principleLabel {
+  color: var(--color-black);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  @include fluid(font-size, 14, 20);
+  font-weight: var(--font-weight-regular);
+  @include fluid(line-height, 48, 88);
+  @include fluid(letter-spacing, 2.8, 5.6);
+}
+
+.principleLogo {
+  width: auto;
+  height: auto;
+}
+
+.principleLink {
+  flex-shrink: 0;
+  color: var(--color-black);
+  text-align: right;
+  font-family: var(--font-en);
+  @include fluid(font-size, 14, 24);
+  font-weight: var(--font-weight-light);
+  line-height: 24px;
+  letter-spacing: 3.12px;
+  text-decoration: none;
+  background-color: var(--color-white);
+  padding: 4px 12px;
+  transition: color var(--transition-base);
+
+  &:hover {
+    color: var(--color-primary);
+  }
+}
+
+.principleDesc {
+  @include fluid(margin-top, 10, 14);
+  color: var(--color-black);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  @include fluid(font-size, 12, 14);
+  font-weight: var(--font-weight-regular);
+  @include fluid(line-height, 22, 28);
+  @include fluid(letter-spacing, 1.2, 2.52);
+}

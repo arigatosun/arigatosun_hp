@@ -28,11 +28,16 @@ font-family: var(--font-primary);  // 'Mozaic GEO Variable' + 日本語フォー
 - 背景: `var(--color-white)` → `#FFFFFF`
 - すべてのカラーはCSS変数経由で指定する。ハードコードしない。
 
-## レスポンシブ
+## レスポンシブ（最重要）
 
-- フォントサイズ・余白・幅は `@include fluid(プロパティ, min, max)` を使う
-- レイアウト構造の切り替えは `@include sp / tab / pc` を使う
-- Header内のナビゲーション等、Figmaで固定px指定されているものはそのまま固定値でOK
+**固定pxでスケーラブルな値を書くことは禁止。**
+Figmaの値は `@include fluid(プロパティ, min, max)` で書く。
+詳細な値の算出ルールは `.claude/rules/responsive.md` に定義済み。
+
+- フォントサイズ・余白・幅 → `@include fluid(プロパティ, min, max)`
+- レイアウト構造の切り替え → `@include sp / tab / pc`
+- 2カラム横並び → 必ずSP時の `flex-direction: column` も書く
+- PC UIの実装 = レスポンシブ対応込みで行う（後から別途対応しない）
 
 ## ホバーエフェクト
 
@@ -55,5 +60,5 @@ ComponentName/
 @use '@/styles/fluid' as *;
 @use '@/styles/breakpoints' as *;
 ```
-- 必要なものだけインポートする
+- この2行は全 `.module.scss` に必須
 - CSS変数はグローバルに利用可能（インポート不要）

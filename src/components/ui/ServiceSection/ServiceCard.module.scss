@@ -1,3 +1,6 @@
+@use '@/styles/fluid' as *;
+@use '@/styles/breakpoints' as *;
+
 .card {
   position: relative;
   // 1920px基準のvw換算（630/1920 = 32.8vw, 860/1920 = 44.8vw）
@@ -6,6 +9,12 @@
   flex-shrink: 0;
   overflow: hidden;
   border-radius: 8px;
+
+  @include sp {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 630 / 860;
+  }
 }
 
 .bgImage {
@@ -41,6 +50,7 @@
   z-index: 2;
 }
 
+// カード内コンテンツ — vw基準でカードと同比率で縮小
 .content {
   position: absolute;
   top: 0;
@@ -50,7 +60,15 @@
   z-index: 3;
   display: flex;
   flex-direction: column;
-  padding: 260px 52px 90px;
+  justify-content: space-between;
+  padding: 13.5vw 2.7vw 4.7vw; // 1920px: 260px 52px 90px
+
+  @include sp {
+    @include fluid(padding-top, 24, 60);
+    @include fluid(padding-left, 16, 40);
+    @include fluid(padding-right, 16, 40);
+    @include fluid(padding-bottom, 20, 40);
+  }
 }
 
 // カード上部のVIEWボタン（赤背景は各行の文字背面のみ）
@@ -58,66 +76,98 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 4px;
+  gap: 0.2vw; // 1920px: 4px
   color: #FFF;
   font-family: var(--font-en);
-  font-size: 28px;
+  font-size: 1.46vw; // 1920px: 28px
   font-weight: var(--font-weight-light);
   font-style: normal;
-  line-height: 26px;
-  letter-spacing: 3.64px;
+  line-height: 1.2;
+  letter-spacing: 0.19vw; // 1920px: 3.64px
   cursor: pointer;
   transition: opacity var(--transition-base);
 
   &:hover {
     opacity: 0.8;
   }
+
+  @include sp {
+    @include fluid(font-size, 14, 22);
+    @include fluid(gap, 2, 4);
+    line-height: 1.3;
+    @include fluid(letter-spacing, 1, 2.5);
+  }
 }
 
 .viewButtonLine {
   display: inline;
   background-color: var(--color-primary);
-  padding: 8px 12px;
-  // インラインで文字幅に合わせた赤塗り
+  padding: 0.42vw 0.63vw; // 1920px: 8px 12px
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
+
+  @include sp {
+    @include fluid(padding-top, 4, 6);
+    @include fluid(padding-bottom, 4, 6);
+    @include fluid(padding-left, 6, 10);
+    @include fluid(padding-right, 6, 10);
+  }
 }
 
 // VIEWボタンとラベル群の間のスペース
 .info {
   display: flex;
   flex-direction: column;
-  margin-top: 240px;
 }
 
 .categoryLabel {
   color: #FFF;
   font-family: 'Noto Sans JP', var(--font-jp);
-  font-size: 16px;
+  font-size: max(11px, 0.83vw); // 1920px: 16px, 1024px: 8.5px→11px
   font-weight: var(--font-weight-regular);
   font-style: normal;
-  line-height: 32px;
-  letter-spacing: 2.08px;
+  line-height: 1.8;
+  letter-spacing: 0.1vw;
+
+  @include sp {
+    @include fluid(font-size, 12, 15);
+    @include fluid(line-height, 22, 28);
+    @include fluid(letter-spacing, 1, 1.5);
+  }
 }
 
 .cardTitle {
-  margin-top: 19px;
+  margin-top: 1vw; // 1920px: 19px
   color: #FFF;
   font-family: var(--font-en);
-  font-size: 34px;
+  font-size: 1.77vw; // 1920px: 34px
   font-weight: var(--font-weight-light);
   font-style: normal;
-  line-height: 24px;
-  letter-spacing: 4.42px;
+  line-height: 1.2;
+  letter-spacing: 0.23vw; // 1920px: 4.42px
+
+  @include sp {
+    @include fluid(margin-top, 6, 14);
+    @include fluid(font-size, 16, 26);
+    line-height: 1.3;
+    @include fluid(letter-spacing, 1.5, 3);
+  }
 }
 
 .cardDescription {
-  margin-top: 19px;
+  margin-top: 1vw; // 1920px: 19px
   color: #FFF;
   font-family: 'Noto Sans JP', var(--font-jp);
-  font-size: 16px;
+  font-size: max(11px, 0.83vw); // 1920px: 16px
   font-weight: var(--font-weight-regular);
   font-style: normal;
-  line-height: 30px;
-  letter-spacing: 2.08px;
+  line-height: 1.8;
+  letter-spacing: 0.1vw;
+
+  @include sp {
+    @include fluid(margin-top, 6, 14);
+    @include fluid(font-size, 12, 15);
+    @include fluid(line-height, 20, 26);
+    @include fluid(letter-spacing, 1, 1.5);
+  }
 }

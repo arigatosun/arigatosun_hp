@@ -1,0 +1,221 @@
+@use '@/styles/fluid' as *;
+@use '@/styles/breakpoints' as *;
+
+.section {
+  @include fluid(padding-left, 20, 200);
+  @include fluid(padding-right, 20, 200);
+  @include fluid(padding-top, 56, 160);
+}
+
+// ── セクションタイトル ──
+.header {
+  display: flex;
+  align-items: center;
+  @include fluid(gap, 10, 20);
+}
+
+.headerLogo {
+  width: auto;
+  height: auto;
+}
+
+.headerText {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.headerTitle {
+  color: var(--color-black);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  @include fluid(font-size, 16, 28);
+  font-weight: 500;
+  line-height: 1.2;
+  @include fluid(letter-spacing, 5, 11.2);
+}
+
+.headerSub {
+  color: #808080;
+  font-family: var(--font-en);
+  @include fluid(font-size, 12, 16);
+  font-weight: var(--font-weight-light);
+  line-height: 24px;
+  @include fluid(letter-spacing, 1, 2.08);
+}
+
+// ── スライダーモード（詳細ページ用） ──
+.sectionSlider {
+  padding-right: 0;
+  overflow: hidden;
+}
+
+// ── メンバーグリッド ──
+.grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  @include fluid(gap, 12, 24);
+  @include fluid(margin-top, 24, 60);
+
+  @include tab {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @include sp {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+// ── スライダー ──
+.sliderWrapper {
+  @include fluid(margin-top, 24, 60);
+}
+
+.sliderTrack {
+  display: flex;
+  @include fluid(gap, 12, 24);
+  width: max-content;
+  animation: memberSlide 25s linear infinite;
+
+  &:hover {
+    animation-play-state: paused;
+  }
+}
+
+// カードがスライダー内の場合は幅を固定
+.cardSlider {
+  @include fluid(width, 160, 233);
+  flex-shrink: 0;
+}
+
+@keyframes memberSlide {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+// ── メンバーカード ──
+.card {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  perspective: 800px;
+  cursor: pointer;
+
+  // 3D tilt + リフトアップ用のCSS変数（デフォルト値）
+  --rotate-x: 0deg;
+  --rotate-y: 0deg;
+  --glow-x: 50%;
+  --glow-y: 50%;
+}
+
+// ── 写真ラッパー（3D tilt + リフトアップ対象） ──
+.cardPhotoWrap {
+  position: relative;
+  overflow: hidden;
+  transform: rotateX(var(--rotate-x)) rotateY(var(--rotate-y)) translateY(0);
+  transition:
+    transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    box-shadow 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform;
+  transform-style: preserve-3d;
+
+  // ヒートマップグロー（擬似要素）
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      circle at var(--glow-x) var(--glow-y),
+      rgba(218, 39, 25, 0.25) 0%,
+      rgba(218, 39, 25, 0.08) 35%,
+      transparent 70%
+    );
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  @include sp {
+    transform: none;
+    transition: none;
+
+    &::before {
+      display: none;
+    }
+  }
+}
+
+// ホバー状態（JSからclassを付与）
+.cardHovered {
+  .cardPhotoWrap {
+    transform: rotateX(var(--rotate-x)) rotateY(var(--rotate-y)) translateY(-8px);
+    box-shadow:
+      0 12px 40px rgba(218, 39, 25, 0.08),
+      0 4px 16px rgba(0, 0, 0, 0.06);
+
+    &::before {
+      opacity: 1;
+    }
+  }
+
+  .cardRole {
+    transform: translateY(-4px);
+    color: #606060;
+  }
+
+  .cardName {
+    transform: translateY(-4px);
+    color: var(--color-primary);
+  }
+
+  @include sp {
+    .cardPhotoWrap {
+      transform: none;
+      box-shadow: none;
+    }
+
+    .cardRole,
+    .cardName {
+      transform: none;
+    }
+  }
+}
+
+.cardPhoto {
+  width: 100%;
+  aspect-ratio: 233 / 235;
+  opacity: 0.4;
+  background: #D9D9D9;
+}
+
+.cardRole {
+  margin-top: 8px;
+  color: #808080;
+  font-family: var(--font-en);
+  @include fluid(font-size, 12, 14);
+  font-weight: var(--font-weight-light);
+  line-height: 24px;
+  letter-spacing: 1.82px;
+  text-transform: uppercase;
+  transition:
+    transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    color 0.4s ease;
+}
+
+.cardName {
+  margin-top: 4px;
+  color: #000;
+  font-family: var(--font-en);
+  @include fluid(font-size, 14, 18);
+  font-weight: var(--font-weight-light);
+  line-height: 24px;
+  letter-spacing: 2.34px;
+  text-transform: uppercase;
+  transition:
+    transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    color 0.4s ease;
+}

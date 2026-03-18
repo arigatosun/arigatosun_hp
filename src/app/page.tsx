@@ -8,15 +8,19 @@ import WorksSection from '@/components/ui/WorksSection';
 import NewsSection from '@/components/ui/NewsSection';
 import LogoSlider from '@/components/ui/LogoSlider';
 import MessageSection from '@/components/ui/MessageSection';
+import GlobalCanvasLoader from '@/components/three/GlobalCanvasLoader';
+import HeroAnimation from '@/components/ui/HeroAnimation';
 
 export default function Home() {
   return (
     <div className={styles.page}>
+      {/* トップページ専用グローバル3Dキャンバス（ヒーロー歩行キャラ） */}
+      <GlobalCanvasLoader />
       {/* 赤モチーフ（ページレベルで配置、セクション間をまたいで表示） */}
       <ParallaxMotifs />
 
       {/* ── ヒーローセクション ── */}
-      <section className={styles.hero}>
+      <section className={styles.hero} data-section="hero">
         <div className={styles.heroContent}>
           <h1 className={styles.heroLogo}>
             <Image
@@ -44,8 +48,10 @@ export default function Home() {
           <p className={styles.heroInfoCopyright}>&copy; 2026 ARIGATOSUN. ALL RIGHTS RESEAVED.</p>
         </div>
 
-        {/* 3Dシーンの領域（アニメーション付きGLB到着後に実装） */}
-        <div className={styles.heroScene} />
+        {/* ロゴパネルアニメーション */}
+        <div className={styles.heroScene}>
+          <HeroAnimation />
+        </div>
       </section>
 
       {/* ── アバウトセクション ── */}

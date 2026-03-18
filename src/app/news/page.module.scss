@@ -1,0 +1,365 @@
+@use '@/styles/fluid' as *;
+@use '@/styles/breakpoints' as *;
+
+.page {
+  @include fluid(padding-left, 20, 200);
+  @include fluid(padding-right, 20, 80);
+  @include fluid(padding-top, 100, 160);
+  @include fluid(padding-bottom, 60, 120);
+}
+
+.inner {
+  display: flex;
+  @include fluid(gap, 40, 140);
+  align-items: flex-start;
+
+  @include sp {
+    flex-direction: column;
+    @include fluid(gap, 24, 40);
+  }
+}
+
+// ── 左側: サイドバー ──
+.left {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  @include fluid(top, 80, 120);
+
+  @include sp {
+    position: static;
+    width: 100%;
+  }
+}
+
+.header {
+  @include fluid(margin-bottom, 60, 240);
+
+  @include sp {
+    @include fluid(margin-bottom, 16, 24);
+  }
+}
+
+.titleLogo {
+  display: flex;
+}
+
+.titleLogoImage {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+}
+
+.label {
+  margin-top: 16px;
+  color: #808080;
+  font-family: var(--font-en);
+  @include fluid(font-size, 14, 20);
+  font-weight: var(--font-weight-light);
+  font-style: normal;
+  line-height: 24px;
+  @include fluid(letter-spacing, 1.2, 2.6);
+}
+
+// ── カテゴリメニュー ──
+.categoryList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  @include fluid(gap, 16, 32);
+  @include fluid(margin-bottom, 24, 56);
+
+  @include sp {
+    flex-direction: row;
+    flex-wrap: wrap;
+    @include fluid(gap, 8, 12);
+    @include fluid(margin-bottom, 16, 24);
+  }
+}
+
+.categoryItem,
+.categoryItemActive {
+  display: block;
+  font-family: var(--font-en);
+  @include fluid(font-size, 14, 20);
+  font-weight: var(--font-weight-light);
+  font-style: normal;
+  line-height: 24px;
+  @include fluid(letter-spacing, 1.2, 2.6);
+  cursor: pointer;
+
+  span {
+    display: inline;
+    padding: 5px 12px;
+    transition: all var(--transition-base);
+  }
+
+  @include sp {
+    @include fluid(font-size, 11, 14);
+
+    span {
+      padding: 4px 8px;
+    }
+  }
+}
+
+.categoryItem {
+  span {
+    color: #808080;
+    background-color: transparent;
+  }
+
+  &:hover span {
+    color: #FFF;
+    background-color: var(--color-primary);
+  }
+}
+
+.categoryItemActive {
+  span {
+    color: #FFF;
+    background-color: var(--color-primary);
+  }
+}
+
+// ── CONTACTリンク ──
+.contactLink {
+  font-family: var(--font-en);
+  @include fluid(font-size, 14, 20);
+  font-weight: var(--font-weight-light);
+  font-style: normal;
+  line-height: 24px;
+  @include fluid(letter-spacing, 1.2, 2.6);
+  color: #808080;
+  transition: color var(--transition-base);
+
+  &:hover {
+    color: var(--color-primary);
+  }
+
+  @include sp {
+    display: none;
+  }
+}
+
+// ── 右側: 記事リスト ──
+.right {
+  flex: 1;
+  min-width: 0;
+  padding-top: 20px;
+
+  @include sp {
+    padding-top: 0;
+    width: 100%;
+  }
+}
+
+// ── 各記事 ──
+.article {
+  display: flex;
+  align-items: flex-start;
+  @include fluid(gap, 16, 56);
+  padding: 24px 20px;
+  margin: -24px -20px;
+  border-radius: 8px;
+  transition:
+    background-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    box-shadow 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.95);
+    transform: translateX(8px);
+    box-shadow:
+      0 4px 24px rgba(0, 0, 0, 0.06),
+      0 12px 40px rgba(0, 0, 0, 0.04);
+
+    .articleTitle {
+      color: var(--color-primary);
+    }
+
+    .articleDate,
+    .articleTag {
+      color: var(--color-black);
+    }
+
+    .thumbnailImage {
+      transform: scale(1.06);
+    }
+
+    .articleTitle::after {
+      transform: scaleX(1);
+    }
+  }
+
+  @include sp {
+    flex-direction: column-reverse;
+    @include fluid(gap, 12, 16);
+    padding: 16px 12px;
+    margin: -16px -12px;
+
+    &:hover {
+      transform: none;
+    }
+  }
+}
+
+.articleContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.articleTitle {
+  color: var(--color-black);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  @include fluid(font-size, 14, 20);
+  font-style: normal;
+  font-weight: var(--font-weight-regular);
+  @include fluid(line-height, 24, 38);
+  @include fluid(letter-spacing, 1.5, 3.2);
+  transition: color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  position: relative;
+  padding-bottom: 4px;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60px;
+    height: 2px;
+    background-color: var(--color-primary);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.1s;
+  }
+}
+
+.articleMeta {
+  @include fluid(margin-top, 16, 32);
+  display: flex;
+  align-items: baseline;
+  @include fluid(gap, 12, 32);
+}
+
+.articleDate {
+  color: #808080;
+  font-family: var(--font-en);
+  @include fluid(font-size, 14, 20);
+  font-style: normal;
+  font-weight: var(--font-weight-light);
+  line-height: 24px;
+  @include fluid(letter-spacing, 1.2, 2.6);
+  transition: color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.articleTag {
+  color: #808080;
+  font-family: var(--font-en);
+  @include fluid(font-size, 14, 20);
+  font-style: normal;
+  font-weight: var(--font-weight-light);
+  line-height: 24px;
+  @include fluid(letter-spacing, 1.2, 2.6);
+  transition: color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+// ── サムネイル ──
+.articleThumbnail {
+  flex-shrink: 0;
+  @include fluid(width, 120, 300);
+  aspect-ratio: 300 / 169;
+  overflow: hidden;
+  border-radius: 4px;
+
+  @include sp {
+    width: 100%;
+  }
+}
+
+.thumbnailImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.thumbnailPlaceholder {
+  width: 100%;
+  height: 100%;
+  background-color: #e8e8e8;
+}
+
+// ── 装飾ライン ──
+.articleDivider {
+  width: 100%;
+  height: 1px;
+  @include fluid(margin-top, 20, 40);
+  background: #808080;
+  opacity: 0.3;
+}
+
+// ── 記事間のスペーサー ──
+.articleSpacer {
+  @include fluid(height, 30, 70);
+
+  @include sp {
+    @include fluid(height, 16, 30);
+  }
+}
+
+// ── ページネーション ──
+.pagination {
+  @include fluid(margin-top, 40, 80);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  @include fluid(gap, 24, 40);
+}
+
+.paginationButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  @include fluid(width, 120, 180);
+  @include fluid(height, 44, 56);
+  border-radius: 40px;
+  border: 1px solid var(--color-black);
+  background-color: var(--color-white);
+  color: var(--color-black);
+  font-family: var(--font-en);
+  @include fluid(font-size, 12, 16);
+  font-weight: var(--font-weight-light);
+  @include fluid(letter-spacing, 0.8, 2);
+  cursor: pointer;
+  transition: all var(--transition-base);
+
+  &:hover {
+    background-color: var(--color-black);
+    color: var(--color-white);
+  }
+}
+
+.paginationDisabled {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.paginationInfo {
+  font-family: var(--font-en);
+  @include fluid(font-size, 14, 18);
+  font-weight: var(--font-weight-light);
+  color: var(--color-black);
+  @include fluid(letter-spacing, 1, 2);
+}
+
+// ── ステータステキスト ──
+.statusText {
+  color: #808080;
+  font-family: var(--font-en);
+  @include fluid(font-size, 13, 16);
+  font-weight: var(--font-weight-light);
+  @include fluid(padding, 32, 60);
+  text-align: center;
+}

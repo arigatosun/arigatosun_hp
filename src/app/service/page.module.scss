@@ -1,0 +1,207 @@
+@use '@/styles/fluid' as *;
+@use '@/styles/breakpoints' as *;
+
+.page {
+  position: relative;
+  @include fluid(padding-top, 60, 80);
+}
+
+// ── 右サイドナビゲーション（ABOUTページと同一スタイル） ──
+.sideNav {
+  position: absolute;
+  @include fluid(right, 20, 250);
+  @include fluid(top, 80, 180);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  @include fluid(gap, 10, 20);
+  z-index: 10;
+
+  @include sp {
+    display: none;
+  }
+}
+
+.sideNavItem {
+  display: inline;
+  color: #808080;
+  font-family: var(--font-en);
+  @include fluid(font-size, 14, 20);
+  font-weight: var(--font-weight-light);
+  font-style: normal;
+  line-height: 24px;
+  letter-spacing: 2.6px;
+  text-decoration: none;
+  padding: 4px 8px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  transition: color var(--transition-base), background-color var(--transition-base);
+
+  &:hover {
+    color: var(--color-white);
+    background-color: var(--color-primary);
+  }
+}
+
+.sideNavItemActive {
+  color: var(--color-white);
+  background-color: var(--color-primary);
+}
+
+.sideNavArrow {
+  display: flex;
+  justify-content: flex-start;
+  padding: 4px 8px;
+}
+
+// ── ヒーローセクション ──
+.hero {
+  @include fluid(padding-left, 20, 200);
+  @include fluid(padding-right, 20, 200);
+  @include fluid(padding-top, 35, 100);
+  @include fluid(padding-bottom, 40, 80);
+}
+
+.heroLeft {
+  max-width: 700px;
+}
+
+.sectionHeader {
+  @include fluid(margin-bottom, 32, 60);
+}
+
+.titleLogo {
+  display: flex;
+}
+
+.titleLogoImage {
+  width: auto;
+  height: auto;
+}
+
+.label {
+  @include fluid(margin-top, 10, 20);
+  color: #808080;
+  font-family: var(--font-en);
+  @include fluid(font-size, 14, 20);
+  font-weight: var(--font-weight-light);
+  font-style: normal;
+  line-height: 24px;
+  letter-spacing: 2.6px;
+}
+
+.heroBody {
+  color: var(--color-black);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  @include fluid(font-size, 14, 16);
+  font-weight: var(--font-weight-regular);
+  @include fluid(line-height, 28, 38);
+  @include fluid(letter-spacing, 2, 4.48);
+}
+
+// ── サービスセクション（共通） ──
+.serviceSection {
+  display: flex;
+  align-items: flex-start;
+  @include fluid(padding-left, 20, 200);
+  @include fluid(padding-right, 20, 200);
+  @include fluid(padding-top, 40, 80);
+  @include fluid(padding-bottom, 40, 80);
+  @include fluid(gap, 32, 80);
+
+  @include sp {
+    flex-direction: column;
+  }
+}
+
+// レイアウト反転（imageRight: テキスト左、画像右）
+.serviceSectionReverse {
+  flex-direction: row-reverse;
+
+  @include sp {
+    flex-direction: column;
+  }
+}
+
+// ── サービス画像 ──
+.serviceImage {
+  flex-shrink: 0;
+  @include fluid(width, 280, 698);
+
+  @include sp {
+    width: 100%;
+  }
+}
+
+.serviceImagePlaceholder {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #D9D9D9;
+  opacity: 0.4;
+}
+
+// ── サービスコンテンツ ──
+.serviceContent {
+  flex: 1;
+  min-width: 0;
+}
+
+// ラベル（AI・開発 等）
+.serviceLabel {
+  color: var(--color-black);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  @include fluid(font-size, 14, 16);
+  font-weight: var(--font-weight-regular);
+  @include fluid(line-height, 28, 32);
+  @include fluid(letter-spacing, 1, 2.08);
+  opacity: 0.5;
+}
+
+// タイトル（AI / DEVELOPMENT 等）
+.serviceTitle {
+  color: var(--color-black);
+  font-family: var(--font-en);
+  @include fluid(font-size, 24, 34);
+  font-weight: var(--font-weight-light);
+  line-height: 24px;
+  @include fluid(letter-spacing, 2, 4.42);
+  @include fluid(margin-top, 4, 8);
+}
+
+// 説明文
+.serviceDesc {
+  color: var(--color-black);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  @include fluid(font-size, 14, 16);
+  font-weight: var(--font-weight-regular);
+  @include fluid(line-height, 26, 30);
+  @include fluid(letter-spacing, 1, 2.08);
+  @include fluid(margin-top, 16, 28);
+}
+
+// ── タグリスト ──
+.serviceTags {
+  @include fluid(margin-top, 16, 28);
+  @include fluid(margin-bottom, 24, 40);
+}
+
+.serviceTagRow {
+  display: flex;
+  flex-wrap: wrap;
+  @include fluid(gap, 8, 16);
+  @include fluid(margin-bottom, 4, 8);
+}
+
+.serviceTag {
+  display: inline;
+  color: #808080;
+  font-family: 'Noto Sans JP', var(--font-jp);
+  @include fluid(font-size, 11, 13);
+  font-weight: var(--font-weight-regular);
+  line-height: 1.6;
+  @include fluid(letter-spacing, 0.5, 1);
+  background-color: var(--color-white);
+  padding: 0 4px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}

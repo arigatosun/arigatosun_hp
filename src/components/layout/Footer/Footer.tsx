@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import Button from '@/components/ui/Button';
+import FooterSitCharacterLoader from '@/components/three/FooterSitCharacterLoader';
 import styles from './Footer.module.scss';
 
 const serviceSubmenu = [
@@ -20,6 +21,11 @@ export default function Footer() {
           fill
           className={styles.maskImage}
         />
+      </div>
+
+      {/* アーチ上のキャラクター */}
+      <div className={styles.sitCharacter}>
+        <FooterSitCharacterLoader />
       </div>
 
       {/* CONTACT US ボタン */}

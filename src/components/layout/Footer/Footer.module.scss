@@ -1,9 +1,10 @@
 @use '@/styles/fluid' as *;
+@use '@/styles/breakpoints' as *;
 
 .footer {
   position: relative;
-  margin-top: 120px;
-  overflow: hidden;
+  @include fluid(margin-top, 40, 120);
+  overflow: visible;
 }
 
 // ── 背景マスクオーバーレイ ──
@@ -21,14 +22,26 @@
   object-position: top center;
 }
 
+// ── アーチ上のキャラクター ──
+.sitCharacter {
+  position: absolute;
+  @include fluid(top, -184, -354);
+  left: 50%;
+  transform: translateX(-50%);
+  @include fluid(width, 150, 300);
+  @include fluid(height, 150, 300);
+  z-index: 2;
+  pointer-events: none;
+}
+
 // ── CONTACT US ボタンエリア ──
 .contactArea {
   position: relative;
   z-index: 1;
   display: flex;
   justify-content: center;
-  padding-top: 200px;
-  padding-bottom: 160px;
+  @include fluid(padding-top, 60, 200);
+  @include fluid(padding-bottom, 40, 160);
 }
 
 // ── メインコンテンツ ──
@@ -37,8 +50,13 @@
   z-index: 1;
   display: flex;
   justify-content: space-between;
-  padding-left: 200px;
-  padding-right: 200px;
+  @include fluid(padding-left, 20, 200);
+  @include fluid(padding-right, 20, 200);
+
+  @include sp {
+    flex-direction: column;
+    @include fluid(gap, 40, 60);
+  }
 }
 
 // ── 左側: ロゴ + ナビゲーション ──
@@ -48,18 +66,19 @@
 }
 
 .logoWrap {
-  margin-bottom: 60px;
+  @include fluid(margin-bottom, 24, 60);
 }
 
 .footerLogo {
   width: auto;
   height: auto;
+  max-width: 100%;
 }
 
 .mainMenu {
   display: flex;
   flex-direction: column;
-  gap: 36px;
+  @include fluid(gap, 20, 36);
   list-style: none;
 }
 
@@ -69,11 +88,11 @@
   gap: 6px;
   color: #FFF;
   font-family: var(--font-en);
-  font-size: 20px;
+  @include fluid(font-size, 14, 20);
   font-style: normal;
   font-weight: var(--font-weight-light);
   line-height: normal;
-  letter-spacing: 2.4px;
+  @include fluid(letter-spacing, 1.2, 2.4);
   transition: color var(--transition-base);
 
   &:hover {
@@ -88,19 +107,19 @@
 .subMenu {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  @include fluid(gap, 12, 24);
   list-style: none;
-  margin-top: 24px;
+  @include fluid(margin-top, 12, 24);
 }
 
 .subMenuItem {
   color: #808080;
   font-family: var(--font-en);
-  font-size: 18px;
+  @include fluid(font-size, 12, 18);
   font-style: normal;
   font-weight: var(--font-weight-light);
   line-height: normal;
-  letter-spacing: 2.16px;
+  @include fluid(letter-spacing, 1, 2.16);
   transition: color var(--transition-base);
 
   &:hover {
@@ -117,12 +136,12 @@
 .projectsTitle {
   color: #FFF;
   font-family: var(--font-en);
-  font-size: 24px;
+  @include fluid(font-size, 16, 24);
   font-style: normal;
   font-weight: var(--font-weight-light);
   line-height: normal;
-  letter-spacing: 2.88px;
-  margin-bottom: 20px;
+  @include fluid(letter-spacing, 1.4, 2.88);
+  @include fluid(margin-bottom, 12, 20);
 }
 
 .projectImages {
@@ -192,9 +211,14 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 70px;
-  margin-top: 120px;
-  padding-bottom: 50px;
+  @include fluid(gap, 24, 70);
+  @include fluid(margin-top, 40, 120);
+  @include fluid(padding-bottom, 24, 50);
+
+  @include sp {
+    flex-direction: column;
+    @include fluid(gap, 8, 16);
+  }
 }
 
 .companyName {
@@ -206,6 +230,11 @@
   font-weight: var(--font-weight-light);
   line-height: 24px;
   letter-spacing: 1.82px;
+
+  @include sp {
+    text-align: center;
+    font-size: 12px;
+  }
 }
 
 .copyright {
@@ -217,4 +246,9 @@
   font-weight: var(--font-weight-light);
   line-height: 24px;
   letter-spacing: 1.82px;
+
+  @include sp {
+    text-align: center;
+    font-size: 12px;
+  }
 }

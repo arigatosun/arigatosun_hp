@@ -13,6 +13,11 @@
   z-index: 6; // 赤モチーフ(z-index:5)の上にコンテンツを表示
   min-height: 100vh;
   overflow: hidden;
+
+  @include sp {
+    min-height: auto;
+    @include fluid(padding-bottom, 40, 80);
+  }
 }
 
 .heroContent {
@@ -21,7 +26,12 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 250px;
+  @include fluid(padding-top, 60, 160);
+
+  @include sp {
+    @include fluid(padding-left, 20, 40);
+    @include fluid(padding-right, 20, 40);
+  }
 }
 
 .heroLogo {
@@ -33,38 +43,57 @@
   width: auto;
   height: auto;
   max-width: 100%;
+
+  @include sp {
+    max-width: 80%;
+  }
 }
 
 .heroLabels {
-  margin-top: 56px;
+  @include fluid(margin-top, 24, 56);
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 32px;
+  @include fluid(gap, 12, 32);
   list-style: none;
   color: var(--color-black);
   text-align: right;
   font-family: var(--font-en);
-  font-size: 20px;
+  @include fluid(font-size, 12, 20);
   font-weight: var(--font-weight-light);
   font-style: normal;
   line-height: normal;
-  letter-spacing: 2.6px;
+  @include fluid(letter-spacing, 1.2, 2.6);
+
+  @include sp {
+    align-items: center;
+    text-align: center;
+  }
 }
 
 // ── ヒーロー右下情報 ──
 .heroInfo {
   position: absolute;
-  top: calc(80px + 710px); // Header高さ + 710px
-  right: 60px;
+  @include fluid(top, 380, 700); // Header高さ(80px) + コンテンツオフセット
+  @include fluid(right, 16, 60);
   z-index: 2;
   text-align: right;
+
+  @include sp {
+    position: relative;
+    top: auto;
+    right: auto;
+    text-align: center;
+    @include fluid(margin-top, 40, 60);
+    @include fluid(padding-left, 20, 40);
+    @include fluid(padding-right, 20, 40);
+  }
 }
 
 .heroInfoTitle {
   color: #808080;
   font-family: var(--font-en);
-  font-size: 20px;
+  @include fluid(font-size, 14, 20);
   font-weight: var(--font-weight-light);
   font-style: normal;
   line-height: 24px;
@@ -80,6 +109,10 @@
   font-style: normal;
   line-height: 24px;
   letter-spacing: 1.82px;
+
+  @include sp {
+    font-size: 12px;
+  }
 }
 
 .heroInfoCopyright {
@@ -90,9 +123,13 @@
   font-style: normal;
   line-height: 24px;
   letter-spacing: 1.82px;
+
+  @include sp {
+    font-size: 12px;
+  }
 }
 
-// 3Dシーン配置用
+// 3Dシーン・パネルアニメーション配置用
 .heroScene {
   position: absolute;
   top: 0;
@@ -127,12 +164,12 @@
   z-index: 6; // 赤モチーフ(z-index:5)の上にテキストを表示
   @include fluid(padding-top, 60, 120);
   padding-bottom: 0;
-  padding-left: 200px;
+  @include fluid(padding-left, 20, 200);
   @include fluid(padding-right, 20, 80);
 }
 
 .aboutHeader {
-  margin-bottom: 48px;
+  @include fluid(margin-bottom, 24, 48);
 }
 
 .aboutTitle {
@@ -142,17 +179,18 @@
 .aboutTitleImage {
   width: auto;
   height: auto;
+  max-width: 100%;
 }
 
 .aboutLabel {
-  margin-top: 20px;
+  @include fluid(margin-top, 10, 20);
   color: #808080;
   font-family: var(--font-en);
-  font-size: 20px;
+  @include fluid(font-size, 14, 20);
   font-weight: var(--font-weight-light);
   font-style: normal;
   line-height: 24px;
-  letter-spacing: 2.6px;
+  @include fluid(letter-spacing, 1.2, 2.6);
 }
 
 .aboutContent {
@@ -160,29 +198,29 @@
 }
 
 .aboutHeading {
-  margin-top: 116px;
+  @include fluid(margin-top, 40, 116);
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
-  font-size: 38px;
+  @include fluid(font-size, 20, 38);
   font-weight: var(--font-weight-regular);
   font-style: normal;
-  line-height: 88px;
-  letter-spacing: 30.4px;
-  margin-bottom: 48px;
+  @include fluid(line-height, 44, 88);
+  @include fluid(letter-spacing, 8, 30.4);
+  @include fluid(margin-bottom, 24, 48);
 }
 
 .aboutMessage {
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
-  font-size: 24px;
+  @include fluid(font-size, 14, 24);
   font-weight: var(--font-weight-regular);
   font-style: normal;
-  line-height: 70px;
-  letter-spacing: 4.32px;
+  @include fluid(line-height, 36, 70);
+  @include fluid(letter-spacing, 2, 4.32);
 }
 
 .aboutBlock {
-  margin-bottom: 100px;
+  @include fluid(margin-bottom, 40, 100);
 
   &:last-child {
     margin-bottom: 0;
@@ -192,10 +230,20 @@
 .aboutLastRow {
   display: flex;
   align-items: flex-end;
-  gap: 60px;
+  @include fluid(gap, 20, 60);
 
   > a {
-    margin-bottom: 110px;
+    @include fluid(margin-bottom, 40, 110);
+  }
+
+  @include sp {
+    flex-direction: column;
+    align-items: flex-start;
+
+    > a {
+      margin-bottom: 0;
+      @include fluid(margin-top, 20, 40);
+    }
   }
 }
 

@@ -1,0 +1,204 @@
+@use '@/styles/fluid' as *;
+@use '@/styles/breakpoints' as *;
+
+.page {
+  @include fluid(padding-top, 120, 200);
+}
+
+// ── プロフィールセクション ──
+.profile {
+  display: flex;
+  @include fluid(gap, 24, 80);
+  @include fluid(padding-left, 20, 200);
+  @include fluid(padding-right, 20, 200);
+
+  @include sp {
+    flex-direction: column;
+  }
+}
+
+// ── 左: 写真 ──
+.photoArea {
+  flex-shrink: 0;
+  @include fluid(width, 200, 280);
+
+  @include sp {
+    width: 60%;
+  }
+}
+
+.photo {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.photoPlaceholder {
+  width: 100%;
+  aspect-ratio: 1 / 1.1;
+  background: #D9D9D9;
+  opacity: 0.4;
+}
+
+// ── 右: テキスト情報 ──
+.info {
+  flex: 1;
+  min-width: 0;
+}
+
+.infoHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  @include sp {
+    flex-direction: column;
+    gap: 16px;
+  }
+}
+
+.infoHeaderLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.role {
+  color: #808080;
+  font-family: var(--font-en);
+  @include fluid(font-size, 12, 14);
+  font-weight: var(--font-weight-light);
+  line-height: 1.4;
+  @include fluid(letter-spacing, 1, 1.82);
+  text-transform: uppercase;
+}
+
+.name {
+  color: var(--color-black);
+  font-family: var(--font-en);
+  @include fluid(font-size, 24, 36);
+  font-weight: var(--font-weight-regular);
+  line-height: 1.2;
+  @include fluid(letter-spacing, 1.5, 3);
+  text-transform: uppercase;
+}
+
+// ── SNSリンク ──
+.socialLinks {
+  display: flex;
+  @include fluid(gap, 16, 32);
+  flex-shrink: 0;
+}
+
+.socialLink {
+  color: #808080;
+  font-family: var(--font-en);
+  @include fluid(font-size, 14, 16);
+  font-weight: var(--font-weight-light);
+  line-height: 24px;
+  letter-spacing: 2.08px;
+  text-decoration: underline;
+  text-decoration-style: solid;
+  text-underline-position: from-font;
+  transition: color var(--transition-base);
+
+  &:hover {
+    color: var(--color-primary);
+  }
+}
+
+// ── 区切り線 ──
+.divider {
+  width: 40px;
+  height: 1px;
+  background-color: var(--color-black);
+  @include fluid(margin-top, 20, 32);
+  @include fluid(margin-bottom, 20, 32);
+}
+
+// ── キャッチコピー ──
+.catchphrase {
+  color: var(--color-black);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  @include fluid(font-size, 14, 18);
+  font-weight: var(--font-weight-medium);
+  @include fluid(line-height, 24, 32);
+  @include fluid(letter-spacing, 2, 4);
+  @include fluid(margin-bottom, 16, 24);
+}
+
+// ── 自己紹介文 ──
+.description {
+  max-width: 839px;
+  color: #000;
+  font-family: 'Noto Sans JP', var(--font-jp);
+  @include fluid(font-size, 14, 16);
+  font-weight: var(--font-weight-regular);
+  @include fluid(line-height, 28, 32);
+  @include fluid(letter-spacing, 2, 3.84);
+}
+
+// ── セクションラベル（経歴・関わったプロジェクト） ──
+.sectionLabel {
+  color: #808080;
+  font-family: 'Noto Sans JP', var(--font-jp);
+  @include fluid(font-size, 14, 16);
+  font-weight: var(--font-weight-regular);
+  @include fluid(line-height, 28, 32);
+  @include fluid(letter-spacing, 1, 2.08);
+  @include fluid(margin-bottom, 12, 20);
+}
+
+// ── 経歴 ──
+.careerSection {
+  @include fluid(margin-top, 24, 48);
+}
+
+.careerText {
+  max-width: 839px;
+  color: #000;
+  font-family: 'Noto Sans JP', var(--font-jp);
+  @include fluid(font-size, 14, 16);
+  font-weight: var(--font-weight-regular);
+  @include fluid(line-height, 28, 32);
+  @include fluid(letter-spacing, 2, 3.84);
+}
+
+// ── 関わったプロジェクト ──
+.projectsSection {
+  @include fluid(margin-top, 24, 48);
+}
+
+.projectsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  @include fluid(gap, 12, 20);
+
+  @include sp {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.projectCard {
+  display: block;
+  text-decoration: none;
+  overflow: hidden;
+  transition: transform var(--transition-base);
+
+  &:hover {
+    transform: scale(1.02);
+  }
+}
+
+.projectThumbnail {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.projectPlaceholder {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: #D9D9D9;
+  opacity: 0.4;
+}

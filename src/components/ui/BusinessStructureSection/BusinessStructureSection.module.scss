@@ -1,0 +1,144 @@
+@use '@/styles/fluid' as *;
+@use '@/styles/breakpoints' as *;
+
+.section {
+  display: flex;
+  @include fluid(gap, 24, 80);
+  @include fluid(padding-left, 20, 200);
+  @include fluid(padding-right, 20, 200);
+  @include fluid(padding-top, 56, 160);
+
+  @include sp {
+    flex-direction: column;
+  }
+}
+
+// ── 左側: タイトル + 説明 ──
+.left {
+  flex: 1;
+  min-width: 0;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  @include fluid(gap, 10, 20);
+}
+
+.headerLogo {
+  width: auto;
+  height: auto;
+}
+
+.headerText {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.headerTitle {
+  color: var(--color-black);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  @include fluid(font-size, 16, 28);
+  font-weight: 500;
+  line-height: 1.2;
+  @include fluid(letter-spacing, 5, 11.2);
+}
+
+.headerSub {
+  color: #808080;
+  font-family: var(--font-en);
+  @include fluid(font-size, 12, 16);
+  font-weight: var(--font-weight-light);
+  line-height: 24px;
+  @include fluid(letter-spacing, 1, 2.08);
+}
+
+.body {
+  @include fluid(margin-top, 24, 60);
+  color: var(--color-black);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  @include fluid(font-size, 14, 16);
+  font-weight: var(--font-weight-regular);
+  @include fluid(line-height, 28, 38);
+  @include fluid(letter-spacing, 2, 4.48);
+}
+
+// ── 右側: 連携体制図 ──
+.right {
+  position: relative;
+  flex-shrink: 0;
+
+  @include sp {
+    width: 100%;
+  }
+}
+
+.structureImage {
+  width: auto;
+  height: auto;
+
+  @include sp {
+    width: 100%;
+    height: auto;
+  }
+}
+
+// ── ヒートマップグロー共通（640×640px画像基準） ──
+.heatmapGlow {
+  position: absolute;
+  width: 46.9%;                  // 300 / 640
+  height: 46.9%;                 // 300 / 640
+  background: radial-gradient(
+    circle,
+    rgba(218, 39, 25, 0.55) 0%,
+    rgba(218, 39, 25, 0.35) 22%,
+    rgba(218, 39, 25, 0.18) 42%,
+    rgba(218, 39, 25, 0.05) 62%,
+    transparent 78%
+  );
+  border-radius: 50%;
+  filter: blur(8px);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  // デフォルト位置（図の中心交差部付近）
+  left: calc(55% + 3.75%);      // 24 / 640
+  top: calc(50% + 2.8%);        // 18 / 640
+
+  @include sp {
+    width: 40%;
+    height: 40%;
+  }
+}
+
+// 浮遊アニメーション（ホバー前）
+.floating {
+  animation: float 6s ease-in-out infinite;
+  transition: left 0.6s ease-out, top 0.6s ease-out;
+}
+
+// ホバー中（カーソル追従）
+.hovering {
+  animation: none;
+  transition: left 0.1s ease-out, top 0.1s ease-out;
+}
+
+// 浮遊キーフレーム — ゆっくり円を描くように動く（%ベース: 640px基準）
+@keyframes float {
+  0% {
+    transform: translate(-50%, -50%) translate(0, 0);
+  }
+  25% {
+    transform: translate(-50%, -50%) translate(3.1%, -2.3%);   // 20/640, 15/640
+  }
+  50% {
+    transform: translate(-50%, -50%) translate(-1.6%, -3.9%);  // 10/640, 25/640
+  }
+  75% {
+    transform: translate(-50%, -50%) translate(-3.1%, 1.6%);   // 20/640, 10/640
+  }
+  100% {
+    transform: translate(-50%, -50%) translate(0, 0);
+  }
+}

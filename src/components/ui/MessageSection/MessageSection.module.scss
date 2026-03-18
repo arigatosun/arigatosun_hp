@@ -1,47 +1,52 @@
+@use '@/styles/fluid' as *;
+@use '@/styles/breakpoints' as *;
+
 .message {
-  margin-top: 410px;
+  @include fluid(margin-top, 120, 410);
   display: flex;
   flex-direction: column;
   align-items: center;
+  @include fluid(padding-left, 20, 40);
+  @include fluid(padding-right, 20, 40);
 }
 
 // ── RISE WITH THANKS. ──
 .heading {
   text-align: center;
   font-family: var(--font-en);
-  font-size: 44px;
+  @include fluid(font-size, 20, 44);
   font-style: normal;
   font-weight: var(--font-weight-light);
-  line-height: 50.688px;
-  letter-spacing: 10.56px;
+  @include fluid(line-height, 24, 51);
+  @include fluid(letter-spacing, 4, 10.56);
 }
 
 // ── メッセージ本文 ──
 .body {
-  margin-top: 140px;
-  width: 1210.44px;
-  max-width: 100%;
+  @include fluid(margin-top, 40, 140);
+  width: 100%;
+  max-width: 1210.44px;
   text-align: center;
 }
 
 .textRed {
   color: var(--color-primary);
   font-family: 'Noto Sans JP', var(--font-jp);
-  font-size: 26px;
+  @include fluid(font-size, 14, 26);
   font-style: normal;
   font-weight: var(--font-weight-regular);
-  line-height: 74px;
-  letter-spacing: 4.68px;
+  @include fluid(line-height, 36, 74);
+  @include fluid(letter-spacing, 2, 4.68);
 }
 
 .textMixed {
-  margin-top: 100px;
+  @include fluid(margin-top, 40, 100);
   font-family: 'Noto Sans JP', var(--font-jp);
-  font-size: 26px;
+  @include fluid(font-size, 14, 26);
   font-style: normal;
   font-weight: var(--font-weight-regular);
-  line-height: 74px;
-  letter-spacing: 4.68px;
+  @include fluid(line-height, 36, 74);
+  @include fluid(letter-spacing, 2, 4.68);
 }
 
 // ── カラー ──

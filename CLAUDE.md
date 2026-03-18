@@ -7,7 +7,15 @@
 - GSAP（アニメーション）
 - WordPress REST API（ニュースページのみ、後日実装）
 
-## フォント設定（重要）
+## 最重要: Fluid-First レスポンシブ開発
+
+**PC UIを実装する = レスポンシブ対応込み。固定pxは使わない。**
+
+SCSSでスケーラブルな値を書く際は必ず `@include fluid(プロパティ, min, max)` を使用する。
+Figmaのデザイン値 = max（PC値）、min（SP値）は `.claude/rules/responsive.md` の算出テーブルに従う。
+2カラム横並びには必ず `@include sp` での縦積み対応を含める。
+
+## フォント設定
 - **メインフォント**: `mozaic-geo-variable`（Adobe Fonts / TypeKit CDN経由）
 - **読み込み方法**: `src/styles/fonts.css` で `@import url('https://use.typekit.net/vpb8rae.css')` として読み込み
 - **layout.tsx** で `import '@/styles/fonts.css'` として最初に読み込む

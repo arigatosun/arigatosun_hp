@@ -1,0 +1,58 @@
+@use '@/styles/fluid' as *;
+@use '@/styles/breakpoints' as *;
+
+// パネルコンテナ（heroScene内でフルサイズ）
+.panels {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+// 各パネル共通
+.panel {
+  position: absolute;
+  will-change: transform, opacity;
+}
+
+.panelImage {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+// ── 各パネルの配置 ──
+// 左上→中央下への斜めカスケード
+// GSAP enterアニメーションで x: '10vw' にオフセットされるため、
+// CSS left は最終表示位置から -10vw した値
+
+// パネル1: 最背面・左上（左端が画面外にはみ出す）
+.panel1 {
+  top: -2%;
+  left: -15%;
+  @include fluid(width, 200, 400);
+  z-index: 1;
+}
+
+// パネル2: ロゴと重なる位置
+.panel2 {
+  top: 22%;
+  left: -2%;
+  @include fluid(width, 200, 400);
+  z-index: 2;
+}
+
+// パネル3: パネル2の下に重なる
+.panel3 {
+  top: 26%;
+  left: 8%;
+  @include fluid(width, 200, 400);
+  z-index: 3;
+}
+
+// パネル4: パネル3の右に重なる
+.panel4 {
+  top: 36%;
+  left: 25%;
+  @include fluid(width, 200, 400);
+  z-index: 4;
+}

@@ -1,24 +1,30 @@
 @use '@/styles/fluid' as *;
+@use '@/styles/breakpoints' as *;
 
 .button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 380px;
-  height: 72px;
+  @include fluid(width, 240, 380);
+  @include fluid(height, 52, 72);
   border-radius: 43.2px;
   font-family: var(--font-en);
-  font-size: 22px;
+  @include fluid(font-size, 14, 22);
   font-weight: var(--font-weight-light);
   font-style: normal;
   line-height: 19.2px;
-  letter-spacing: 2.86px;
+  @include fluid(letter-spacing, 1.4, 2.86);
   text-align: center;
   transition: all var(--transition-base);
   cursor: pointer;
   flex-shrink: 0;
   white-space: nowrap;
   box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.15), -16px 16px 28px 0 rgba(0, 0, 0, 0.16);
+
+  @include sp {
+    width: 100%;
+    max-width: 320px;
+  }
 }
 
 // デザインの「VIEW ABOUT >」等のスタイル

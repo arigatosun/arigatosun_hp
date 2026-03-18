@@ -1,8 +1,9 @@
 @use '@/styles/fluid' as *;
+@use '@/styles/breakpoints' as *;
 
 .news {
   position: relative;
-  padding-left: 200px;
+  @include fluid(padding-left, 20, 200);
   @include fluid(padding-right, 20, 80);
   @include fluid(padding-top, 60, 120);
   @include fluid(padding-bottom, 60, 120);
@@ -10,8 +11,13 @@
 
 .inner {
   display: flex;
-  gap: 140px;
+  @include fluid(gap, 40, 140);
   align-items: flex-start;
+
+  @include sp {
+    flex-direction: column;
+    @include fluid(gap, 24, 40);
+  }
 }
 
 // ── 左側 ──
@@ -19,10 +25,18 @@
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
+
+  @include sp {
+    width: 100%;
+  }
 }
 
 .header {
-  margin-bottom: 240px;
+  @include fluid(margin-bottom, 60, 240);
+
+  @include sp {
+    @include fluid(margin-bottom, 16, 24);
+  }
 }
 
 .titleLogo {
@@ -32,17 +46,18 @@
 .titleLogoImage {
   width: auto;
   height: auto;
+  max-width: 100%;
 }
 
 .label {
   margin-top: 16px;
   color: #808080;
   font-family: var(--font-en);
-  font-size: 20px;
+  @include fluid(font-size, 14, 20);
   font-weight: var(--font-weight-light);
   font-style: normal;
   line-height: 24px;
-  letter-spacing: 2.6px;
+  @include fluid(letter-spacing, 1.2, 2.6);
 }
 
 // ── カテゴリメニュー ──
@@ -50,25 +65,40 @@
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 32px;
-  margin-bottom: 56px;
+  @include fluid(gap, 16, 32);
+  @include fluid(margin-bottom, 24, 56);
+
+  @include sp {
+    flex-direction: row;
+    flex-wrap: wrap;
+    @include fluid(gap, 8, 12);
+    @include fluid(margin-bottom, 16, 24);
+  }
 }
 
 .categoryItem,
 .categoryItemActive {
   display: block;
   font-family: var(--font-en);
-  font-size: 20px;
+  @include fluid(font-size, 14, 20);
   font-weight: var(--font-weight-light);
   font-style: normal;
   line-height: 24px;
-  letter-spacing: 2.6px;
+  @include fluid(letter-spacing, 1.2, 2.6);
   cursor: pointer;
 
   span {
     display: inline;
     padding: 5px 12px;
     transition: all var(--transition-base);
+  }
+
+  @include sp {
+    @include fluid(font-size, 11, 14);
+
+    span {
+      padding: 4px 8px;
+    }
   }
 }
 
@@ -93,6 +123,10 @@
 
 .buttonWrap {
   display: flex;
+
+  @include sp {
+    display: none; // SP時はカテゴリ横にボタンは不要（下部に配置検討）
+  }
 }
 
 // ── 右側: 記事リスト ──
@@ -100,13 +134,18 @@
   flex: 1;
   min-width: 0;
   padding-top: 20px;
+
+  @include sp {
+    padding-top: 0;
+    width: 100%;
+  }
 }
 
 // ── 各記事 ──
 .article {
   display: flex;
   align-items: flex-start;
-  gap: 56px;
+  @include fluid(gap, 16, 56);
   padding: 24px 20px;
   margin: -24px -20px; // paddingの分だけ外側に広げて装飾ラインとの整合性を保つ
   border-radius: 8px;
@@ -140,6 +179,17 @@
       transform: scaleX(1);
     }
   }
+
+  @include sp {
+    flex-direction: column-reverse; // サムネイルを上に表示
+    @include fluid(gap, 12, 16);
+    padding: 16px 12px;
+    margin: -16px -12px;
+
+    &:hover {
+      transform: none; // SP時は横スライドしない
+    }
+  }
 }
 
 .articleContent {
@@ -150,11 +200,11 @@
 .articleTitle {
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
-  font-size: 20px;
+  @include fluid(font-size, 14, 20);
   font-style: normal;
   font-weight: var(--font-weight-regular);
-  line-height: 38px;
-  letter-spacing: 3.2px;
+  @include fluid(line-height, 24, 38);
+  @include fluid(letter-spacing, 1.5, 3.2);
   transition: color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   position: relative;
   padding-bottom: 4px;
@@ -175,41 +225,45 @@
 }
 
 .articleMeta {
-  margin-top: 32px;
+  @include fluid(margin-top, 16, 32);
   display: flex;
   align-items: baseline;
-  gap: 32px;
+  @include fluid(gap, 12, 32);
 }
 
 .articleDate {
   color: #808080;
   font-family: var(--font-en);
-  font-size: 20px;
+  @include fluid(font-size, 14, 20);
   font-style: normal;
   font-weight: var(--font-weight-light);
   line-height: 24px;
-  letter-spacing: 2.6px;
+  @include fluid(letter-spacing, 1.2, 2.6);
   transition: color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .articleTag {
   color: #808080;
   font-family: var(--font-en);
-  font-size: 20px;
+  @include fluid(font-size, 14, 20);
   font-style: normal;
   font-weight: var(--font-weight-light);
   line-height: 24px;
-  letter-spacing: 2.6px;
+  @include fluid(letter-spacing, 1.2, 2.6);
   transition: color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 // ── サムネイル ──
 .articleThumbnail {
   flex-shrink: 0;
-  width: 300px;
+  @include fluid(width, 120, 300);
   aspect-ratio: 300 / 169;
   overflow: hidden;
   border-radius: 4px;
+
+  @include sp {
+    width: 100%;
+  }
 }
 
 .thumbnailImage {
@@ -223,12 +277,33 @@
 .articleDivider {
   width: 100%;
   height: 1px;
-  margin-top: 40px;
+  @include fluid(margin-top, 20, 40);
   background: #808080;
   opacity: 0.3;
 }
 
 // ── 記事間のスペーサー ──
 .articleSpacer {
-  height: 70px;
+  @include fluid(height, 30, 70);
+
+  @include sp {
+    @include fluid(height, 16, 30);
+  }
+}
+
+// ── ローディング・空状態 ──
+.loadingText,
+.emptyText {
+  color: #808080;
+  font-family: var(--font-en);
+  @include fluid(font-size, 13, 16);
+  font-weight: var(--font-weight-light);
+  @include fluid(padding, 32, 60);
+}
+
+// ── サムネイルプレースホルダー ──
+.thumbnailPlaceholder {
+  width: 100%;
+  height: 100%;
+  background-color: #e8e8e8;
 }

@@ -1,0 +1,272 @@
+@use '@/styles/fluid' as *;
+@use '@/styles/breakpoints' as *;
+
+.page {
+  @include fluid(padding-top, 60, 200);
+  @include fluid(padding-bottom, 60, 120);
+  @include fluid(padding-left, 20, 200);
+  @include fluid(padding-right, 20, 200);
+  min-height: 100vh;
+}
+
+// ── 2カラムレイアウト ──
+.container {
+  display: flex;
+  @include fluid(gap, 40, 200);
+  max-width: 1400px;
+  margin: 0 auto;
+
+  @include sp {
+    flex-direction: column;
+    gap: 40px;
+  }
+}
+
+// ── 左カラム ──
+.leftColumn {
+  flex-shrink: 0;
+  @include fluid(max-width, 280, 560);
+
+  @include sp {
+    max-width: 100%;
+  }
+}
+
+.titleArea {
+  @include fluid(margin-bottom, 30, 60);
+}
+
+.titleLogo {
+  width: auto;
+  height: auto;
+  @include fluid(margin-bottom, 8, 12);
+}
+
+.subtitle {
+  color: #808080;
+  font-family: var(--font-en);
+  @include fluid(font-size, 14, 20);
+  font-weight: var(--font-weight-light);
+  font-style: normal;
+  line-height: 24px;
+  @include fluid(letter-spacing, 1.3, 2.6);
+}
+
+.description {
+  @include fluid(width, 280, 560);
+  font-family: var(--font-jp);
+  @include fluid(font-size, 14, 16);
+  font-weight: var(--font-weight-regular);
+  font-style: normal;
+  @include fluid(line-height, 24, 34);
+  @include fluid(letter-spacing, 1.28, 2.56);
+  color: var(--color-black);
+
+  @include sp {
+    width: 100%;
+  }
+}
+
+// ── 右カラム: フォーム ──
+.rightColumn {
+  flex: 1;
+  min-width: 0;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  @include fluid(gap, 16, 24);
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  @include fluid(gap, 4, 8);
+}
+
+// ラベル（日本語）
+.label {
+  color: #000;
+  font-family: var(--font-jp);
+  @include fluid(font-size, 14, 18);
+  font-weight: var(--font-weight-regular);
+  font-style: normal;
+  @include fluid(line-height, 24, 32);
+  @include fluid(letter-spacing, 2.16, 4.32);
+}
+
+// ラベル（MAIL - 英語フォント）
+.labelEn {
+  font-family: var(--font-en);
+  font-weight: var(--font-weight-light);
+}
+
+// インプットフィールド — 下線のみ
+.input {
+  width: 100%;
+  max-width: 781px;
+  @include fluid(height, 36, 40);
+  background: #FFF;
+  border: none;
+  border-bottom: 1px solid var(--color-gray-300);
+  border-radius: 0;
+  @include fluid(padding-left, 4, 8);
+  @include fluid(padding-right, 4, 8);
+  font-family: var(--font-jp);
+  @include fluid(font-size, 14, 16);
+  font-weight: var(--font-weight-regular);
+  font-style: normal;
+  @include fluid(line-height, 28, 34);
+  @include fluid(letter-spacing, 1.28, 2.56);
+  color: var(--color-black);
+  outline: none;
+  transition: border-color var(--transition-base);
+
+  &::placeholder {
+    color: var(--color-black);
+    opacity: 0.5;
+    font-family: var(--font-jp);
+    @include fluid(font-size, 14, 16);
+    font-weight: var(--font-weight-regular);
+    @include fluid(line-height, 28, 34);
+    @include fluid(letter-spacing, 1.28, 2.56);
+  }
+
+  &:focus {
+    border-bottom-color: var(--color-black);
+  }
+}
+
+// テキストエリア
+.textarea {
+  @include fluid(height, 120, 160);
+  resize: vertical;
+  @include fluid(padding-top, 8, 12);
+  border: 1px solid var(--color-gray-300);
+}
+
+// ── プライバシーポリシー同意（ページ全体の中央） ──
+.agreementArea {
+  display: flex;
+  justify-content: center;
+  @include fluid(margin-top, 32, 60);
+}
+
+.agreementLabel {
+  display: flex;
+  align-items: center;
+  @include fluid(gap, 6, 10);
+  cursor: pointer;
+}
+
+.checkbox {
+  @include fluid(width, 14, 16);
+  @include fluid(height, 14, 16);
+  cursor: pointer;
+  accent-color: var(--color-black);
+}
+
+.agreementText {
+  color: #050505;
+  font-family: var(--font-jp);
+  @include fluid(font-size, 14, 16);
+  font-weight: var(--font-weight-regular);
+  font-style: normal;
+  line-height: normal;
+  @include fluid(letter-spacing, 0.8, 1.6);
+}
+
+.privacyLink {
+  color: #00F;
+  font-family: var(--font-jp);
+  @include fluid(font-size, 14, 16);
+  font-weight: var(--font-weight-regular);
+  font-style: normal;
+  line-height: normal;
+  @include fluid(letter-spacing, 0.8, 1.6);
+  text-decoration: underline;
+  text-underline-offset: auto;
+  text-underline-position: from-font;
+  transition: opacity var(--transition-base);
+
+  &:hover {
+    opacity: 0.7;
+  }
+}
+
+// ── エラーメッセージ ──
+.errorMessage {
+  text-align: center;
+  color: var(--color-primary);
+  font-family: var(--font-jp);
+  @include fluid(font-size, 13, 14);
+  @include fluid(margin-top, 8, 12);
+}
+
+// ── 送信ボタン（ページ全体の中央） ──
+.submitArea {
+  display: flex;
+  justify-content: center;
+  @include fluid(margin-top, 20, 40);
+}
+
+.submitButton {
+  @include fluid(width, 280, 380);
+  @include fluid(height, 52, 72);
+  border-radius: 43.2px;
+  border: 1px solid var(--color-black);
+  background: #FFF;
+  color: var(--color-black);
+  text-align: center;
+  font-family: var(--font-en);
+  @include fluid(font-size, 16, 24);
+  font-weight: var(--font-weight-light);
+  font-style: normal;
+  line-height: 19.2px;
+  @include fluid(letter-spacing, 1.56, 3.12);
+  cursor: pointer;
+  transition: all var(--transition-base);
+
+  &:hover:not(:disabled) {
+    background: var(--color-black);
+    color: var(--color-white);
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  @include sp {
+    width: 100%;
+    max-width: 320px;
+  }
+}
+
+// ── 送信完了画面 ──
+.thanksContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  text-align: center;
+}
+
+.thanksTitle {
+  font-family: var(--font-en);
+  @include fluid(font-size, 28, 56);
+  font-weight: var(--font-weight-light);
+  color: var(--color-black);
+  @include fluid(margin-bottom, 16, 32);
+  @include fluid(letter-spacing, 2, 4);
+}
+
+.thanksText {
+  font-family: var(--font-jp);
+  @include fluid(font-size, 14, 18);
+  font-weight: var(--font-weight-regular);
+  @include fluid(line-height, 24, 36);
+  color: var(--color-black);
+}

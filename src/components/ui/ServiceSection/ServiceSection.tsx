@@ -77,48 +77,50 @@ export default function ServiceSection() {
     const track = trackRef.current;
     if (!section || !track) return;
 
-    // カードトラックの横スクロール量を計算（右側エリアの幅を基準）
-    const getScrollAmount = () => {
-      const rightArea = section.querySelector(`.${styles.right}`) as HTMLElement;
-      const rightWidth = rightArea ? rightArea.offsetWidth : window.innerWidth * 0.62;
-      return -(track.scrollWidth - rightWidth);
-    };
+    // gsap.matchMedia でPC時のみ横スクロールを有効化
+    const mm = gsap.matchMedia();
 
-    // GPU合成レイヤーに昇格
-    gsap.set(track, { force3D: true });
+    mm.add('(min-width: 768px)', () => {
+      // カードトラックの横スクロール量を計算（右側エリアの幅を基準）
+      const getScrollAmount = () => {
+        const rightArea = section.querySelector(`.${styles.right}`) as HTMLElement;
+        const rightWidth = rightArea ? rightArea.offsetWidth : window.innerWidth * 0.62;
+        return -(track.scrollWidth - rightWidth);
+      };
 
-    const tween = gsap.to(track, {
-      x: getScrollAmount,
-      ease: 'none',
-      force3D: true,
-      scrollTrigger: {
-        trigger: section,
-        start: 'top top',
-        end: () => `+=${Math.max(track.scrollWidth, window.innerWidth)}`,
-        pin: true,
-        scrub: 1.2, // 滑らかな追従スクロール
-        invalidateOnRefresh: true,
-        onUpdate: (self) => {
-          // スクロール進行率からアクティブなメニューを計算（DOM直接操作）
-          const progress = self.progress;
-          const menuCount = MENU_ITEMS.length;
-          const newIndex = Math.min(
-            Math.floor(progress * menuCount),
-            menuCount - 1
-          );
-          updateActiveMenu(newIndex);
+      // GPU合成レイヤーに昇格
+      gsap.set(track, { force3D: true });
+
+      gsap.to(track, {
+        x: getScrollAmount,
+        ease: 'none',
+        force3D: true,
+        scrollTrigger: {
+          trigger: section,
+          start: 'top 32px', // セクション上端がビューポート上端から32px手前でピン固定
+          end: () => `+=${Math.max(track.scrollWidth, window.innerWidth)}`,
+          pin: true,
+          scrub: 1.2, // 滑らかな追従スクロール
+          invalidateOnRefresh: true,
+          onUpdate: (self) => {
+            // スクロール進行率からアクティブなメニューを計算（DOM直接操作）
+            const progress = self.progress;
+            const menuCount = MENU_ITEMS.length;
+            const newIndex = Math.min(
+              Math.floor(progress * menuCount),
+              menuCount - 1
+            );
+            updateActiveMenu(newIndex);
+          },
         },
-      },
+      });
     });
 
-    return () => {
-      tween.scrollTrigger?.kill();
-      tween.kill();
-    };
+    return () => mm.revert();
   }, [updateActiveMenu]);
 
   return (
-    <section className={styles.service} ref={sectionRef}>
+    <section className={styles.service} ref={sectionRef} data-section="service">
       {/* 上部装飾マスク */}
       <div className={styles.decoTop}>
         <Image

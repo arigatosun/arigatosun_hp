@@ -1,3 +1,5 @@
+@use '@/styles/breakpoints' as *;
+
 .container {
   position: absolute;
   top: 0;
@@ -7,6 +9,7 @@
   pointer-events: none;
   z-index: 5; // 装飾マスク(z-index:4)の上、セクションコンテンツ(z-index:6)の下
   overflow: visible; // パララックスで上下にはみ出しても表示
+
 }
 
 .svg {

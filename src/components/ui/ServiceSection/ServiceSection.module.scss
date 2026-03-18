@@ -1,30 +1,41 @@
 @use '@/styles/fluid' as *;
+@use '@/styles/breakpoints' as *;
 
 .service {
   position: relative;
-  margin-top: 370px; // アバウトセクションとの余白
+  @include fluid(margin-top, 120, 370); // アバウトセクションとの余白
   overflow-x: clip; // 横スクロールバー防止
   overflow-y: visible; // 装飾マスクのはみ出しを許容
+
 }
 
 // ── 装飾マスク ──
-// vw基準でオフセットし、画面サイズに応じて比率を保つ
+// 2項vw式: 1920pxで元の位置(-17.6vw/-18.35vw)を正確に再現し、
+// 小さいビューポートでは+171px補正分だけマスクがセクション内に寄る
 .decoTop {
   position: absolute;
-  top: -17.6vw; // 1920px時 = -340px相当
+  top: calc(-26.5vw + 171px); // 1920px: -338px(元と同じ) / 1200px: -147px / 1024px: -100px
   left: 0;
   width: 100%;
   z-index: 4;
   pointer-events: none;
+
+  @include sp {
+    display: none;
+  }
 }
 
 .decoBottom {
   position: absolute;
-  bottom: -18.35vw; // 1920px時 = -355px相当
+  bottom: calc(-27.3vw + 171px); // 1920px: -353px(元と同じ) / 1200px: -157px / 1024px: -109px
   left: 0;
   width: 100%;
   z-index: 4;
   pointer-events: none;
+
+  @include sp {
+    display: none;
+  }
 }
 
 .decoImage {
@@ -38,16 +49,31 @@
   display: flex;
   min-height: 100vh;
   position: relative;
+  overflow: visible;
+
+  // GSAP横スクロールは1024px以上のみ → それ未満は縦積み
+  @include sp {
+    flex-direction: column;
+    min-height: auto;
+  }
 }
 
 // ── 左側（sticky） ──
 .left {
-  width: 45%;
+  width: 50%;
   flex-shrink: 0;
   display: flex;
   align-items: center;
-  padding-left: 8.3vw; // 1920px時 = 160px相当
-  padding-right: 3.1vw; // 1920px時 = 60px相当
+  padding-left: 8.3vw; // 1920px時 = 160px相当（vw基準で自動スケール）
+  padding-right: 2vw;
+
+  @include sp {
+    width: 100%;
+    @include fluid(padding-left, 20, 40);
+    @include fluid(padding-right, 20, 40);
+    @include fluid(padding-top, 40, 60);
+    @include fluid(padding-bottom, 24, 40);
+  }
 }
 
 .leftContent {
@@ -62,54 +88,63 @@
 .titleLogoImage {
   width: auto;
   height: auto;
+  max-width: 10vw; // 1920px時 = 192px相当、ビューポートに応じて縮小
+  min-width: 120px;
 }
 
 .label {
-  margin-top: 16px;
+  @include fluid(margin-top, 8, 12);
   color: #808080;
   font-family: var(--font-en);
-  font-size: 20px;
+  @include fluid(font-size, 12, 16);
   font-weight: var(--font-weight-light);
   font-style: normal;
-  line-height: 24px;
-  letter-spacing: 2.6px;
+  @include fluid(line-height, 18, 22);
+  @include fluid(letter-spacing, 1, 2);
 }
 
 .description {
-  margin-top: 48px;
+  @include fluid(margin-top, 16, 32);
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
-  font-size: 24px;
+  @include fluid(font-size, 13, 20);
   font-weight: var(--font-weight-regular);
   font-style: normal;
-  line-height: 52px;
-  letter-spacing: 3.12px;
+  @include fluid(line-height, 26, 44);
+  @include fluid(letter-spacing, 0.5, 1);
 }
 
 // ── メニューリスト ──
 .menuList {
-  margin-top: 48px;
+  @include fluid(margin-top, 16, 32);
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 32px;
-  margin-bottom: 48px;
+  @include fluid(gap, 10, 20);
+  @include fluid(margin-bottom, 16, 32);
+
+  @include sp {
+    display: none; // 1024px未満はメニューリスト非表示（カード縦積みのため）
+  }
 }
 
 .menuItem,
 .menuItemActive {
   display: block;
   font-family: var(--font-en);
-  font-size: 20px;
+  @include fluid(font-size, 12, 16);
   font-weight: var(--font-weight-light);
   font-style: normal;
-  line-height: 24px;
-  letter-spacing: 2.6px;
+  @include fluid(line-height, 18, 22);
+  @include fluid(letter-spacing, 1, 2);
   cursor: pointer;
 
   span {
     display: inline;
-    padding: 5px 12px;
+    @include fluid(padding-top, 3, 5);
+    @include fluid(padding-bottom, 3, 5);
+    @include fluid(padding-left, 6, 10);
+    @include fluid(padding-right, 6, 10);
     transition: all var(--transition-base);
   }
 }
@@ -140,11 +175,25 @@
   overflow: visible; // カードが左側コンテンツの上をスクロールして通過するのを許容
   display: flex;
   align-items: center;
+
+  @include sp {
+    overflow: hidden;
+    @include fluid(padding-left, 20, 40);
+    @include fluid(padding-right, 20, 40);
+  }
 }
 
 .cardsTrack {
   display: flex;
-  gap: 1.67vw; // 1920px時 = 32px相当
+  gap: 1.67vw; // 1920px時 = 32px相当（vw基準で自動スケール）
   padding-right: 10.4vw; // 1920px時 = 200px相当
   will-change: transform; // GPU合成レイヤーで滑らかな横スクロール
+
+  @include sp {
+    flex-direction: column;
+    @include fluid(gap, 20, 32);
+    padding-right: 0;
+    will-change: auto;
+    width: 100%;
+  }
 }
