@@ -8,14 +8,11 @@ import WorksSection from '@/components/ui/WorksSection';
 import NewsSection from '@/components/ui/NewsSection';
 import LogoSlider from '@/components/ui/LogoSlider';
 import MessageSection from '@/components/ui/MessageSection';
-import GlobalCanvasLoader from '@/components/three/GlobalCanvasLoader';
-import HeroAnimation from '@/components/ui/HeroAnimation';
+import FooterCharacterLoader from '@/components/three/FooterCharacterLoader';
 
 export default function Home() {
   return (
     <div className={styles.page}>
-      {/* トップページ専用グローバル3Dキャンバス（ヒーロー歩行キャラ） */}
-      <GlobalCanvasLoader />
       {/* 赤モチーフ（ページレベルで配置、セクション間をまたいで表示） */}
       <ParallaxMotifs />
 
@@ -33,11 +30,16 @@ export default function Home() {
             />
           </h1>
 
-          <ul className={styles.heroLabels}>
-            <li>AI / DEVELOPMENT</li>
-            <li>DESIGN / BRANDING</li>
-            <li>IP / CREATIVE</li>
-          </ul>
+          <div className={styles.heroLabelsArea}>
+            <div className={styles.heroCharacter}>
+              <FooterCharacterLoader />
+            </div>
+            <ul className={styles.heroLabels}>
+              <li>AI / DEVELOPMENT</li>
+              <li>DESIGN / BRANDING</li>
+              <li>IP / CREATIVE</li>
+            </ul>
+          </div>
         </div>
 
         <div className={styles.heroInfo}>
@@ -48,10 +50,6 @@ export default function Home() {
           <p className={styles.heroInfoCopyright}>&copy; 2026 ARIGATOSUN. ALL RIGHTS RESEAVED.</p>
         </div>
 
-        {/* ロゴパネルアニメーション */}
-        <div className={styles.heroScene}>
-          <HeroAnimation />
-        </div>
       </section>
 
       {/* ── アバウトセクション ── */}

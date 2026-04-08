@@ -4,7 +4,6 @@ import { useEffect, useRef } from 'react';
 import Image from 'next/image';
 import styles from './WorksSection.module.scss';
 import Button from '@/components/ui/Button';
-import FooterCharacterLoader from '@/components/three/FooterCharacterLoader';
 
 type WorkItem = {
   id: string;
@@ -142,10 +141,6 @@ export default function WorksSection() {
 
       {/* 下部: キャラクター + テキスト + ボタン */}
       <div className={styles.footer}>
-        <div className={styles.footerCharacter}>
-          <FooterCharacterLoader />
-        </div>
-
         <div className={styles.footerText}>
           <p className={styles.footerServices}>
             AI / DEVELOPMENT / APPLICATION / DESIGN / UI / UX / BRANDING /<br />
