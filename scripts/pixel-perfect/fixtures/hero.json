@@ -1,0 +1,22 @@
+{
+  "section": "hero",
+  "viewportWidth": 1920,
+  "source": "manual",
+  "_comment": "Phase 1 動作確認用フィクスチャ。実際のFigma値はPhase 2でMCPから取得する。",
+  "elements": [
+    {
+      "key": "heroLogoImage",
+      "description": "アリガトサンメインロゴ画像",
+      "expected": {
+        "width": 575
+      }
+    },
+    {
+      "key": "heroLabels",
+      "description": "AI/DEVELOPMENT 等のラベルリスト",
+      "expected": {
+        "fontSize": 17.7
+      }
+    }
+  ]
+}

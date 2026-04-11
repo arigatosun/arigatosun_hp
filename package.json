@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "pp:capture": "tsx scripts/pixel-perfect/capture/run.ts",
+    "pp:compare": "tsx scripts/pixel-perfect/compare/run.ts"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.7",
@@ -26,6 +28,8 @@
     "@types/three": "^0.183.1",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
+    "playwright": "^1.59.1",
+    "tsx": "^4.21.0",
     "typescript": "^5"
   }
 }

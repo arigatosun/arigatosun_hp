@@ -1,0 +1,30 @@
+{
+  "section": "hero",
+  "viewportWidth": 1920,
+  "source": "manual",
+  "_comment": "このファイルは Phase 1 動作確認用のサンプルです。Phase 2 で Figma Dev Mode MCP から自動生成する予定。key は SCSS モジュールの元クラス名と一致させること。",
+  "elements": [
+    {
+      "key": "heroLogoImage",
+      "description": "アリガトサンメインロゴ画像",
+      "expected": {
+        "width": 575
+      }
+    },
+    {
+      "key": "heroLabels",
+      "description": "AI/DEVELOPMENT 等のラベルリスト",
+      "expected": {
+        "fontSize": 17.7
+      }
+    },
+    {
+      "key": "heroInfoTitle",
+      "description": "RISE WITH THANKS タイトル",
+      "expected": {
+        "fontSize": 20,
+        "marginBottom": 4
+      }
+    }
+  ]
+}
