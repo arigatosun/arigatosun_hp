@@ -1,0 +1,27 @@
+@use '@/styles/fluid' as *;
+@use '@/styles/breakpoints' as *;
+
+.wrapper {
+  @include fluid(margin-top, 12, 20);
+  @include fluid(margin-bottom, 24, 48);
+}
+
+.titleLogo {
+  display: flex;
+}
+
+.titleLogoImage {
+  @include fluid(width, 100, 220);
+  height: auto;
+}
+
+.label {
+  @include fluid(margin-top, 10, 20);
+  color: #808080;
+  font-family: var(--font-en);
+  @include fluid(font-size, 14, 20);
+  font-weight: var(--font-weight-light);
+  font-style: normal;
+  line-height: 24px;
+  @include fluid(letter-spacing, 1.2, 2.6);
+}

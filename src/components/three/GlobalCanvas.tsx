@@ -30,15 +30,6 @@ export default function GlobalCanvas() {
       <directionalLight position={[0, 0, 10]} intensity={0.8} />
 
       <Suspense fallback={null}>
-        {/* Hero: 左→右に歩行 */}
-        <WalkingCharacter
-          glbPath={GLB_PATH}
-          direction="left-to-right"
-          speed={1.8}
-          sectionSelector='[data-section="hero"]'
-          baseY={-0.8}
-          scale={0.6}
-        />
         {/* Service: 右→左に歩行（セクション表示時にトリガー） */}
         <WalkingCharacter
           glbPath={GLB_PATH}
@@ -46,7 +37,7 @@ export default function GlobalCanvas() {
           speed={1.8}
           sectionSelector='[data-section="service"]'
           triggerOnVisible
-          baseY={-2.5}
+          baseY={-2.8}
           scale={0.6}
         />
       </Suspense>

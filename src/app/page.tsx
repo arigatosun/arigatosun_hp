@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import styles from './page.module.scss';
 import Button from '@/components/ui/Button';
+import SectionTitle from '@/components/ui/SectionTitle';
 import RevealText, { RevealBlock, RevealLine } from '@/components/ui/RevealText';
 import ParallaxMotifs from '@/components/ui/ParallaxMotifs';
 import ServiceSection from '@/components/ui/ServiceSection';
@@ -8,11 +9,14 @@ import WorksSection from '@/components/ui/WorksSection';
 import NewsSection from '@/components/ui/NewsSection';
 import LogoSlider from '@/components/ui/LogoSlider';
 import MessageSection from '@/components/ui/MessageSection';
+import GlobalCanvasLoader from '@/components/three/GlobalCanvasLoader';
 import FooterCharacterLoader from '@/components/three/FooterCharacterLoader';
 
 export default function Home() {
   return (
     <div className={styles.page}>
+      {/* サービスセクション歩行キャラ用3Dキャンバス */}
+      <GlobalCanvasLoader />
       {/* 赤モチーフ（ページレベルで配置、セクション間をまたいで表示） */}
       <ParallaxMotifs />
 
@@ -54,18 +58,13 @@ export default function Home() {
 
       {/* ── アバウトセクション ── */}
       <section className={styles.about}>
-        <div className={styles.aboutHeader}>
-          <h2 className={styles.aboutTitle}>
-            <Image
-              src="/images/top/about-title.png"
-              alt="アバウト"
-              width={216}
-              height={48}
-              className={styles.aboutTitleImage}
-            />
-          </h2>
-          <p className={styles.aboutLabel}>ABOUT</p>
-        </div>
+        <SectionTitle
+          src="/images/top/about-title.png"
+          alt="アバウト"
+          width={216}
+          height={48}
+          label="ABOUT"
+        />
 
         <div className={styles.aboutContent}>
           <h3 className={styles.aboutHeading}>感謝とともに昇る。</h3>
@@ -89,7 +88,7 @@ export default function Home() {
                 <RevealLine>心が躍り、思わず理性が吹き飛ぶような「想像を超えた」瞬間。</RevealLine>
                 <RevealLine>そこにこそ本当の「ありがとう」が宿ると信じ、この社名を名付けました。</RevealLine>
                 <RevealLine>妥協なき愛で、世を照らす太陽であれ。</RevealLine>
-                <RevealLine>正解を超えるような体験を創造するために、私たちは挑戦を続けます。</RevealLine>
+                <RevealLine>正解を超える体験を創造するために、私たちは挑戦を続けます。</RevealLine>
               </RevealBlock>
 
               <Button href="/about">VIEW ABOUT &gt;</Button>

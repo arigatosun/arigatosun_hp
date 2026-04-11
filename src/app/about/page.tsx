@@ -6,6 +6,7 @@ import styles from './page.module.scss';
 import PrinciplesSection from '@/components/ui/PrinciplesSection';
 import BusinessStructureSection from '@/components/ui/BusinessStructureSection';
 import MemberSection from '@/components/ui/MemberSection';
+import SectionTitle from '@/components/ui/SectionTitle';
 
 export default function AboutPage() {
   const handleScrollTo = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
@@ -53,19 +54,14 @@ export default function AboutPage() {
 
       {/* フィロソフィーセクション */}
       <section id="philosophy" className={styles.philosophySection}>
-        <div className={styles.sectionHeader}>
-          <h1 className={styles.titleLogo}>
-            <Image
-              src="/images/about/aboutsectiontitle.png"
-              alt="アバウト"
-              width={216}
-              height={48}
-              priority
-              className={styles.titleLogoImage}
-            />
-          </h1>
-          <p className={styles.label}>ABOUT</p>
-        </div>
+        <SectionTitle
+          src="/images/about/aboutsectiontitle.png"
+          alt="アバウト"
+          width={216}
+          height={48}
+          label="ABOUT"
+          as="h1"
+        />
 
         <h2 className={styles.heading}>妥協なき愛で、世を照らす太陽であれ。</h2>
 

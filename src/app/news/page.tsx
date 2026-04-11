@@ -4,6 +4,7 @@ import { useRef, useCallback, useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import styles from './page.module.scss';
+import SectionTitle from '@/components/ui/SectionTitle';
 import type { NewsItem } from '@/lib/wordpress';
 
 const API_URL = process.env.NEXT_PUBLIC_WORDPRESS_API_URL || '';
@@ -157,16 +158,14 @@ export default function NewsPage() {
         {/* 左側: タイトル + カテゴリ + CONTACT */}
         <div className={styles.left}>
           <div className={styles.header}>
-            <h1 className={styles.titleLogo}>
-              <Image
-                src="/images/top/newstitlelogo.png"
-                alt="ニュース"
-                width={183}
-                height={45}
-                className={styles.titleLogoImage}
-              />
-            </h1>
-            <p className={styles.label}>NEWS</p>
+            <SectionTitle
+              src="/images/top/newstitlelogo.png"
+              alt="ニュース"
+              width={183}
+              height={45}
+              label="NEWS"
+              as="h1"
+            />
           </div>
 
           <ul className={styles.categoryList} ref={menuRef}>

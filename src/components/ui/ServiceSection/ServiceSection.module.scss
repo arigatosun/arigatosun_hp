@@ -3,7 +3,7 @@
 
 .service {
   position: relative;
-  @include fluid(margin-top, 120, 370); // アバウトセクションとの余白
+  @include fluid(margin-top, 80, 250);
   overflow-x: clip; // 横スクロールバー防止
   overflow-y: visible; // 装飾マスクのはみ出しを許容
 
@@ -14,7 +14,7 @@
 // 小さいビューポートでは+171px補正分だけマスクがセクション内に寄る
 .decoTop {
   position: absolute;
-  top: calc(-26.5vw + 171px); // 1920px: -338px(元と同じ) / 1200px: -147px / 1024px: -100px
+  top: calc(-26.5vw + 197px);
   left: 0;
   width: 100%;
   z-index: 4;
@@ -27,7 +27,7 @@
 
 .decoBottom {
   position: absolute;
-  bottom: calc(-27.3vw + 171px); // 1920px: -353px(元と同じ) / 1200px: -157px / 1024px: -109px
+  bottom: calc(-27.3vw + 145px);
   left: 0;
   width: 100%;
   z-index: 4;
@@ -63,8 +63,9 @@
   width: 50%;
   flex-shrink: 0;
   display: flex;
-  align-items: center;
-  padding-left: 8.3vw; // 1920px時 = 160px相当（vw基準で自動スケール）
+  align-items: flex-start;
+  @include fluid(padding-left, 20, 200);
+  @include fluid(padding-top, 40, 80);
   padding-right: 2vw;
 
   @include sp {
@@ -81,47 +82,57 @@
   flex-direction: column;
 }
 
-.titleLogo {
-  display: flex;
-}
+.sectionTitle {
+  margin-top: 102px;
+  margin-bottom: 0;
 
-.titleLogoImage {
-  width: auto;
-  height: auto;
-  max-width: 10vw; // 1920px時 = 192px相当、ビューポートに応じて縮小
-  min-width: 120px;
+  img {
+    @include fluid(width, 80, 180);
+  }
+
+  p {
+    margin-top: 22px;
+  }
 }
 
 .label {
-  @include fluid(margin-top, 8, 12);
+  @include fluid(margin-top, 10, 20);
   color: #808080;
   font-family: var(--font-en);
-  @include fluid(font-size, 12, 16);
+  @include fluid(font-size, 14, 20);
   font-weight: var(--font-weight-light);
   font-style: normal;
-  @include fluid(line-height, 18, 22);
-  @include fluid(letter-spacing, 1, 2);
+  line-height: 24px;
+  @include fluid(letter-spacing, 1.2, 2.6);
 }
 
 .description {
-  @include fluid(margin-top, 16, 32);
+  @include fluid(margin-top, 23, 62);
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
   @include fluid(font-size, 13, 20);
   font-weight: var(--font-weight-regular);
   font-style: normal;
-  @include fluid(line-height, 26, 44);
-  @include fluid(letter-spacing, 0.5, 1);
+  @include fluid(line-height, 30, 54);
+
+  p:nth-child(2) {
+    margin-top: -6px;
+  }
+
+  p:nth-child(3) {
+    margin-top: -10px;
+  }
+  @include fluid(letter-spacing, 1.8, 4.3);
 }
 
 // ── メニューリスト ──
 .menuList {
-  @include fluid(margin-top, 16, 32);
+  @include fluid(margin-top, 24, 50);
   list-style: none;
   display: flex;
   flex-direction: column;
-  @include fluid(gap, 10, 20);
-  @include fluid(margin-bottom, 16, 32);
+  @include fluid(gap, 13, 34);
+  @include fluid(margin-bottom, 29, 62);
 
   @include sp {
     display: none; // 1024px未満はメニューリスト非表示（カード縦積みのため）
@@ -132,17 +143,18 @@
 .menuItemActive {
   display: block;
   font-family: var(--font-en);
-  @include fluid(font-size, 12, 16);
+  @include fluid(font-size, 14, 19);
   font-weight: var(--font-weight-light);
   font-style: normal;
-  @include fluid(line-height, 18, 22);
-  @include fluid(letter-spacing, 1, 2);
+  @include fluid(line-height, 16, 19);
+  @include fluid(letter-spacing, 1.4, 2.8);
   cursor: pointer;
 
   span {
-    display: inline;
-    @include fluid(padding-top, 3, 5);
-    @include fluid(padding-bottom, 3, 5);
+    display: inline-block;
+    padding-top: 0;
+    padding-bottom: 0;
+    line-height: 0.9;
     @include fluid(padding-left, 6, 10);
     @include fluid(padding-right, 6, 10);
     transition: all var(--transition-base);
@@ -171,10 +183,12 @@
 // ── 右側（カードエリア） ──
 .right {
   flex: 1;
-  min-width: 0; // overflow:visibleのflex itemはmin-width:autoでコンテンツ幅に広がるため必須
-  overflow: visible; // カードが左側コンテンツの上をスクロールして通過するのを許容
+  min-width: 0;
+  overflow: visible;
   display: flex;
   align-items: center;
+  margin-left: -38px;
+  padding-top: 30px;
 
   @include sp {
     overflow: hidden;
@@ -185,7 +199,7 @@
 
 .cardsTrack {
   display: flex;
-  gap: 1.67vw; // 1920px時 = 32px相当（vw基準で自動スケール）
+  gap: 0.73vw;
   padding-right: 10.4vw; // 1920px時 = 200px相当
   will-change: transform; // GPU合成レイヤーで滑らかな横スクロール
 

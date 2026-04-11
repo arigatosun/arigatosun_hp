@@ -4,7 +4,7 @@
 .card {
   position: relative;
   // 1920px基準のvw換算（630/1920 = 32.8vw, 860/1920 = 44.8vw）
-  width: 32.8vw;
+  width: 31.97vw;
   height: 44.8vw;
   flex-shrink: 0;
   overflow: hidden;
@@ -43,8 +43,8 @@
   left: 0;
   width: 100%;
   height: 100%;
-  opacity: 0.85;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.50) 0%, #000 62.02%);
+  opacity: 0.55;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.30) 0%, #000 62.02%);
   background-blend-mode: multiply;
   mix-blend-mode: multiply;
   z-index: 2;
@@ -61,7 +61,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 13.5vw 2.7vw 4.7vw; // 1920px: 260px 52px 90px
+  padding: 14.9vw 2.7vw 4.7vw 3.1vw;
 
   @include sp {
     @include fluid(padding-top, 24, 60);
@@ -79,7 +79,7 @@
   gap: 0.2vw; // 1920px: 4px
   color: #FFF;
   font-family: var(--font-en);
-  font-size: 1.46vw; // 1920px: 28px
+  font-size: 0.9vw;
   font-weight: var(--font-weight-light);
   font-style: normal;
   line-height: 1.2;
@@ -102,7 +102,7 @@
 .viewButtonLine {
   display: inline;
   background-color: var(--color-primary);
-  padding: 0.42vw 0.63vw; // 1920px: 8px 12px
+  padding: 0 0.4vw 0 0.1vw;
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
 
@@ -140,7 +140,7 @@
   margin-top: 1vw; // 1920px: 19px
   color: #FFF;
   font-family: var(--font-en);
-  font-size: 1.77vw; // 1920px: 34px
+  font-size: 1.4vw;
   font-weight: var(--font-weight-light);
   font-style: normal;
   line-height: 1.2;

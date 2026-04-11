@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
 import styles from './page.module.scss';
+import SectionTitle from '@/components/ui/SectionTitle';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -74,15 +74,14 @@ export default function ContactPage() {
         {/* 左カラム: タイトル + 説明 */}
         <div className={styles.leftColumn}>
           <div className={styles.titleArea}>
-            <Image
+            <SectionTitle
               src="/images/contact/contact_titlelogo.png"
               alt="CONTACT"
               width={250}
               height={37}
-              className={styles.titleLogo}
-              priority
+              label="CONTACT US"
+              as="h1"
             />
-            <p className={styles.subtitle}>CONTACT US</p>
           </div>
           <p className={styles.description}>
             アリガトサンにご関心をお寄せいただきありがとうございます。

@@ -8,6 +8,7 @@ import styles from './ServiceSection.module.scss';
 import ServiceCard from './ServiceCard';
 import type { ServiceCardData } from './ServiceCard';
 import Button from '@/components/ui/Button';
+import SectionTitle from '@/components/ui/SectionTitle';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -45,10 +46,14 @@ const SERVICE_CARDS: ServiceCardData[] = [
 ];
 
 const MENU_ITEMS = [
-  '・AI / DEVELOPMENT >',
-  '・DESIGN / BRANDING >',
-  '・IP / CREATIVE >',
+  '· AI / DEVELOPMENT >',
+  '· DESIGN / BRANDING >',
+  '· IP / CREATIVE >',
 ];
+
+// スクロール連動の横スクロールアニメーションを有効にするフラグ
+// true: アニメーション有効 / false: アニメーション停止（静的表示）
+const ENABLE_SCROLL_ANIMATION = false;
 
 export default function ServiceSection() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -73,6 +78,8 @@ export default function ServiceSection() {
   }, []);
 
   useEffect(() => {
+    if (!ENABLE_SCROLL_ANIMATION) return;
+
     const section = sectionRef.current;
     const track = trackRef.current;
     if (!section || !track) return;
@@ -97,13 +104,12 @@ export default function ServiceSection() {
         force3D: true,
         scrollTrigger: {
           trigger: section,
-          start: 'top 32px', // セクション上端がビューポート上端から32px手前でピン固定
+          start: 'top 32px',
           end: () => `+=${Math.max(track.scrollWidth, window.innerWidth)}`,
           pin: true,
-          scrub: 1.2, // 滑らかな追従スクロール
+          scrub: 1.2,
           invalidateOnRefresh: true,
           onUpdate: (self) => {
-            // スクロール進行率からアクティブなメニューを計算（DOM直接操作）
             const progress = self.progress;
             const menuCount = MENU_ITEMS.length;
             const newIndex = Math.min(
@@ -137,20 +143,18 @@ export default function ServiceSection() {
         {/* 左側: sticky コンテンツ */}
         <div className={styles.left}>
           <div className={styles.leftContent}>
-            <h2 className={styles.titleLogo}>
-              <Image
-                src="/images/top/servicetitlelogo.png"
-                alt="サービス"
-                width={203}
-                height={47}
-                className={styles.titleLogoImage}
-              />
-            </h2>
-            <p className={styles.label}>SERVICE</p>
+            <SectionTitle
+              src="/images/top/servicetitlelogo.png"
+              alt="サービス"
+              width={203}
+              height={47}
+              label="SERVICE"
+              className={styles.sectionTitle}
+            />
 
             <div className={styles.description}>
               <p>最先端のAI開発技術で、アイデアや理想を形に。</p>
-              <p>デザイン・ブランディングで、世の中に届けるところまで。</p>
+              <p>ブランディングで、世の中に届けるところまで。</p>
               <p>構想からリリースまで一気通貫で進めます。</p>
             </div>
 

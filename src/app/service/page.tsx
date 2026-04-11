@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import Button from '@/components/ui/Button';
+import SectionTitle from '@/components/ui/SectionTitle';
 import styles from './page.module.scss';
 
 const services = [
@@ -87,17 +88,14 @@ export default function ServicePage() {
       <section className={styles.hero}>
         <div className={styles.heroLeft}>
           <div className={styles.sectionHeader}>
-            <h1 className={styles.titleLogo}>
-              <Image
-                src="/images/top/servicetitlelogo.png"
-                alt="サービス"
-                width={216}
-                height={48}
-                priority
-                className={styles.titleLogoImage}
-              />
-            </h1>
-            <p className={styles.label}>SERVICE</p>
+            <SectionTitle
+              src="/images/top/servicetitlelogo.png"
+              alt="サービス"
+              width={216}
+              height={48}
+              label="SERVICE"
+              as="h1"
+            />
           </div>
 
           <div className={styles.heroBody}>

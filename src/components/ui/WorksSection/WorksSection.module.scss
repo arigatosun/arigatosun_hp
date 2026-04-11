@@ -3,36 +3,24 @@
 
 .works {
   position: relative;
+  z-index: 5;
   @include fluid(padding-left, 20, 200);
   @include fluid(padding-right, 20, 80);
-  @include fluid(padding-top, 60, 120);
+  @include fluid(padding-top, 52, 104);
   @include fluid(padding-bottom, 60, 120);
 }
 
 // ── ヘッダー ──
 .header {
-  @include fluid(margin-bottom, 40, 120);
+  @include fluid(margin-bottom, 43, 130);
 }
 
-.titleLogo {
-  display: flex;
-}
+.sectionTitle {
+  margin-top: 161px;
 
-.titleLogoImage {
-  width: auto;
-  height: auto;
-  max-width: 100%;
-}
-
-.label {
-  @include fluid(margin-top, 8, 16);
-  color: #808080;
-  font-family: var(--font-en);
-  @include fluid(font-size, 14, 20);
-  font-weight: var(--font-weight-light);
-  font-style: normal;
-  @include fluid(line-height, 20, 24);
-  @include fluid(letter-spacing, 1.2, 2.6);
+  img {
+    @include fluid(width, 75, 183);
+  }
 }
 
 // ── 実績アイテム ──
@@ -53,47 +41,74 @@
 }
 
 .itemSpaced {
-  @include fluid(margin-top, 60, 180);
+  @include fluid(margin-top, 90, 280);
 }
 
 // ── 左側テキスト ──
 .itemLeft {
   flex: 1;
   min-width: 0;
+  padding-top: 20px;
 }
 
 .client {
   color: #808080;
   font-family: var(--font-en);
-  @include fluid(font-size, 13, 16);
+  @include fluid(font-size, 15, 20);
   font-style: normal;
   font-weight: var(--font-weight-light);
-  @include fluid(line-height, 20, 24);
-  @include fluid(letter-spacing, 1.5, 2.08);
+  @include fluid(line-height, 22, 28);
+  @include fluid(letter-spacing, 1.7, 2.6);
+  margin-top: 12px;
+}
+
+.clientName {
+  @include fluid(font-size, 14, 18);
+  font-weight: var(--font-weight-regular);
+  @include fluid(letter-spacing, 1.5, 2.4);
 }
 
 .itemTitle {
-  @include fluid(margin-top, 12, 36);
+  @include fluid(margin-top, 9, 30);
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
-  @include fluid(font-size, 14, 24);
+  @include fluid(font-size, 12, 20);
   font-style: normal;
   font-weight: var(--font-weight-regular);
-  @include fluid(line-height, 24, 48);
+  @include fluid(line-height, 22, 44);
   @include fluid(letter-spacing, 1, 3.12);
+}
+
+.separatorWrap {
+  letter-spacing: 0;
+  word-spacing: 0;
+  margin: 0 3.5px;
+}
+
+.separator {
+  letter-spacing: 0;
+}
+
+.afterSeparator {
+  @include fluid(letter-spacing, 1.4, 3.2);
+}
+
+.lastLine {
+  display: block;
+  margin-top: -6px;
 }
 
 // ── 横ライン装飾 ──
 .divider {
-  @include fluid(margin-top, 20, 40);
-  @include fluid(width, 30, 52);
+  @include fluid(margin-top, 26, 52);
+  @include fluid(width, 25, 43);
   height: 1px;
   background: var(--color-black);
 }
 
 // ── 詳細情報 ──
 .detailsList {
-  @include fluid(margin-top, 20, 50);
+  @include fluid(margin-top, 17, 44);
   display: flex;
   flex-direction: column;
   @include fluid(gap, 2, 4);
@@ -115,7 +130,7 @@
   font-style: normal;
   font-weight: var(--font-weight-light);
   @include fluid(line-height, 20, 24);
-  @include fluid(letter-spacing, 1.5, 2.08);
+  @include fluid(letter-spacing, 1.8, 2.7);
   flex-shrink: 0;
 }
 
@@ -126,14 +141,16 @@
   font-style: normal;
   font-weight: var(--font-weight-regular);
   @include fluid(line-height, 22, 32);
-  @include fluid(letter-spacing, 1.5, 2.08);
+  @include fluid(letter-spacing, 1.8, 2.7);
 }
 
 // ── 右側画像 ──
 .itemRight {
-  width: 55%; // 画像エリアをビューポートに応じて縮小
+  width: 55%;
   flex-shrink: 0;
-  @include fluid(margin-top, -30, -60); // 画像を上にオフセット
+  @include fluid(margin-top, -22, -44);
+  transform: translateX(-48px);
+  width: 58%;
 
   @include max(1023px) {
     width: 100%;

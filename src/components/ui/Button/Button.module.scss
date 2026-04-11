@@ -5,11 +5,11 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  @include fluid(width, 240, 380);
-  @include fluid(height, 52, 72);
+  @include fluid(width, 220, 340);
+  @include fluid(height, 48, 64);
   border-radius: 43.2px;
   font-family: var(--font-en);
-  @include fluid(font-size, 14, 22);
+  @include fluid(font-size, 13, 19);
   font-weight: var(--font-weight-light);
   font-style: normal;
   line-height: 19.2px;
