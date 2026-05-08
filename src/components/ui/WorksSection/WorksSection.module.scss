@@ -52,7 +52,7 @@
 }
 
 .client {
-  color: #808080;
+  color: var(--color-text-secondary);
   font-family: var(--font-en);
   @include fluid(font-size, 15, 20);
   font-style: normal;
@@ -124,7 +124,7 @@
 }
 
 .detailLabel {
-  color: #808080;
+  color: var(--color-text-secondary);
   font-family: var(--font-en);
   @include fluid(font-size, 13, 16);
   font-style: normal;
@@ -135,7 +135,7 @@
 }
 
 .detailValue {
-  color: #808080;
+  color: var(--color-text-secondary);
   font-family: 'Noto Sans JP', var(--font-jp);
   @include fluid(font-size, 13, 16);
   font-style: normal;
@@ -202,7 +202,7 @@
 
 .viewMoreText {
   display: inline;
-  color: #FFF;
+  color: var(--color-white);
   font-family: var(--font-en);
   @include fluid(font-size, 14, 28);
   font-style: normal;
@@ -257,7 +257,7 @@
 }
 
 .footerServices {
-  color: #808080;
+  color: var(--color-text-secondary);
   text-align: right;
   font-family: var(--font-en);
   @include fluid(font-size, 11, 14);
@@ -273,7 +273,7 @@
 
 .footerCopyright {
   @include fluid(margin-top, 8, 12);
-  color: #808080;
+  color: var(--color-text-secondary);
   text-align: right;
   font-family: var(--font-en);
   @include fluid(font-size, 11, 14);

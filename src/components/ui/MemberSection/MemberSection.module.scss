@@ -7,41 +7,7 @@
   @include fluid(padding-top, 56, 160);
 }
 
-// ── セクションタイトル ──
-.header {
-  display: flex;
-  align-items: center;
-  @include fluid(gap, 10, 20);
-}
-
-.headerLogo {
-  width: auto;
-  height: auto;
-}
-
-.headerText {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.headerTitle {
-  color: var(--color-black);
-  font-family: 'Noto Sans JP', var(--font-jp);
-  @include fluid(font-size, 16, 28);
-  font-weight: 500;
-  line-height: 1.2;
-  @include fluid(letter-spacing, 5, 11.2);
-}
-
-.headerSub {
-  color: #808080;
-  font-family: var(--font-en);
-  @include fluid(font-size, 12, 16);
-  font-weight: var(--font-weight-light);
-  line-height: 24px;
-  @include fluid(letter-spacing, 1, 2.08);
-}
+// ── セクションタイトル（SectionHeader 共通コンポーネントを使用） ──
 
 // ── スライダーモード（詳細ページ用） ──
 .sectionSlider {
@@ -129,7 +95,7 @@
     inset: 0;
     background: radial-gradient(
       circle at var(--glow-x) var(--glow-y),
-      rgba(218, 39, 25, 0.25) 0%,
+      var(--color-primary-rgba-25) 0%,
       rgba(218, 39, 25, 0.08) 35%,
       transparent 70%
     );
@@ -189,12 +155,12 @@
   width: 100%;
   aspect-ratio: 233 / 235;
   opacity: 0.4;
-  background: #D9D9D9;
+  background: var(--color-placeholder);
 }
 
 .cardRole {
   margin-top: 8px;
-  color: #808080;
+  color: var(--color-text-secondary);
   font-family: var(--font-en);
   @include fluid(font-size, 12, 14);
   font-weight: var(--font-weight-light);
@@ -208,7 +174,7 @@
 
 .cardName {
   margin-top: 4px;
-  color: #000;
+  color: var(--color-black);
   font-family: var(--font-en);
   @include fluid(font-size, 14, 18);
   font-weight: var(--font-weight-light);

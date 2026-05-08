@@ -86,7 +86,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  color: #FFF;
+  color: var(--color-white);
   font-family: var(--font-en);
   @include fluid(font-size, 14, 20);
   font-style: normal;
@@ -113,7 +113,7 @@
 }
 
 .subMenuItem {
-  color: #808080;
+  color: var(--color-text-secondary);
   font-family: var(--font-en);
   @include fluid(font-size, 12, 18);
   font-style: normal;
@@ -134,7 +134,7 @@
 }
 
 .projectsTitle {
-  color: #FFF;
+  color: var(--color-white);
   font-family: var(--font-en);
   @include fluid(font-size, 16, 24);
   font-style: normal;
@@ -222,7 +222,7 @@
 }
 
 .companyName {
-  color: #808080;
+  color: var(--color-text-secondary);
   text-align: right;
   font-family: var(--font-en);
   font-size: 14px;
@@ -238,7 +238,7 @@
 }
 
 .copyright {
-  color: #FFF;
+  color: var(--color-white);
   text-align: right;
   font-family: var(--font-en);
   font-size: 14px;

@@ -89,7 +89,7 @@ export default function ServicePage() {
         <div className={styles.heroLeft}>
           <div className={styles.sectionHeader}>
             <SectionTitle
-              src="/images/top/servicetitlelogo.png"
+              src="/images/sections/service/title-logo.png"
               alt="サービス"
               width={216}
               height={48}

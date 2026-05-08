@@ -1,36 +1,15 @@
-// ============================================
-// メンバーデータ — 静的定義
-// ============================================
+// このファイルは将来 CMS / API から取得するデータの一時的な静的ソース
+import type { Member } from '@/types/member';
 
-export type MemberSocial = {
-  instagram?: string;
-  x?: string;
-};
-
-export type MemberProject = {
-  title: string;
-  slug: string;
-  thumbnail?: string;
-};
-
-export type Member = {
-  slug: string;
-  name: string;
-  role: string;
-  photo?: string;
-  catchphrase: string;
-  description: string;
-  career: string;
-  social?: MemberSocial;
-  projects?: MemberProject[];
-};
+// 型は @/types/member に集約。後方互換のため再エクスポート。
+export type { Member, MemberSocial, MemberProject } from '@/types/member';
 
 export const members: Member[] = [
   {
     slug: 'shuto-nakamura',
     name: 'SHUTO NAKAMURA',
     role: 'CEO',
-    photo: '/images/menber/syutonakamura.png',
+    photo: '/images/team/shuto-nakamura.png',
     catchphrase: '「できない理由」をゼロにする。',
     description:
       'ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。',

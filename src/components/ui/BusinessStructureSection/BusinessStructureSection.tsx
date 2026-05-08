@@ -2,6 +2,7 @@
 
 import { useRef, useCallback, useState, useEffect } from 'react';
 import Image from 'next/image';
+import SectionHeader from '@/components/ui/SectionHeader';
 import styles from './BusinessStructureSection.module.scss';
 
 export default function BusinessStructureSection() {
@@ -52,19 +53,16 @@ export default function BusinessStructureSection() {
     <section className={styles.section}>
       {/* 左側: タイトル + 説明テキスト */}
       <div className={styles.left}>
-        <div className={styles.header}>
-          <Image
-            src="/images/about/titlesunlogo.png"
-            alt=""
-            width={56}
-            height={56}
-            className={styles.headerLogo}
-          />
-          <div className={styles.headerText}>
-            <h2 className={styles.headerTitle}>事業領域と連携体制</h2>
-            <p className={styles.headerSub}>BUSINESS STRUCTURE</p>
-          </div>
-        </div>
+        <SectionHeader
+          logo={{
+            src: '/images/sections/about/title-sun.png',
+            alt: '',
+            width: 56,
+            height: 56,
+          }}
+          title="事業領域と連携体制"
+          subtitle="BUSINESS STRUCTURE"
+        />
 
         <p className={styles.body}>
           アリガトサンの事業を牽引する4つのコア領域と、連携体制を示す図です。
@@ -81,7 +79,7 @@ export default function BusinessStructureSection() {
         onMouseLeave={isPC ? handleMouseLeave : undefined}
       >
         <Image
-          src="/images/about/structurelayer.png"
+          src="/images/sections/about/structure-layer.png"
           alt="事業領域と連携体制図"
           width={640}
           height={640}

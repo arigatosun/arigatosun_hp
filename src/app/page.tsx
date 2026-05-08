@@ -25,7 +25,7 @@ export default function Home() {
         <div className={styles.heroContent}>
           <h1 className={styles.heroLogo}>
             <Image
-              src="/images/top/topherologo.png"
+              src="/images/sections/hero/title-logo.png"
               alt="合同会社アリガトサン"
               width={632}
               height={120}
@@ -59,7 +59,7 @@ export default function Home() {
       {/* ── アバウトセクション ── */}
       <section className={styles.about}>
         <SectionTitle
-          src="/images/top/about-title.png"
+          src="/images/sections/about/title-text.png"
           alt="アバウト"
           width={216}
           height={48}

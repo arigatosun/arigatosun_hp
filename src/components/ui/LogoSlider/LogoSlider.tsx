@@ -1,11 +1,6 @@
 import Image from 'next/image';
 import styles from './LogoSlider.module.scss';
-// 仮データ（後日クライアントロゴに差し替え）
-const LOGOS = Array.from({ length: 8 }, (_, i) => ({
-  id: `logo-${i}`,
-  src: '/images/top/corporatelogo.png',
-  alt: 'ARIGATOSUN',
-}));
+import { LOGOS } from '@/data/logos';
 
 export default function LogoSlider() {
   return (

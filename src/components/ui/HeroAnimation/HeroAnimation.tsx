@@ -7,10 +7,10 @@ import styles from './HeroAnimation.module.scss';
 
 // ── ロゴパネル定義 ──
 const LOGO_PANELS = [
-  { src: '/images/top/1.png', width: 500, height: 400, className: styles.panel1 },
-  { src: '/images/top/2.png', width: 500, height: 400, className: styles.panel2 },
-  { src: '/images/top/3.png', width: 480, height: 420, className: styles.panel3 },
-  { src: '/images/top/4.png', width: 500, height: 400, className: styles.panel4 },
+  { src: '/images/sections/hero/hero-panel-1.png', width: 500, height: 400, className: styles.panel1 },
+  { src: '/images/sections/hero/hero-panel-2.png', width: 500, height: 400, className: styles.panel2 },
+  { src: '/images/sections/hero/hero-panel-3.png', width: 480, height: 420, className: styles.panel3 },
+  { src: '/images/sections/hero/hero-panel-4.png', width: 500, height: 400, className: styles.panel4 },
 ];
 
 // ── 3フェーズモーション定義 ──

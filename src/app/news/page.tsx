@@ -159,7 +159,7 @@ export default function NewsPage() {
         <div className={styles.left}>
           <div className={styles.header}>
             <SectionTitle
-              src="/images/top/newstitlelogo.png"
+              src="/images/sections/news/title-logo.png"
               alt="ニュース"
               width={183}
               height={45}

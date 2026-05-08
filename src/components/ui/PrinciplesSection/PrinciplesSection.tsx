@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import SectionHeader from '@/components/ui/SectionHeader';
 import styles from './PrinciplesSection.module.scss';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -109,26 +110,23 @@ export default function PrinciplesSection() {
   return (
     <section ref={sectionRef} className={styles.section}>
       {/* セクションタイトル */}
-      <div className={styles.header}>
-        <Image
-          src="/images/about/titlesunlogo.png"
-          alt=""
-          width={56}
-          height={56}
-          className={styles.headerLogo}
-        />
-        <div className={styles.headerText}>
-          <h2 className={styles.headerTitle}>アリガト３原則</h2>
-          <p className={styles.headerSub}>ARIGATOSUN THREE PRINCIPLES</p>
-        </div>
-      </div>
+      <SectionHeader
+        logo={{
+          src: '/images/sections/about/title-sun.png',
+          alt: '',
+          width: 56,
+          height: 56,
+        }}
+        title="アリガト３原則"
+        subtitle="ARIGATOSUN THREE PRINCIPLES"
+      />
 
       {/* メインコンテンツ */}
       <div className={styles.content}>
         {/* 左側: ヒートマップダイアグラム */}
         <div className={styles.mapArea}>
           <Image
-            src="/images/about/principleslayer.png"
+            src="/images/sections/about/principles-layer.png"
             alt="アリガト３原則 ダイアグラム"
             width={600}
             height={460}
@@ -169,7 +167,7 @@ export default function PrinciplesSection() {
                 <div className={styles.principleHeadLeft}>
                   <span className={styles.principleLabel}>{principle.labelJa}</span>
                   <Image
-                    src="/images/about/blackarigatosun.png"
+                    src="/images/sections/about/black-logo.png"
                     alt="アリガトサン"
                     width={200}
                     height={30}

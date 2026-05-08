@@ -19,40 +19,7 @@
   min-width: 0;
 }
 
-.header {
-  display: flex;
-  align-items: center;
-  @include fluid(gap, 10, 20);
-}
-
-.headerLogo {
-  width: auto;
-  height: auto;
-}
-
-.headerText {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.headerTitle {
-  color: var(--color-black);
-  font-family: 'Noto Sans JP', var(--font-jp);
-  @include fluid(font-size, 16, 28);
-  font-weight: 500;
-  line-height: 1.2;
-  @include fluid(letter-spacing, 5, 11.2);
-}
-
-.headerSub {
-  color: #808080;
-  font-family: var(--font-en);
-  @include fluid(font-size, 12, 16);
-  font-weight: var(--font-weight-light);
-  line-height: 24px;
-  @include fluid(letter-spacing, 1, 2.08);
-}
+// セクションタイトルは SectionHeader 共通コンポーネントを使用
 
 .body {
   @include fluid(margin-top, 24, 60);

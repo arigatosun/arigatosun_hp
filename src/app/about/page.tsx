@@ -55,7 +55,7 @@ export default function AboutPage() {
       {/* フィロソフィーセクション */}
       <section id="philosophy" className={styles.philosophySection}>
         <SectionTitle
-          src="/images/about/aboutsectiontitle.png"
+          src="/images/sections/about/title-logo.png"
           alt="アバウト"
           width={216}
           height={48}

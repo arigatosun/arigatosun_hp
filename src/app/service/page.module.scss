@@ -24,7 +24,7 @@
 
 .sideNavItem {
   display: inline;
-  color: #808080;
+  color: var(--color-text-secondary);
   font-family: var(--font-en);
   @include fluid(font-size, 14, 20);
   font-weight: var(--font-weight-light);
@@ -81,7 +81,7 @@
 
 .label {
   @include fluid(margin-top, 10, 20);
-  color: #808080;
+  color: var(--color-text-secondary);
   font-family: var(--font-en);
   @include fluid(font-size, 14, 20);
   font-weight: var(--font-weight-light);
@@ -136,7 +136,7 @@
 .serviceImagePlaceholder {
   width: 100%;
   aspect-ratio: 16 / 9;
-  background: #D9D9D9;
+  background: var(--color-placeholder);
   opacity: 0.4;
 }
 
@@ -194,7 +194,7 @@
 
 .serviceTag {
   display: inline;
-  color: #808080;
+  color: var(--color-text-secondary);
   font-family: 'Noto Sans JP', var(--font-jp);
   @include fluid(font-size, 11, 13);
   font-weight: var(--font-weight-regular);

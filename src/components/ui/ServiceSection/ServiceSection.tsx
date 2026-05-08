@@ -5,51 +5,12 @@ import Image from 'next/image';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import styles from './ServiceSection.module.scss';
-import ServiceCard from './ServiceCard';
-import type { ServiceCardData } from './ServiceCard';
+import ServiceCard from '@/components/ui/ServiceCard';
 import Button from '@/components/ui/Button';
 import SectionTitle from '@/components/ui/SectionTitle';
+import { SERVICE_CARDS, SERVICE_MENU_ITEMS } from '@/data/services';
 
 gsap.registerPlugin(ScrollTrigger);
-
-const SERVICE_CARDS: ServiceCardData[] = [
-  {
-    id: 'ai-dev',
-    category: 'AI / DEVELOPMENT',
-    categoryLabel: 'AI・開発',
-    title: 'AI / DEVELOPMENT',
-    description:
-      'ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。',
-    viewLabel: 'VIEW AI / DEVELOPMENT >',
-    bgImage: '/images/top/backgroundcard.png',
-  },
-  {
-    id: 'design-branding',
-    category: 'DESIGN / BRANDING',
-    categoryLabel: 'デザイン・ブランディング',
-    title: 'DESIGN / BRANDING',
-    description:
-      'ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。',
-    viewLabel: 'VIEW DESIGN / BRANDING >',
-    bgImage: '/images/top/backgroundcard.png',
-  },
-  {
-    id: 'ip-creative',
-    category: 'IP / CREATIVE',
-    categoryLabel: 'IP・クリエイティブ',
-    title: 'IP / CREATIVE',
-    description:
-      'ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。',
-    viewLabel: 'VIEW IP / CREATIVE >',
-    bgImage: '/images/top/backgroundcard.png',
-  },
-];
-
-const MENU_ITEMS = [
-  '· AI / DEVELOPMENT >',
-  '· DESIGN / BRANDING >',
-  '· IP / CREATIVE >',
-];
 
 // スクロール連動の横スクロールアニメーションを有効にするフラグ
 // true: アニメーション有効 / false: アニメーション停止（静的表示）
@@ -111,7 +72,7 @@ export default function ServiceSection() {
           invalidateOnRefresh: true,
           onUpdate: (self) => {
             const progress = self.progress;
-            const menuCount = MENU_ITEMS.length;
+            const menuCount = SERVICE_MENU_ITEMS.length;
             const newIndex = Math.min(
               Math.floor(progress * menuCount),
               menuCount - 1
@@ -130,7 +91,7 @@ export default function ServiceSection() {
       {/* 上部装飾マスク */}
       <div className={styles.decoTop}>
         <Image
-          src="/images/top/uemask.png"
+          src="/images/sections/service/mask-top.png"
           alt=""
           width={1920}
           height={420}
@@ -144,7 +105,7 @@ export default function ServiceSection() {
         <div className={styles.left}>
           <div className={styles.leftContent}>
             <SectionTitle
-              src="/images/top/servicetitlelogo.png"
+              src="/images/sections/service/title-logo.png"
               alt="サービス"
               width={203}
               height={47}
@@ -159,7 +120,7 @@ export default function ServiceSection() {
             </div>
 
             <ul className={styles.menuList} ref={menuRef}>
-              {MENU_ITEMS.map((item, index) => (
+              {SERVICE_MENU_ITEMS.map((item, index) => (
                 <li
                   key={item}
                   className={
@@ -188,7 +149,7 @@ export default function ServiceSection() {
       {/* 下部装飾マスク */}
       <div className={styles.decoBottom}>
         <Image
-          src="/images/top/sitamask.png"
+          src="/images/sections/service/mask-bottom.png"
           alt=""
           width={1920}
           height={420}

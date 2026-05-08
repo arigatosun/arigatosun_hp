@@ -1,51 +1,10 @@
 // WordPress REST API 連携
+import type { WPPost, WPCategory, NewsItem } from '@/types/wordpress';
 
 const API_URL = process.env.NEXT_PUBLIC_WORDPRESS_API_URL || '';
 
-// ── 型定義 ──
-
-/** WordPress REST API の投稿レスポンス */
-export type WPPost = {
-  id: number;
-  slug: string;
-  date: string;
-  title: { rendered: string };
-  content: { rendered: string };
-  excerpt: { rendered: string };
-  featured_media: number;
-  categories: number[];
-  _embedded?: {
-    'wp:featuredmedia'?: Array<{
-      source_url: string;
-      alt_text: string;
-    }>;
-    'wp:term'?: Array<Array<{
-      id: number;
-      name: string;
-      slug: string;
-    }>>;
-  };
-};
-
-/** WordPress REST API のカテゴリレスポンス */
-export type WPCategory = {
-  id: number;
-  name: string;
-  slug: string;
-  count: number;
-};
-
-/** アプリ内で使う統一型 */
-export type NewsItem = {
-  id: number;
-  slug: string;
-  title: string;
-  date: string;
-  tag: string;
-  thumbnail: string;
-  excerpt: string;
-  content: string;
-};
+// 型は @/types/wordpress に集約。後方互換のため再エクスポート。
+export type { WPPost, WPCategory, NewsItem } from '@/types/wordpress';
 
 // ── ユーティリティ ──
 

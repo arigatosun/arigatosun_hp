@@ -6,41 +6,7 @@
   @include fluid(padding-right, 20, 200);
 }
 
-// ── セクションタイトル ──
-.header {
-  display: flex;
-  align-items: center;
-  @include fluid(gap, 10, 20);
-}
-
-.headerLogo {
-  width: auto;
-  height: auto;
-}
-
-.headerText {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.headerTitle {
-  color: var(--color-black);
-  font-family: 'Noto Sans JP', var(--font-jp);
-  @include fluid(font-size, 16, 28);
-  font-weight: 500;
-  line-height: 1.2;
-  @include fluid(letter-spacing, 5, 11.2);
-}
-
-.headerSub {
-  color: #808080;
-  font-family: var(--font-en);
-  @include fluid(font-size, 12, 16);
-  font-weight: var(--font-weight-light);
-  line-height: 24px;
-  @include fluid(letter-spacing, 1, 2.08);
-}
+// ── セクションタイトル（SectionHeader 共通コンポーネントを使用） ──
 
 // ── メインコンテンツ ──
 .content {
@@ -126,7 +92,7 @@
 }
 
 .mapLabelEn {
-  color: #808080;
+  color: var(--color-text-secondary);
   text-align: center;
   font-family: var(--font-en);
   @include fluid(font-size, 10, 12.6);
@@ -155,7 +121,7 @@
   transform: translateY(-50%);
   background: radial-gradient(
     ellipse 65% 50%,
-    rgba(218, 39, 25, 0.75) 0%,
+    var(--color-primary-rgba-75) 0%,
     rgba(218, 39, 25, 0.6) 20%,
     rgba(218, 39, 25, 0.4) 38%,
     rgba(218, 39, 25, 0.15) 55%,
@@ -182,7 +148,7 @@
   transform: translateY(-50%);
   background: radial-gradient(
     ellipse,
-    rgba(218, 39, 25, 0.55) 0%,
+    var(--color-primary-rgba-55) 0%,
     rgba(218, 39, 25, 0.35) 28%,
     rgba(218, 39, 25, 0.15) 48%,
     rgba(218, 39, 25, 0.04) 65%,
@@ -210,7 +176,7 @@
     ellipse,
     rgba(218, 39, 25, 0.65) 0%,
     rgba(218, 39, 25, 0.45) 22%,
-    rgba(218, 39, 25, 0.25) 42%,
+    var(--color-primary-rgba-25) 42%,
     rgba(218, 39, 25, 0.06) 62%,
     transparent 78%
   );

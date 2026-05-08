@@ -13,7 +13,7 @@
   position: relative;
   z-index: 1;
   // 白背景アニメーション（インラインで改行にも自然に対応）
-  background: linear-gradient(#FFF, #FFF) no-repeat left center / 0% 100%;
+  background: linear-gradient(var(--color-white), var(--color-white)) no-repeat left center / 0% 100%;
   padding: 0.05em 0;
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;

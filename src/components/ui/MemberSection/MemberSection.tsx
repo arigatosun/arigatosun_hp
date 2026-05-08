@@ -3,6 +3,7 @@
 import { useRef, useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { members } from '@/data/members';
+import SectionHeader from '@/components/ui/SectionHeader';
 import styles from './MemberSection.module.scss';
 
 type MemberSectionProps = {
@@ -84,12 +85,7 @@ export default function MemberSection({ variant = 'grid' }: MemberSectionProps) 
       className={`${styles.section} ${variant === 'slider' ? styles.sectionSlider : ''}`}
     >
       {/* セクションタイトル */}
-      <div className={styles.header}>
-        <div className={styles.headerText}>
-          <h2 className={styles.headerTitle}>メンバー</h2>
-          <p className={styles.headerSub}>MEMBER</p>
-        </div>
-      </div>
+      <SectionHeader title="メンバー" subtitle="MEMBER" />
 
       {variant === 'grid' ? (
         // グリッドモード（ABOUTページ用）

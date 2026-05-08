@@ -71,7 +71,7 @@ export default function Header() {
           <li>
             <Link href="/" className={styles.logo}>
               <Image
-                src="/images/common/mini-logo.svg"
+                src="/images/icons/mini-logo.svg"
                 alt="合同会社アリガトサン"
                 width={50}
                 height={48}
@@ -124,7 +124,7 @@ export default function Header() {
         {/* モバイルメニューボタン */}
         <Link href="/" className={styles.mobileLogo}>
           <Image
-            src="/images/common/mini-logo.svg"
+            src="/images/icons/mini-logo.svg"
             alt="合同会社アリガトサン"
             width={32}
             height={30}

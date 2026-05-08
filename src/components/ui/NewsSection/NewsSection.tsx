@@ -5,16 +5,10 @@ import Image from 'next/image';
 import styles from './NewsSection.module.scss';
 import Button from '@/components/ui/Button';
 import SectionTitle from '@/components/ui/SectionTitle';
-import type { NewsItem } from '@/lib/wordpress';
+import type { NewsItem, WPPost, WPCategory } from '@/types/wordpress';
+import { NEWS_CATEGORIES } from '@/data/news-categories';
 
 const API_URL = process.env.NEXT_PUBLIC_WORDPRESS_API_URL || '';
-
-const CATEGORIES = [
-  { label: '・ALL >', value: 'all', id: 0 },
-  { label: '・INFORMATION >', value: 'information', id: 0 },
-  { label: '・EVENTS >', value: 'events', id: 0 },
-  { label: '・PRESS >', value: 'press', id: 0 },
-];
 
 /** HTMLタグ除去 */
 function stripHtml(html: string): string {
@@ -29,26 +23,6 @@ function formatDate(isoDate: string): string {
   const day = String(d.getDate()).padStart(2, '0');
   return `${year}.${month}/${day}`;
 }
-
-type WPPost = {
-  id: number;
-  slug: string;
-  date: string;
-  title: { rendered: string };
-  excerpt: { rendered: string };
-  featured_media: number;
-  categories: number[];
-  _embedded?: {
-    'wp:featuredmedia'?: Array<{ source_url: string }>;
-    'wp:term'?: Array<Array<{ id: number; name: string; slug: string }>>;
-  };
-};
-
-type WPCategory = {
-  id: number;
-  name: string;
-  slug: string;
-};
 
 /** WPPostをNewsItemに変換 */
 function toNewsItem(post: WPPost): NewsItem {
@@ -72,7 +46,8 @@ export default function NewsSection() {
   const menuRef = useRef<HTMLUListElement>(null);
   const activeRef = useRef(0);
   const [news, setNews] = useState<NewsItem[]>([]);
-  const [categories, setCategories] = useState(CATEGORIES);
+  // NEWS_CATEGORIES は readonly なので、可変コピーを state に持たせる
+  const [categories, setCategories] = useState([...NEWS_CATEGORIES]);
   const [loading, setLoading] = useState(true);
 
   // カテゴリ一覧を取得してIDをマッピング
@@ -153,7 +128,7 @@ export default function NewsSection() {
         <div className={styles.left}>
           <div className={styles.header}>
             <SectionTitle
-              src="/images/top/newstitlelogo.png"
+              src="/images/sections/news/title-logo.png"
               alt="ニュース"
               width={183}
               height={45}

@@ -36,7 +36,7 @@
 .photoPlaceholder {
   width: 100%;
   aspect-ratio: 1 / 1.1;
-  background: #D9D9D9;
+  background: var(--color-placeholder);
   opacity: 0.4;
 }
 
@@ -64,7 +64,7 @@
 }
 
 .role {
-  color: #808080;
+  color: var(--color-text-secondary);
   font-family: var(--font-en);
   @include fluid(font-size, 12, 14);
   font-weight: var(--font-weight-light);
@@ -91,7 +91,7 @@
 }
 
 .socialLink {
-  color: #808080;
+  color: var(--color-text-secondary);
   font-family: var(--font-en);
   @include fluid(font-size, 14, 16);
   font-weight: var(--font-weight-light);
@@ -130,7 +130,7 @@
 // ── 自己紹介文 ──
 .description {
   max-width: 839px;
-  color: #000;
+  color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
   @include fluid(font-size, 14, 16);
   font-weight: var(--font-weight-regular);
@@ -140,7 +140,7 @@
 
 // ── セクションラベル（経歴・関わったプロジェクト） ──
 .sectionLabel {
-  color: #808080;
+  color: var(--color-text-secondary);
   font-family: 'Noto Sans JP', var(--font-jp);
   @include fluid(font-size, 14, 16);
   font-weight: var(--font-weight-regular);
@@ -156,7 +156,7 @@
 
 .careerText {
   max-width: 839px;
-  color: #000;
+  color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
   @include fluid(font-size, 14, 16);
   font-weight: var(--font-weight-regular);
@@ -199,6 +199,6 @@
 .projectPlaceholder {
   width: 100%;
   aspect-ratio: 4 / 3;
-  background: #D9D9D9;
+  background: var(--color-placeholder);
   opacity: 0.4;
 }

@@ -23,7 +23,7 @@
 }
 
 .sideNavItem {
-  color: #808080;
+  color: var(--color-text-secondary);
   font-family: var(--font-en);
   @include fluid(font-size, 14, 20);
   font-weight: var(--font-weight-light);
@@ -69,7 +69,7 @@
 
 .label {
   @include fluid(margin-top, 10, 20);
-  color: #808080;
+  color: var(--color-text-secondary);
   font-family: var(--font-en);
   @include fluid(font-size, 14, 20);
   font-weight: var(--font-weight-light);

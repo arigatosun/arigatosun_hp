@@ -51,7 +51,7 @@
 
 .label {
   margin-top: 16px;
-  color: #808080;
+  color: var(--color-text-secondary);
   font-family: var(--font-en);
   @include fluid(font-size, 14, 20);
   font-weight: var(--font-weight-light);
@@ -104,19 +104,19 @@
 
 .categoryItem {
   span {
-    color: #808080;
+    color: var(--color-text-secondary);
     background-color: transparent;
   }
 
   &:hover span {
-    color: #FFF;
+    color: var(--color-white);
     background-color: var(--color-primary);
   }
 }
 
 .categoryItemActive {
   span {
-    color: #FFF;
+    color: var(--color-white);
     background-color: var(--color-primary);
   }
 }
@@ -232,7 +232,7 @@
 }
 
 .articleDate {
-  color: #808080;
+  color: var(--color-text-secondary);
   font-family: var(--font-en);
   @include fluid(font-size, 14, 20);
   font-style: normal;
@@ -243,7 +243,7 @@
 }
 
 .articleTag {
-  color: #808080;
+  color: var(--color-text-secondary);
   font-family: var(--font-en);
   @include fluid(font-size, 14, 20);
   font-style: normal;
@@ -278,7 +278,7 @@
   width: 100%;
   height: 1px;
   @include fluid(margin-top, 20, 40);
-  background: #808080;
+  background: var(--color-text-secondary);
   opacity: 0.3;
 }
 
@@ -294,7 +294,7 @@
 // ── ローディング・空状態 ──
 .loadingText,
 .emptyText {
-  color: #808080;
+  color: var(--color-text-secondary);
   font-family: var(--font-en);
   @include fluid(font-size, 13, 16);
   font-weight: var(--font-weight-light);

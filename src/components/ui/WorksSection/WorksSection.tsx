@@ -5,60 +5,7 @@ import Image from 'next/image';
 import styles from './WorksSection.module.scss';
 import Button from '@/components/ui/Button';
 import SectionTitle from '@/components/ui/SectionTitle';
-
-type WorkItem = {
-  id: string;
-  client: string;
-  title: string;
-  details: { label: string; value: string }[];
-  term: string;
-  image: string;
-  imageWidth: number;
-  imageHeight: number;
-};
-
-const WORKS_DATA: WorkItem[] = [
-  {
-    id: 'work-1',
-    client: '全日本漬物協同組合連合会',
-    title: '何百年も続く日本の漬物文化を、この先も愛してもら\nえるカタチへ。|最優秀賞から生まれたキャラクター\nデザインと、ポータルサイトのリブランディング',
-    details: [
-      { label: 'D / B：', value: 'キャラクターデザイン、ポータルサイト設計・デザイン' },
-    ],
-    term: '2026.3 - 2026.4（ポータルサイトのみでの算出）',
-    image: '/images/top/works1.png',
-    imageWidth: 868,
-    imageHeight: 675,
-  },
-  {
-    id: 'work-2',
-    client: '全日本漬物協同組合連合会',
-    title: 'ここに実績項目のタイトルが入ります。ここに実績項目のタイトルが入ります。ここに実績項目のタイトルが入ります。ここに実績項目のタイトルが入ります。ここに実績項目のタイトルが入ります。',
-    details: [
-      { label: 'AI / D：', value: 'プロジェクトマネジメント、システム実装' },
-      { label: 'D / B：', value: 'ディレクション、ロゴデザイン' },
-      { label: 'IP / C：', value: 'キャラクター設計' },
-    ],
-    term: '2024.7 - 2024.10',
-    image: '/images/top/works1.png',
-    imageWidth: 868,
-    imageHeight: 675,
-  },
-  {
-    id: 'work-3',
-    client: '全日本漬物協同組合連合会',
-    title: 'ここに実績項目のタイトルが入ります。ここに実績項目のタイトルが入ります。ここに実績項目のタイトルが入ります。ここに実績項目のタイトルが入ります。ここに実績項目のタイトルが入ります。',
-    details: [
-      { label: 'AI / D：', value: 'プロジェクトマネジメント、システム実装' },
-      { label: 'D / B：', value: 'ディレクション、ロゴデザイン' },
-      { label: 'IP / C：', value: 'キャラクター設計' },
-    ],
-    term: '2024.7 - 2024.10',
-    image: '/images/top/works1.png',
-    imageWidth: 868,
-    imageHeight: 675,
-  },
-];
+import { WORKS_DATA } from '@/data/works';
 
 export default function WorksSection() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -92,7 +39,7 @@ export default function WorksSection() {
       {/* ヘッダー */}
       <div className={styles.header}>
         <SectionTitle
-          src="/images/top/workstitlelogo.png"
+          src="/images/sections/works/title-logo.png"
           alt="ワークス"
           width={204}
           height={46}

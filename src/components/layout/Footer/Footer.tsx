@@ -16,7 +16,7 @@ export default function Footer() {
       {/* 背景マスクオーバーレイ */}
       <div className={styles.maskOverlay}>
         <Image
-          src="/images/top/Mask group.png"
+          src="/images/sections/footer/bg-mask.png"
           alt=""
           fill
           className={styles.maskImage}
@@ -39,7 +39,7 @@ export default function Footer() {
         <div className={styles.left}>
           <div className={styles.logoWrap}>
             <Image
-              src="/images/top/footerlogo.png"
+              src="/images/sections/footer/logo.png"
               alt="合同会社アリガトサン"
               width={420}
               height={113}
@@ -119,7 +119,7 @@ export default function Footer() {
           <div className={styles.projectImages}>
             <div className={styles.projectImageWrap}>
               <Image
-                src="/images/top/kusomeganelogo.png"
+                src="/images/partners/kusomegane-logo.png"
                 alt="KUSOMEGANE"
                 width={400}
                 height={130}
@@ -128,7 +128,7 @@ export default function Footer() {
             </div>
             <div className={styles.projectImageWrap}>
               <Image
-                src="/images/top/aseavelogo.png"
+                src="/images/partners/aseave-logo.png"
                 alt="ASEAVE"
                 width={400}
                 height={130}

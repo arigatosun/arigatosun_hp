@@ -43,7 +43,7 @@
 }
 
 .subtitle {
-  color: #808080;
+  color: var(--color-text-secondary);
   font-family: var(--font-en);
   @include fluid(font-size, 14, 20);
   font-weight: var(--font-weight-light);
@@ -87,7 +87,7 @@
 
 // ラベル（日本語）
 .label {
-  color: #000;
+  color: var(--color-black);
   font-family: var(--font-jp);
   @include fluid(font-size, 14, 18);
   font-weight: var(--font-weight-regular);
@@ -107,7 +107,7 @@
   width: 100%;
   max-width: 781px;
   @include fluid(height, 36, 40);
-  background: #FFF;
+  background: var(--color-white);
   border: none;
   border-bottom: 1px solid var(--color-gray-300);
   border-radius: 0;
@@ -168,7 +168,7 @@
 }
 
 .agreementText {
-  color: #050505;
+  color: var(--color-text-soft-black);
   font-family: var(--font-jp);
   @include fluid(font-size, 14, 16);
   font-weight: var(--font-weight-regular);
@@ -178,7 +178,7 @@
 }
 
 .privacyLink {
-  color: #00F;
+  color: var(--color-link-blue);
   font-family: var(--font-jp);
   @include fluid(font-size, 14, 16);
   font-weight: var(--font-weight-regular);
@@ -216,7 +216,7 @@
   @include fluid(height, 52, 72);
   border-radius: 43.2px;
   border: 1px solid var(--color-black);
-  background: #FFF;
+  background: var(--color-white);
   color: var(--color-black);
   text-align: center;
   font-family: var(--font-en);

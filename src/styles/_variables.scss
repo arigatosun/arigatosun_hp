@@ -22,6 +22,24 @@
   --color-gray-800: #262626;
   --color-gray-900: #171717;
 
+  // ── テキスト・グレー系の追加 ──
+  // NOTE: --color-gray-500 (#737373) はパレット上のミドルグレー。
+  //       --color-text-secondary (#808080) は Figma 実測の説明文・キャプション専用色。
+  //       Figma準拠の文言用には必ず --color-text-secondary を使うこと。
+  --color-text-secondary: #808080;   // 説明文・キャプション用グレー
+  --color-placeholder: #D9D9D9;      // プレースホルダー背景用
+  --color-text-soft-black: #050505;  // 微黒（純黒より柔らかい）
+  --color-link-blue: #00F;           // リンク・URL用標準青
+
+  // ── ブランドレッド（rgba透過バリエーション） ──
+  --color-primary-rgba-75: rgba(218, 39, 25, 0.75);
+  --color-primary-rgba-55: rgba(218, 39, 25, 0.55);
+  --color-primary-rgba-25: rgba(218, 39, 25, 0.25);
+
+  // ── 黒の透過バリエーション（汎用） ──
+  --color-black-rgba-30: rgba(0, 0, 0, 0.30);
+  --color-black-rgba-15: rgba(0, 0, 0, 0.15);
+
   // ── 背景・テキスト ──
   --color-bg: #F5F6F7;
   --color-text: var(--color-black);

@@ -75,7 +75,7 @@ export default function ContactPage() {
         <div className={styles.leftColumn}>
           <div className={styles.titleArea}>
             <SectionTitle
-              src="/images/contact/contact_titlelogo.png"
+              src="/images/sections/contact/title-logo.png"
               alt="CONTACT"
               width={250}
               height={37}

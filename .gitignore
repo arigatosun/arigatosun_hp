@@ -43,3 +43,6 @@ next-env.d.ts
 # pixel-perfect PoC
 /scripts/pixel-perfect/output/
 .mcp.json
+
+# claude
+.claude/memory/
