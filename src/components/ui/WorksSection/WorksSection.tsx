@@ -50,7 +50,7 @@ export default function WorksSection() {
 
       {/* 実績一覧 */}
       <div className={styles.itemsList}>
-        {WORKS_DATA.map((work, index) => (
+        {WORKS_DATA.slice(0, 3).map((work, index) => (
           <div
             key={work.id}
             className={`${styles.item} ${index > 0 ? styles.itemSpaced : ''}`}

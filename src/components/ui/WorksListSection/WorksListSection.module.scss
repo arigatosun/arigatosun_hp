@@ -1,0 +1,58 @@
+@use '@/styles/fluid' as *;
+@use '@/styles/breakpoints' as *;
+
+.section {
+  position: relative;
+  z-index: 5;
+  // 1200px ビューポートで sidebar + 2 列カードを収めるため、padding は LP 慣習に合わせる
+  // 左右対称（pagination の全幅中央配置のため）
+  @include fluid(padding-left, 20, 100);
+  @include fluid(padding-right, 20, 100);
+  @include fluid(padding-top, 60, 160);
+  @include fluid(padding-bottom, 60, 200);
+}
+
+// ── 2カラムレイアウト（sidebar + content） ──
+.layout {
+  display: flex;
+  align-items: flex-start;
+  // Figma 1920 frame では sidebar→grid 間 234px。1200 viewport では比率縮小
+  @include fluid(gap, 24, 60);
+
+  @include max(1023px) {
+    flex-direction: column;
+    gap: 0;
+  }
+}
+
+.content {
+  flex: 1;
+  min-width: 0;
+
+  @include max(1023px) {
+    width: 100%;
+    @include fluid(margin-top, 32, 60);
+  }
+}
+
+// ── カードグリッド（PC: 2 cols / SP: 1 col） ──
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  // Figma: 列ギャップ 80 / 行ピッチ 180。1200 viewport では比率縮小
+  @include fluid(column-gap, 16, 56);
+  @include fluid(row-gap, 56, 140);
+
+  @include sp {
+    grid-template-columns: 1fr;
+    @include fluid(row-gap, 40, 80);
+  }
+}
+
+// ── ページネーション位置 ──
+.paginationWrap {
+  // Figma: 最終カード y=2852 + 高さ ~531 = 3383 → pagination y=3092 = カード並びの直下 240px
+  @include fluid(margin-top, 56, 240);
+  display: flex;
+  justify-content: center;
+}
