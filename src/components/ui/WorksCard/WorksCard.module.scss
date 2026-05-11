@@ -1,4 +1,7 @@
-@use '@/styles/fluid' as *;
+// Figma フレーム 1920px 準拠
+@use '@/styles/fluid' as * with (
+  $fluid-max-viewport: 1920
+);
 @use '@/styles/breakpoints' as *;
 
 .card {
@@ -12,10 +15,10 @@
   }
 }
 
-// ── 画像（Figma: 460×260） ──
+// ── 画像（Figma: 460×258.94） ──
 .imageWrap {
   width: 100%;
-  aspect-ratio: 460 / 260;
+  aspect-ratio: 460 / 258.94;
   overflow: hidden;
   background: var(--color-placeholder);
 }
@@ -28,7 +31,7 @@
   transition: opacity var(--transition-base);
 }
 
-// ── CLIENT ライン（Figma: 画像→35px / 英字 17px + 日本語 15px / line-height 44） ──
+// ── CLIENT ライン（Figma: 画像→35px / 英字 17px + 日本語 15px / line-height 44 / letter-spacing 3.4） ──
 .client {
   @include fluid(margin-top, 16, 35);
   color: var(--color-text-secondary);
@@ -50,7 +53,7 @@
   @include fluid(letter-spacing, 1.5, 2.6);
 }
 
-// ── 本文（Figma: CLIENT→16px / 18px / line-height 36 / Noto Sans JP） ──
+// ── 本文（Figma: CLIENT→16px / 18px / line-height 36 / letter-spacing 2.34 / Noto Sans JP） ──
 .body {
   @include fluid(margin-top, 8, 16);
   color: var(--color-black);
@@ -61,7 +64,7 @@
   @include fluid(letter-spacing, 1.2, 2.34);
 }
 
-// ── VIEW MORE（Figma: 本文→32px / 24px 白文字 / 赤帯） ──
+// ── VIEW MORE（Figma: 本文→32px / 24px 白文字 / 赤帯 #DA2719 / letter-spacing 3.12） ──
 .viewMore {
   @include fluid(margin-top, 16, 32);
   display: inline-block;

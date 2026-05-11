@@ -1,8 +1,12 @@
-@use '@/styles/fluid' as *;
+// Figma フレーム 1920px 準拠
+@use '@/styles/fluid' as * with (
+  $fluid-max-viewport: 1920
+);
 @use '@/styles/breakpoints' as *;
 
 .sidebar {
-  @include fluid(width, 180, 240);
+  // Figma: sidebar w=286
+  @include fluid(width, 220, 286);
   flex-shrink: 0;
 
   @include max(1023px) {
@@ -10,7 +14,7 @@
   }
 }
 
-// SectionTitle と filter list の間の余白（Figma: WORKS y=269 → ・ALL y=407 = 138px）
+// Figma: WORKS y=269 → ・ALL y=407 = 138px
 .sectionTitle {
   @include fluid(margin-bottom, 56, 138);
 }
@@ -26,7 +30,7 @@
   padding: 0;
   display: flex;
   flex-direction: column;
-  // Figma: 行ピッチ 56px - 文字高 24px ≈ 32px
+  // Figma: 行ピッチ 56px - 文字高 24px = 32px
   @include fluid(gap, 18, 32);
 }
 
@@ -41,6 +45,7 @@
   color: var(--color-text-secondary);
   font-family: var(--font-en);
   font-weight: var(--font-weight-light);
+  // Figma: font-size 20 / letter-spacing 2.6
   @include fluid(font-size, 14, 20);
   line-height: 24px;
   @include fluid(letter-spacing, 1.4, 2.6);
@@ -56,7 +61,6 @@
 }
 
 .bullet {
-  // bullet "・" は active 状態でも背景なし（Figma 通り）
   letter-spacing: 0;
 }
 
@@ -67,7 +71,7 @@
     background-color var(--transition-base);
 }
 
-// active 状態（白文字 + 赤背景ハイライト）
+// active 状態（Figma: 白文字 + #DA2719 背景ハイライト）
 .itemActive .link {
   color: var(--color-white);
 }
@@ -83,12 +87,11 @@
   background-color: var(--color-primary-dark);
 }
 
-// ── CREATIVE PROJECT と NEWS の間の縦罫線（Figma: y=678〜734 = 56px） ──
+// ── CREATIVE PROJECT と NEWS の間の縦罫線（Figma: 56px） ──
 .divider {
   width: 1px;
   @include fluid(height, 28, 56);
   background: var(--color-text-secondary);
-  // bullet "・" の中心に揃える
   @include fluid(margin-left, 7, 15);
   @include fluid(margin-top, 18, 32);
   @include fluid(margin-bottom, 18, 32);
