@@ -46,3 +46,7 @@ next-env.d.ts
 
 # claude
 .claude/memory/
+
+# session-temporary（試運転用一時ファイル）
+/.tmp-review/
+/scripts/_*.ts

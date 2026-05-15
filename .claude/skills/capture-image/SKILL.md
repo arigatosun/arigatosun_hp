@@ -1,22 +1,44 @@
 ---
 name: capture-image
-description: Figmaデザインのスクリーンショットと自由文の指示を入力すると、まず「セクション分解 / クラス名 / margin・padding（fluid()込み） / SP対応 / ファイル構成」を構造化提案して確認し、修正 or GO の合意後に実装まで進める。ユーザーが画像を添付して「このセクション実装したい」「これコーディングして」「Figmaから起こして」「ヒーロー部分起こして」「画像のUI実装して」等を言ったら発動。
+description: Figmaデザインのスクリーンショット or Figma URL と自由文の指示を入力すると、Figma Dev Mode MCP から実測値を自動取得した上で「セクション分解 / クラス名 / margin・padding（fluid()込み） / SP対応 / ファイル構成」を構造化提案して確認し、修正 or GO の合意後に実装まで進める。ユーザーが画像 or FigmaURLを添付して「このセクション実装したい」「これコーディングして」「Figmaから起こして」「ヒーロー部分起こして」「画像のUI実装して」等を言ったら発動。
 ---
 
-# capture-image — Figma画像から構造化提案 → 確認 → 実装スキル
+# capture-image — Figma情報の自動取得 → 構造化提案 → 確認 → 実装スキル
 
 ## このスキルがやること
 
-Figmaのスクリーンショット + 自由文の指示を受け取ったら、**いきなりコードに走らず**「セクション分解 → レイアウト視覚図（PC/SP） → クラス名 → 寸法（fluid込み） → SP対応 → ファイル構成」をMarkdownで構造化提案し、ユーザーの "GO" 合意後に初めて実装する。プロジェクト規約（fluid() / CSS変数 / Component 3点セット）を厳守する。
+Figma URL or スクリーンショット + 自由文の指示を受け取ったら、**いきなりコードに走らず**：
+
+1. （Figma URL が提示されていれば）Figma Dev Mode MCP で実測値・変数・スクショを自動取得
+2. 「セクション分解 → レイアウト視覚図（PC/SP） → クラス名 → 寸法（fluid込み） → SP対応 → ファイル構成」をMarkdownで構造化提案
+3. ユーザーの "GO" 合意後に初めて実装
+
+プロジェクト規約（fluid() / CSS変数 / Component 3点セット）を厳守する。
 
 **重要:** 提案フェーズでは**実コード（pseudo-JSX 含む）は書かない**。要素の親子関係は構造ツリー、平面配置はレイアウト視覚図で表現する。
 
 ---
 
-## 動作フロー（3フェーズ）
+## 動作フロー（4フェーズ）
+
+### フェーズ0: Figma 情報の自動取得（URL がある時のみ）
+
+ユーザーが Figma URL を提示している場合に実行。詳細手順は `.claude/rules/figma-mcp-workflow.md` を必ず読んでから動く。
+
+要点だけ：
+1. URL から nodeId 抽出（`?node-id=1-2` → `1:2`）
+2. `mcp__figma-dev-mode__get_design_context` を呼ぶ（スクショ + 参考コード + 寸法メタが返る）
+   - `artifactType: COMPONENT_WITHIN_A_WEB_PAGE_OR_APP_SCREEN`（単体セクション）or `WEB_PAGE_OR_APP_SCREEN`（ページ全体）
+   - `clientFrameworks: "react,next.js"`, `clientLanguages: "typescript,scss"`, `taskType: "CREATE_ARTIFACT"`
+3. `mcp__figma-dev-mode__get_variable_defs` で使用変数（色/フォント/寸法トークン）を取得し、既存 `--color-*` 等にマップ
+4. （補助）必要なら `mcp__figma-dev-mode__get_screenshot` で純粋なスクショ取得
+
+取得した実測値はフェーズ1の④寸法表の **max列** にそのまま反映する。min値はルールテーブル算出（フェーズ1で実施）。
+
+**URL が無い・MCP接続失敗時:** 画像ベースの推定にフォールバックし、Figma URL があれば後で渡してほしいことだけ一度伝える（しつこく聞かない）。
 
 ### フェーズ1: 構造化提案（コード書かない）
-画像と指示を解析し、後述の **8ブロック必須テンプレート** をすべて埋めてMarkdown出力する。
+画像 or フェーズ0取得情報と指示を解析し、後述の **8ブロック必須テンプレート** をすべて埋めてMarkdown出力する。
 この時点で `.tsx` `.scss` のファイル作成は禁止。提案のみ。
 
 ### フェーズ2: ユーザー判断待ち
@@ -148,6 +170,7 @@ graph TD
 | gap | contentBlock | 40 | 16 | `@include fluid(gap, 16, 40);` |
 | ... | ... | ... | ... | ... |
 
+> max値: フェーズ0で Figma MCP から取得した実測値を優先。URL未提示や接続失敗時のみ画像目視で推定。
 > min値の算出は `.claude/rules/responsive.md` のテーブルに従うこと。
 
 ### ⑤ 色・フォント参照（必ずCSS変数表記）
@@ -260,4 +283,18 @@ graph TD
 → 既存の Button コンポーネントを拡張すべきか、新規 CTAButton を作るか確認
 → 8ブロック提案（小さなコンポーネントでもブロックは省略しない、N/A は明記）
 → GO 受領後に実装
+```
+
+### 例3: Figma URL を渡されたケース（推奨フロー）
+```
+ユーザー: 「https://figma.com/design/xxx/?node-id=122-128 のヒーロー実装して」
+
+→ スキル発動
+→ フェーズ0: URL から nodeId=122:128 を抽出
+  - mcp__figma-dev-mode__get_design_context (artifactType=COMPONENT_WITHIN_A_WEB_PAGE_OR_APP_SCREEN)
+  - mcp__figma-dev-mode__get_variable_defs
+  → 実測寸法 + 使用変数を収集
+→ フェーズ1: 8ブロック提案。④寸法表の max列は MCP 実測値で埋める
+→ フェーズ2: ユーザー判断
+→ フェーズ3: GO 受領後に3点セット作成
 ```

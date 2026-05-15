@@ -41,6 +41,7 @@
 | TSX / SCSS のコーディング規約・命名 | `.claude/rules/coding-standards.md` |
 | 新しいコンポーネントを追加する | `.claude/rules/component-creation.md` |
 | Figma デザインを実装に落とすフロー | `.claude/rules/design-to-implementation.md` |
+| Figma URL から実測値を MCP で取得する手順 | `.claude/rules/figma-mcp-workflow.md` |
 | 画像 / 3D 等のアセット配置・命名 | `.claude/rules/asset-management.md` |
 | コミット前のセルフチェック | `.claude/rules/pre-commit-checklist.md` |
 
