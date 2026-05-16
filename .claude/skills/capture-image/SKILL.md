@@ -192,9 +192,22 @@ graph TD
 - `src/components/ui/HeroSection/HeroSection.module.scss` — スタイル一式
 - `src/components/ui/HeroSection/index.ts` — `export { HeroSection } from './HeroSection';`
 
-### ⑧ 実装上の注意点
-- データソース: ハードコード or `src/data/hero.ts` に分離するか（要相談）
-- 画像配置: `public/images/sections/hero/...` （命名規則は kebab-case）
+### ⑧ コンテンツ照合チェックリスト + 実装上の注意点
+
+**🚨 必須：寸法だけでなく以下も Figma と1個ずつ突き合わせる（Phase 4 で漏らした項目）**
+
+- [ ] **写真・画像ソース**: Figma の画像が既存リポジトリと**同一かどうか**必ず確認。違うなら Figma からダウンロードして `public/` に配置 → data 側のパス更新
+- [ ] **テキスト本文**: 引用文 / 紹介文 / 経歴等が Figma の文言と一致するか。既存データが `"ここに簡易的な説明文が入ります"` 等のプレースホルダーのままになっていないか
+- [ ] **リンク・SNS**: INSTAGRAM / X / その他リンクの有無と URL（Figma にあって既存になければ追加、逆もしかり）
+- [ ] **要素の有無**: Figma側にあって既存実装にないもの、その逆も洗い出す
+- [ ] **配置・並び順**: 既存と Figma で並び順が違うケース（例: SNSが右上 vs 左下）
+
+> ⚠️ 照合せずに寸法・フォントだけ合わせると「ピクセルパーフェクト判定」が誤る（Phase 4 で写真齟齬・本文齟齬を見落とし）。
+> 既存のデータ・画像を流用する時は **必ず Figma と突き合わせて差分を明示** すること。
+
+**実装関連:**
+- データソース: ハードコード or `src/data/...` に分離するか（要相談）
+- 画像配置: `public/images/sections/...` （命名規則は kebab-case）
 - アニメーション: GSAPでフェードイン → useEffect + ScrollTrigger 想定
 - 3D連動: 不要 / `src/components/three/...` のキャラクターと位置合わせが必要 等
 - アクセシビリティ: `aria-label` / 見出しレベル（h1〜h6）の階層
