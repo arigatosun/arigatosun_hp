@@ -1,7 +1,7 @@
 # 次セッション向けハンドオフ — アリガトサンWEB
 
-> 最終更新: 2026-05-16（Phase 4 訂正版）
-> **自宅PC・別マシンから再開する時は、まずこのドキュメントを読む**
+> 最終更新: 2026-05-16（Phase 5 中間コミット時点）
+> **次セッション開始時は必ずこのドキュメントを読む**
 
 ---
 
@@ -10,63 +10,45 @@
 当初は外部メンバー（ヒデヤ三藤）への引き継ぎを準備していたが、本人実装に方針変更。
 「爆速 × ピクセルパーフェクト」を目標に、エージェント主導の自律開発フローへ移行中。
 
----
-
-## 🚨 Phase 4 のレビュー結果に重大な訂正（2026-05-16 判明）
-
-前回ハンドオフ時点では「MemberHeroBlock 実装は Figma 準拠で完成」と報告したが、**重大な見落とし** が判明：
-
-### 1. メンバー写真の齟齬
-- **Figma**: 黒スーツの中村秀人さん単独カット
-- **実装**: ベージュスーツ + 赤いアリガトくんマスコットが横にいるカット（既存 `public/images/team/shuto-nakamura.png` を流用）
-- 原因: 私（Claude）が Figma MCP で寸法情報は取ったが、**画像ファイル自体を Figma からダウンロードせず既存パスを使った**
-- レビュー時にも「写真の被写体に赤いキャラが含まれている＝仕様」と誤判定
-
-### 2. 本文・SNSリンクの齟齬
-- 自己紹介本文: Figma は「世は大AI時代。〜唯一無二の存在であることを誓います。」という実コンテンツ / 既存データは `"ここに簡易的な説明文が入ります"` のプレースホルダー
-- 引用文: Figma に「関わる人へ想像以上の価値を提供し続け、唯一無二の存在であれ。」がある / 既存 `catchphrase` は「『できない理由』をゼロにする。」で別物
-- SNS: Figma には INSTAGRAM のみ（右上配置） / 既存実装は INSTAGRAM + X が「区切り線の下」に表示
-
-### 3. 「3Dキャラ被り解消」タスクは存在しなかった
-- 前回ハンドオフで「GlobalCanvasが写真にオーバーレイ」としていたのは誤読
-- 実際: `GlobalCanvas` は `app/page.tsx`（TOP）のみで呼ばれている。メンバー詳細ページには来ない
-- 写真の中の赤いキャラは「写真自体の被写体の一部」（前述の写真齟齬）
-
-### 反省
-
-`capture-image` スキルのフェーズ1で「寸法だけでなく、画像・テキスト本文・リンク有無も照合する」が抜けていた。
-→ **`SKILL.md` の ⑧ に「コンテンツ照合チェックリスト」を追加済み**（2026-05-16）。次回以降は必ずこれを通す。
+Phase 4 で **「Figma 寸法は取ったが写真と本文は既存データ流用してハーフ実装」** という重大な見落としが判明。
+Phase 5 で ABOUT/MEMBER 詳細ページを **Figma 準拠で全面刷新** する作業中。
 
 ---
 
-## 方針転換: ABOUT/MEMBER 詳細ページは Figma 準拠で**全面刷新**
+## Phase 5 中間コミットで完了したこと
 
-既存 `src/app/about/member/[slug]/page.tsx` のコンテンツ構造（`catchphrase` / `description` / `careerSection` / `projectsSection` / `MemberSection` slider）はそのまま流用せず、**Figma 通りに作り直す**。
+### A. データ層拡張
+- `src/types/member.ts` に Phase 5 拡張フィールド追加: `roleJp` / `quote` / `introParagraphs`
+- `src/data/members.ts` の `shuto-nakamura` に Figma 準拠データ反映
+- 写真ファイル `public/images/team/shuto-nakamura.png` を Figma の黒スーツ単体カットに **差し替え済み**（2.9MB）
 
-### 大きな作業項目（次セッション開始時）
+### B. 新規コンポーネント 5 個（3点セット × 5 = 15 ファイル）
+- `MemberQuoteText` — 引用文「関わる人へ想像以上の〜」(20px Noto Sans JP Regular)
+- `MemberIntroText` — 自己紹介本文 9 段落（16px Noto Sans JP Regular）
+- `MemberSocialLinks` — INSTAGRAM のみ（16px Mozaic Light, underline, #808080）
+- `MemberCareerSection` — 経歴タイトル + 本文
+- `MemberProjectGrid` — プロジェクト 3 列グリッド
 
-| # | やること | 状態 |
+### C. page.tsx 全面刷新
+- 既存 `catchphrase / description / careerSection / projectsSection / infoHeader` 等の旧構造を破棄
+- 新コンポーネント順序に置換: Hero → SocialLinks → Quote → Intro → Career → Projects → MemberSection slider
+
+### D. 既知の不具合と一時対処
+- **画像最適化キャッシュ問題**: Next.js dev で `/_next/image?url=...&w=...&q=...` の AVIF/WebP キャッシュが古い画像を返し続ける
+- 一時対処: `MemberHeroBlock` の `<Image>` に `unoptimized` を付与（最適化バイパス）
+
+---
+
+## 残課題（次セッションで対応、優先度順）
+
+| # | 課題 | 説明 |
 |---|---|---|
-| 0 | Figma MCP 再接続（Claude Code 再起動で実施） | 必須 |
-| 1 | Figma から ABOUT~MEMBER(各詳細ページ)~1 の全サブセクションを順次 `get_design_context` で取得 | — |
-| 2 | `Member` 型 と `members.ts` を Figma 準拠に拡張（引用文 / 紹介文 / 経歴(構造化) / SNSは INSTAGRAM のみ / プロジェクトに画像つき） | — |
-| 3 | Figma の写真を MCP 経由でダウンロード → `public/images/team/shuto-nakamura.png` を**上書き** | — |
-| 4 | 既存 `page.tsx` を破棄して、Figma 準拠の新ページに置換 | — |
-| 5 | サブセクションを capture-image スキルフローで順次実装 | — |
-
-### サブセクション分割（前回 Agent 解析より、要 Figma 側で再確認）
-
-| # | コンポーネント名 | 役割 | Figma nodeId（参考） |
-|---|---|---|---|
-| 1 | `MemberHeroBlock` | 写真 + 役職 + 氏名 + 区切り線（**写真差し替え必須**） | `1705:44859` 周辺 |
-| 2 | `MemberSocialLinks` | INSTAGRAM 等のSNS（Figma上は右上想定） | `1601:67770` |
-| 3 | `MemberQuoteText` | 「関わる人へ想像以上の〜」引用文 | （要再確認） |
-| 4 | `MemberIntroText` | 自己紹介本文（実コンテンツ） | `1578:64878-79` |
-| 5 | `MemberCareerSection` | 経歴（Figmaではプレースホルダーのまま） | `1578:64876-80` |
-| 6 | `MemberProjectGrid` | 関わったプロジェクト 3列×2行 | `1644:176303` 系 |
-| 7 | `RelatedMembersStrip` | 他メンバー横並び（既存 `MemberSection` slider 流用検討） | `1705:44906` |
-
-> 親フレーム: `1578:63922`（PC 1920×3927、background `#F5F6F7`）
+| 1 | **INSTAGRAM の位置調整** | Figma では Hero ブロックの右上想定。現状は Hero の下に独立配置されている。`MemberSocialLinks` を `MemberHeroBlock` 内に取り込んで absolute 配置するのが正攻法 |
+| 2 | **`unoptimized` の恒久対策** | `.next/cache/images` クリア or 画像ファイル名バージョニング (例: `shuto-nakamura-v2.png`) で対処。本番 build では一度クリアすれば解消するはず |
+| 3 | **プロジェクトカード画像 6 枚** | Figma 上に CHOBITZ 等のサムネイル画像あり。MCP `localhost:3845/assets/*.png` から curl ダウンロード → `public/images/works/` に配置 → `members.ts` の `projects[].thumbnail` に追加 |
+| 4 | **MemberRelatedStrip の画像** | Figma に10人分のメンバー写真あり（imgRectangle337/353/358/359/360/361/362/363/364/365）。各メンバーの photo に追加すれば既存 `MemberSection slider` で自動表示。「ARIGATO KUN」も Figma にあるが members.ts には居ない |
+| 5 | **フルページスクショで全体確認** | playwright `fullPage: true` で経歴・プロジェクト含む全体確認、Figma と並べて差分検証 |
+| 6 | **ピクセルパーフェクト微調整** | 各ブロック間の余白（margin-top）を Figma 実測値で再調整。現状は仮置き (24/40/80 px) |
 
 ---
 
@@ -77,40 +59,32 @@
 - `/service/[serviceId]/page.tsx` 新設
 - SEO メタデータ（og:image / og:title）
 - 3D GLB ファイルサイズ最適化
-- 既存 ESLint エラー4件の解消（HeroAnimation / MemberSection / NewsSection / RevealText）
+- 既存 ESLint エラー 4 件の解消
 
 ---
 
-## 自宅PC再開時の初回プロンプト（コピペ用）
+## 次セッション再開時の初回プロンプト（コピペ用）
 
 ```
-アリガトサンWEBの開発を再開します。
+アリガトサンWEBの開発を再開します。Phase 5 続き。
 
-最初に docs/next-session-handoff.md を読んで、Phase 4 のレビュー訂正と方針転換
-（ABOUT/MEMBER 詳細ページの Figma 準拠 全面刷新）を把握してください。
-そのあと以下を進めて：
+最初に docs/next-session-handoff.md を読んで、これまでの経緯と残課題を把握してください。
+そのあと以下を進める：
 
-1. dev サーバーをポート3030で起動
-2. http://localhost:3030/about/member/shuto-nakamura で現状確認
-3. Figma MCP の疎通確認（mcp__figma-dev-mode__get_metadata で空打ち）
-4. 疎通OKなら、ABOUT~MEMBER(各詳細ページ)~1 (nodeId=1578:63922) のサブセクションを順次取得して
-   再設計プランをユーザーに提示
+1. dev サーバーをポート3034で起動（npm run dev -- -p 3034 --webpack）
+   ※ Turbopack はファイル変更で固まる事例があったので webpack 推奨
+2. Figma MCP の疎通確認（mcp__figma-dev-mode__get_metadata で空打ち）
+3. 残課題の #1（INSTAGRAM 位置）か #3（プロジェクト画像）から着手するか提案
+4. capture-image スキルのフェーズ1 ⑧ コンテンツ照合チェックリストを必ず通すこと
 
-Figmaデスクトップアプリで「アリガトサン_Webサイト」を開いて、
+Figma はデスクトップアプリで「アリガトサン_Webサイト」を開いて、
 Preferences > Enable local MCP server を ON、ABOUT~MEMBER(各詳細ページ)~1 のフレームを
-選択した状態にしておきます。
+選択した状態にしてあります。
 ```
 
 ---
 
 ## 技術ノート
-
-### Figma MCP 自動連携の使い方
-
-1. Figma デスクトップアプリで対象ファイルを開く（**Webブラウザ版ではダメ**）
-2. Preferences > Enable local MCP server を ON
-3. `capture-image` スキル発動時に Figma URL を渡す
-4. スキルが自動で `mcp__figma-dev-mode__get_design_context` / `get_variable_defs` を呼ぶ
 
 ### Figma MCP の注意点
 
@@ -122,22 +96,37 @@ Preferences > Enable local MCP server を ON、ABOUT~MEMBER(各詳細ページ)~
 
 ### MCP 接続が切れた時
 
-Claude Code セッション中に Figma MCP がdisconnectすると、`ToolSearch` でも `select:mcp__figma-dev-mode__*` が再認識されない。
+Claude Code セッション中に Figma MCP が disconnect すると、`ToolSearch` でも `select:mcp__figma-dev-mode__*` が再認識されない。
 → **Claude Code を再起動** することでMCPツールが再読み込みされる。
+
+### Next.js dev サーバーの罠
+
+- **Turbopack はファイル変更で固まることがある** → `--webpack` を付ける（Next.js 16 でも有効）
+- 起動失敗 `EADDRINUSE` のときはポート変更 (3030 → 3031 → 3032 → 3033 → 3034 と試した経緯あり)
+- 起動失敗 `Unable to acquire lock at .next/dev/lock` → `rm -f .next/dev/lock` で削除
+- **画像最適化キャッシュ問題**: 写真差し替え後も古い画像が表示される。`unoptimized` 一時付与 or `.next/cache/images` 削除 or 画像ファイル名バージョニングで対処
 
 ### ピクセルパーフェクト検証（playwright ad-hoc）
 
 - `scripts/_*.ts` （アンダーバー始まり）は `.gitignore` で除外済みの試運転用スロット
+- `scripts/_review-member-hero.ts` を再利用可能（URL を 3034 等に書き換える）
 - `page.evaluate` には **IIFE文字列** `(() => {...})()` を渡す（tsx の `__name` ヘルパー注入を回避）
-- viewport 別に複数 context を立てて、スクショと computed style を抽出する
+- `waitUntil: 'networkidle'` は来ないことがあるので `'domcontentloaded'` + `waitForTimeout(3000)` 推奨
 
-### MemberHeroBlock の仮置き値（要 Figma 親グループ実測）
+### Figma 実測値（Phase 5 取得済み）
 
-| プロパティ | 仮置き値 | 状態 |
+| 要素 | nodeId | スタイル |
 |---|---|---|
-| `gap`（写真↔テキスト） | 60px | 全面刷新時に Figma 値で上書き |
-| `padding-inline` | 200px | 同上 |
-| 氏名↔区切り線 `margin-top` | 40px | 同上 |
+| 写真 | 1705:44859 | 293×293, localhost:3845/assets/92c31c4...png |
+| 役職「代表社員」 | 1578:63977 | 15px Noto Sans JP / 16px Mozaic Light, #808080 |
+| 氏名 | 1578:63978 | 28px Mozaic Light, letter-spacing 3.64, black |
+| INSTAGRAM | 1578:64875 | 16px Mozaic Light, #808080, underline, text-center |
+| 引用文 | 1578:64878 | 20px Noto Sans JP Regular, letter-spacing 2.6, black |
+| 自己紹介本文 | 1578:64879 | 16px Noto Sans JP Regular, letter-spacing 3.84, black |
+| 経歴タイトル | 1578:64876 | 16px Noto Sans JP Regular, #808080 |
+| 経歴本文 | 1578:64880 | 16px Noto Sans JP Regular, black（プレースホルダー） |
+| プロジェクトタイトル | 1578:64877 | 16px Noto Sans JP Regular, #808080 |
+| 他メンバー | 1705:44906 | 231×231 写真 + 14px 役職 + 18px 氏名 ×10人 |
 
 ---
 
@@ -145,6 +134,5 @@ Claude Code セッション中に Figma MCP がdisconnectすると、`ToolSearch
 
 - 司令塔: `CLAUDE.md`
 - 残作業の元データ: `memory/` 配下（ローカルPC固有、別マシンでは要再構築）
-- ピクセルパーフェクト計画: `scripts/pixel-perfect/` ディレクトリ
 - Figma MCP ワークフロー: `.claude/rules/figma-mcp-workflow.md`
 - capture-image スキル: `.claude/skills/capture-image/SKILL.md`（⑧コンテンツ照合チェックリスト追加済）

@@ -22,4 +22,8 @@ export type Member = {
   career: string;
   social?: MemberSocial;
   projects?: MemberProject[];
+  // Phase 5: ABOUT/MEMBER 詳細ページ Figma 準拠 拡張フィールド
+  roleJp?: string;
+  quote?: string;
+  introParagraphs?: string[];
 };

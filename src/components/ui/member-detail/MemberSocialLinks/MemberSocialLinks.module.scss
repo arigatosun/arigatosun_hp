@@ -1,0 +1,21 @@
+@use '@/styles/fluid' as *;
+@use '@/styles/breakpoints' as *;
+
+.root {
+  display: flex;
+}
+
+.link {
+  color: var(--color-text-secondary);
+  font-family: var(--font-en);
+  font-weight: var(--font-weight-light);
+  @include fluid(font-size, 12, 16);
+  @include fluid(line-height, 14, 24);
+  @include fluid(letter-spacing, 1.04, 2.08);
+  text-decoration: underline;
+  transition: color var(--transition-base);
+
+  &:hover {
+    color: var(--color-primary);
+  }
+}

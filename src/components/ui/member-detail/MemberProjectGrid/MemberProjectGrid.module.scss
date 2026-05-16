@@ -1,0 +1,47 @@
+@use '@/styles/fluid' as *;
+@use '@/styles/breakpoints' as *;
+
+.title {
+  margin: 0;
+  @include fluid(margin-bottom, 12, 20);
+  color: var(--color-text-secondary);
+  font-family: var(--font-jp);
+  font-weight: var(--font-weight-regular);
+  @include fluid(font-size, 14, 16);
+  @include fluid(line-height, 22, 32);
+  @include fluid(letter-spacing, 1.04, 2.08);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  @include fluid(gap, 12, 20);
+
+  @include sp {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.card {
+  display: block;
+  text-decoration: none;
+  overflow: hidden;
+  transition: transform var(--transition-base);
+
+  &:hover {
+    transform: scale(1.02);
+  }
+}
+
+.thumbnail {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.placeholder {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: var(--color-placeholder);
+  opacity: 0.4;
+}

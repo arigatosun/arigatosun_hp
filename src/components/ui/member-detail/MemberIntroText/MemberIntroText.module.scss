@@ -1,0 +1,15 @@
+@use '@/styles/fluid' as *;
+@use '@/styles/breakpoints' as *;
+
+.root {
+  color: var(--color-black);
+  font-family: var(--font-jp);
+  font-weight: var(--font-weight-regular);
+}
+
+.paragraph {
+  margin: 0;
+  @include fluid(font-size, 14, 16);
+  @include fluid(line-height, 22, 32);
+  @include fluid(letter-spacing, 1.92, 3.84);
+}

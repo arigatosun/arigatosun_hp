@@ -26,6 +26,7 @@ export default function MemberHeroBlock({
           height={293}
           className={styles.photo}
           priority
+          unoptimized
         />
       </div>
       <div className={styles.infoBlock}>
