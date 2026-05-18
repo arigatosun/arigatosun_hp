@@ -90,6 +90,7 @@ public/
 
 Claude が毎回読む必要はない。実装で迷った時の補足資料。
 
+- `docs/DEVELOPER_ONBOARDING.md` — **外部開発者向け開発フロー ガイドライン**（依頼時に最初に共有）
 - `docs/DEVELOPMENT.md` — 開発環境・技術スタック詳説
 - `docs/RESPONSIVE_GUIDE.md` — レスポンシブ設計の背景思想
 - `docs/3D-ARIGATOKUN-RUNNER.md` — 3D演出仕様
