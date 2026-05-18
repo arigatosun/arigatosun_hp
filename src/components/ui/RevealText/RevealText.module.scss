@@ -4,30 +4,14 @@
 
 .line {
   display: block;
-  position: relative;
   width: fit-content;
 }
 
 .lineInner {
   display: inline;
-  position: relative;
-  z-index: 1;
-  // 白背景アニメーション（インラインで改行にも自然に対応）
-  background: linear-gradient(var(--color-white), var(--color-white)) no-repeat left center / 0% 100%;
-  padding: 0.05em 0;
-  box-decoration-break: clone;
-  -webkit-box-decoration-break: clone;
-  transition: background-size 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-// absoluteマスクは不要（lineInnerのbackgroundで代替）
+// マスク要素は不使用
 .mask {
   display: none;
-}
-
-// アニメーション発火時：白背景が左から右に広がる
-.revealed {
-  .lineInner {
-    background-size: 100% 100%;
-  }
 }
