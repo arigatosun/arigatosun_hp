@@ -1,0 +1,59 @@
+@use '@/styles/fluid' as * with (
+  $fluid-max-viewport: 1920
+);
+@use '@/styles/breakpoints' as *;
+
+.block {
+  display: flex;
+  align-items: flex-start;
+  @include fluid(gap, 40, 140);
+  @include fluid(padding-left, 20, 200);
+  @include fluid(padding-right, 20, 200);
+  @include fluid(margin-top, 96, 280);
+
+  // 1024px 未満は縦積み
+  @include max(1023px) {
+    flex-direction: column;
+    @include fluid(gap, 32, 48);
+  }
+}
+
+// ── 左: 見出し + 本文 ──
+.text {
+  flex: 0 0 auto;
+  // Figma: 本文幅 700 / コンテンツ幅 1520 ≒ 46%
+  width: 46%;
+  // Figma の本文ボックス幅 700px を上限に固定 → 広い画面でも改行位置が Figma と一致
+  max-width: 700px;
+
+  @include max(1023px) {
+    width: 100%;
+  }
+}
+
+.body {
+  // Figma: サブ見出し下端 → 本文上端 ≒ 140px
+  @include fluid(margin-top, 48, 140);
+  margin-bottom: 0;
+  color: var(--color-black);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  font-weight: var(--font-weight-regular);
+  @include fluid(font-size, 14, 16);
+  @include fluid(line-height, 28, 38);
+  // 字間は本文ごとに異なる（Figma 実測）。em でフォントサイズに追従させる。
+  letter-spacing: var(--body-tracking, 0.28em);
+
+  @include max(1023px) {
+    @include fluid(margin-top, 24, 40);
+  }
+}
+
+// ── 右: ビジュアル ──
+.visual {
+  flex: 1 1 0;
+  min-width: 0;
+
+  @include max(1023px) {
+    width: 100%;
+  }
+}

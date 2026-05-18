@@ -37,6 +37,12 @@
   justify-content: flex-end;
   overflow: hidden;
   background-color: var(--color-placeholder);
+  text-decoration: none;
+  transition: opacity var(--transition-base);
+
+  &:hover {
+    opacity: 0.85;
+  }
 }
 
 // ── カード下部テキスト群（下寄せ） ──
