@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>引き継ぎ確認ガイド — 合同会社アリガトサン コーポレートサイト</title>
+<style>
+  :root {
+    --red: #DA2719;
+    --ink: #1c1411;
+    --muted: #6b6259;
+    --bg: #f7f5f3;
+    --card: #ffffff;
+    --line: #e3ddd6;
+    --code-bg: #2b2622;
+    --code-ink: #f4ede4;
+    --note: #fff8e6;
+    --note-line: #e8b730;
+    --warn: #fdeceb;
+    --warn-line: var(--red);
+    --term: #eef4f1;
+    --term-line: #3a9d72;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans JP", "Yu Gothic", sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+    line-height: 1.85;
+    font-size: 16px;
+  }
+  .layout { display: flex; gap: 0; align-items: flex-start; }
+  /* ── サイドTOC ── */
+  nav.toc {
+    position: sticky; top: 0; height: 100vh; overflow-y: auto;
+    width: 290px; flex-shrink: 0;
+    background: #fffdfb; border-right: 1px solid var(--line);
+    padding: 26px 20px;
+  }
+  nav.toc h2 { font-size: 13px; letter-spacing: .08em; color: var(--muted); margin: 0 0 14px; }
+  nav.toc ol { list-style: none; margin: 0; padding: 0; counter-reset: step; }
+  nav.toc li { margin: 2px 0; }
+  nav.toc a {
+    display: block; padding: 7px 10px; border-radius: 7px;
+    text-decoration: none; color: var(--ink); font-size: 13.5px;
+  }
+  nav.toc a:hover { background: var(--term); }
+  nav.toc a.active { background: var(--red); color: #fff; }
+  nav.toc a .num { color: var(--red); font-weight: 700; margin-right: 7px; }
+  nav.toc a.active .num { color: #fff; }
+  /* ── 本文 ── */
+  main { flex: 1; min-width: 0; padding: 0 6vw 120px; max-width: 980px; margin: 0 auto; }
+  header.hero {
+    padding: 64px 0 40px; border-bottom: 3px solid var(--red); margin-bottom: 14px;
+  }
+  header.hero .kicker { color: var(--red); font-weight: 700; letter-spacing: .12em; font-size: 13px; }
+  header.hero h1 { font-size: 30px; margin: 10px 0 6px; line-height: 1.4; }
+  header.hero p { color: var(--muted); margin: 4px 0; font-size: 14.5px; }
+  section { padding: 40px 0; border-bottom: 1px solid var(--line); }
+  section.step > h2 {
+    font-size: 23px; margin: 0 0 4px; line-height: 1.4;
+  }
+  .steptag {
+    display: inline-block; background: var(--red); color: #fff;
+    font-size: 12px; font-weight: 700; padding: 3px 11px; border-radius: 20px;
+    letter-spacing: .05em; margin-bottom: 12px;
+  }
+  .lead { color: var(--muted); font-size: 14.5px; margin: 0 0 20px; }
+  h3 { font-size: 17.5px; margin: 30px 0 8px; padding-left: 11px; border-left: 4px solid var(--red); }
+  h4 { font-size: 15px; margin: 20px 0 6px; }
+  p { margin: 9px 0; }
+  ul, ol { padding-left: 1.4em; }
+  li { margin: 5px 0; }
+  a { color: var(--red); }
+  code.inline {
+    background: #efe9e2; color: #5b3a16; padding: 1px 6px;
+    border-radius: 4px; font-size: 13.5px;
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+  }
+  pre {
+    background: var(--code-bg); color: var(--code-ink);
+    padding: 15px 17px; border-radius: 10px; overflow-x: auto;
+    font-size: 13px; line-height: 1.7; margin: 12px 0;
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+  }
+  pre .cm { color: #9b9388; }      /* コメント */
+  pre .ng { color: #ff8e83; }      /* NG */
+  pre .ok { color: #8fd9a8; }      /* OK */
+  pre .label {
+    display:block; font-size: 11px; letter-spacing:.08em; color:#9b9388;
+    margin-bottom: 7px; text-transform: uppercase;
+  }
+  /* ── 解説ボックス ── */
+  .box { border-radius: 10px; padding: 13px 17px; margin: 12px 0; font-size: 14px; }
+  .box .bt { font-weight: 700; font-size: 13px; display: block; margin-bottom: 3px; }
+  .box.term { background: var(--term); border-left: 4px solid var(--term-line); }
+  .box.term .bt { color: var(--term-line); }
+  .box.note { background: var(--note); border-left: 4px solid var(--note-line); }
+  .box.note .bt { color: #9a7400; }
+  .box.warn { background: var(--warn); border-left: 4px solid var(--warn-line); }
+  .box.warn .bt { color: var(--red); }
+  table { border-collapse: collapse; width: 100%; margin: 12px 0; font-size: 13.5px; }
+  th, td { border: 1px solid var(--line); padding: 7px 10px; text-align: left; vertical-align: top; }
+  th { background: #f0eae3; }
+  .card {
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: 12px; padding: 6px 20px 14px; margin: 14px 0;
+  }
+  .card > h4:first-child { color: var(--red); border: 0; padding: 0; margin-top: 14px; }
+  .pill {
+    display:inline-block; font-size:11px; background:#efe9e2; color:var(--muted);
+    border-radius:12px; padding:2px 9px; margin-left:6px;
+  }
+  .done { color: var(--term-line); font-weight: 700; }
+  .todo { color: var(--muted); }
+  dl.gloss dt { font-weight: 700; margin-top: 14px; color: var(--ink); }
+  dl.gloss dt .en { color: var(--muted); font-weight: 400; font-size: 12.5px; margin-left: 6px; }
+  dl.gloss dd { margin: 3px 0 0; }
+  footer { padding: 40px 0 0; color: var(--muted); font-size: 13px; }
+  .toplink { display:inline-block; margin-top:18px; font-size:13px; }
+  @media (max-width: 880px) {
+    nav.toc { display: none; }
+    main { padding: 0 7vw 90px; }
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+
+<nav class="toc">
+  <h2>読む順番</h2>
+  <ol>
+    <li><a href="#intro"><span class="num">0</span>このガイドの使い方</a></li>
+    <li><a href="#glossary"><span class="num">★</span>用語集（先に流し読み）</a></li>
+    <li><a href="#s1"><span class="num">1</span>プロジェクトの全体像</a></li>
+    <li><a href="#s2"><span class="num">2</span>前任者からの引き継ぎレター</a></li>
+    <li><a href="#s3"><span class="num">3</span>開発の進め方</a></li>
+    <li><a href="#s4"><span class="num">4</span>司令塔ファイル CLAUDE.md</a></li>
+    <li><a href="#s5"><span class="num">5</span>現在の進捗と残課題</a></li>
+    <li><a href="#s6"><span class="num">6</span>実装ルール（.claude/rules）</a></li>
+    <li><a href="#s7"><span class="num">7</span>レスポンシブ設計の詳細</a></li>
+    <li><a href="#s8"><span class="num">8</span>領域別の仕様書</a></li>
+    <li><a href="#s9"><span class="num">9</span>Claude Code 活用のコツ</a></li>
+    <li><a href="#s10"><span class="num">10</span>注意点・既知の問題</a></li>
+    <li><a href="#s11"><span class="num">11</span>今回のセッションでの変更</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<header class="hero">
+  <div class="kicker">引き継ぎ確認ガイド</div>
+  <h1>合同会社アリガトサン コーポレートサイト<br>— このプロジェクトを引き継ぐ方へ</h1>
+  <p>リポジトリ: <code class="inline">arigatosun_hp</code>（Next.js コーポレートサイト）</p>
+  <p>このページは、確認すべきドキュメントを「読む順番」に並べ、Web 用語・コードに解説を添えてまとめたものです。</p>
+</header>
+
+<!-- ════════ 0 ════════ -->
+<section class="step" id="intro">
+  <div class="steptag">STEP 0</div>
+  <h2>このガイドの使い方</h2>
+  <p class="lead">最初にここだけ読んでください。</p>
+
+  <p>このプロジェクトには <strong>17 個ほどのドキュメント</strong>（<code class="inline">.md</code> ファイル）が散らばっています。
+  全部を最初から読む必要はありません。このガイドは、それらを <strong>読むべき順番に並べ替え</strong>、
+  各ドキュメントが「何のためのものか」「どこに本物のファイルがあるか」を1ページで把握できるようにしたものです。</p>
+
+  <div class="box term">
+    <span class="bt">用語：ドキュメント / .md ファイル</span>
+    「ドキュメント」は説明書のこと。<code class="inline">.md</code>（マークダウン）は、見出しや箇条書きを
+    簡単な記号で書ける軽量なテキスト形式です。プログラムではなく「人間が読む説明文」が書かれています。
+  </div>
+
+  <h4>進め方</h4>
+  <ol>
+    <li>まず次の「<strong>用語集</strong>」を流し読みして、知らない言葉に当たりをつける。</li>
+    <li>STEP 1 → 11 の順に読む。各 STEP には「<strong>元ファイル</strong>」の場所を書いてあります。</li>
+    <li>もっと詳しく知りたい STEP は、元ファイルを直接開く。</li>
+  </ol>
+
+  <div class="box note">
+    <span class="bt">ヒント：このプロジェクトは「Claude Code」前提で作られています</span>
+    分からないことがあったら、ターミナルで <code class="inline">claude</code> を起動し、
+    「<code class="inline">CLAUDE.md を読んで○○について教えて</code>」のように聞くのが想定された使い方です（STEP 9 で詳説）。
+  </div>
+</section>
+
+<!-- ════════ 用語集 ════════ -->
+<section class="step" id="glossary">
+  <div class="steptag">用語集</div>
+  <h2>★ 先に流し読みしておく用語集</h2>
+  <p class="lead">この先のドキュメントに出てくる Web 用語をまとめました。完全に覚えなくてOK。「こういうものか」程度で先に進めます。</p>
+
+  <h3>Git・GitHub まわり（コードの保管と共同作業）</h3>
+  <dl class="gloss">
+    <dt>リポジトリ <span class="en">repository / repo</span></dt>
+    <dd>プロジェクトのファイル一式と、その変更履歴を丸ごと保管する「箱」。GitHub 上にあります。</dd>
+    <dt>クローン <span class="en">clone</span></dt>
+    <dd>GitHub 上のリポジトリを、自分のパソコンにコピーしてくること。</dd>
+    <dt>ブランチ <span class="en">branch</span></dt>
+    <dd>作業用の「枝分かれした作業スペース」。本流は <code class="inline">main</code>。新機能は別ブランチで作り、完成したら main に合流させます。</dd>
+    <dt>コミット <span class="en">commit</span></dt>
+    <dd>変更内容に「ここまでの区切り」とメモ（コミットメッセージ）を付けて記録すること。セーブポイントのようなもの。</dd>
+    <dt>プッシュ <span class="en">push</span></dt>
+    <dd>自分のパソコンのコミットを、GitHub 側へアップロードすること。</dd>
+    <dt>マージ <span class="en">merge</span></dt>
+    <dd>あるブランチの変更を、別のブランチ（多くは main）に合流・統合すること。</dd>
+    <dt>プルリクエスト <span class="en">Pull Request / PR</span></dt>
+    <dd>「このブランチの変更を main に取り込んでほしい」という申請。レビュー（中身の確認）を経てマージされます。</dd>
+  </dl>
+
+  <h3>このサイトを動かす技術</h3>
+  <dl class="gloss">
+    <dt>Next.js（ネクストジェイエス）</dt>
+    <dd>Web サイトを作るための土台ソフト（フレームワーク）。React という仕組みの上に作られています。</dd>
+    <dt>App Router（アップルーター）</dt>
+    <dd>Next.js の「どのURLでどのページを表示するか」を決める仕組み。<code class="inline">src/app/</code> フォルダの構造が、そのままサイトのURL構造になります。</dd>
+    <dt>TypeScript（タイプスクリプト）</dt>
+    <dd>JavaScript（Webの基本言語）に「型」というミスを防ぐ仕組みを足した言語。ファイル拡張子は <code class="inline">.ts</code> / <code class="inline">.tsx</code>。</dd>
+    <dt>コンポーネント <span class="en">component</span></dt>
+    <dd>ボタン・ヘッダー・カードなど、画面の「部品」。部品を組み合わせてページを作ります。</dd>
+    <dt>SCSS / CSS Modules</dt>
+    <dd>見た目（色・大きさ・配置）を指定する言語が CSS。SCSS はその高機能版。「CSS Modules」は、各部品ごとに見た目を閉じ込めて他とぶつからないようにする仕組み。ファイルは <code class="inline">.module.scss</code>。</dd>
+    <dt>レスポンシブ <span class="en">responsive</span></dt>
+    <dd>PC・タブレット・スマホ、どの画面幅でも崩れず美しく見えるように作ること。</dd>
+    <dt>React Three Fiber / Three.js / GLB</dt>
+    <dd>Web 上で 3D を表示する技術。<code class="inline">.glb</code> は 3D モデルのファイル形式。このサイトには 3D キャラクター演出があります。</dd>
+    <dt>GSAP（ジーサップ）</dt>
+    <dd>アニメーション（動きの演出）を付けるためのライブラリ。スクロールに連動した動きなどに使います。</dd>
+    <dt>WordPress REST API</dt>
+    <dd>ニュース記事を WordPress（ブログ管理ツール）側で書き、その内容をこのサイトが受け取って表示する連携の仕組み。<strong>このサイトでは「後日連携」予定</strong>で、まだ本接続していません。</dd>
+  </dl>
+
+  <h3>開発作業まわり</h3>
+  <dl class="gloss">
+    <dt>npm（エヌピーエム）</dt>
+    <dd>このプロジェクトが使う外部の部品（ライブラリ）をまとめて管理・インストールする道具。<code class="inline">npm install</code> で一式そろえます。</dd>
+    <dt>開発サーバー <span class="en">dev server</span></dt>
+    <dd><code class="inline">npm run dev</code> で起動する、作りかけのサイトを手元で確認するための仮サーバー。<code class="inline">http://localhost:3000</code> で見られます。</dd>
+    <dt>ビルド <span class="en">build</span></dt>
+    <dd><code class="inline">npm run build</code> で実行。コードを「本番公開用」に変換する作業。型のミスなどがあると失敗します。</dd>
+    <dt>Lint（リント）/ ESLint</dt>
+    <dd><code class="inline">npm run lint</code> で実行。コードの「書き方の品質」を自動チェックする道具。バグになりやすい書き方を警告してくれます。</dd>
+    <dt>環境変数 / .env.local</dt>
+    <dd>API キーなど「コードに直接書きたくない秘密の設定値」を入れておくファイルが <code class="inline">.env.local</code>。GitHub にはアップロードしません（秘密だから）。</dd>
+    <dt>Figma（フィグマ）</dt>
+    <dd>デザインを作る・閲覧するツール。このサイトのデザイン（完成見本）は Figma にあります。</dd>
+    <dt>MCP</dt>
+    <dd>Claude Code が Figma などの外部ツールと直接やり取りするための接続規格。デザインの実寸法を自動取得するのに使います。</dd>
+  </dl>
+</section>
+
+<!-- ════════ 1 ════════ -->
+<section class="step" id="s1">
+  <div class="steptag">STEP 1</div>
+  <h2>プロジェクトの全体像</h2>
+  <p class="lead">元ファイル： <code class="inline">README.md</code> / <code class="inline">CLAUDE.md</code>（プロジェクト直下）</p>
+
+  <p><strong>合同会社アリガトサンのコーポレートサイト</strong>です。会社の公式ホームページを、最新の技術で作り直しているプロジェクトと考えてください。</p>
+
+  <h3>使われている技術（と、その役割）</h3>
+  <table>
+    <tr><th>技術</th><th>役割（かみくだき）</th></tr>
+    <tr><td>Next.js 16（App Router）</td><td>サイト全体の土台。ページの仕組み。</td></tr>
+    <tr><td>TypeScript</td><td>サイトの動き（プログラム）を書く言語。ミスを型で防ぐ。</td></tr>
+    <tr><td>SCSS Modules + CSS変数</td><td>見た目（色・サイズ・配置）を指定。</td></tr>
+    <tr><td>clamp() / Fluid Design</td><td>画面幅に応じて文字や余白をなめらかに伸縮させる仕組み（→ STEP 7）。</td></tr>
+    <tr><td>React Three Fiber + Three.js</td><td>3D キャラクター演出。</td></tr>
+    <tr><td>GSAP</td><td>スクロール連動などのアニメーション。</td></tr>
+    <tr><td>Resend</td><td>お問い合わせフォームから送信されたメールを実際に届けるサービス。</td></tr>
+    <tr><td>WordPress REST API</td><td>ニュース記事の連携（後日対応予定）。</td></tr>
+    <tr><td>npm</td><td>部品の管理。<strong>yarn・pnpm は使わない</strong>（統一のため）。</td></tr>
+  </table>
+
+  <h3>サイトのページ構成</h3>
+  <p>URL は <code class="inline">src/app/</code> フォルダの構造と対応しています。</p>
+  <table>
+    <tr><th>URL</th><th>ページ</th></tr>
+    <tr><td>/</td><td>トップページ</td></tr>
+    <tr><td>/about</td><td>会社紹介・メンバー</td></tr>
+    <tr><td>/about/member/[slug]</td><td>メンバー個別の詳細ページ</td></tr>
+    <tr><td>/service</td><td>事業内容</td></tr>
+    <tr><td>/works</td><td>実績一覧</td></tr>
+    <tr><td>/news ・ /news/[slug]</td><td>ニュース一覧・記事詳細</td></tr>
+    <tr><td>/contact</td><td>お問い合わせフォーム</td></tr>
+  </table>
+  <div class="box term">
+    <span class="bt">用語：[slug]（スラッグ）</span>
+    フォルダ名の角カッコは「ここは可変」という意味。<code class="inline">/about/member/[slug]</code> なら、
+    <code class="inline">/about/member/shuto-nakamura</code> のように、メンバーごとに中身が変わる1つの仕組みでまかなう、ということです。
+  </div>
+
+  <h3>フォルダ構成（要点）</h3>
+<pre><span class="label">プロジェクトの主なフォルダ</span>src/
+├── app/          <span class="cm"># 各ページ（URLと対応）</span>
+├── components/   <span class="cm"># 画面の部品</span>
+│   ├── layout/   <span class="cm">#   ヘッダー・フッター等の共通枠</span>
+│   ├── ui/       <span class="cm">#   セクション・汎用部品</span>
+│   └── three/    <span class="cm">#   3D 関連</span>
+├── data/         <span class="cm"># 静的データ（将来CMSに差し替え）</span>
+├── lib/          <span class="cm"># 補助的なプログラム</span>
+├── styles/       <span class="cm"># 全体の見た目設定</span>
+└── types/        <span class="cm"># 型定義</span>
+public/           <span class="cm"># 画像・3Dモデル等の素材</span>
+.claude/rules/    <span class="cm"># 開発ルール（Claude Code が参照）</span>
+docs/             <span class="cm"># 人間が読む詳しい資料</span></pre>
+</section>
+
+<!-- ════════ 2 ════════ -->
+<section class="step" id="s2">
+  <div class="steptag">STEP 2</div>
+  <h2>前任者からの引き継ぎレター</h2>
+  <p class="lead">元ファイル： <code class="inline">docs/dear-hideya.md</code></p>
+
+  <p>このプロジェクトを作っていた前任者（<strong>だいち</strong>さん）が、引き継ぐ人に向けて書いた手紙です。
+  最初の30分でやること、最初に読むべき順番、おすすめの進め方が書かれています。</p>
+
+  <h4>レターの要点</h4>
+  <ul>
+    <li>用意するもの： <strong>Node.js 20+ / npm / git / Claude Code CLI</strong>。エディタは Cursor か VS Code。</li>
+    <li>このプロジェクトは <strong>Claude Code 前提で設計</strong>されている。</li>
+    <li>最初は <code class="inline">CLAUDE.md</code> だけ読めばOK。あとは必要になったら参照する。</li>
+    <li>まず <code class="inline">/capture-image</code> というスキルを試してみてほしい（Figma のスクショから実装提案を出してくれる仕組み）。</li>
+    <li>ルール類・スキルは「もっとこうしたい」と思ったら自由に書き換えてOK。</li>
+  </ul>
+
+  <div class="box note">
+    <span class="bt">補足：このレターは「ひでや」さん宛て</span>
+    手紙は前任者から「ひで（ひでや）」さんへ宛てたものです。あなたがさらにその次の担当なら、
+    手紙は「最初の引き継ぎの記録」として読んでください。内容（読む順番・進め方）は今でも有効です。
+  </div>
+</section>
+
+<!-- ════════ 3 ════════ -->
+<section class="step" id="s3">
+  <div class="steptag">STEP 3</div>
+  <h2>開発の進め方</h2>
+  <p class="lead">元ファイル： <code class="inline">docs/DEVELOPER_ONBOARDING.md</code> — 環境構築から最初の PR までの一気通貫ガイド。引き継ぎで<strong>一番重要</strong>。</p>
+
+  <h3>3-1. 環境構築（最初の30分）</h3>
+<pre><span class="label">ターミナルで実行するコマンド</span>git clone https://github.com/arigatosun/arigatosun_hp.git
+cd arigatosun_hp
+npm install        <span class="cm"># 部品を一式インストール</span>
+npm run dev        <span class="cm"># 開発サーバー起動</span></pre>
+  <p><code class="inline">http://localhost:3000</code> が開けば成功です。</p>
+
+  <h4>環境変数（.env.local）</h4>
+  <p>プロジェクト直下に <code class="inline">.env.local</code> というファイルを作り、秘密の設定値を入れます。</p>
+<pre><span class="label">.env.local の中身</span>RESEND_API_KEY=                  <span class="cm"># 問い合わせメール送信用。未設定だとビルド失敗</span>
+NEXT_PUBLIC_WORDPRESS_API_URL=   <span class="cm"># ニュース連携用。未設定でもビルドは通る</span></pre>
+  <div class="box warn">
+    <span class="bt">重要：.env.local は絶対に GitHub にアップしない</span>
+    秘密の値（API キー）が入っているためです。<code class="inline">.gitignore</code> という仕組みで自動的に除外されていますが、
+    念のため <code class="inline">git add -A</code>（全部追加）を避け、<code class="inline">git add &lt;ファイル名&gt;</code> と1つずつ指定する習慣が推奨されています。
+  </div>
+
+  <h3>3-2. 開発の絶対ルール（破ると PR が差し戻される）</h3>
+  <div class="card">
+    <h4>① スケーラブルな値は固定 px 禁止 → fluid() を使う</h4>
+    <p>文字サイズ・余白・幅などは、固定の <code class="inline">px</code> で書かず、画面幅で伸縮する <code class="inline">@include fluid()</code> で書きます。</p>
+<pre><span class="ng">// ❌ NG（固定サイズ）</span>
+.title { font-size: 48px; margin-top: 80px; }
+
+<span class="ok">// ✅ OK（画面幅で 24px〜48px に伸縮）</span>
+.title {
+  @include fluid(font-size, 24, 48);
+  @include fluid(margin-top, 40, 80);
+}</pre>
+    <div class="box term">
+      <span class="bt">解説：fluid() とは</span>
+      このプロジェクト独自の「おまじない」。<code class="inline">@include fluid(font-size, 24, 48)</code> は
+      「文字サイズを、スマホでは 24px・PC では 48px、その間はなめらかに変化させる」という意味です（詳細は STEP 7）。
+    </div>
+  </div>
+  <div class="card">
+    <h4>② 色は CSS 変数経由（#xxxxxx の直書き禁止）</h4>
+    <p>色コードを直接書かず、あらかじめ名前を付けた「変数」で指定します。</p>
+<pre><span class="ng">// ❌ NG</span>  color: #DA2719;
+<span class="ok">// ✅ OK</span>  color: var(--color-primary);</pre>
+    <div class="box term">
+      <span class="bt">解説：CSS 変数 / デザイントークン</span>
+      <code class="inline">var(--color-primary)</code> は「ブランドの赤」に付けた名札。色を一箇所で管理でき、表記ゆれも防げます。
+      使える色の一覧は <code class="inline">.claude/rules/design-tokens.md</code> にあります。
+    </div>
+  </div>
+  <div class="card">
+    <h4>③ コンポーネントは「3点セット」で作る</h4>
+<pre>src/components/ui/MyComponent/
+├── MyComponent.tsx          <span class="cm"># 部品の中身（HTML構造・動き）</span>
+├── MyComponent.module.scss  <span class="cm"># 見た目</span>
+└── index.ts                 <span class="cm"># 読み込み用の入口</span></pre>
+  </div>
+  <div class="card">
+    <h4>④ 横並び2カラムは、スマホで縦積みにする対応を必ず入れる</h4>
+<pre>.row {
+  display: flex;            <span class="cm"># PCでは横並び</span>
+  gap: 40px;
+  @include sp {             <span class="cm"># スマホ（767px以下）では</span>
+    flex-direction: column; <span class="cm">#   縦並びに切り替え</span>
+    gap: 24px;
+  }
+}</pre>
+  </div>
+
+  <h3>3-3. ブランチ戦略（作業の進め方）</h3>
+  <table>
+    <tr><th>ブランチ</th><th>用途</th><th>命名例</th></tr>
+    <tr><td>main</td><td>安定版。管理者以外は直接 push しない</td><td>—</td></tr>
+    <tr><td>feature/*</td><td>新機能の実装</td><td>feature/about-member-detail</td></tr>
+    <tr><td>fix/*</td><td>バグ修正</td><td>fix/header-mobile-overflow</td></tr>
+    <tr><td>chore/*</td><td>設定・ドキュメント等</td><td>chore/update-readme</td></tr>
+  </table>
+<pre><span class="label">基本の作業フロー</span>git checkout main &amp;&amp; git pull          <span class="cm"># mainを最新に</span>
+git checkout -b feature/&lt;短い名前&gt;       <span class="cm"># 作業ブランチを作る</span>
+<span class="cm"># ... 実装 ...</span>
+git push -u origin feature/&lt;短い名前&gt;    <span class="cm"># GitHubへ</span>
+gh pr create                            <span class="cm"># プルリクエストを作る</span></pre>
+
+  <h3>3-4. コミットのルール</h3>
+  <ul>
+    <li>メッセージは<strong>日本語</strong>。形式は <code class="inline">Phase X: 実装内容の要約</code> または <code class="inline">種別: 要約</code>。</li>
+    <li>1コミット＝1論点（巨大なコミットにしない）。</li>
+  </ul>
+<pre><span class="ok">良い例</span>  Phase 6: MemberDetail SNSブロックを Figma 準拠で右上配置に修正
+<span class="ng">悪い例</span>  update / fix bug / WIP</pre>
+
+  <h3>3-5. やってはいけないこと（NG リスト）</h3>
+  <ul>
+    <li><code class="inline">main</code> への直接 push（外部開発者の場合）／ 任意ブランチでの <code class="inline">git push --force</code></li>
+    <li><code class="inline">.env*</code> のコミット</li>
+    <li>固定 px でスケーラブル値を書く ／ <code class="inline">#xxxxxx</code> の直書き</li>
+    <li>Figma が出力した生コードをそのままコピペ（プロジェクトの規約と合わない）</li>
+    <li>4幅（320/375/768/1200px）のレスポンシブ確認をせずに PR を出す</li>
+  </ul>
+
+  <h3>3-6. PR 前の品質チェック</h3>
+<pre>npm run lint    <span class="cm"># コード品質チェック → エラー0にする</span>
+npm run build   <span class="cm"># 本番ビルド → 成功させる</span></pre>
+  <p>さらに、ブラウザの開発者ツールで <strong>320 / 375 / 768 / 1200px</strong> の4つの幅を切り替え、
+  文字の重なり・はみ出し・横スクロール発生がないか目視確認します。</p>
+</section>
+
+<!-- ════════ 4 ════════ -->
+<section class="step" id="s4">
+  <div class="steptag">STEP 4</div>
+  <h2>司令塔ファイル「CLAUDE.md」</h2>
+  <p class="lead">元ファイル： <code class="inline">CLAUDE.md</code>（プロジェクト直下）</p>
+
+  <p><code class="inline">CLAUDE.md</code> は、Claude Code が<strong>毎回最初に読む「司令塔」ファイル</strong>です。
+  詳細は書かず、「○○したいときは△△を読め」という<strong>目次（ルーティング）</strong>に徹しています。</p>
+
+  <h3>最重要ルール（CLAUDE.md より）</h3>
+  <ol>
+    <li>スケーラブルな値は必ず <code class="inline">@include fluid()</code> で書く。固定 px 禁止。</li>
+    <li>色は必ず CSS 変数（<code class="inline">var(--color-xxx)</code>）経由。<code class="inline">#xxxxxx</code> 直書き禁止。</li>
+    <li>コンポーネントは <code class="inline">.tsx + .module.scss + index.ts</code> の3点セット。</li>
+    <li>横並び要素には必ずスマホ用の縦積み対応（<code class="inline">@include sp</code>）を入れる。</li>
+  </ol>
+
+  <h3>ルーティング目次（やりたいこと → 読むファイル）</h3>
+  <table>
+    <tr><th>やりたいこと</th><th>読むファイル</th></tr>
+    <tr><td>レスポンシブ・fluid() の計算</td><td>.claude/rules/responsive.md</td></tr>
+    <tr><td>色・フォント等のトークン参照</td><td>.claude/rules/design-tokens.md</td></tr>
+    <tr><td>コーディング規約・命名</td><td>.claude/rules/coding-standards.md</td></tr>
+    <tr><td>新しいコンポーネント追加</td><td>.claude/rules/component-creation.md</td></tr>
+    <tr><td>Figma を実装に落とすフロー</td><td>.claude/rules/design-to-implementation.md</td></tr>
+    <tr><td>Figma から実測値を取得</td><td>.claude/rules/figma-mcp-workflow.md</td></tr>
+    <tr><td>画像・3D の配置・命名</td><td>.claude/rules/asset-management.md</td></tr>
+    <tr><td>コミット前のチェック</td><td>.claude/rules/pre-commit-checklist.md</td></tr>
+  </table>
+  <div class="box note">
+    <span class="bt">補足：AGENTS.md について</span>
+    <code class="inline">AGENTS.md</code> は、OpenAI の Codex という別の AI ツール向けの、CLAUDE.md と似た指示ファイルです。
+    内容はほぼ同じ趣旨です（今回の作業で、参照パスの誤記を修正済み → STEP 11）。
+  </div>
+</section>
+
+<!-- ════════ 5 ════════ -->
+<section class="step" id="s5">
+  <div class="steptag">STEP 5</div>
+  <h2>現在の進捗と残課題</h2>
+  <p class="lead">元ファイル： <code class="inline">docs/next-session-handoff.md</code> — 「今プロジェクトがどこまで進んでいるか」が分かる最重要ファイル。</p>
+
+  <h3>これまでの経緯</h3>
+  <p>当初は外部メンバーへの引き継ぎを準備していましたが、本人実装に方針変更。
+  「<strong>Phase 5</strong>」として、ABOUT / メンバー詳細ページを Figma 準拠で全面刷新している最中です。</p>
+
+  <h3>サイト全体の残実装（handoff より）</h3>
+  <table>
+    <tr><th>項目</th><th>状態</th></tr>
+    <tr><td>WordPress 連携用の環境変数設定</td><td class="done">✅ 完了（今回のセッションで設定）</td></tr>
+    <tr><td>お問い合わせフォームのメール送信確認</td><td class="todo">キー設定済み・実送信は未検証</td></tr>
+    <tr><td>/service/[serviceId] ページ新設</td><td class="todo">未着手</td></tr>
+    <tr><td>SEO メタデータ（og:image 等）</td><td class="todo">未着手</td></tr>
+    <tr><td>3D GLB ファイルのサイズ最適化</td><td class="todo">未着手</td></tr>
+    <tr><td>ESLint エラー・警告の解消</td><td class="done">✅ 完了（今回のセッションで全解消）</td></tr>
+  </table>
+
+  <h3>メンバー詳細ページの残課題（Phase 5）</h3>
+  <ul>
+    <li>INSTAGRAM リンクの位置調整（Figma では Hero ブロック右上）</li>
+    <li>画像最適化キャッシュ問題の恒久対策（現在は一時対処中）</li>
+    <li>プロジェクトカード画像6枚の配置</li>
+    <li>メンバー写真10人分の追加</li>
+    <li>ピクセルパーフェクトの余白微調整</li>
+  </ul>
+  <div class="box warn">
+    <span class="bt">引き継ぎ時に必ず確認</span>
+    handoff ファイルの末尾には「<strong>本番デプロイ前の必須チェック</strong>」も追記してあります（→ STEP 10 の remotePatterns）。
+    本番公開の作業に入る前に必ず目を通してください。
+  </div>
+</section>
+
+<!-- ════════ 6 ════════ -->
+<section class="step" id="s6">
+  <div class="steptag">STEP 6</div>
+  <h2>実装ルール（.claude/rules/ — 8ファイル）</h2>
+  <p class="lead">元ファイル： <code class="inline">.claude/rules/</code> フォルダ内の8つの <code class="inline">.md</code>。コードを書く直前に、該当するものを読む設計です。</p>
+
+  <div class="card">
+    <h4>responsive.md <span class="pill">最重要</span></h4>
+    <p>このプロジェクトの根幹。「固定 px 禁止、必ず <code class="inline">fluid()</code>」というルールと、
+    スマホ時の最小値（min）の算出テーブルが書かれています。詳細は STEP 7。</p>
+  </div>
+  <div class="card">
+    <h4>design-tokens.md</h4>
+    <p>使ってよい色・フォント・余白などの「正解リスト」。たとえば
+    ブランド赤は <code class="inline">--color-primary</code>（#DA2719）、文字色は <code class="inline">--color-black</code>（#140700）。
+    新しい色が必要なら、先に <code class="inline">_variables.scss</code> に定義してから使います。</p>
+  </div>
+  <div class="card">
+    <h4>coding-standards.md</h4>
+    <p>TSX / SCSS の書き方・命名規約。コンポーネント名は PascalCase（例 <code class="inline">MemberSection</code>）、
+    CSS クラス名は camelCase（例 <code class="inline">memberCard</code>）、import の順序、など。</p>
+  </div>
+  <div class="card">
+    <h4>component-creation.md</h4>
+    <p>新しい部品を追加するときの手順。「3点セット」で作る、置き場所の判断（layout / ui / three）、
+    <code class="inline">'use client'</code> を付ける条件など。</p>
+    <div class="box term">
+      <span class="bt">解説：'use client' とは</span>
+      Next.js では部品が2種類あります。<code class="inline">'use client'</code> を付けると「ブラウザ側で動く部品」になり、
+      クリックや状態変化・アニメーションが扱えます。付けない部品は表示専用で軽量。迷ったら付けない側に倒す、が原則です。
+    </div>
+  </div>
+  <div class="card">
+    <h4>design-to-implementation.md</h4>
+    <p>Figma のデザイン値を、どう SCSS コードに変換するかの実装手順。
+    「Figma の値 = 最大値、最小値はテーブルから算出」という流れ。</p>
+  </div>
+  <div class="card">
+    <h4>figma-mcp-workflow.md</h4>
+    <p>Figma のデザインから、寸法・色などの<strong>実測値</strong>を MCP 経由で自動取得する手順。
+    Figma デスクトップアプリで「Dev Mode MCP Server」をオンにする必要があります。</p>
+  </div>
+  <div class="card">
+    <h4>asset-management.md</h4>
+    <p>画像・3D モデルの置き場所と命名ルール。ファイル名は <strong>小文字＋ハイフン区切り</strong>（例 <code class="inline">hero-bg.png</code>）。
+    画像は <code class="inline">next/image</code> を使い、<code class="inline">alt</code>（代替テキスト）を必ず付ける、など。</p>
+  </div>
+  <div class="card">
+    <h4>pre-commit-checklist.md</h4>
+    <p>コミット直前のチェックリスト。<code class="inline">npm run lint</code> / <code class="inline">npm run build</code> がエラー0、
+    4幅でのレスポンシブ目視、色・固定 px の点検、不要な <code class="inline">console.log</code> 削除など。</p>
+  </div>
+
+  <div class="box note">
+    <span class="bt">docs/ と .claude/rules/ の役割の違い</span>
+    <code class="inline">.claude/rules/</code> は <strong>Claude Code が状況別に参照する短いルール</strong>。
+    <code class="inline">docs/</code> は <strong>人間が腰を据えて読む詳しい資料</strong>。同じ内容を両方に書かない方針です。
+  </div>
+</section>
+
+<!-- ════════ 7 ════════ -->
+<section class="step" id="s7">
+  <div class="steptag">STEP 7</div>
+  <h2>レスポンシブ設計の詳細（このプロジェクトの心臓部）</h2>
+  <p class="lead">元ファイル： <code class="inline">docs/RESPONSIVE_GUIDE.md</code> / <code class="inline">docs/DEVELOPMENT.md</code> / <code class="inline">.claude/rules/responsive.md</code></p>
+
+  <h3>設計思想：Fluid Design（フルイドデザイン）</h3>
+  <p>従来のレスポンシブは「スマホ用」「PC用」とパッと切り替える方式でした。
+  このプロジェクトは <code class="inline">clamp()</code> という CSS 機能を使い、
+  画面幅に応じて文字や余白を<strong>なめらかに連続変化</strong>させます。</p>
+
+  <div class="box term">
+    <span class="bt">解説：clamp() とは</span>
+    CSS の機能で「最小値・推奨値・最大値」を渡すと、画面幅に応じて値がその範囲でなめらかに変わります。
+    このプロジェクトでは <code class="inline">fluid()</code> がこの clamp() を自動生成してくれます。
+  </div>
+
+  <h3>fluid() の使い方</h3>
+<pre><span class="label">入力（SCSS に書くもの）</span>@include fluid(font-size, 14, 24);
+
+<span class="label">↓ 自動生成される本物の CSS</span>font-size: clamp(0.875rem, 0.511rem + 1.136vw, 1.5rem);
+
+<span class="cm">// 結果： 画面320px時は14px、1200px時は24px、その間はなめらかに変化</span></pre>
+  <table>
+    <tr><th>引数</th><th>意味</th></tr>
+    <tr><td>第1引数</td><td>CSS プロパティ名（font-size, padding, gap など）</td></tr>
+    <tr><td>第2引数</td><td>最小値（スマホ＝320px時のデザイン値）</td></tr>
+    <tr><td>第3引数</td><td>最大値（PC＝1200px時のデザイン値＝Figma の値）</td></tr>
+  </table>
+
+  <h3>最小値（min）の決め方の目安</h3>
+  <p>Figma には PC のデザインしか無い場合が多いので、スマホ用の最小値は次の比率で見積もります。</p>
+  <table>
+    <tr><th>用途</th><th>PC値(max)</th><th>スマホ値(min)の目安</th></tr>
+    <tr><td>大見出し</td><td>38〜44px</td><td>PC値 × 約0.50〜0.55</td></tr>
+    <tr><td>本文（日本語）</td><td>24〜26px</td><td>14px（最小可読サイズ）</td></tr>
+    <tr><td>余白（margin/padding）</td><td>—</td><td>PC値 × 約0.30〜0.50</td></tr>
+  </table>
+
+  <h3>ブレイクポイント（レイアウトの切り替え）</h3>
+  <p><code class="inline">fluid()</code> は「サイズの伸縮」担当。「横並び→縦並び」のような<strong>構造の変更</strong>には
+  ブレイクポイントを使います。</p>
+<pre>@include sp  { ... }   <span class="cm">// スマホ：〜767px</span>
+@include tab { ... }   <span class="cm">// タブレット：768〜1023px</span>
+@include pc  { ... }   <span class="cm">// PC：1024px〜</span></pre>
+
+  <div class="box note">
+    <span class="bt">確認用の4つの幅</span>
+    実装後は必ず <strong>320px / 375px / 768px / 1200px</strong> の4幅で見た目を確認します。
+    ブラウザの開発者ツール（F12 →「デバイスツールバー」）で幅を切り替えられます。
+  </div>
+</section>
+
+<!-- ════════ 8 ════════ -->
+<section class="step" id="s8">
+  <div class="steptag">STEP 8</div>
+  <h2>領域別の仕様書（必要になったら読む）</h2>
+  <p class="lead">特定の機能を触るときに参照する、専門的な設計資料です。今すぐ全部読む必要はありません。</p>
+
+  <div class="card">
+    <h4>docs/SERVICE_SECTION_PLAN.md</h4>
+    <p><strong>Service（事業内容）セクション</strong>の実装計画書。レイアウト構成、重なり順（Z-index）、
+    使う素材ファイル、スクロール連動の仕組み、コンポーネント設計まで詳細に定義されています。
+    Service ページを触るときに読みます。</p>
+  </div>
+  <div class="card">
+    <h4>docs/3D-ARIGATOKUN-RUNNER.md</h4>
+    <p><strong>3D キャラクター「アリガトくん」の走行演出</strong>の仕様書。Blender デザイナーへの依頼内容、
+    3D モデル（GLB）到着後の実装手順、パラメータ調整、パフォーマンス最適化について。3D 演出を触るときに読みます。</p>
+  </div>
+  <div class="card">
+    <h4>docs/service-3d-debug-prompt.md</h4>
+    <p>「Service セクションで 3D キャラクターが表示されない」という<strong>既知の不具合</strong>を、
+    外部に調査依頼するためにまとめた資料。試したこと・確認済みの事実・仮説が整理されています。
+    <strong>この不具合が解決済みかどうかは、引き継ぎ時に要確認</strong>（→ STEP 10）。</p>
+  </div>
+  <div class="card">
+    <h4>.claude/skills/capture-image/SKILL.md</h4>
+    <p>前任者が作った <code class="inline">/capture-image</code> スキルの仕様。Figma のスクショや URL を渡すと、
+    実装に走る前に「セクション分解・クラス名・寸法表・SP対応・ファイル構成」などの<strong>構造化提案</strong>を
+    まず出してくれます。「先に方針 → それから実装」を強制する仕組みです。</p>
+  </div>
+</section>
+
+<!-- ════════ 9 ════════ -->
+<section class="step" id="s9">
+  <div class="steptag">STEP 9</div>
+  <h2>Claude Code 活用のコツ</h2>
+  <p class="lead">元ファイル： <code class="inline">docs/CLAUDE_CODE_HACKS.md</code> — このプロジェクトを動かす上での開発スタイル集。</p>
+
+  <p>このプロジェクトは、AI コーディングツール「<strong>Claude Code</strong>」を使う前提で設計されています。
+  前任者がまとめた、効率よく使うコツの抜粋です。</p>
+
+  <ul>
+    <li><strong>コードを書く前に方針を出させる</strong>：いきなり実装させず、まず構造提案を文章で出させると手戻りが激減する。</li>
+    <li><strong>ビルド・lint は Claude にやらせる</strong>：<code class="inline">npm run build</code> を実行させ、出たエラーをそのまま渡してデバッグさせる。</li>
+    <li><strong>同じミスをしたら rules/ に追記</strong>：Claude が繰り返すミスは、ルール不足。<code class="inline">.claude/rules/</code> にアンチパターンを足せば次から回避される。</li>
+    <li><strong>コミットメッセージを下書きさせる</strong>：<code class="inline">git diff</code> を渡して日本語で要約させる。ただし<strong>最終確認は自分で</strong>。</li>
+    <li><strong>具体的に聞く</strong>：ふわっと聞かず、ファイルパス・行番号を添えて、該当ファイルを読ませながら質問する。</li>
+  </ul>
+
+  <div class="box note">
+    <span class="bt">困ったときの優先順位（DEVELOPER_ONBOARDING より）</span>
+    ① <code class="inline">CLAUDE.md</code> の目次から該当 rules を読む → ② Claude Code に「該当ファイルを読んだ上で教えて」と聞く →
+    ③ <code class="inline">docs/</code> の詳細資料 → ④ それでも詰まったら管理者に連絡（<code class="inline">k2@arigatosun.com</code>）。
+  </div>
+</section>
+
+<!-- ════════ 10 ════════ -->
+<section class="step" id="s10">
+  <div class="steptag">STEP 10</div>
+  <h2>注意点・既知の問題</h2>
+  <p class="lead">引き継ぎ時に特に気をつけたい点をまとめました。</p>
+
+  <h3>① 本番公開前：next/image の画像ドメイン許可</h3>
+  <p>ニュースのサムネイル画像は <code class="inline">next/image</code> という最適化機能で表示しています。
+  この機能は、<code class="inline">next.config.ts</code> の <code class="inline">remotePatterns</code> に
+  <strong>登録したドメインの画像しか表示できません</strong>。</p>
+  <ul>
+    <li>現在の登録：<code class="inline">arigatosun-web.local</code>（ローカル開発用の WordPress）のみ。</li>
+    <li><strong>本番の WordPress を別ドメインに置く場合、そのドメインの追記が必須。</strong>忘れると本番でニュース画像が表示されません。</li>
+  </ul>
+  <div class="box warn">
+    <span class="bt">この注意点は handoff ファイルにも記載済み</span>
+    <code class="inline">docs/next-session-handoff.md</code> の「本番デプロイ前の必須チェック」に、対処コード例つきで残してあります。
+  </div>
+
+  <h3>② Service セクションの 3D 表示不具合（要確認）</h3>
+  <p><code class="inline">docs/service-3d-debug-prompt.md</code> に「Service セクションで 3D キャラクターが表示されない」という
+  調査資料があります。これが<strong>解決済みか未解決か</strong>を、現状のサイトを見て確認してください。</p>
+
+  <h3>③ お問い合わせフォームのメール送信は未検証</h3>
+  <p><code class="inline">RESEND_API_KEY</code> は設定済みでビルドも通りますが、
+  「実際にフォーム送信してメールが届くか」のテストはまだ行われていません。</p>
+
+  <h3>④ ドキュメントの軽微な古さ</h3>
+  <ul>
+    <li><code class="inline">docs/dear-hideya.md</code> の手順に <code class="inline">cd arigatosunWEB</code> とありますが、
+    実際のフォルダ名は <code class="inline">arigatosun_hp</code> です（前任者の手紙のため、原文のまま保存）。</li>
+    <li><code class="inline">README.md</code> と <code class="inline">AGENTS.md</code> は今回のセッションで最新化済み（→ STEP 11）。</li>
+  </ul>
+</section>
+
+<!-- ════════ 11 ════════ -->
+<section class="step" id="s11">
+  <div class="steptag">STEP 11</div>
+  <h2>今回のセッションで行った変更</h2>
+  <p class="lead">このガイドを作成したセッションで、すでに次の作業が完了しています。引き継ぎ後の「現在地」として把握してください。</p>
+
+  <table>
+    <tr><th>作業</th><th>内容</th><th>状態</th></tr>
+    <tr><td>環境構築</td><td>クローン → <code class="inline">npm install</code> → 開発サーバー起動</td><td class="done">✅</td></tr>
+    <tr><td>ブランチ統合</td><td><code class="inline">figma-mcp</code> ブランチ（/works 実績ページ機能）を <code class="inline">main</code> にマージし、不要ブランチを削除</td><td class="done">✅</td></tr>
+    <tr><td>環境変数</td><td><code class="inline">.env.local</code> を作成（Resend / WordPress の設定）</td><td class="done">✅</td></tr>
+    <tr><td>コード品質</td><td>ESLint のエラー4件・警告8件をすべて解消（<code class="inline">next/image</code> 移行、共通フック化など）</td><td class="done">✅</td></tr>
+    <tr><td>ドキュメント</td><td>handoff に本番チェック追記、<code class="inline">README.md</code> 刷新、<code class="inline">AGENTS.md</code> のパス誤記修正</td><td class="done">✅</td></tr>
+    <tr><td>本ガイド</td><td>この HTML ファイルを作成</td><td class="done">✅</td></tr>
+  </table>
+
+  <div class="box note">
+    <span class="bt">残っている宿題（記録のみ）</span>
+    ・本番公開時の <code class="inline">remotePatterns</code> 追記（STEP 10 ①）<br>
+    ・お問い合わせフォームの実メール送信テスト（STEP 10 ③）<br>
+    ・Phase 5（メンバー詳細ページ）の続き（STEP 5）
+  </div>
+</section>
+
+<footer>
+  <p>このガイドは引き継ぎ補助用にまとめた資料です。各 STEP の「元ファイル」が一次情報なので、
+  詳細はそちらを参照してください。情報が古くなったら、元ファイル側を更新してください。</p>
+  <a class="toplink" href="#intro">▲ 先頭に戻る</a>
+</footer>
+
+</main>
+</div>
+
+<script>
+  // TOC：現在表示中のセクションをハイライト
+  const links = [...document.querySelectorAll('nav.toc a')];
+  const map = {};
+  links.forEach(a => { const id = a.getAttribute('href').slice(1); map[id] = a; });
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        if (map[e.target.id]) map[e.target.id].classList.add('active');
+      }
+    });
+  }, { rootMargin: '-45% 0px -50% 0px' });
+  document.querySelectorAll('section').forEach(s => obs.observe(s));
+</script>
+
+</body>
+</html>

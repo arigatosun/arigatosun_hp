@@ -12,7 +12,7 @@
 **PC UIを実装する = レスポンシブ対応込み。固定pxは使わない。**
 
 SCSSでスケーラブルな値を書く際は必ず `@include fluid(プロパティ, min, max)` を使用する。
-Figmaのデザイン値 = max（PC値）、min（SP値）は `.Codex/rules/responsive.md` の算出テーブルに従う。
+Figmaのデザイン値 = max（PC値）、min（SP値）は `.claude/rules/responsive.md` の算出テーブルに従う。
 2カラム横並びには必ず `@include sp` での縦積み対応を含める。
 
 ## フォント設定
@@ -32,7 +32,7 @@ Figmaのデザイン値 = max（PC値）、min（SP値）は `.Codex/rules/respo
 - フォント・余白・幅 → `@include fluid(プロパティ, min, max)` を使用
 - レイアウト切り替え → `@include sp / tab / pc` を使用
 - カラーは必ずCSS変数経由（ハードコード禁止）
-- 詳細は `.Codex/rules/` 参照
+- 詳細は `.claude/rules/` 参照
 
 ## コンポーネント構成
 ```
