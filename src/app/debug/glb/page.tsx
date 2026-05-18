@@ -167,6 +167,9 @@ function CameraRig({ params, controlsRef }: {
     // OrthographicCameraのzoom同期
     if (camera instanceof THREE.OrthographicCamera) {
       if (camera.zoom !== params.orthoZoom) {
+        // react-three-fiber は useFrame 内で Three.js オブジェクトを直接更新するのが正規の作法。
+        // useThree() 由来の camera を不変扱いする immutability ルールはここでは誤検知。
+        // eslint-disable-next-line react-hooks/immutability
         camera.zoom = params.orthoZoom;
         camera.updateProjectionMatrix();
       }

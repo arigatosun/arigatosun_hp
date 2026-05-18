@@ -1,8 +1,9 @@
 'use client';
 
-import { useRef, useCallback, useEffect, useState } from 'react';
+import { useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { members } from '@/data/members';
+import { useMediaQuery } from '@/lib/useMediaQuery';
 import SectionHeader from '@/components/ui/SectionHeader';
 import styles from './MemberSection.module.scss';
 
@@ -11,17 +12,10 @@ type MemberSectionProps = {
 };
 
 export default function MemberSection({ variant = 'grid' }: MemberSectionProps) {
-  const [isPC, setIsPC] = useState(false);
   const cardRefs = useRef<(HTMLAnchorElement | null)[]>([]);
 
   // SP/PC判定（768px以上でマウスインタラクション有効）
-  useEffect(() => {
-    const mq = window.matchMedia('(min-width: 768px)');
-    setIsPC(mq.matches);
-    const handler = (e: MediaQueryListEvent) => setIsPC(e.matches);
-    mq.addEventListener('change', handler);
-    return () => mq.removeEventListener('change', handler);
-  }, []);
+  const isPC = useMediaQuery('(min-width: 768px)');
 
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLAnchorElement>, index: number) => {
     const card = cardRefs.current[index];

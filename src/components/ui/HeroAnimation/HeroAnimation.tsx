@@ -48,7 +48,10 @@ export default function HeroAnimation() {
 
   // パネルを初期位置に配置し、即座にパネルアニメーションを開始
   useEffect(() => {
-    panelRefs.current.forEach((panel) => {
+    // クリーンアップ時に同じ配列を参照するため effect 冒頭で控える
+    const panels = panelRefs.current;
+
+    panels.forEach((panel) => {
       if (panel) {
         gsap.set(panel, {
           x: '-75vw',
@@ -62,7 +65,7 @@ export default function HeroAnimation() {
     });
 
     // パネルアニメーションを起動
-    panelRefs.current.forEach((panel, index) => {
+    panels.forEach((panel, index) => {
       if (!panel) return;
       const motion = PANEL_MOTIONS[index];
       const tl = gsap.timeline();
@@ -123,7 +126,7 @@ export default function HeroAnimation() {
     return () => {
       idleTweensRef.current.forEach(tween => tween.kill());
       idleTweensRef.current = [];
-      panelRefs.current.forEach(panel => {
+      panels.forEach(panel => {
         if (panel) gsap.killTweensOf(panel);
       });
     };

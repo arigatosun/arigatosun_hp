@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef } from 'react';
 import styles from './RevealText.module.scss';
 
 type RevealTextProps = {
@@ -10,37 +10,40 @@ type RevealTextProps = {
 
 export default function RevealText({ children, className }: RevealTextProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const queueRef = useRef<HTMLElement[]>([]);
-  const isPlayingRef = useRef(false);
-
-  const playNext = useCallback(() => {
-    if (queueRef.current.length === 0) {
-      isPlayingRef.current = false;
-      return;
-    }
-
-    isPlayingRef.current = true;
-    const line = queueRef.current.shift()!;
-
-    // requestAnimationFrameでブラウザの描画タイミングに同期
-    requestAnimationFrame(() => {
-      line.classList.add(styles.revealed);
-    });
-
-    // 次の行を一定間隔後にアニメーション
-    setTimeout(() => playNext(), 600);
-  }, []);
-
-  const enqueue = useCallback((el: HTMLElement) => {
-    queueRef.current.push(el);
-    if (!isPlayingRef.current) {
-      playNext();
-    }
-  }, [playNext]);
 
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
+
+    // キューと再生状態は effect スコープ内に閉じる
+    const queue: HTMLElement[] = [];
+    let isPlaying = false;
+
+    // function 宣言は巻き上げられるため、再帰（自己参照）を安全に書ける
+    function playNext() {
+      if (queue.length === 0) {
+        isPlaying = false;
+        return;
+      }
+
+      isPlaying = true;
+      const line = queue.shift()!;
+
+      // requestAnimationFrameでブラウザの描画タイミングに同期
+      requestAnimationFrame(() => {
+        line.classList.add(styles.revealed);
+      });
+
+      // 次の行を一定間隔後にアニメーション
+      setTimeout(playNext, 600);
+    }
+
+    function enqueue(el: HTMLElement) {
+      queue.push(el);
+      if (!isPlaying) {
+        playNext();
+      }
+    }
 
     const lines = container.querySelectorAll(`.${styles.line}`);
 
@@ -49,11 +52,7 @@ export default function RevealText({ children, className }: RevealTextProps) {
         // 上から順にアニメーションするためDOM順でソート
         const sorted = [...entries]
           .filter((e) => e.isIntersecting)
-          .sort((a, b) => {
-            const aTop = a.boundingClientRect.top;
-            const bTop = b.boundingClientRect.top;
-            return aTop - bTop;
-          });
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
 
         sorted.forEach((entry) => {
           enqueue(entry.target as HTMLElement);
@@ -69,7 +68,7 @@ export default function RevealText({ children, className }: RevealTextProps) {
     lines.forEach((line) => observer.observe(line));
 
     return () => observer.disconnect();
-  }, [enqueue]);
+  }, []);
 
   return (
     <div ref={containerRef} className={className}>

@@ -267,6 +267,7 @@
 
 // ── サムネイル ──
 .articleThumbnail {
+  position: relative;
   flex-shrink: 0;
   @include fluid(width, 120, 300);
   aspect-ratio: 300 / 169;

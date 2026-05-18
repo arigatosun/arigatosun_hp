@@ -172,10 +172,12 @@ export default function NewsSection() {
                   </div>
                   <div className={styles.articleThumbnail}>
                     {item.thumbnail ? (
-                      <img
+                      <Image
                         src={item.thumbnail}
                         alt={item.title}
+                        fill
                         className={styles.thumbnailImage}
+                        sizes="(max-width: 768px) 100vw, 300px"
                       />
                     ) : (
                       <div className={styles.thumbnailPlaceholder} />

@@ -1,23 +1,17 @@
 'use client';
 
-import { useRef, useCallback, useState, useEffect } from 'react';
+import { useRef, useCallback } from 'react';
 import Image from 'next/image';
+import { useMediaQuery } from '@/lib/useMediaQuery';
 import SectionHeader from '@/components/ui/SectionHeader';
 import styles from './BusinessStructureSection.module.scss';
 
 export default function BusinessStructureSection() {
   const glowRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isPC, setIsPC] = useState(true);
 
   // SP/PC判定（768px以上でマウスインタラクション有効）
-  useEffect(() => {
-    const mq = window.matchMedia('(min-width: 768px)');
-    setIsPC(mq.matches);
-    const handler = (e: MediaQueryListEvent) => setIsPC(e.matches);
-    mq.addEventListener('change', handler);
-    return () => mq.removeEventListener('change', handler);
-  }, []);
+  const isPC = useMediaQuery('(min-width: 768px)');
 
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();

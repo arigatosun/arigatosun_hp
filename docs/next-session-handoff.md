@@ -54,12 +54,40 @@ Phase 5 で ABOUT/MEMBER 詳細ページを **Figma 準拠で全面刷新** す�
 
 ## サイト全体の残実装（低優先、別タスク）
 
-- `NEXT_PUBLIC_WORDPRESS_API_URL` 環境変数設定（NEWS が実API化）
-- `/api/contact` のメール送信実装確認（Resend は dependencies 入り）
-- `/service/[serviceId]/page.tsx` 新設
-- SEO メタデータ（og:image / og:title）
-- 3D GLB ファイルサイズ最適化
-- 既存 ESLint エラー 4 件の解消
+- [x] `NEXT_PUBLIC_WORDPRESS_API_URL` 環境変数設定（NEWS が実API化）— ✅ 完了 2026-05-18（`.env.local` に設定）
+- [ ] `/api/contact` のメール送信実装確認（Resend は dependencies 入り）— `RESEND_API_KEY` は `.env.local` に設定済み・ビルド通過確認済み。実際のメール送信は未検証
+- [ ] `/service/[serviceId]/page.tsx` 新設
+- [ ] SEO メタデータ（og:image / og:title）
+- [ ] 3D GLB ファイルサイズ最適化
+- [x] 既存 ESLint エラー 4 件の解消 — ✅ 完了 2026-05-18（`react-hooks` 系 4 件 + 警告 8 件すべて解消）
+
+---
+
+## ⚠️ 本番デプロイ前の必須チェック
+
+> 本番環境の動作確認のタイミングで必ず確認すること。
+
+### next/image の画像ドメイン許可（remotePatterns）
+
+NEWS のサムネイル / アイキャッチを `next/image` で表示している
+（`src/app/news/page.tsx` / `src/app/news/[slug]/page.tsx` / `src/components/ui/NewsSection/NewsSection.tsx`）。
+
+`next/image` は `next.config.ts` の `images.remotePatterns` に登録したドメインの画像しか表示できない。
+
+- 現状の登録は `arigatosun-web.local`（ローカル開発用の WordPress）のみ。
+- **本番の WordPress を別ドメインに置く場合、そのドメインを `remotePatterns` に追加しないと本番でニュース画像が表示されない。**
+- 未登録のままだと `Invalid src prop ... hostname is not configured under images in your next.config.ts` というエラーになる。
+
+対応は `next.config.ts` に1行追記するだけ:
+
+```ts
+images: {
+  remotePatterns: [
+    { protocol: 'http',  hostname: 'arigatosun-web.local' },   // ローカル用（残してOK）
+    { protocol: 'https', hostname: '<本番WordPressドメイン>' }, // ← 本番ドメインを追加
+  ],
+},
+```
 
 ---
 

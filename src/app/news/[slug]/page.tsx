@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import Image from 'next/image';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { fetchPostBySlug } from '@/lib/wordpress';
@@ -50,10 +51,12 @@ export default async function NewsDetailPage({ params }: Props) {
         {/* アイキャッチ画像 */}
         {post.thumbnail && (
           <div className={styles.heroImage}>
-            <img
+            <Image
               src={post.thumbnail}
               alt={post.title}
+              fill
               className={styles.heroImg}
+              sizes="(max-width: 768px) 100vw, 800px"
             />
           </div>
         )}
