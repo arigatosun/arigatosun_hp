@@ -1,0 +1,94 @@
+// Figma フレームは 1920px 幅で設計されているため、max-viewport を 1920 に上書き。
+// これにより 1920px ビューポートで Figma 完全一致、それ以下では Figma 比率を保ってスケール。
+@use '@/styles/fluid' as * with (
+  $fluid-max-viewport: 1920
+);
+@use '@/styles/breakpoints' as *;
+
+.section {
+  // Figma: カード上端 y=594 / 本文下端 y=528 → 余白 66px
+  @include fluid(margin-top, 32, 66);
+  // Figma: 左右 200px（タイトルブロックと左端を揃える）
+  @include fluid(padding-left, 20, 200);
+  @include fluid(padding-right, 20, 200);
+  // Figma: カード下端 y=1154 / 次セクション y=1394 → 余白 240px
+  @include fluid(padding-bottom, 96, 240);
+}
+
+// ── 3列グリッド ──
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  // Figma: カード間 40px
+  @include fluid(gap, 16, 40);
+
+  // 1024px 未満は1列縦積み
+  @include max(1023px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// ── カード（Figma: 480×560 / 背景 #d9d9d9 / 角丸なし） ──
+.card {
+  position: relative;
+  aspect-ratio: 480 / 560;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  overflow: hidden;
+  background-color: var(--color-placeholder);
+  text-decoration: none;
+  transition: opacity var(--transition-base);
+
+  &:hover {
+    opacity: 0.85;
+  }
+}
+
+// ── カード下部テキスト群（下寄せ） ──
+.cardBody {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  // Figma: 各テキスト間 16px
+  @include fluid(gap, 8, 16);
+  // Figma: 左右内側 40px / 下 40px
+  @include fluid(padding-left, 16, 40);
+  @include fluid(padding-right, 16, 40);
+  @include fluid(padding-bottom, 16, 40);
+}
+
+// 日本語ラベル（Figma: Noto Sans JP / 16px / opacity 0.5）
+.cardLabel {
+  margin: 0;
+  color: var(--color-white);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  @include fluid(font-size, 12, 16);
+  font-weight: var(--font-weight-regular);
+  line-height: 1.5;
+  @include fluid(letter-spacing, 1, 2.08);
+  opacity: 0.5;
+}
+
+// 英語タイトル（Figma: Mozaic GEO Variable Light / 25.5px）
+.cardTitle {
+  margin: 0;
+  color: var(--color-white);
+  font-family: var(--font-en);
+  @include fluid(font-size, 16, 25.5);
+  font-weight: var(--font-weight-light);
+  line-height: 1.2;
+  @include fluid(letter-spacing, 1.6, 3.32);
+}
+
+// 説明文（Figma: Noto Sans JP / 14px / line-height 26）
+.cardDesc {
+  margin: 0;
+  color: var(--color-white);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  @include fluid(font-size, 12, 14);
+  font-weight: var(--font-weight-regular);
+  @include fluid(line-height, 20, 26);
+  @include fluid(letter-spacing, 1, 1.82);
+}

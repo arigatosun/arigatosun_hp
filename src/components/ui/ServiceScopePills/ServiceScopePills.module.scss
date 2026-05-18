@@ -1,0 +1,71 @@
+@use '@/styles/fluid' as * with (
+  $fluid-max-viewport: 1920
+);
+@use '@/styles/breakpoints' as *;
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  // Figma: 行ピッチ 66px / ピル高 38px → 行間 28px
+  @include fluid(gap, 14, 28);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  @include fluid(gap, 16, 40);
+}
+
+// ピル（BRANDING / IDENTITY 等）
+.pill {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  // Figma: ピル 188×38
+  @include fluid(width, 124, 188);
+  @include fluid(height, 30, 38);
+  border: 1px solid var(--color-text-secondary);
+  border-radius: var(--border-radius-full);
+  color: var(--color-text-secondary);
+  font-family: var(--font-en);
+  @include fluid(font-size, 13, 18);
+  font-weight: var(--font-weight-light);
+  @include fluid(letter-spacing, 1.6, 2.7);
+
+  // カーソル追従の赤グロー。
+  // 背景グラデはピルの角丸でクリップされる（＝マスクされた表示）。
+  // --gx / --gy はカーソル位置（JS が各ピルのローカル座標で更新）。既定は画面外。
+  --gx: -999px;
+  --gy: -999px;
+  @include fluid(--glow-radius, 90, 150);
+  // 中心の濃さは GlowImage（アリガトサン・スタンダード等）のグローに合わせる。
+  // GlowImage は radial-gradient(primary→transparent) + opacity 0.55 ＝ 実効 primary 55%。
+  background: radial-gradient(
+    circle var(--glow-radius) at var(--gx) var(--gy),
+    color-mix(in srgb, var(--color-primary) 55%, transparent) 0%,
+    color-mix(in srgb, var(--color-primary) 30%, transparent) 38%,
+    color-mix(in srgb, var(--color-primary) 9%, transparent) 70%,
+    transparent 100%
+  );
+}
+
+// 赤アクセントピル（BRANDING）
+// マウス未操作時の既定位置。Figma 同様このピルが赤い状態から始まる。
+.pillAccent {
+  --gx: 90%;
+  --gy: 140%;
+}
+
+// カテゴリ列挙テキスト
+.items {
+  color: var(--color-text-secondary);
+  font-family: var(--font-en);
+  @include fluid(font-size, 12, 16);
+  font-weight: var(--font-weight-light);
+  @include fluid(letter-spacing, 1.5, 2.4);
+  line-height: 1.5;
+}

@@ -1,0 +1,76 @@
+@use '@/styles/fluid' as * with (
+  $fluid-max-viewport: 1920
+);
+@use '@/styles/breakpoints' as *;
+
+.section {
+  @include fluid(padding-left, 20, 200);
+  @include fluid(padding-right, 20, 200);
+  @include fluid(margin-top, 96, 280);
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  @include fluid(margin-top, 32, 63);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  // Figma: カード間 85px
+  @include fluid(gap, 24, 85);
+
+  @include max(1023px) {
+    grid-template-columns: 1fr;
+    @include fluid(gap, 32, 48);
+  }
+}
+
+// ── 事例カード ──
+.thumb {
+  width: 100%;
+  // Figma: サムネ 450×253
+  aspect-ratio: 450 / 253;
+  overflow: hidden;
+  background-color: var(--color-placeholder);
+}
+
+.thumbImage {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.thumbPlaceholder {
+  width: 100%;
+  height: 100%;
+  background-color: var(--color-placeholder);
+}
+
+.client {
+  @include fluid(margin-top, 24, 40);
+  margin-bottom: 0;
+  color: var(--color-text-secondary);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  @include fluid(font-size, 13, 15);
+  font-weight: var(--font-weight-regular);
+  @include fluid(letter-spacing, 1.7, 3.4);
+  line-height: 1.6;
+}
+
+.clientLabel {
+  font-family: var(--font-en);
+  @include fluid(font-size, 14, 17);
+  font-weight: var(--font-weight-light);
+}
+
+.text {
+  @include fluid(margin-top, 8, 16);
+  margin-bottom: 0;
+  color: var(--color-black);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  font-weight: var(--font-weight-regular);
+  @include fluid(font-size, 15, 18);
+  @include fluid(line-height, 28, 36);
+  @include fluid(letter-spacing, 1.5, 2.34);
+}

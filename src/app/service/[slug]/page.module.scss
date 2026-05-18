@@ -1,0 +1,10 @@
+@use '@/styles/fluid' as * with (
+  $fluid-max-viewport: 1920
+);
+@use '@/styles/breakpoints' as *;
+
+.page {
+  position: relative;
+  // GlowImage の赤グローが端で見切れても横スクロールを出さない
+  overflow-x: clip;
+}

@@ -1,0 +1,44 @@
+@use '@/styles/fluid' as * with (
+  $fluid-max-viewport: 1920
+);
+@use '@/styles/breakpoints' as *;
+
+.crossLinks {
+  @include fluid(padding-left, 20, 200);
+  @include fluid(padding-right, 20, 200);
+  @include fluid(margin-top, 64, 121);
+  @include fluid(padding-bottom, 96, 240);
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  // Figma: カード間 80px
+  @include fluid(gap, 24, 80);
+
+  @include sp {
+    grid-template-columns: 1fr;
+    @include fluid(gap, 20, 40);
+  }
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  // Figma: カード 720×400
+  aspect-ratio: 720 / 400;
+  background-color: var(--color-placeholder);
+  text-decoration: none;
+}
+
+.label {
+  color: var(--color-black);
+  font-family: var(--font-en);
+  @include fluid(font-size, 22, 32);
+  font-weight: var(--font-weight-light);
+  @include fluid(letter-spacing, 2.8, 4.16);
+  text-align: center;
+  transition: color var(--transition-base);
+
+  .card:hover & {
+    color: var(--color-primary);
+  }
+}
