@@ -236,12 +236,12 @@
   @include fluid(margin-top, 24, 80);
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
-  @include fluid(font-size, 16, 30);
+  @include fluid(font-size, 18, 32);
   font-weight: var(--font-weight-regular);
   font-style: normal;
-  @include fluid(line-height, 44, 88);
-  @include fluid(letter-spacing, 7, 28);
-  @include fluid(margin-bottom, 34, 59);
+  line-height: 2.0625; // Figma: 66px / 32px
+  @include fluid(letter-spacing, 12.8, 25.6);
+  @include fluid(margin-bottom, 40, 64);
 }
 
 .aboutMessage {
@@ -251,8 +251,8 @@
   @include fluid(font-size, 13, 20);
   font-weight: var(--font-weight-regular);
   font-style: normal;
-  @include fluid(line-height, 33, 64);
-  @include fluid(letter-spacing, 1.5, 3.5);
+  @include fluid(line-height, 33, 62);
+  @include fluid(letter-spacing, 1.8, 3.6);
 }
 
 .aboutBlock {

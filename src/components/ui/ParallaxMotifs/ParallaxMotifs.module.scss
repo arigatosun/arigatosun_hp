@@ -14,8 +14,9 @@
 
 .svg {
   position: absolute;
-  // Figmaデータ: Group 111のY=1708px、ヒーロー約1100px → アバウトセクション内約600px地点
-  top: calc(100vh + 904px);
+  // Figma「Group 868」書き出し（viewBox 1920×1919）。
+  // モチーフ群の上端が Hero 最下部の右下に覗くよう配置（Figma 準拠）
+  top: calc(100vh - 155px);
   left: 50%;
   // 1920pxベースのデザインを現在のビューポート幅にスケール
   width: 100vw;
