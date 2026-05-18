@@ -2,58 +2,44 @@
 @use '@/styles/breakpoints' as *;
 
 .message {
-  @include fluid(margin-top, 120, 410);
+  @include fluid(margin-top, 100, 340);
   display: flex;
   flex-direction: column;
   align-items: center;
   @include fluid(padding-left, 20, 40);
   @include fluid(padding-right, 20, 40);
+  // 本文末尾とフッターの 3D キャラクターの間に 160px の余白を確保
+  @include fluid(padding-bottom, 54, 108);
 }
 
 // ── RISE WITH THANKS. ──
 .heading {
   text-align: center;
+  white-space: nowrap;
   font-family: var(--font-en);
-  @include fluid(font-size, 20, 44);
+  @include fluid(font-size, 20, 36);
   font-style: normal;
   font-weight: var(--font-weight-light);
-  @include fluid(line-height, 24, 51);
-  @include fluid(letter-spacing, 4, 10.56);
+  line-height: 1.056;
+  @include fluid(letter-spacing, 4.32, 8.64);
 }
 
 // ── メッセージ本文 ──
 .body {
-  @include fluid(margin-top, 40, 140);
+  @include fluid(margin-top, 42, 104);
   width: 100%;
-  max-width: 1210.44px;
+  max-width: 908px;
   text-align: center;
-}
-
-.textRed {
-  color: var(--color-primary);
   font-family: 'Noto Sans JP', var(--font-jp);
-  @include fluid(font-size, 14, 26);
+  @include fluid(font-size, 14, 24);
   font-style: normal;
   font-weight: var(--font-weight-regular);
-  @include fluid(line-height, 36, 74);
-  @include fluid(letter-spacing, 2, 4.68);
+  line-height: 2.583;
+  @include fluid(letter-spacing, 2.16, 4.32);
 }
 
-.textMixed {
-  @include fluid(margin-top, 40, 100);
-  font-family: 'Noto Sans JP', var(--font-jp);
-  @include fluid(font-size, 14, 26);
-  font-style: normal;
-  font-weight: var(--font-weight-regular);
-  @include fluid(line-height, 36, 74);
-  @include fluid(letter-spacing, 2, 4.68);
-}
-
-// ── カラー ──
-.red {
+// ── スクロール連動カラーリベール対象（1文字単位） ──
+// 既定は赤（JS無効・SEO時に可読）。JS実行時に 白→赤 をスクロールで描画する。
+.char {
   color: var(--color-primary);
-}
-
-.white {
-  color: var(--color-white);
 }
