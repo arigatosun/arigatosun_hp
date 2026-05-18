@@ -15,7 +15,7 @@ export const SERVICE_CARDS: readonly ServiceCardData[] = [
   {
     id: 'design-branding',
     category: 'DESIGN / BRANDING',
-    categoryLabel: 'デザイン・ブランディング',
+    categoryLabel: 'デザイン・ブランディング部',
     title: 'DESIGN / BRANDING',
     description:
       'ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。',
@@ -25,7 +25,7 @@ export const SERVICE_CARDS: readonly ServiceCardData[] = [
   {
     id: 'ip-creative',
     category: 'IP / CREATIVE',
-    categoryLabel: 'IP・クリエイティブ',
+    categoryLabel: 'IP・クリエイティブ部',
     title: 'IP / CREATIVE',
     description:
       'ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。',
