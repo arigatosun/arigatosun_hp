@@ -41,7 +41,41 @@
   display: flex;
   justify-content: center;
   @include fluid(padding-top, 60, 200);
-  @include fluid(padding-bottom, 40, 160);
+  @include fluid(padding-bottom, 80, 200);
+}
+
+// ── CONTACT US ボタン（フッター専用 / Figma: 380×72・枠線なし） ──
+.contactButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  @include fluid(width, 240, 380);
+  @include fluid(height, 52, 72);
+  border-radius: 43.2px;
+  background-color: var(--color-white);
+  box-shadow: 0 2px 20px 0 rgba(0, 0, 0, 0.08);
+  color: var(--color-primary);
+  font-family: var(--font-en);
+  @include fluid(font-size, 14, 22);
+  font-weight: var(--font-weight-light);
+  font-style: normal;
+  line-height: 1;
+  @include fluid(letter-spacing, 1.43, 2.86);
+  text-align: center;
+  white-space: nowrap;
+  transition:
+    background-color var(--transition-base),
+    color var(--transition-base);
+
+  &:hover {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+  }
+
+  @include sp {
+    width: 100%;
+    max-width: 320px;
+  }
 }
 
 // ── メインコンテンツ ──
@@ -70,7 +104,7 @@
 }
 
 .footerLogo {
-  width: auto;
+  @include fluid(width, 200, 367);
   height: auto;
   max-width: 100%;
 }
@@ -78,7 +112,7 @@
 .mainMenu {
   display: flex;
   flex-direction: column;
-  @include fluid(gap, 20, 36);
+  @include fluid(gap, 16, 32);
   list-style: none;
 }
 
@@ -109,7 +143,7 @@
   flex-direction: column;
   @include fluid(gap, 12, 24);
   list-style: none;
-  @include fluid(margin-top, 12, 24);
+  @include fluid(margin-top, 14, 28);
 }
 
 .subMenuItem {
@@ -128,9 +162,15 @@
 }
 
 // ── 右側: CREATIVE PROJECTS ──
+// Figma: 右カラム幅 720px / コンテンツ幅(1520px)比 47.37%
 .right {
   display: flex;
   flex-direction: column;
+  width: 47.37%;
+
+  @include sp {
+    width: 100%;
+  }
 }
 
 .projectsTitle {
@@ -141,13 +181,13 @@
   font-weight: var(--font-weight-light);
   line-height: normal;
   @include fluid(letter-spacing, 1.4, 2.88);
-  @include fluid(margin-bottom, 12, 20);
+  @include fluid(margin-bottom, 8, 14);
 }
 
 .projectImages {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  @include fluid(gap, 10, 20);
 }
 
 .projectImageWrap {
@@ -213,7 +253,7 @@
   align-items: center;
   @include fluid(gap, 24, 70);
   @include fluid(margin-top, 40, 120);
-  @include fluid(padding-bottom, 24, 50);
+  @include fluid(padding-bottom, 28, 74);
 
   @include sp {
     flex-direction: column;
@@ -225,7 +265,7 @@
   color: var(--color-text-secondary);
   text-align: right;
   font-family: var(--font-en);
-  font-size: 14px;
+  @include fluid(font-size, 12, 14);
   font-style: normal;
   font-weight: var(--font-weight-light);
   line-height: 24px;
@@ -233,7 +273,6 @@
 
   @include sp {
     text-align: center;
-    font-size: 12px;
   }
 }
 
@@ -241,7 +280,7 @@
   color: var(--color-white);
   text-align: right;
   font-family: var(--font-en);
-  font-size: 14px;
+  @include fluid(font-size, 12, 14);
   font-style: normal;
   font-weight: var(--font-weight-light);
   line-height: 24px;
@@ -249,6 +288,5 @@
 
   @include sp {
     text-align: center;
-    font-size: 12px;
   }
 }
