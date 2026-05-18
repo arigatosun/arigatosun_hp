@@ -1,0 +1,60 @@
+// Figma フレームは 1920px 幅で設計されているため、/works では max-viewport を 1920 に上書き。
+// これにより 1920px ビューポートで Figma 完全一致、それ以下では Figma 比率を保ってスケール。
+@use '@/styles/fluid' as * with (
+  $fluid-max-viewport: 1920
+);
+@use '@/styles/breakpoints' as *;
+
+.section {
+  position: relative;
+  z-index: 5;
+  // Figma: 左右 200px（pagination の全幅中央のため対称）
+  @include fluid(padding-left, 20, 200);
+  @include fluid(padding-right, 20, 200);
+  @include fluid(padding-top, 60, 160);
+  @include fluid(padding-bottom, 60, 200);
+}
+
+// ── 2カラムレイアウト（sidebar + content） ──
+.layout {
+  display: flex;
+  align-items: flex-start;
+  // Figma: sidebar 右端(x=486) → grid 左端(x=720) = 234px
+  @include fluid(gap, 32, 234);
+
+  @include max(1023px) {
+    flex-direction: column;
+    gap: 0;
+  }
+}
+
+.content {
+  flex: 1;
+  min-width: 0;
+
+  @include max(1023px) {
+    width: 100%;
+    @include fluid(margin-top, 32, 60);
+  }
+}
+
+// ── カードグリッド（PC: 2 cols / SP: 1 col） ──
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  // Figma: 列ギャップ 80px / 行ピッチ 711 - カード高 ~531 = 180px
+  @include fluid(column-gap, 16, 80);
+  @include fluid(row-gap, 56, 180);
+
+  @include sp {
+    grid-template-columns: 1fr;
+    @include fluid(row-gap, 40, 80);
+  }
+}
+
+// ── ページネーション位置（Figma: グリッド最下 + 240px） ──
+.paginationWrap {
+  @include fluid(margin-top, 56, 240);
+  display: flex;
+  justify-content: center;
+}
