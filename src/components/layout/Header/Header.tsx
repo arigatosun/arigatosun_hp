@@ -73,8 +73,8 @@ export default function Header() {
               <Image
                 src="/images/icons/mini-logo.svg"
                 alt="合同会社アリガトサン"
-                width={50}
-                height={48}
+                width={48}
+                height={46}
                 priority
               />
             </Link>

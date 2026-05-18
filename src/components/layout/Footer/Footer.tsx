@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import Button from '@/components/ui/Button';
 import FooterSitCharacterLoader from '@/components/three/FooterSitCharacterLoader';
 import styles from './Footer.module.scss';
 
@@ -30,7 +29,9 @@ export default function Footer() {
 
       {/* CONTACT US ボタン */}
       <div className={styles.contactArea}>
-        <Button href="/contact">CONTACT US &gt;</Button>
+        <Link href="/contact" className={styles.contactButton}>
+          CONTACT US &gt;
+        </Link>
       </div>
 
       {/* メインコンテンツ */}
