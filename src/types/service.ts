@@ -29,6 +29,16 @@ export type ServicePillRow = {
   accent: boolean;
 };
 
+/** 赤グローを形（雲・泡など）の内側だけにクリップするマスク */
+export type ServiceConceptMask = {
+  /** 形のシルエット画像（不透明部分にだけグローが出る） */
+  src: string;
+  /** mask-size（線画イラストとの寸法差を補正・例 '94% 88%'） */
+  size: string;
+  /** mask-position（例 '50% 50%'） */
+  position: string;
+};
+
 /** コンセプトブロックのビジュアル（イラスト画像 or ピルリスト） */
 export type ServiceConceptVisual =
   | {
@@ -38,6 +48,8 @@ export type ServiceConceptVisual =
       alt: string;
       width: number;
       height: number;
+      /** グローを形の内側にクリップするマスク。null ならクリップなし */
+      mask: ServiceConceptMask | null;
     }
   | {
       kind: 'pills';

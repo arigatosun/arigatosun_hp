@@ -47,8 +47,15 @@ const DESIGN_BRANDING: ServiceDetailData = {
         kind: 'image',
         src: '/images/sections/service/detail/concept-standard.png',
         alt: 'アリガトサン・スタンダードを表すクラウド型の概念図。意匠・設計・課題解決・価値拡張・独自性の5要素で構成される',
-        width: 680,
-        height: 466,
+        // 線画PNGの実寸（wrap のアスペクトを画像と完全一致させる）
+        width: 2043,
+        height: 1398,
+        // 雲シルエットのマスク（線画より小さめ枠で書き出されているため size/position で補正）
+        mask: {
+          src: '/images/sections/service/detail/concept-standard-mask.png',
+          size: '93.98% 88.2%',
+          position: '48.8% 50.3%',
+        },
       },
     },
     {
@@ -87,8 +94,16 @@ const DESIGN_BRANDING: ServiceDetailData = {
         kind: 'image',
         src: '/images/sections/service/detail/concept-flow.png',
         alt: '制作フローを表すネットワーク図。デザイン・ブランディングを中心に各スキルが連携する様子',
-        width: 666,
-        height: 650,
+        // 線画PNGの実寸
+        width: 1998,
+        height: 1953,
+        // 泡シルエットのマスク。マスク(1998×1951)を線画(1998×1953)枠いっぱいに伸ばし、
+        // 高さ2px差は 0.1% 拡大で吸収（4辺を一致させる）。
+        mask: {
+          src: '/images/sections/service/detail/concept-flow-mask.png',
+          size: '100% 100%',
+          position: '0% 0%',
+        },
       },
     },
   ],

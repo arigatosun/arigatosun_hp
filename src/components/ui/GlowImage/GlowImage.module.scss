@@ -26,6 +26,15 @@
   background-color: var(--color-placeholder);
 }
 
+// グローのクリップ層。mask 指定時、内側のグローを形の中だけに切り抜く。
+// イラスト枠に固定されており、中のグローだけがカーソル追従で動く。
+.glowClip {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
 // カーソル追従の赤グロー
 .glow {
   position: absolute;
@@ -37,7 +46,6 @@
   filter: blur(8px);
   pointer-events: none;
   transform: translate(-50%, -50%);
-  z-index: 1;
   // デフォルト位置（中央やや右下）
   left: 58%;
   top: 56%;

@@ -62,6 +62,7 @@ export default async function ServiceDetailPage({ params }: PageParams) {
               alt={concept.visual.alt}
               width={concept.visual.width}
               height={concept.visual.height}
+              mask={concept.visual.mask}
             />
           ) : (
             <ServiceScopePills rows={concept.visual.rows} />
