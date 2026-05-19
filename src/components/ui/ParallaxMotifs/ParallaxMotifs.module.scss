@@ -13,12 +13,48 @@
 
 .svg {
   position: absolute;
-  // Figma「Group 870」書き出し（viewBox 1920×1919）。静的表示。
+  // Figma「Group 870」書き出し（viewBox 1920×1919）。
   top: calc(100vh - 155px);
   left: 50%;
   // 1920pxベースのデザインを現在のビューポート幅にスケール
   width: 100vw;
   height: auto;
-  transform: translateX(-50%);
+  // translateX(-50%) で中央寄せ + マウス追従の微視差（--mx / --my）
+  transform: translateX(-50%) translate(var(--mx, 0px), var(--my, 0px));
+  transition: transform 0.5s ease-out;
   overflow: visible;
+}
+
+// ── 各モチーフのゆっくりした浮遊 ──
+// 基準位置（Figma 準拠）の周りで小さく上下＋微回転。モチーフごとに速度・位相をずらす。
+.motif {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: motifFloat 7s ease-in-out infinite;
+}
+
+.motif:nth-of-type(5n + 1) { animation-duration: 8.4s; animation-delay: -0.6s; }
+.motif:nth-of-type(5n + 2) { animation-duration: 6.6s; animation-delay: -2.8s; }
+.motif:nth-of-type(5n + 3) { animation-duration: 7.8s; animation-delay: -4.5s; }
+.motif:nth-of-type(5n + 4) { animation-duration: 6.0s; animation-delay: -1.9s; }
+.motif:nth-of-type(5n)     { animation-duration: 9.0s; animation-delay: -3.7s; }
+
+@keyframes motifFloat {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-14px) rotate(1.6deg);
+  }
+}
+
+// アクセシビリティ: 視差・浮遊を無効化
+@media (prefers-reduced-motion: reduce) {
+  .svg {
+    transition: none;
+  }
+  .motif {
+    animation: none;
+  }
 }
