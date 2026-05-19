@@ -1,4 +1,4 @@
-// Figma フレーム 1920px 準拠（詳細デザイン確定までの暫定スターターレイアウト）
+// Figma フレーム 1920px 準拠
 @use '@/styles/fluid' as * with (
   $fluid-max-viewport: 1920
 );
@@ -10,99 +10,15 @@
   overflow-x: clip;
 }
 
-.detail {
-  @include fluid(padding-top, 48, 120);
-  @include fluid(padding-bottom, 96, 200);
-  @include fluid(padding-left, 20, 360);
-  @include fluid(padding-right, 20, 360);
-}
-
-.client {
-  color: var(--color-text-secondary);
-  font-family: var(--font-en);
-  font-weight: var(--font-weight-light);
-  @include fluid(font-size, 13, 17);
-  @include fluid(letter-spacing, 1.8, 3.4);
-}
-
-.clientLabel {
-  font-family: var(--font-en);
-}
-
-.clientName {
-  font-family: 'Noto Sans JP', var(--font-jp);
-  font-weight: var(--font-weight-regular);
-}
-
-.title {
-  @include fluid(margin-top, 12, 24);
-  color: var(--color-black);
-  font-family: 'Noto Sans JP', var(--font-jp);
-  font-weight: var(--font-weight-regular);
-  @include fluid(font-size, 22, 40);
-  @include fluid(line-height, 36, 64);
-}
-
-.lead {
-  @include fluid(margin-top, 12, 24);
-  color: var(--color-text-secondary);
-  font-family: 'Noto Sans JP', var(--font-jp);
-  font-weight: var(--font-weight-regular);
-  @include fluid(font-size, 14, 20);
-  @include fluid(line-height, 24, 38);
-}
-
-.imageWrap {
-  @include fluid(margin-top, 32, 64);
-  width: 100%;
-  aspect-ratio: 868 / 675;
-  overflow: hidden;
-  background: var(--color-placeholder);
-}
-
-.image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.meta {
-  @include fluid(margin-top, 32, 64);
-  display: flex;
-  flex-direction: column;
-  @include fluid(gap, 10, 16);
-}
-
-.metaRow {
-  display: flex;
-  @include fluid(gap, 8, 20);
-
-  @include sp {
-    flex-direction: column;
-    gap: 4px;
-  }
-}
-
-.metaLabel {
-  flex-shrink: 0;
-  color: var(--color-primary);
-  font-family: var(--font-en);
-  font-weight: var(--font-weight-regular);
-  @include fluid(font-size, 13, 17);
-  @include fluid(letter-spacing, 0.8, 1.6);
-}
-
-.metaValue {
-  color: var(--color-black);
-  font-family: 'Noto Sans JP', var(--font-jp);
-  font-weight: var(--font-weight-regular);
-  @include fluid(font-size, 13, 17);
-  @include fluid(line-height, 22, 32);
+// 暫定: WORKS 一覧へ戻る導線（以降のセクション実装で差し替え予定）
+.footer {
+  @include fluid(padding-left, 20, 200);
+  @include fluid(padding-right, 20, 200);
+  @include fluid(padding-top, 40, 80);
+  @include fluid(padding-bottom, 80, 160);
 }
 
 .back {
-  @include fluid(margin-top, 56, 100);
   display: inline-block;
   color: var(--color-text-secondary);
   font-family: var(--font-en);

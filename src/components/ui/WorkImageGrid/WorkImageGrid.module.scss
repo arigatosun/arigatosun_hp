@@ -1,0 +1,56 @@
+// Figma フレーム 1920px 準拠
+@use '@/styles/fluid' as * with (
+  $fluid-max-viewport: 1920
+);
+@use '@/styles/breakpoints' as *;
+
+// グレーカードを本文と同じ左右 x=200 基準に収める枠
+.wrap {
+  @include fluid(padding-left, 20, 200);
+  @include fluid(padding-right, 20, 200);
+  @include fluid(margin-top, 40, 80);
+}
+
+// グレーカード本体（Figma: 背景 #EBEDEE）
+.card {
+  background: var(--color-card-gray);
+  @include fluid(padding-top, 32, 73);
+  @include fluid(padding-bottom, 20, 40);
+  @include fluid(padding-left, 24, 150);
+  @include fluid(padding-right, 24, 150);
+}
+
+// 画像グリッド（PC 4列 / SP 2列）
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  @include fluid(gap, 8, 12);
+
+  @include sp {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+// 各サムネ。aspect-ratio はインライン style（データの画像比）。
+.cell {
+  position: relative;
+  overflow: hidden;
+  background: var(--color-white);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
+}
+
+.image {
+  object-fit: cover;
+}
+
+// ＜…(一部抜粋)＞ キャプション（カード内・右寄せ）
+.caption {
+  margin: 0;
+  @include fluid(margin-top, 16, 32);
+  text-align: right;
+  color: var(--color-text-secondary);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  font-weight: var(--font-weight-regular);
+  @include fluid(font-size, 11, 12);
+  @include fluid(letter-spacing, 0.8, 1.2);
+}
