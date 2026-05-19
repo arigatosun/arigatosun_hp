@@ -1,6 +1,8 @@
 // このファイルは将来 CMS / API から取得するデータの一時的な静的ソース
 import type { ServiceCardData } from '@/types/service';
 
+// bgImage: 背景画像。null の間は Figma 同様グレープレースホルダー表示。
+// 画像が用意できたら各カードの bgImage にパスを入れるだけで差し替わる。
 export const SERVICE_CARDS: readonly ServiceCardData[] = [
   {
     id: 'ai-dev',
@@ -10,32 +12,32 @@ export const SERVICE_CARDS: readonly ServiceCardData[] = [
     description:
       'ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。',
     viewLabel: 'VIEW AI / DEVELOPMENT >',
-    bgImage: '/images/sections/service/bg-card.png',
+    bgImage: null,
   },
   {
     id: 'design-branding',
     category: 'DESIGN / BRANDING',
-    categoryLabel: 'デザイン・ブランディング部',
+    categoryLabel: 'デザイン・ブランディング',
     title: 'DESIGN / BRANDING',
     description:
       'ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。',
     viewLabel: 'VIEW DESIGN / BRANDING >',
-    bgImage: '/images/sections/service/bg-card.png',
+    bgImage: null,
   },
   {
     id: 'ip-creative',
     category: 'IP / CREATIVE',
-    categoryLabel: 'IP・クリエイティブ部',
+    categoryLabel: 'IP・クリエイティブ',
     title: 'IP / CREATIVE',
     description:
       'ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。',
     viewLabel: 'VIEW IP / CREATIVE >',
-    bgImage: '/images/sections/service/bg-card.png',
+    bgImage: null,
   },
 ] as const;
 
 export const SERVICE_MENU_ITEMS = [
-  '· AI / DEVELOPMENT >',
-  '· DESIGN / BRANDING >',
-  '· IP / CREATIVE >',
+  '・AI / DEVELOPMENT >',
+  '・DESIGN / BRANDING >',
+  '・IP / CREATIVE >',
 ] as const;
