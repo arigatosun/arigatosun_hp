@@ -1,0 +1,84 @@
+// Figma フレーム 1920px 準拠
+@use '@/styles/fluid' as * with (
+  $fluid-max-viewport: 1920
+);
+@use '@/styles/breakpoints' as *;
+
+// 白カードを本文と同じ左右 x=200 基準に収める枠
+.wrap {
+  @include fluid(padding-left, 20, 200);
+  @include fluid(padding-right, 20, 200);
+}
+
+// 白カード本体（Figma: 1520×480 / 背景白）
+.card {
+  background: var(--color-white);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  @include fluid(gap, 36, 76);
+  @include fluid(padding-top, 48, 132);
+  @include fluid(padding-bottom, 48, 128);
+  @include fluid(padding-left, 24, 120);
+  @include fluid(padding-right, 24, 120);
+}
+
+// 1行 = ラベル群（左）＋ ロゴ（右）
+.row {
+  display: flex;
+  align-items: center;
+  @include fluid(gap, 24, 80);
+
+  @include sp {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}
+
+.labels {
+  flex-shrink: 0;
+  @include fluid(width, 200, 360);
+
+  @include sp {
+    width: 100%;
+  }
+}
+
+.label {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  font-weight: var(--font-weight-regular);
+  @include fluid(font-size, 13, 16);
+  @include fluid(line-height, 28, 36);
+  @include fluid(letter-spacing, 2, 3.84);
+}
+
+.note {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  font-weight: var(--font-weight-regular);
+  @include fluid(font-size, 11, 12);
+  @include fluid(line-height, 24, 36);
+  @include fluid(letter-spacing, 1.5, 2.88);
+}
+
+// 行右側のロゴ画像。aspect-ratio はインライン style（データの viewBox 寸法）で指定。
+.visualLogo {
+  display: block;
+  max-width: 100%;
+  background-position: left center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+// 行ごとのロゴ表示幅。2行を共通スケール（×0.62〜×1.0）で拡縮。
+.row:nth-of-type(1) .visualLogo {
+  @include fluid(width, 305, 491);
+}
+
+.row:nth-of-type(2) .visualLogo {
+  @include fluid(width, 148, 239);
+}

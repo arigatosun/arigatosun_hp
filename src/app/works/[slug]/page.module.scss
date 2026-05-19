@@ -1,0 +1,13 @@
+// Figma フレーム 1920px 準拠
+@use '@/styles/fluid' as * with (
+  $fluid-max-viewport: 1920
+);
+@use '@/styles/breakpoints' as *;
+
+.page {
+  position: relative;
+  padding-top: 80px; // Header(position: fixed) 分のオフセット
+  // 最終セクション（実績・事例）→ グローバルフッターの間隔
+  @include fluid(padding-bottom, 96, 240);
+  overflow-x: clip;
+}

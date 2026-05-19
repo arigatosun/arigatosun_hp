@@ -1,0 +1,41 @@
+// Figma フレーム 1920px 準拠
+@use '@/styles/fluid' as * with (
+  $fluid-max-viewport: 1920
+);
+@use '@/styles/breakpoints' as *;
+
+// 色付きカードを本文と同じ左右 x=200 基準に収める枠
+.wrap {
+  @include fluid(padding-left, 20, 200);
+  @include fluid(padding-right, 20, 200);
+}
+
+// カード本体。高さは aspect-ratio（インライン style）で Figma 比率を維持。
+.card {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.white {
+  background: var(--color-white);
+}
+
+// Figma: #F9E7EA opacity 75%。子（グラフィック）を透かさないよう alpha 背景で表現。
+.pink {
+  background: color-mix(in srgb, var(--color-hero-pink) 75%, transparent);
+}
+
+// 中央のグラフィック（タグライン / ロゴ）。Figma 実測でカード幅の約 26.3%。
+.graphic {
+  display: block;
+  width: 26.3%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+
+  @include sp {
+    width: 64%;
+  }
+}

@@ -1,0 +1,17 @@
+// Figma フレーム 1920px 準拠
+@use '@/styles/fluid' as * with (
+  $fluid-max-viewport: 1920
+);
+@use '@/styles/breakpoints' as *;
+
+// セクション区切りの短い横線（左端 x=200 基準）
+.divider {
+  @include fluid(padding-left, 20, 200);
+}
+
+.line {
+  display: block;
+  @include fluid(width, 32, 48);
+  height: 1px;
+  background: var(--color-black);
+}

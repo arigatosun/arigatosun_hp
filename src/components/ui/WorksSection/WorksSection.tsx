@@ -2,13 +2,18 @@
 
 import { useEffect, useRef } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import styles from './WorksSection.module.scss';
 import Button from '@/components/ui/Button';
 import SectionTitle from '@/components/ui/SectionTitle';
+import type { WorkItem } from '@/types/work';
 import FooterCharacterLoader from '@/components/three/FooterCharacterLoader';
-import { WORKS_DATA } from '@/data/works';
 
-export default function WorksSection() {
+type WorksSectionProps = {
+  works: readonly WorkItem[];
+};
+
+export default function WorksSection({ works }: WorksSectionProps) {
   const sectionRef = useRef<HTMLElement>(null);
 
   // VIEW MORE の赤塗り背景をスクロール表示時に左→右アニメーション
@@ -51,7 +56,7 @@ export default function WorksSection() {
 
       {/* 実績一覧 */}
       <div className={styles.itemsList}>
-        {WORKS_DATA.slice(0, 3).map((work, index) => (
+        {works.slice(0, 3).map((work, index) => (
           <div
             key={work.id}
             className={`${styles.item} ${index > 0 ? styles.itemSpaced : ''}`}
@@ -102,9 +107,9 @@ export default function WorksSection() {
                   className={styles.workImage}
                 />
                 {/* VIEW MORE > ボタン */}
-                <a href="/works" className={styles.viewMore}>
+                <Link href="/works" className={styles.viewMore}>
                   <span className={styles.viewMoreText}>VIEW MORE &gt;</span>
-                </a>
+                </Link>
               </div>
             </div>
           </div>

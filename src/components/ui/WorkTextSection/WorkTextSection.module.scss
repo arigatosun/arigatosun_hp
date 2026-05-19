@@ -1,0 +1,45 @@
+// Figma フレーム 1920px 準拠
+@use '@/styles/fluid' as * with (
+  $fluid-max-viewport: 1920
+);
+@use '@/styles/breakpoints' as *;
+
+// 詳細ページの「見出し＋本文」ブロック。テキスト左端は Figma 実測 x=200。
+.section {
+  @include fluid(padding-left, 20, 200);
+  @include fluid(padding-right, 20, 200);
+}
+
+.heading {
+  margin: 0;
+  color: var(--color-black);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  font-weight: var(--font-weight-regular);
+  @include fluid(line-height, 36, 56);
+}
+
+.main .heading {
+  @include fluid(font-size, 18, 24);
+  @include fluid(letter-spacing, 4, 6.96);
+}
+
+.sub .heading {
+  @include fluid(font-size, 15, 20);
+  @include fluid(letter-spacing, 3.5, 5.8);
+}
+
+.body {
+  margin: 0;
+  @include fluid(margin-top, 6, 11);
+  color: var(--color-black);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  font-weight: var(--font-weight-regular);
+  @include fluid(font-size, 13, 16);
+  @include fluid(line-height, 28, 36);
+  @include fluid(letter-spacing, 2, 3.84);
+}
+
+// ＜＞見出し（sub）は本文との間隔が ■見出しより詰まる（Figma 実測）
+.sub .body {
+  @include fluid(margin-top, 2, 4);
+}

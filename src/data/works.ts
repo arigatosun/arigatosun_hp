@@ -1,7 +1,10 @@
-// このファイルは将来 CMS / API から取得するデータの一時的な静的ソース
+// 作品データのアクセス層。
+// 現状は静的データを返すだけ。WordPress 連携時は WORKS_DATA を fetch 化（または廃止）し、
+// getAllWorks / getWorkBySlug の中身だけ差し替えれば利用側（ページ・コンポーネント）は無修正。
 import type { WorkItem } from '@/types/work';
 
-export const WORKS_DATA: readonly WorkItem[] = [
+// 静的データ（暫定ソース。WordPress 連携時に置き換え）
+const WORKS_DATA: readonly WorkItem[] = [
   {
     id: 'work-1',
     client: '全日本漬物協同組合連合会',
@@ -123,3 +126,18 @@ export const WORKS_DATA: readonly WorkItem[] = [
     imageHeight: 675,
   },
 ] as const;
+
+/**
+ * 作品一覧を取得する。ページ / コンポーネントは必ずこの関数経由でアクセスすること。
+ * WordPress 連携時はこの中身を REST API の fetch に差し替える（戻り値の型は不変）。
+ */
+export async function getAllWorks(): Promise<readonly WorkItem[]> {
+  return WORKS_DATA;
+}
+
+/** slug（= work id）から単一の作品を取得する。該当なしは undefined。 */
+export async function getWorkBySlug(
+  slug: string,
+): Promise<WorkItem | undefined> {
+  return WORKS_DATA.find((work) => work.id === slug);
+}
