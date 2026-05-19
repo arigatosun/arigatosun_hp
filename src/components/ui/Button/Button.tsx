@@ -5,6 +5,7 @@ type ButtonProps = {
   href: string;
   children: React.ReactNode;
   variant?: 'outline' | 'filled';
+  size?: 'default' | 'sm';
   external?: boolean;
 };
 
@@ -12,9 +13,12 @@ export default function Button({
   href,
   children,
   variant = 'outline',
+  size = 'default',
   external = false,
 }: ButtonProps) {
-  const className = `${styles.button} ${styles[variant]}`;
+  const className = `${styles.button} ${styles[variant]}${
+    size === 'sm' ? ` ${styles.sm}` : ''
+  }`;
 
   if (external) {
     return (
