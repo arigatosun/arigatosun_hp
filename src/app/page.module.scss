@@ -27,7 +27,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  @include fluid(padding-top, 60, 252);
+  // heroInfo と同量(70px)上へ寄せ、20px 戻して微調整
+  @include fluid(padding-top, 60, 202);
 
   @include sp {
     @include fluid(padding-left, 20, 40);
@@ -96,7 +97,8 @@
 // ── ヒーロー右下情報 ──
 .heroInfo {
   position: absolute;
-  @include fluid(top, 380, 688);
+  // コピーライト行と下の赤モチーフの間に余白を確保するため上へ寄せる
+  @include fluid(top, 380, 618);
   @include fluid(right, 24, 60);
   z-index: 2;
   text-align: right;
@@ -184,6 +186,9 @@
 .about {
   position: relative;
   z-index: 6; // 赤モチーフ(z-index:5)の上にテキストを表示
+  // 赤モチーフ(静的配置)と Figma の位置関係を合わせるため上へ寄せる
+  // 「AIが当たり前〜」の行が左の赤モチーフ中心に重なる位置
+  margin-top: -139px;
   @include fluid(padding-top, 60, 120);
   padding-bottom: 0;
   @include fluid(padding-left, 20, 200);
