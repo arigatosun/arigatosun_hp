@@ -7,28 +7,7 @@
 .page {
   position: relative;
   padding-top: 80px; // Header(position: fixed) 分のオフセット
+  // 最終セクション（実績・事例）→ グローバルフッターの間隔
+  @include fluid(padding-bottom, 96, 240);
   overflow-x: clip;
-}
-
-// 暫定: WORKS 一覧へ戻る導線（以降のセクション実装で差し替え予定）
-.footer {
-  @include fluid(padding-left, 20, 200);
-  @include fluid(padding-right, 20, 200);
-  @include fluid(padding-top, 40, 80);
-  @include fluid(padding-bottom, 80, 160);
-}
-
-.back {
-  display: inline-block;
-  color: var(--color-text-secondary);
-  font-family: var(--font-en);
-  font-weight: var(--font-weight-light);
-  @include fluid(font-size, 14, 18);
-  @include fluid(letter-spacing, 1.5, 2.6);
-  text-decoration: none;
-  transition: color var(--transition-base);
-
-  &:hover {
-    color: var(--color-primary);
-  }
 }

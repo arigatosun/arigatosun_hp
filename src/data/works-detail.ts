@@ -22,9 +22,11 @@ const CHORITZ_DETAIL: WorkDetailContent = {
       mark: `${CHORITZ}/logo-1.svg`,
     },
   },
+  // gap = 直前要素からの上余白（Figma 実測 px・1920 基準）
   blocks: [
     {
       type: 'lead',
+      gap: 240,
       heading: '数値では測れない想いや姿勢を、ブランドの核心へ宿す。',
       subheading: '社名からVIまで、一気通貫のブランド構築',
       body: [
@@ -34,6 +36,7 @@ const CHORITZ_DETAIL: WorkDetailContent = {
     },
     {
       type: 'textSection',
+      gap: 240,
       level: 'main',
       heading: '■ヒアリングと現状把握',
       body: [
@@ -45,12 +48,14 @@ const CHORITZ_DETAIL: WorkDetailContent = {
     },
     {
       type: 'textSection',
+      gap: 240,
       level: 'main',
       heading: '■ネーミング制作',
       body: ['複数の案を提案し、選ばれたのがCHORITZです。読み：チョウリツ。'],
     },
     {
       type: 'namingCard',
+      gap: 60,
       rows: [
         {
           label: '＜表示名（対外）＞',
@@ -70,6 +75,7 @@ const CHORITZ_DETAIL: WorkDetailContent = {
     },
     {
       type: 'textSection',
+      gap: 80,
       level: 'sub',
       heading: '＜名前に込めた意味＞',
       body: [
@@ -80,6 +86,7 @@ const CHORITZ_DETAIL: WorkDetailContent = {
     },
     {
       type: 'textSection',
+      gap: 80,
       level: 'sub',
       heading: '＜視覚的なひっかかり＞',
       body: [
@@ -89,15 +96,17 @@ const CHORITZ_DETAIL: WorkDetailContent = {
         '朱さんの働き方や動きにしっかりとフィットするようにネーミング設計を行っています。',
       ],
     },
-    { type: 'textSection', level: 'main', heading: '■タグライン制作' },
+    { type: 'textSection', gap: 260, level: 'main', heading: '■タグライン制作' },
     {
       type: 'showcaseCard',
+      gap: 40,
       background: 'white',
       card: { w: 1520, h: 480 },
       graphic: { src: `${CHORITZ}/tagline.svg`, w: 400, h: 106 },
     },
     {
       type: 'paragraph',
+      gap: 80,
       body: [
         'CHORITZが何者かを一目で伝えるタグラインです。',
         'これらのサービスを求めている人が見た瞬間に、自分に関係する会社だと認識できることを第一に考えました。',
@@ -105,15 +114,17 @@ const CHORITZ_DETAIL: WorkDetailContent = {
         '安心感を補強する役割も担っています。その姿勢をそのまま言葉にしています。',
       ],
     },
-    { type: 'textSection', level: 'main', heading: '■ロゴデザイン' },
+    { type: 'textSection', gap: 260, level: 'main', heading: '■ロゴデザイン' },
     {
       type: 'showcaseCard',
+      gap: 40,
       background: 'pink',
       card: { w: 1520, h: 660 },
       graphic: { src: `${CHORITZ}/choritz-logo.svg`, w: 310.5, h: 159.71 },
     },
     {
       type: 'paragraph',
+      gap: 80,
       body: [
         '「頂」の字をモチーフに構成したマークは、',
         'CHORITZが中心（軸）となり、中国と日本を繋ぎながらより良いものを生み出していく様を表現しています。',
@@ -124,6 +135,8 @@ const CHORITZ_DETAIL: WorkDetailContent = {
     },
     {
       type: 'imageGrid',
+      gap: 80,
+      cardHeight: 840,
       images: Array.from(
         { length: 15 },
         (_, i) => `${CHORITZ}/prop-${i + 1}.jpg`,
@@ -133,6 +146,8 @@ const CHORITZ_DETAIL: WorkDetailContent = {
     },
     {
       type: 'imageGrid',
+      gap: 80,
+      cardHeight: 690,
       images: Array.from(
         { length: 8 },
         (_, i) => `${CHORITZ}/guide-${i + 1}.jpg`,
@@ -140,6 +155,103 @@ const CHORITZ_DETAIL: WorkDetailContent = {
       imageRatio: { w: 299, h: 211 },
       caption: '＜ロゴデザイン簡易ガイドライン(一部抜粋)＞',
     },
+    {
+      type: 'textSection',
+      gap: 260,
+      level: 'main',
+      heading: '■WEBサイトデザイン',
+      body: [
+        'ネーミングとロゴが決定したのち、設計したブランドのらしさをWebへと展開していきました。',
+      ],
+    },
+    {
+      type: 'mockupCard',
+      gap: 60,
+      src: `${CHORITZ}/web-mockup-1.jpg`,
+      w: 1520,
+      h: 810,
+    },
+    {
+      type: 'paragraph',
+      gap: 80,
+      body: [
+        'CHORITZというブランドの主張が強くなりすぎると、サービスの強みが届きづらくなる。',
+        '海外とのやり取り、リスクや責任感のある仕事だからこそ、誠実に、また正確に仕事を行えることをしっかりと届けることが重要だと考え、',
+        '見やすさを重点に置いた最小限の装飾と構成で進行していきました。',
+        '朱さんの仕事への想いと親しみやすさが両立できるカラー設定は、ロゴ設計の段階で決まっていたものをそのままWebへと引き継いでいます。',
+      ],
+    },
+    {
+      type: 'mockupCard',
+      gap: 80,
+      src: `${CHORITZ}/web-mockup-2.jpg`,
+      w: 1520,
+      h: 810,
+    },
+    {
+      type: 'paragraph',
+      gap: 180,
+      body: [
+        '文字情報や素材共有だけでは受け取れない、朱さんのまだ言葉になっていなかった想いや姿勢。',
+        'それらを汲み取れたのは、KUSOMEGANEでのやり取りを通じて積み重ねてきた関係性があったからこそです。',
+        'データや数値では測れない部分が、CHORITZならではの独自の強みとして宿っています。',
+      ],
+    },
+    { type: 'divider', gap: 180 },
+    {
+      type: 'textSection',
+      gap: 180,
+      level: 'main',
+      heading: '■名刺デザイン',
+      body: [
+        'ただ情報を整理する、ビジュアルとして装飾するだけでなく、CHORITZだからこそ落とし込めるブランド設計。',
+        'そういった部分に強く共感してくださり、Webサイトが世に出たあとすぐに名刺展開の依頼をいただきました。',
+      ],
+    },
+    {
+      type: 'mockupCard',
+      gap: 170,
+      src: `${CHORITZ}/namecard-mockup.png`,
+      // w/h は Figma フレーム「Group 880」実測（アスペクト比）。
+      // 書き出し PNG の余白超過分は object-fit: cover で切り落とす。
+      w: 1503,
+      h: 711,
+    },
+    {
+      type: 'paragraph',
+      gap: 180,
+      body: [
+        'ネーミングからはじまり、ロゴ・VI・Web・名刺まで一気通貫で設計したブランドは、',
+        '朱さんの根本にある時間が経っても変わらない本質的な部分をデザインとビジュアルに落とし込み、',
+        '時代の流れの中でもイメージを崩さず訴求し続けられる設計を目指しています。',
+      ],
+    },
+    { type: 'divider', gap: 180 },
+    {
+      type: 'creditList',
+      gap: 180,
+      groups: [
+        {
+          label: 'CREDIT',
+          lines: [
+            'CLIENT : 頂立輸入代行会社',
+            'PROJECT MANAGEMENT : RYO YOSHIKAWA',
+            'BRANDING / DESIGN : YUGO NISHIMOTO',
+            'WEB DEVELOPMENT : HIDEYA MIFUJI',
+          ],
+        },
+        {
+          label: 'SCOPE',
+          lines: ['NAMING / TAGLINE / LOGO / VI / WEB / BUSINESS CARD'],
+        },
+        {
+          label: 'TERM',
+          lines: ['2025.12 ~ 2026.4'],
+        },
+      ],
+    },
+    { type: 'divider', gap: 180 },
+    { type: 'relatedWorks', gap: 240 },
   ],
 };
 

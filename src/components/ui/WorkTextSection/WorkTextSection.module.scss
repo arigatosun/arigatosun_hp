@@ -10,16 +10,6 @@
   @include fluid(padding-right, 20, 200);
 }
 
-// main = ■見出しブロック（前のブロックとの間隔 大）
-.main {
-  @include fluid(margin-top, 96, 240);
-}
-
-// sub = ＜＞見出しブロック（間隔 中）
-.sub {
-  @include fluid(margin-top, 32, 80);
-}
-
 .heading {
   margin: 0;
   color: var(--color-black);

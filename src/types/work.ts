@@ -47,7 +47,8 @@ export type WorkNamingRow = {
  * 詳細ページの本文ブロック。順序入替可能な配列で持つ（block ベース構成）。
  * 今後 process / credit 等のブロック型を追加してユニオンを拡張する。
  */
-export type WorkContentBlock =
+// gap = 直前の要素からの上余白（Figma 実測 px・1920 基準）。ページ側で margin-top に適用。
+export type WorkContentBlock = { gap: number } & (
   | {
       type: 'lead';
       heading: string;
@@ -76,10 +77,28 @@ export type WorkContentBlock =
     }
   | {
       type: 'imageGrid'; // グレーカード＋画像グリッド＋キャプション
+      cardHeight: number; // カードの Figma 高さ（min-height に使用）
       images: string[];
       imageRatio: { w: number; h: number };
       caption: string;
-    };
+    }
+  | {
+      type: 'mockupCard'; // Web デザインモックアップ画像カード
+      src: string;
+      w: number; // カードの Figma 寸法（アスペクト比に使用）
+      h: number;
+    }
+  | {
+      type: 'divider'; // セクション区切りの短い横線
+    }
+  | {
+      type: 'creditList'; // CREDIT / SCOPE / TERM のラベル＋内容
+      groups: { label: string; lines: string[] }[];
+    }
+  | {
+      type: 'relatedWorks'; // 他実績へのリンクカード群
+    }
+);
 
 /** 1作品の詳細ページ全体のデータ。 */
 export type WorkDetailContent = {

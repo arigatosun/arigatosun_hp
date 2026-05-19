@@ -1,0 +1,22 @@
+// Figma フレーム 1920px 準拠
+@use '@/styles/fluid' as * with (
+  $fluid-max-viewport: 1920
+);
+@use '@/styles/breakpoints' as *;
+
+// Web モックアップ画像カードを本文と同じ左右 x=200 基準に収める枠
+.wrap {
+  @include fluid(padding-left, 20, 200);
+  @include fluid(padding-right, 20, 200);
+}
+
+// カード本体。高さは aspect-ratio（インライン style）で Figma 比率を維持。
+.card {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.image {
+  object-fit: cover;
+}

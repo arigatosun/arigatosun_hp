@@ -5,16 +5,25 @@ type WorkImageGridProps = {
   images: string[];
   imageRatio: { w: number; h: number };
   caption: string;
+  cardHeight: number;
 };
 
 export default function WorkImageGrid({
   images,
   imageRatio,
   caption,
+  cardHeight,
 }: WorkImageGridProps) {
   return (
     <div className={styles.wrap}>
-      <div className={styles.card}>
+      <div
+        className={styles.card}
+        style={{
+          minHeight: `clamp(${(cardHeight * 0.5).toFixed(0)}px, ${(
+            cardHeight / 19.2
+          ).toFixed(3)}vw, ${cardHeight}px)`,
+        }}
+      >
         <div className={styles.grid}>
           {images.map((src, index) => (
             <div

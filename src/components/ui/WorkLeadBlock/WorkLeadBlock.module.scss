@@ -8,9 +8,6 @@
 .lead {
   @include fluid(padding-left, 20, 200);
   @include fluid(padding-right, 20, 200);
-  // ヒーロー帯下端 → 見出し（Figma: 240px）
-  @include fluid(padding-top, 96, 240);
-  @include fluid(padding-bottom, 48, 120);
 }
 
 .heading {

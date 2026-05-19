@@ -8,7 +8,6 @@
 .wrap {
   @include fluid(padding-left, 20, 200);
   @include fluid(padding-right, 20, 200);
-  @include fluid(margin-top, 32, 60);
 }
 
 // 白カード本体（Figma: 1520×480 / 背景白）

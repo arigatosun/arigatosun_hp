@@ -1,0 +1,40 @@
+// Figma フレーム 1920px 準拠
+@use '@/styles/fluid' as * with (
+  $fluid-max-viewport: 1920
+);
+@use '@/styles/breakpoints' as *;
+
+// CREDIT / SCOPE / TERM のラベル＋内容ブロック。左端 x=200 基準。
+.creditList {
+  @include fluid(padding-left, 20, 200);
+  @include fluid(padding-right, 20, 200);
+  display: flex;
+  flex-direction: column;
+  @include fluid(gap, 16, 28);
+}
+
+// ラベル（CREDIT / SCOPE / TERM）— Mozaic GEO / Regular（Figma 実測）
+.label {
+  margin: 0;
+  color: var(--color-black);
+  font-family: var(--font-en);
+  font-weight: var(--font-weight-regular);
+  @include fluid(font-size, 15, 20);
+  @include fluid(line-height, 40, 56);
+  @include fluid(letter-spacing, 3, 5.8);
+}
+
+.lines {
+  @include fluid(margin-top, 4, 8);
+}
+
+// 内容行 — Mozaic GEO / Light、日本語は Noto Sans JP にフォールバック
+.line {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-family: var(--font-primary);
+  font-weight: var(--font-weight-light);
+  @include fluid(font-size, 13, 17);
+  @include fluid(line-height, 30, 44);
+  @include fluid(letter-spacing, 1.7, 3.4);
+}

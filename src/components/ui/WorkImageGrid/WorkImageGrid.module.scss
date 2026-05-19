@@ -8,14 +8,17 @@
 .wrap {
   @include fluid(padding-left, 20, 200);
   @include fluid(padding-right, 20, 200);
-  @include fluid(margin-top, 40, 80);
 }
 
-// グレーカード本体（Figma: 背景 #EBEDEE）
+// グレーカード本体（Figma: 背景 #EBEDEE）。高さは min-height（インライン）で Figma 実測に合わせ、
+// 内容が収まらない SP では自然に伸びる。
 .card {
   background: var(--color-card-gray);
+  display: flex;
+  flex-direction: column;
   @include fluid(padding-top, 32, 73);
-  @include fluid(padding-bottom, 20, 40);
+  // Figma カード高さ(840/690px)に収めるため下余白は小さめ
+  @include fluid(padding-bottom, 8, 14);
   @include fluid(padding-left, 24, 150);
   @include fluid(padding-right, 24, 150);
 }
@@ -46,7 +49,8 @@
 // ＜…(一部抜粋)＞ キャプション（カード内・右寄せ）
 .caption {
   margin: 0;
-  @include fluid(margin-top, 16, 32);
+  margin-top: auto; // カード下部へ寄せる（Figma 実測の高さ内で）
+  @include fluid(padding-top, 16, 32);
   text-align: right;
   color: var(--color-text-secondary);
   font-family: 'Noto Sans JP', var(--font-jp);
