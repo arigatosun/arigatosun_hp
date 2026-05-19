@@ -32,6 +32,7 @@ Figma URL or スクリーンショット + 自由文の指示を受け取った�
    - `clientFrameworks: "react,next.js"`, `clientLanguages: "typescript,scss"`, `taskType: "CREATE_ARTIFACT"`
 3. `mcp__figma-dev-mode__get_variable_defs` で使用変数（色/フォント/寸法トークン）を取得し、既存 `--color-*` 等にマップ
 4. （補助）必要なら `mcp__figma-dev-mode__get_screenshot` で純粋なスクショ取得
+5. **上下の隣接セクションの Group ノードも `get_metadata` で取得**し、セクション間ギャップ（上下）の Figma 値を算出しておく。詳細は `.claude/rules/section-spacing.md`
 
 取得した実測値はフェーズ1の④寸法表の **max列** にそのまま反映する。min値はルールテーブル算出（フェーズ1で実施）。
 
@@ -63,7 +64,8 @@ GO受領後にのみ実行。
    ```
 4. スケーラブルな値はすべて `@include fluid(プロパティ, min, max);`
 5. 色は必ず `var(--color-xxx)` （ハードコード禁止）
-6. 完了後に「作成ファイル一覧」「動作確認手順（npm run dev → 該当URL）」を返す
+6. **上下の隣接セクションとの余白を実測照合**: ブラウザ実測し、フェーズ0で算出した Figma のセクション間ギャップと一致するか確認。ズレていれば対象セクションの `padding-top` / `padding-bottom` で調整（`.claude/rules/section-spacing.md`）
+7. 完了後に「作成ファイル一覧」「動作確認手順（npm run dev → 該当URL）」を返す
 
 ---
 
@@ -247,6 +249,7 @@ graph TD
 - [ ] absolute 配置には SP時の `position: relative; top: auto;` がある
 - [ ] ホバーは `color: var(--color-primary)` + `transition: color var(--transition-base)`
 - [ ] tsx は named export、index.ts で再エクスポート
+- [ ] 上下の隣接セクションとの余白が Figma のセクション間ギャップと一致（`.claude/rules/section-spacing.md`）
 
 ### 実装後に返す情報
 - 作成ファイルの絶対パス一覧

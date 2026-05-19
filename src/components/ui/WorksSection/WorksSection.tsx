@@ -7,6 +7,7 @@ import styles from './WorksSection.module.scss';
 import Button from '@/components/ui/Button';
 import SectionTitle from '@/components/ui/SectionTitle';
 import type { WorkItem } from '@/types/work';
+import FooterCharacterLoader from '@/components/three/FooterCharacterLoader';
 
 type WorksSectionProps = {
   works: readonly WorkItem[];
@@ -106,7 +107,7 @@ export default function WorksSection({ works }: WorksSectionProps) {
                   className={styles.workImage}
                 />
                 {/* VIEW MORE > ボタン */}
-                <Link href="/works" className={index === 0 ? styles.viewMore : styles.viewMoreLeft}>
+                <Link href="/works" className={styles.viewMore}>
                   <span className={styles.viewMoreText}>VIEW MORE &gt;</span>
                 </Link>
               </div>
@@ -117,6 +118,11 @@ export default function WorksSection({ works }: WorksSectionProps) {
 
       {/* 下部: キャラクター + テキスト + ボタン */}
       <div className={styles.footer}>
+        {/* 3Dキャラクター（ありがとくん・手振り） */}
+        <div className={styles.footerCharacter}>
+          <FooterCharacterLoader />
+        </div>
+
         <div className={styles.footerText}>
           <p className={styles.footerServices}>
             AI / DEVELOPMENT / APPLICATION / DESIGN / UI / UX / BRANDING /<br />

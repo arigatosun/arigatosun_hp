@@ -7,6 +7,7 @@ import Button from '@/components/ui/Button';
 import SectionTitle from '@/components/ui/SectionTitle';
 import type { NewsItem, WPPost, WPCategory } from '@/types/wordpress';
 import { NEWS_CATEGORIES } from '@/data/news-categories';
+import { NEWS_MOCK } from '@/data/news-mock';
 
 const API_URL = process.env.NEXT_PUBLIC_WORDPRESS_API_URL || '';
 
@@ -149,18 +150,16 @@ export default function NewsSection() {
           </ul>
 
           <div className={styles.buttonWrap}>
-            <Button href="/news">VIEW NEWS &gt;</Button>
+            <Button href="/news" size="sm">VIEW NEWS &gt;</Button>
           </div>
         </div>
 
-        {/* 右側: 記事リスト */}
+        {/* 右側: 記事リスト（API が空の間は仮データを表示） */}
         <div className={styles.right}>
           {loading ? (
             <p className={styles.loadingText}>読み込み中...</p>
-          ) : news.length === 0 ? (
-            <p className={styles.emptyText}>記事がありません</p>
           ) : (
-            news.map((item, index) => (
+            (news.length > 0 ? news : NEWS_MOCK).map((item, index, arr) => (
               <div key={item.id}>
                 <a href={`/news/${item.slug}`} className={styles.article}>
                   <div className={styles.articleContent}>
@@ -168,6 +167,9 @@ export default function NewsSection() {
                     <div className={styles.articleMeta}>
                       <span className={styles.articleDate}>{item.date}</span>
                       <span className={styles.articleTag}>{item.tag}</span>
+                      <span className={styles.articleArrow} aria-hidden="true">
+                        →
+                      </span>
                     </div>
                   </div>
                   <div className={styles.articleThumbnail}>
@@ -185,7 +187,7 @@ export default function NewsSection() {
                   </div>
                 </a>
                 <div className={styles.articleDivider} />
-                {index < news.length - 1 && <div className={styles.articleSpacer} />}
+                {index < arr.length - 1 && <div className={styles.articleSpacer} />}
               </div>
             ))
           )}

@@ -92,6 +92,7 @@
 
   p {
     margin-top: 22px;
+    line-height: 18px; // Figma: SERVICE ラベル行高
   }
 }
 
@@ -107,32 +108,24 @@
 }
 
 .description {
-  @include fluid(margin-top, 23, 62);
+  @include fluid(margin-top, 23, 68);
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
   @include fluid(font-size, 13, 20);
   font-weight: var(--font-weight-regular);
   font-style: normal;
-  @include fluid(line-height, 30, 54);
-
-  p:nth-child(2) {
-    margin-top: -6px;
-  }
-
-  p:nth-child(3) {
-    margin-top: -10px;
-  }
-  @include fluid(letter-spacing, 1.8, 4.3);
+  @include fluid(line-height, 30, 44); // Figma: 44px
+  @include fluid(letter-spacing, 1.8, 4.4);
 }
 
 // ── メニューリスト ──
 .menuList {
-  @include fluid(margin-top, 24, 50);
+  @include fluid(margin-top, 24, 60);
   list-style: none;
   display: flex;
   flex-direction: column;
-  @include fluid(gap, 13, 34);
-  @include fluid(margin-bottom, 29, 62);
+  @include fluid(gap, 13, 28); // Figma: 項目ピッチ52px − 行ボックス24px
+  @include fluid(margin-bottom, 29, 64);
 
   @include sp {
     display: none; // 1024px未満はメニューリスト非表示（カード縦積みのため）
@@ -143,41 +136,44 @@
 .menuItemActive {
   display: block;
   font-family: var(--font-en);
-  @include fluid(font-size, 14, 19);
+  @include fluid(font-size, 14, 20);
   font-weight: var(--font-weight-light);
   font-style: normal;
-  @include fluid(line-height, 16, 19);
-  @include fluid(letter-spacing, 1.4, 2.8);
+  line-height: 1.2; // 赤帯がはみ出さない行ボックス高
+  @include fluid(letter-spacing, 1.4, 2.6);
+  white-space: nowrap;
   cursor: pointer;
-
-  span {
-    display: inline-block;
-    padding-top: 0;
-    padding-bottom: 0;
-    line-height: 0.9;
-    @include fluid(padding-left, 6, 10);
-    @include fluid(padding-right, 6, 10);
-    transition: all var(--transition-base);
-  }
 }
 
-.menuItem {
-  span {
-    color: var(--color-text-secondary);
-    background-color: transparent;
-  }
-
-  &:hover span {
-    color: var(--color-white);
-    background-color: var(--color-primary);
-  }
+// 赤マーカー帯（Service 詳細ページ ServiceDetailHero 側面ナビと同方式）
+// Mozaic GEO は文字実体が行ボックス中心より約0.094em下に来るため、
+// 帯も同じだけ下げて文字の中央に重ねる。
+// 非アクティブ＝帯幅0／アクティブ・hover＝右寄せで calc(100% - 5px) に展開
+.menuItem span,
+.menuItemActive span {
+  background-image: linear-gradient(
+    var(--color-primary),
+    var(--color-primary)
+  );
+  background-repeat: no-repeat;
+  background-position: right calc(50% + 0.094em);
+  background-size: 0 0.85em;
+  transition: color var(--transition-base),
+    background-size var(--transition-base);
 }
 
-.menuItemActive {
-  span {
-    color: var(--color-white);
-    background-color: var(--color-primary);
-  }
+.menuItem span {
+  color: var(--color-text-secondary);
+}
+
+.menuItem:hover span {
+  color: var(--color-white);
+  background-size: calc(100% - 5px) 0.85em;
+}
+
+.menuItemActive span {
+  color: var(--color-white);
+  background-size: calc(100% - 5px) 0.85em;
 }
 
 // ── 右側（カードエリア） ──
@@ -199,7 +195,7 @@
 
 .cardsTrack {
   display: flex;
-  gap: 0.73vw;
+  gap: 0.833vw; // Figma: カード間 16px
   padding-right: 10.4vw; // 1920px時 = 200px相当
   will-change: transform; // GPU合成レイヤーで滑らかな横スクロール
 

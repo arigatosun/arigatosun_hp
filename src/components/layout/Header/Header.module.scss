@@ -14,8 +14,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  @include fluid(padding-top, 14, 46);
-  @include fluid(padding-bottom, 14, 20);
+  // 上下対称にしてナビを白背景の中心線に揃える
+  @include fluid(padding-top, 14, 33);
+  @include fluid(padding-bottom, 14, 33);
   @include fluid(padding-left, 20, 46);
   @include fluid(padding-right, 20, 40);
 

@@ -5,7 +5,7 @@
   position: relative;
   z-index: 5;
   @include fluid(padding-left, 20, 200);
-  @include fluid(padding-right, 20, 80);
+  @include fluid(padding-right, 20, 183); // Figma: セクション右端 x1737 → ページ右端まで183px
   @include fluid(padding-top, 52, 104);
   @include fluid(padding-bottom, 60, 120);
 }
@@ -16,7 +16,7 @@
 }
 
 .sectionTitle {
-  margin-top: 161px;
+  margin-top: 108px; // Figma: SERVICE末尾→WORKSタイトル 320px に合わせ調整
 
   img {
     @include fluid(width, 75, 183);
@@ -31,7 +31,7 @@
 
 .item {
   display: flex;
-  @include fluid(gap, 16, 40);
+  @include fluid(gap, 20, 100); // Figma: テキスト560と画像877の間 100px
   align-items: flex-start;
 
   @include max(1023px) {
@@ -69,14 +69,14 @@
 }
 
 .itemTitle {
-  @include fluid(margin-top, 9, 30);
+  @include fluid(margin-top, 20, 40); // Figma: CLIENT行下端→タイトル 40px
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
   @include fluid(font-size, 12, 20);
   font-style: normal;
   font-weight: var(--font-weight-regular);
-  @include fluid(line-height, 22, 44);
-  @include fluid(letter-spacing, 1, 3.12);
+  @include fluid(line-height, 22, 40); // Figma: 40px
+  @include fluid(letter-spacing, 1.6, 3.2); // Figma: 3.2px
 }
 
 .separatorWrap {
@@ -108,10 +108,10 @@
 
 // ── 詳細情報 ──
 .detailsList {
-  @include fluid(margin-top, 17, 44);
+  @include fluid(margin-top, 26, 52); // Figma: 区切り線→詳細リスト 52px
   display: flex;
   flex-direction: column;
-  @include fluid(gap, 2, 4);
+  @include fluid(gap, 5, 11); // Figma: D/B行→TERM行 約11px
 }
 
 .detailRow {
@@ -140,17 +140,15 @@
   @include fluid(font-size, 13, 16);
   font-style: normal;
   font-weight: var(--font-weight-regular);
-  @include fluid(line-height, 22, 32);
-  @include fluid(letter-spacing, 1.8, 2.7);
+  @include fluid(line-height, 18, 24); // Figma: 24px
+  @include fluid(letter-spacing, 1.4, 2.08); // Figma: 2.08px
 }
 
 // ── 右側画像 ──
 .itemRight {
-  width: 55%;
+  width: 57%; // Figma: 画像エリア877 / セクション幅1537
   flex-shrink: 0;
   @include fluid(margin-top, -22, -44);
-  transform: translateX(-48px);
-  width: 58%;
 
   @include max(1023px) {
     width: 100%;
@@ -170,10 +168,10 @@
 }
 
 // ── VIEW MORE ボタン ──
-.viewMore,
-.viewMoreLeft {
+.viewMore {
   position: absolute;
   top: 65%; // 画像サイズに対する比率で配置
+  left: 5%; // Figma: 全カード共通でラップトップ左寄り
   z-index: 2;
   display: inline-flex;
   cursor: pointer;
@@ -186,18 +184,9 @@
   @include max(1023px) {
     position: relative;
     top: auto;
-    right: auto;
     left: auto;
     @include fluid(margin-top, 12, 24);
   }
-}
-
-.viewMore {
-  right: 10%;
-}
-
-.viewMoreLeft {
-  left: 5%;
 }
 
 .viewMoreText {
