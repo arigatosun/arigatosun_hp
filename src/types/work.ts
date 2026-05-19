@@ -100,9 +100,25 @@ export type WorkContentBlock = { gap: number } & (
     }
 );
 
-/** 1作品の詳細ページ全体のデータ。 */
-export type WorkDetailContent = {
-  slug: string;
-  hero: WorkHero;
-  blocks: WorkContentBlock[];
+/** アーカイブ型ページ（パターンB）の1エントリ（スライダー＋見出し＋本文＋CREDIT）。 */
+export type WorkArchiveEntry = {
+  heading: string;
+  body: string[]; // 本文段落
+  credit: string[]; // ＜CREDIT＞行
+  images: string[]; // スライダー画像
 };
+
+/** 1作品の詳細ページ全体のデータ。pattern で2種のレイアウトを判別。 */
+export type WorkDetailContent =
+  | {
+      slug: string;
+      pattern: 'detail'; // パターンA: ブロック積み上げ式の詳細ページ
+      hero: WorkHero;
+      blocks: WorkContentBlock[];
+    }
+  | {
+      slug: string;
+      pattern: 'archive'; // パターンB: スライダーカードのアーカイブページ
+      lead: { heading: string; body: string[] };
+      entries: WorkArchiveEntry[];
+    };

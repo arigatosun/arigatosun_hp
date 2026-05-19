@@ -9,7 +9,6 @@ type WorksCardProps = {
   imageWidth: number;
   imageHeight: number;
   href?: string;
-  showViewMore?: boolean;
 };
 
 export default function WorksCard({
@@ -19,7 +18,6 @@ export default function WorksCard({
   imageWidth,
   imageHeight,
   href = '/works',
-  showViewMore = true,
 }: WorksCardProps) {
   // works.ts の title は LP 用の \n と | 区切りを含む。/works カードは自然折り返しで表示するため
   // \n を除去し、区切りの | は残したまま右側に半角スペースを足して読みやすくする。
@@ -44,11 +42,9 @@ export default function WorksCard({
 
       <p className={styles.body}>{bodyText}</p>
 
-      {showViewMore && (
-        <span className={styles.viewMore}>
-          <span className={styles.viewMoreText}>VIEW MORE &gt;</span>
-        </span>
-      )}
+      <span className={styles.viewMore}>
+        <span className={styles.viewMoreText}>VIEW MORE &gt;</span>
+      </span>
     </Link>
   );
 }

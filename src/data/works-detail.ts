@@ -8,6 +8,7 @@ const CHORITZ = '/images/works/choritz';
 // ヒーロー写真コラージュ・座標は 1920×760 ヒーロー基準の Figma 実測値
 const CHORITZ_DETAIL: WorkDetailContent = {
   slug: 'work-1',
+  pattern: 'detail',
   hero: {
     photos: [
       { src: `${CHORITZ}/rect-220.jpg`, x: 561, y: -37, width: 302, height: 197 },
@@ -255,12 +256,106 @@ const CHORITZ_DETAIL: WorkDetailContent = {
   ],
 };
 
+// ── パターンB: ロゴ・VI プロジェクトアーカイブ（スライダーカードのループ）──
+const ARCHIVE = '/images/works/archive';
+
+// 全エントリ共通の本文（Figma プレースホルダー。後で実データへ差し替え）
+const ARCHIVE_BODY = [
+  '頭文字「IGC」をベースに構成されたシンボルマークです。「I」はゴルフピンとボールをモチーフに、日本らしい要素を加えることで、上質さと信頼感を表現。特別な体験や出会いの場としての輝きを象徴しています。また、「G」と「C」は一部を重ね合わせることで、ボールの軌道やスイングの美しさを連想させ、プレーヤーのスコア向上やゴルフへの愛着が右肩上がりに深まっていく様子を表現しています。全体として、上質さ・親しみ・成長のストーリーを兼ね備えた、クラブの理念を体現するデザインです。',
+];
+
+// CREDIT 行を組み立てる（CLIENT 以外は Figma プレースホルダー）
+const archiveCredit = (client: string): string[] => [
+  `<CREDIT> CLIENT : ${client}　|　PROJECT MANAGEMENT : RYO YOSHIKAWA　|　DESIGN DIRECTION / DESIGN : YUGO NISHIMOTO`,
+  '<SCOPE> LOGO / VI　<TERM> 2025.5 ~ 2025.8',
+];
+
+// スライダー画像は現状 Figma プレースホルダー1枚を共有（実画像は後日差し替え）
+const archiveImages = [`${ARCHIVE}/slide-placeholder.png`];
+
+const IGC_ARCHIVE: WorkDetailContent = {
+  slug: 'work-2',
+  pattern: 'archive',
+  lead: {
+    heading: '独自の核を構築する、ロゴ・VIのプロジェクトアーカイブ。',
+    body: [
+      'ブランドの核となるロゴとVIを中心に手がけたプロジェクトのアーカイブです。',
+      'そのブランドにしかない核を見つけ、形にし、どこに展開されても機能し続けるシンボルとして設計すること。',
+      'どんなプロジェクトでも、その向き合い方は変わりません。',
+    ],
+  },
+  entries: [
+    {
+      heading: '■ゴルフショップ「 IMANISHI GOLF CLUB 」のロゴ・VI設計',
+      body: ARCHIVE_BODY,
+      credit: archiveCredit('IMANISHI GOLF CLUB'),
+      images: archiveImages,
+    },
+    {
+      heading: '■「PROOSEL QUEST」のロゴデザイン',
+      body: ARCHIVE_BODY,
+      credit: archiveCredit('株式会社 PROOSEL'),
+      images: archiveImages,
+    },
+    {
+      heading: '■会計サービス「ハロタロ」のブランディング',
+      body: ARCHIVE_BODY,
+      credit: archiveCredit('ハロタロ'),
+      images: archiveImages,
+    },
+    {
+      heading: '■歯科医と歯科助手を繋ぐ「 Thoot 」のロゴ・VI設計',
+      body: ARCHIVE_BODY,
+      credit: archiveCredit('Thoot'),
+      images: archiveImages,
+    },
+    {
+      heading: '■OEM・中国輸入代行会社「 CHORITZ 」のロゴ・VI設計',
+      body: ARCHIVE_BODY,
+      credit: archiveCredit('頂立輸入代行会社'),
+      images: archiveImages,
+    },
+    {
+      heading: '■理美容師検索予約アプリ「 Men’te 」のロゴ・VI設計',
+      body: ARCHIVE_BODY,
+      credit: archiveCredit('Men’te'),
+      images: archiveImages,
+    },
+    {
+      heading: '■「 MAISON ORICHAN 」のロゴ・VI設計',
+      body: ARCHIVE_BODY,
+      credit: archiveCredit('株式会社 BUBBIC'),
+      images: archiveImages,
+    },
+    {
+      heading: '■ヴィラ「 NEST 」のロゴ・VI設計',
+      body: ARCHIVE_BODY,
+      credit: archiveCredit('NEST'),
+      images: archiveImages,
+    },
+    {
+      heading: '■「 株式会社アリガトサン 」のブランディング',
+      body: ARCHIVE_BODY,
+      credit: archiveCredit('株式会社アリガトサン'),
+      images: archiveImages,
+    },
+    {
+      heading: '■「 全日本漬物協同組合連合会 」のロゴデザイン',
+      body: ARCHIVE_BODY,
+      credit: archiveCredit('全日本漬物協同組合連合会'),
+      images: archiveImages,
+    },
+  ],
+};
+
 /**
  * slug から詳細ページデータを取得する。
- * 現状はデザインが CHORITZ の1件のみのため、全 work で暫定共有する。
+ * work-2 はパターンB（アーカイブ）、それ以外はパターンA（CHORITZ 詳細）を返す。
+ * 「順番は後で変わる」前提のため、この分岐の差し替えだけで割当を変更できる。
  */
 export async function getWorkDetailBySlug(
   slug: string,
 ): Promise<WorkDetailContent | undefined> {
+  if (slug === 'work-2') return { ...IGC_ARCHIVE, slug };
   return { ...CHORITZ_DETAIL, slug };
 }

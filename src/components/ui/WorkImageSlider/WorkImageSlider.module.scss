@@ -1,0 +1,67 @@
+// Figma フレーム 1920px 準拠
+@use '@/styles/fluid' as * with (
+  $fluid-max-viewport: 1920
+);
+@use '@/styles/breakpoints' as *;
+
+// 全幅の白バンド。左右 x=200 内側にスライダー枠を収める。
+.band {
+  width: 100%;
+  background: var(--color-white);
+  @include fluid(padding-left, 20, 200);
+  @include fluid(padding-right, 20, 200);
+}
+
+// スライダー枠（Figma 実測 1520×480）
+.frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1520 / 480;
+  overflow: hidden;
+}
+
+.image {
+  object-fit: cover;
+}
+
+// ‹ › 矢印（枠の左右端・縦中央）
+.arrowPrev,
+.arrowNext {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  transition: opacity var(--transition-base);
+
+  &:hover {
+    opacity: 0.55;
+  }
+}
+
+.arrowPrev {
+  left: 0;
+}
+
+.arrowNext {
+  right: 0;
+}
+
+.arrowIcon {
+  display: block;
+  @include fluid(width, 10, 14);
+  @include fluid(height, 13, 18);
+  background: url('/images/works/archive/slider-arrow.svg') center / contain
+    no-repeat;
+}
+
+// 左矢印は ‹ なので反転
+.arrowPrev .arrowIcon {
+  transform: scaleX(-1);
+}
