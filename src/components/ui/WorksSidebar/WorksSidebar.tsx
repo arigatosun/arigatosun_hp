@@ -44,7 +44,7 @@ export default function WorksSidebar({ active = 'ALL' }: WorksSidebarProps) {
                 className={`${styles.item} ${isActive ? styles.itemActive : ''}`}
               >
                 <Link href={item.href} className={styles.link}>
-                  <span className={styles.bullet}>・</span>
+                  <span>・</span>
                   <span className={styles.label}>
                     {item.key} &gt;
                   </span>
@@ -54,12 +54,19 @@ export default function WorksSidebar({ active = 'ALL' }: WorksSidebarProps) {
           })}
         </ul>
 
-        <div className={styles.divider} />
+        <span className={styles.divider} aria-hidden="true">
+          <svg viewBox="0 0 8 57" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M3.32809 56.3536C3.52335 56.5488 3.83993 56.5488 4.03519 56.3536L7.21717 53.1716C7.41244 52.9763 7.41244 52.6597 7.21717 52.4645C7.02191 52.2692 6.70533 52.2692 6.51007 52.4645L3.68164 55.2929L0.853213 52.4645C0.657951 52.2692 0.341369 52.2692 0.146106 52.4645C-0.0491558 52.6597 -0.0491557 52.9763 0.146106 53.1716L3.32809 56.3536ZM3.68164 56L4.18164 56L4.18164 -4.37114e-08L3.68164 0L3.18164 4.37114e-08L3.18164 56L3.68164 56Z"
+              fill="currentColor"
+            />
+          </svg>
+        </span>
 
         <ul className={styles.list}>
           <li className={styles.item}>
             <Link href="/news" className={styles.link}>
-              <span className={styles.bullet}>・</span>
+              <span>・</span>
               <span className={styles.label}>NEWS &gt;</span>
             </Link>
           </li>

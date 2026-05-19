@@ -49,50 +49,48 @@
   @include fluid(font-size, 14, 20);
   line-height: 24px;
   @include fluid(letter-spacing, 1.4, 2.6);
-  transition: color var(--transition-base);
+  // Figma: 各項目は折り返さない（whitespace-nowrap）
+  white-space: nowrap;
+  // 赤マーカー帯（SERVICE 詳細ページ side nav と同方式・文字より背の低い帯）
+  background-image: linear-gradient(
+    var(--color-primary),
+    var(--color-primary)
+  );
+  background-repeat: no-repeat;
+  // 大文字の視覚中心は行ボックス中央より 0.094em 下にあるため、帯も同量下げて Figma 同様に上下均等にする
+  background-position: right calc(50% + 0.094em);
+  background-size: 0 0.85em;
+  transition: color var(--transition-base),
+    background-size var(--transition-base);
 
   &:hover {
-    color: var(--color-primary);
-
-    .label {
-      color: var(--color-primary);
-    }
+    color: var(--color-white);
+    background-size: calc(100% - 5px) 0.85em;
   }
-}
-
-.bullet {
-  letter-spacing: 0;
 }
 
 .label {
   display: inline-block;
-  transition:
-    color var(--transition-base),
-    background-color var(--transition-base);
 }
 
-// active 状態（Figma: 白文字 + #DA2719 背景ハイライト）
+// active 状態: 白文字 + 赤マーカー帯（ベタ塗りブロックではなく、文字より背の低い帯）
 .itemActive .link {
   color: var(--color-white);
+  background-size: calc(100% - 5px) 0.85em;
 }
 
-.itemActive .label {
-  color: var(--color-white);
-  background-color: var(--color-primary);
-  padding: 0 4px;
-}
-
-.itemActive .link:hover .label {
-  color: var(--color-white);
-  background-color: var(--color-primary-dark);
-}
-
-// ── CREATIVE PROJECT と NEWS の間の縦罫線（Figma: 56px） ──
+// ── CREATIVE PROJECT と NEWS の間の下矢印（SERVICE 詳細ページ side nav と同方式） ──
 .divider {
-  width: 1px;
-  @include fluid(height, 28, 56);
-  background: var(--color-text-secondary);
+  display: block;
   @include fluid(margin-left, 7, 15);
-  @include fluid(margin-top, 18, 32);
-  @include fluid(margin-bottom, 18, 32);
+  // Figma: CREATIVE PROJECT 下端→矢印 23px / 矢印下端→NEWS 40px
+  @include fluid(margin-top, 13, 23);
+  @include fluid(margin-bottom, 22, 40);
+  color: var(--color-text-secondary);
+
+  svg {
+    display: block;
+    width: auto;
+    @include fluid(height, 36, 56);
+  }
 }

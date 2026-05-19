@@ -19,8 +19,9 @@ export default function WorksCard({
   imageHeight,
   href = '/works',
 }: WorksCardProps) {
-  // works.ts の title は LP 用の \n を含む。/works カードは自然折り返しで表示するため改行は除去
-  const bodyText = title.replace(/\n/g, '');
+  // works.ts の title は LP 用の \n と | 区切りを含む。/works カードは自然折り返しで表示するため
+  // \n を除去し、区切りの | は残したまま右側に半角スペースを足して読みやすくする。
+  const bodyText = title.replace(/\n/g, '').replace(/\|/g, '| ');
 
   return (
     <Link href={href} className={styles.card}>

@@ -15,10 +15,10 @@
   }
 }
 
-// ── 画像（Figma: 460×258.94） ──
+// ── 画像（460×260 / 1920px 表示時の実寸） ──
 .imageWrap {
   width: 100%;
-  aspect-ratio: 460 / 258.94;
+  aspect-ratio: 460 / 260;
   overflow: hidden;
   background: var(--color-placeholder);
 }
@@ -77,11 +77,13 @@
   font-family: var(--font-en);
   font-weight: var(--font-weight-light);
   @include fluid(font-size, 14, 24);
-  @include fluid(line-height, 16, 20);
-  @include fluid(letter-spacing, 1.5, 3.12);
-  @include fluid(padding-top, 3, 4);
-  @include fluid(padding-bottom, 3, 4);
-  @include fluid(padding-left, 4, 6);
-  @include fluid(padding-right, 4, 6);
+  // 赤帯を VIEW MORE のテキストにぴったり沿わせる（Figma node 1601:118774 帯幅187 ≒ テキスト188）。
+  // line-height・padding・letter-spacing はフォントサイズに追従させたいので unitless / em 指定。
+  // 縦: 大文字基準で redAbove:大文字:redBelow ≒ 6:39:3 / 横: 左右 padding なし。
+  line-height: 0.681;
+  letter-spacing: 0.13em; // Figma 実測 3.12px ÷ font-size 24px
+  padding: 0 0 0.16em;
+  // 末尾 ">" の後ろに付く letter-spacing 1 文字分（0.13em）の空き赤を帯から除去
+  clip-path: inset(0 0.13em 0 0);
   background-color: var(--color-primary);
 }
