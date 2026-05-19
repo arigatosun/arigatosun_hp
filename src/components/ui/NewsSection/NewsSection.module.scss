@@ -4,14 +4,14 @@
 .news {
   position: relative;
   @include fluid(padding-left, 20, 200);
-  @include fluid(padding-right, 20, 80);
-  @include fluid(padding-top, 60, 120);
+  @include fluid(padding-right, 20, 200); // Figma: 記事リスト右端 x1720 → ページ右端まで200px
+  @include fluid(padding-top, 60, 180); // Figma: WORKS末尾→NEWS 320px に合わせ調整
   @include fluid(padding-bottom, 60, 120);
 }
 
 .inner {
   display: flex;
-  @include fluid(gap, 40, 140);
+  @include fluid(gap, 40, 220); // Figma: 左カラム↔記事リスト 220px
   align-items: flex-start;
 
   @include sp {
@@ -65,7 +65,7 @@
   list-style: none;
   display: flex;
   flex-direction: column;
-  @include fluid(gap, 16, 32);
+  @include fluid(gap, 16, 28); // Figma: 項目ピッチ52px − 行ボックス24px
   @include fluid(margin-bottom, 24, 56);
 
   @include sp {
@@ -83,42 +83,42 @@
   @include fluid(font-size, 14, 20);
   font-weight: var(--font-weight-light);
   font-style: normal;
-  line-height: 24px;
+  line-height: 1.2;
   @include fluid(letter-spacing, 1.2, 2.6);
+  white-space: nowrap;
   cursor: pointer;
-
-  span {
-    display: inline;
-    padding: 5px 12px;
-    transition: all var(--transition-base);
-  }
 
   @include sp {
     @include fluid(font-size, 11, 14);
-
-    span {
-      padding: 4px 8px;
-    }
   }
 }
 
-.categoryItem {
-  span {
-    color: var(--color-text-secondary);
-    background-color: transparent;
-  }
-
-  &:hover span {
-    color: var(--color-white);
-    background-color: var(--color-primary);
-  }
+// 赤マーカー帯（SERVICE セクションの側面メニューと同方式）
+.categoryItem span,
+.categoryItemActive span {
+  background-image: linear-gradient(
+    var(--color-primary),
+    var(--color-primary)
+  );
+  background-repeat: no-repeat;
+  background-position: right calc(50% + 0.094em);
+  background-size: 0 0.85em;
+  transition: color var(--transition-base),
+    background-size var(--transition-base);
 }
 
-.categoryItemActive {
-  span {
-    color: var(--color-white);
-    background-color: var(--color-primary);
-  }
+.categoryItem span {
+  color: var(--color-text-secondary);
+}
+
+.categoryItem:hover span {
+  color: var(--color-white);
+  background-size: calc(100% - 5px) 0.85em;
+}
+
+.categoryItemActive span {
+  color: var(--color-white);
+  background-size: calc(100% - 5px) 0.85em;
 }
 
 .buttonWrap {
@@ -145,50 +145,23 @@
 .article {
   display: flex;
   align-items: flex-start;
-  @include fluid(gap, 16, 56);
-  padding: 24px 20px;
-  margin: -24px -20px; // paddingの分だけ外側に広げて装飾ラインとの整合性を保つ
-  border-radius: 8px;
-  transition:
-    background-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-    transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-    box-shadow 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  @include fluid(gap, 16, 40); // Figma: タイトル↔サムネイル 40px
 
+  // ホバー: タイトルが赤に変わり、赤い矢印が右からスッと現れる
   &:hover {
-    background-color: rgba(255, 255, 255, 0.95);
-    transform: translateX(8px);
-    box-shadow:
-      0 4px 24px rgba(0, 0, 0, 0.06),
-      0 12px 40px rgba(0, 0, 0, 0.04);
-
     .articleTitle {
       color: var(--color-primary);
     }
 
-    .articleDate,
-    .articleTag {
-      color: var(--color-black);
-    }
-
-    .thumbnailImage {
-      transform: scale(1.06);
-    }
-
-    // タイトル下にアクセントラインが伸びる
-    .articleTitle::after {
-      transform: scaleX(1);
+    .articleArrow {
+      opacity: 1;
+      transform: translateX(0);
     }
   }
 
   @include sp {
     flex-direction: column-reverse; // サムネイルを上に表示
     @include fluid(gap, 12, 16);
-    padding: 16px 12px;
-    margin: -16px -12px;
-
-    &:hover {
-      transform: none; // SP時は横スライドしない
-    }
   }
 }
 
@@ -200,32 +173,16 @@
 .articleTitle {
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
-  @include fluid(font-size, 14, 20);
+  @include fluid(font-size, 14, 18); // Figma: 18px
   font-style: normal;
   font-weight: var(--font-weight-regular);
-  @include fluid(line-height, 24, 38);
-  @include fluid(letter-spacing, 1.5, 3.2);
-  transition: color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  position: relative;
-  padding-bottom: 4px;
-
-  // アクセントライン（ホバー時に左→右に伸びる）
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 60px;
-    height: 2px;
-    background-color: var(--color-primary);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.1s;
-  }
+  @include fluid(line-height, 24, 34); // Figma: 34px
+  @include fluid(letter-spacing, 1.5, 2.88); // Figma: 2.88px
+  transition: color var(--transition-base);
 }
 
 .articleMeta {
-  @include fluid(margin-top, 16, 32);
+  @include fluid(margin-top, 16, 24); // Figma: タイトル下端→日付 24px
   display: flex;
   align-items: baseline;
   @include fluid(gap, 12, 32);
@@ -250,15 +207,29 @@
   font-weight: var(--font-weight-light);
   line-height: 24px;
   @include fluid(letter-spacing, 1.2, 2.6);
-  transition: color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+// ── ホバー時に右から現れる矢印インジケーター ──
+.articleArrow {
+  margin-left: auto;
+  color: var(--color-primary);
+  font-family: var(--font-en);
+  @include fluid(font-size, 16, 22);
+  font-weight: var(--font-weight-light);
+  line-height: 1;
+  opacity: 0;
+  transform: translateX(12px);
+  transition:
+    opacity var(--transition-base),
+    transform var(--transition-base);
 }
 
 // ── サムネイル ──
 .articleThumbnail {
   position: relative;
   flex-shrink: 0;
-  @include fluid(width, 120, 300);
-  aspect-ratio: 300 / 169;
+  @include fluid(width, 120, 266); // Figma: 266px
+  aspect-ratio: 266 / 150; // Figma: 266×150
   overflow: hidden;
   border-radius: 4px;
 
@@ -278,14 +249,14 @@
 .articleDivider {
   width: 100%;
   height: 1px;
-  @include fluid(margin-top, 20, 40);
+  @include fluid(margin-top, 24, 48); // Figma: 日付→区切り線 48px
   background: var(--color-text-secondary);
   opacity: 0.3;
 }
 
 // ── 記事間のスペーサー ──
 .articleSpacer {
-  @include fluid(height, 30, 70);
+  @include fluid(height, 30, 60); // Figma: 区切り線→次記事 60px
 
   @include sp {
     @include fluid(height, 16, 30);
@@ -306,5 +277,5 @@
 .thumbnailPlaceholder {
   width: 100%;
   height: 100%;
-  background-color: #e8e8e8;
+  background-color: var(--color-white); // Figma: サムネ未設定時は白
 }

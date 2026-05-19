@@ -48,3 +48,17 @@
     border-color: var(--color-primary-dark);
   }
 }
+
+// 小サイズ（Figma: NEWS セクションの VIEW NEWS ボタン 300×60）
+.sm {
+  @include fluid(width, 200, 300);
+  @include fluid(height, 44, 60);
+  border-radius: 32.4px;
+  @include fluid(font-size, 14, 18);
+  @include fluid(letter-spacing, 1.2, 2.34);
+
+  @include sp {
+    width: 100%;
+    max-width: 320px;
+  }
+}
