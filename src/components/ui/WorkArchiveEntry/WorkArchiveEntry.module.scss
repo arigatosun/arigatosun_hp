@@ -1,0 +1,47 @@
+// Figma フレーム 1920px 準拠
+@use '@/styles/fluid' as * with (
+  $fluid-max-viewport: 1920
+);
+@use '@/styles/breakpoints' as *;
+
+// 見出し・本文・CREDIT は左右 x=200 基準
+.text {
+  @include fluid(padding-left, 20, 200);
+  @include fluid(padding-right, 20, 200);
+  @include fluid(margin-top, 22, 44); // スライダー → ■見出し
+}
+
+// ■見出し（日本語 Noto / 英字 Mozaic を自動切替）
+.heading {
+  margin: 0;
+  color: var(--color-black);
+  font-family: var(--font-primary);
+  font-weight: var(--font-weight-regular);
+  @include fluid(font-size, 15, 20);
+  @include fluid(line-height, 38, 56);
+  @include fluid(letter-spacing, 2.5, 4);
+}
+
+.body {
+  margin: 0;
+  // ■見出し(line-height 56)下端の余白を相殺し、Figma 実測の見出し→本文 46px に合わせる
+  margin-top: -10px;
+  color: var(--color-black);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  font-weight: var(--font-weight-regular);
+  @include fluid(font-size, 13, 16);
+  @include fluid(line-height, 26, 32);
+  @include fluid(letter-spacing, 1, 1.92);
+}
+
+// ＜CREDIT＞行（Mozaic GEO Light・グレー）
+.credit {
+  margin: 0;
+  @include fluid(margin-top, 10, 16);
+  color: var(--color-text-secondary);
+  font-family: var(--font-primary);
+  font-weight: var(--font-weight-light);
+  @include fluid(font-size, 12, 14);
+  @include fluid(line-height, 24, 32);
+  @include fluid(letter-spacing, 1.6, 2.8);
+}

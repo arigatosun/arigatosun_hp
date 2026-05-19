@@ -1,0 +1,58 @@
+// Figma フレーム 1920px 準拠
+@use '@/styles/fluid' as * with (
+  $fluid-max-viewport: 1920
+);
+@use '@/styles/breakpoints' as *;
+
+// ヘッダー（fixed 80px）下端 → リード見出し
+.archive {
+  @include fluid(padding-top, 80, 200);
+}
+
+// リード（見出し＋区切り線＋本文）は左右 x=200 基準
+.header {
+  @include fluid(padding-left, 20, 200);
+  @include fluid(padding-right, 20, 200);
+}
+
+.leadHeading {
+  margin: 0;
+  color: var(--color-black);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  font-weight: var(--font-weight-regular);
+  @include fluid(font-size, 18, 26);
+  @include fluid(line-height, 38, 56);
+  @include fluid(letter-spacing, 4, 7.54);
+}
+
+.divider {
+  display: block;
+  @include fluid(margin-top, 24, 60);
+  width: 48px;
+  height: 1px;
+  background: var(--color-black);
+}
+
+.leadBody {
+  margin: 0;
+  @include fluid(margin-top, 18, 40);
+  color: var(--color-black);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  font-weight: var(--font-weight-regular);
+  @include fluid(font-size, 13, 16);
+  @include fluid(line-height, 28, 36);
+  @include fluid(letter-spacing, 2, 3.84);
+}
+
+// リード → 1エントリ目、およびエントリ間の間隔
+.entries {
+  @include fluid(margin-top, 96, 240);
+  display: flex;
+  flex-direction: column;
+  @include fluid(gap, 96, 240);
+}
+
+// 最終エントリ → 実績・事例セクション（Figma 実測ギャップ）
+.related {
+  @include fluid(margin-top, 168, 420);
+}

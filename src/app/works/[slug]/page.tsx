@@ -14,6 +14,7 @@ import WorkMockupCard from '@/components/ui/WorkMockupCard';
 import WorkDivider from '@/components/ui/WorkDivider';
 import WorkCreditList from '@/components/ui/WorkCreditList';
 import WorkRelatedSection from '@/components/ui/WorkRelatedSection';
+import WorkArchive from '@/components/ui/WorkArchive';
 import styles from './page.module.scss';
 
 type PageParams = {
@@ -51,6 +52,20 @@ export default async function WorkDetailPage({ params }: PageParams) {
   const works = await getAllWorks();
   const relatedWorks = works.filter((item) => item.id !== slug).slice(0, 3);
 
+  // パターンB（アーカイブ）はスライダーカードのループ構成
+  if (detail && detail.pattern === 'archive') {
+    return (
+      <div className={styles.page}>
+        <WorkArchive
+          lead={detail.lead}
+          entries={detail.entries}
+          relatedWorks={relatedWorks}
+        />
+      </div>
+    );
+  }
+
+  // パターンA（詳細）はブロック積み上げ構成
   return (
     <div className={styles.page}>
       {detail && <WorkDetailHero hero={detail.hero} />}

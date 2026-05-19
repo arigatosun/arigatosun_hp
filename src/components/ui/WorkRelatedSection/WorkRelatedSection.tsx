@@ -29,7 +29,6 @@ export default function WorkRelatedSection({
             imageWidth={work.imageWidth}
             imageHeight={work.imageHeight}
             href={`/works/${work.id}`}
-            showViewMore={false}
           />
         ))}
       </div>
