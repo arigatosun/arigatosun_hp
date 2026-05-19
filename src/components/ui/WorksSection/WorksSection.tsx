@@ -5,6 +5,7 @@ import Image from 'next/image';
 import styles from './WorksSection.module.scss';
 import Button from '@/components/ui/Button';
 import SectionTitle from '@/components/ui/SectionTitle';
+import FooterCharacterLoader from '@/components/three/FooterCharacterLoader';
 import { WORKS_DATA } from '@/data/works';
 
 export default function WorksSection() {
@@ -101,7 +102,7 @@ export default function WorksSection() {
                   className={styles.workImage}
                 />
                 {/* VIEW MORE > ボタン */}
-                <a href="/works" className={index === 0 ? styles.viewMore : styles.viewMoreLeft}>
+                <a href="/works" className={styles.viewMore}>
                   <span className={styles.viewMoreText}>VIEW MORE &gt;</span>
                 </a>
               </div>
@@ -112,6 +113,11 @@ export default function WorksSection() {
 
       {/* 下部: キャラクター + テキスト + ボタン */}
       <div className={styles.footer}>
+        {/* 3Dキャラクター（ありがとくん・手振り） */}
+        <div className={styles.footerCharacter}>
+          <FooterCharacterLoader />
+        </div>
+
         <div className={styles.footerText}>
           <p className={styles.footerServices}>
             AI / DEVELOPMENT / APPLICATION / DESIGN / UI / UX / BRANDING /<br />
