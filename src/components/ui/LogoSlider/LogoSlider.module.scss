@@ -9,6 +9,7 @@
 
 // ── ロゴスライダー ──
 .slider {
+  position: relative;
   overflow: hidden;
   width: 100%;
 }
@@ -26,17 +27,52 @@
   align-items: center;
 }
 
+// ベース層のロゴ（グレースケール・低不透明度）
 .logoImage {
   @include fluid(width, 300, 648); // Figma: ロゴ1個 648×141
   @include fluid(height, 65, 141);
   opacity: 0.4;
   filter: grayscale(100%);
-  transition: opacity 0.4s ease, filter 0.4s ease;
+}
 
-  &:hover {
-    opacity: 1;
-    filter: grayscale(0%);
-  }
+// ── カラー層（カーソル追従の放射状マスク）──
+// ベース層と同じトラックをフルカラーで重ね、カーソル位置を中心とした
+// 放射状グラデーションでマスクする。覗いた部分だけカラーロゴが現れる。
+.reveal {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+  // カーソル位置（JS が px で更新）
+  --mx: 50%;
+  --my: 50%;
+  // 反応半径（ビューポート追従）
+  --reveal-radius: clamp(120px, 14vw, 210px);
+  // black=表示 / transparent=非表示。マスクのアルファチャンネル用途。
+  -webkit-mask-image: radial-gradient(
+    circle var(--reveal-radius) at var(--mx) var(--my),
+    black 0%,
+    black 32%,
+    transparent 78%
+  );
+  mask-image: radial-gradient(
+    circle var(--reveal-radius) at var(--mx) var(--my),
+    black 0%,
+    black 32%,
+    transparent 78%
+  );
+}
+
+// ホバー中のみカラー層をフェードイン
+.active {
+  opacity: 1;
+}
+
+// カラー層のロゴ（フルカラー）
+.logoImageColor {
+  @include fluid(width, 300, 648);
+  @include fluid(height, 65, 141);
 }
 
 @keyframes scrollLoop {
