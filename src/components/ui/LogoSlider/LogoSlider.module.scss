@@ -3,7 +3,8 @@
 
 .wrapper {
   position: relative;
-  @include fluid(margin-top, 120, 380);
+  // Figma: NEWS末尾→LogoSlider 320px（NEWS の padding-bottom 120 と合算）
+  @include fluid(margin-top, 120, 200);
 }
 
 // ── ロゴスライダー ──
@@ -14,7 +15,7 @@
 
 .track {
   display: flex;
-  @include fluid(gap, 40, 100);
+  @include fluid(gap, 40, 75); // Figma: ロゴ間 75px
   width: max-content;
   animation: scrollLoop 60s linear infinite;
 }
@@ -26,8 +27,8 @@
 }
 
 .logoImage {
-  @include fluid(width, 300, 865);
-  @include fluid(height, 65, 188);
+  @include fluid(width, 300, 648); // Figma: ロゴ1個 648×141
+  @include fluid(height, 65, 141);
   opacity: 0.4;
   filter: grayscale(100%);
   transition: opacity 0.4s ease, filter 0.4s ease;
@@ -43,6 +44,6 @@
     transform: translateX(0);
   }
   100% {
-    transform: translateX(calc(-50% - 50px));
+    transform: translateX(calc(-50% - 37.5px));
   }
 }
