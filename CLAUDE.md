@@ -42,6 +42,7 @@
 | 新しいコンポーネントを追加する | `.claude/rules/component-creation.md` |
 | Figma デザインを実装に落とすフロー | `.claude/rules/design-to-implementation.md` |
 | Figma URL から実測値を MCP で取得する手順 | `.claude/rules/figma-mcp-workflow.md` |
+| セクション間（上下）の余白を Figma と合わせる | `.claude/rules/section-spacing.md` |
 | 画像 / 3D 等のアセット配置・命名 | `.claude/rules/asset-management.md` |
 | コミット前のセルフチェック | `.claude/rules/pre-commit-checklist.md` |
 
