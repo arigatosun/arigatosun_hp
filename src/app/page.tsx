@@ -11,8 +11,11 @@ import LogoSlider from '@/components/ui/LogoSlider';
 import MessageSection from '@/components/ui/MessageSection';
 import GlobalCanvasLoader from '@/components/three/GlobalCanvasLoader';
 import FooterCharacterLoader from '@/components/three/FooterCharacterLoader';
+import { getAllWorks } from '@/data/works';
 
-export default function Home() {
+export default async function Home() {
+  const works = await getAllWorks();
+
   return (
     <div className={styles.page}>
       {/* サービスセクション歩行キャラ用3Dキャンバス */}
@@ -101,7 +104,7 @@ export default function Home() {
       <ServiceSection />
 
       {/* ── ワークスセクション ── */}
-      <WorksSection />
+      <WorksSection works={works} />
 
       {/* ── ニュースセクション ── */}
       <NewsSection />

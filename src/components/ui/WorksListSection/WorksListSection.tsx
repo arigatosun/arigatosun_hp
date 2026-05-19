@@ -4,16 +4,20 @@ import { useState } from 'react';
 import WorksCard from '@/components/ui/WorksCard';
 import WorksSidebar from '@/components/ui/WorksSidebar';
 import WorksPagination from '@/components/ui/WorksPagination';
-import { WORKS_DATA } from '@/data/works';
+import type { WorkItem } from '@/types/work';
 import styles from './WorksListSection.module.scss';
 
 // Figma の /works ページは 2 列 × 4 行 = 8 件 / ページ
 const PER_PAGE = 8;
 
-export default function WorksListSection() {
+type WorksListSectionProps = {
+  works: readonly WorkItem[];
+};
+
+export default function WorksListSection({ works }: WorksListSectionProps) {
   const [page, setPage] = useState(1);
-  const totalPages = Math.max(1, Math.ceil(WORKS_DATA.length / PER_PAGE));
-  const cards = WORKS_DATA.slice((page - 1) * PER_PAGE, page * PER_PAGE);
+  const totalPages = Math.max(1, Math.ceil(works.length / PER_PAGE));
+  const cards = works.slice((page - 1) * PER_PAGE, page * PER_PAGE);
 
   // ページ送り：NEXT/BACK はページ下部にあるため、切替後は上部の新しいカードへスクロールを戻す
   const goToPage = (next: number) => {
