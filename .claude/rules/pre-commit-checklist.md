@@ -45,6 +45,12 @@ paths:
 
 ---
 
+## セクション間の余白
+
+- [ ] 上下の隣接セクションとの余白が **Figma の Group 間距離と一致**している（ブラウザ実測で照合・`.claude/rules/section-spacing.md`）
+
+---
+
 ## コンポーネント構造
 
 - [ ] 新規コンポーネントは `Component/Component.tsx + Component.module.scss + index.ts` の3点セット
@@ -79,4 +85,5 @@ paths:
 | 色の変数名分からない | `.claude/rules/design-tokens.md` |
 | 新規コンポーネント手順 | `.claude/rules/component-creation.md` |
 | Figma 値どう変換 | `.claude/rules/design-to-implementation.md` |
+| セクション間の上下余白 | `.claude/rules/section-spacing.md` |
 | 画像どこに置く | `.claude/rules/asset-management.md` |
