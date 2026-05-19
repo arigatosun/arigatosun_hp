@@ -8,7 +8,8 @@ export type ServiceCardData = {
   title: string;
   description: string;
   viewLabel: string;
-  bgImage: string;
+  /** カード背景画像。未用意なら null（グレープレースホルダー表示） */
+  bgImage: string | null;
 };
 
 export type ServiceMenuItem = string;

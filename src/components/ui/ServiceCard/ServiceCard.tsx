@@ -9,34 +9,44 @@ type ServiceCardProps = {
 export default function ServiceCard({ card }: ServiceCardProps) {
   return (
     <div className={styles.card}>
-      {/* 背景画像 */}
-      <Image
-        src={card.bgImage}
-        alt={card.title}
-        width={630}
-        height={860}
-        className={styles.bgImage}
-      />
-
-      {/* オーバーレイ画像 */}
-      <Image
-        src="/images/sections/service/card-overlay.png"
-        alt=""
-        width={630}
-        height={860}
-        className={styles.overlay}
-        aria-hidden="true"
-      />
-
-      {/* グラデーションオーバーレイ */}
-      <div className={styles.gradient} />
+      {/* 背景: 画像があれば写真＋オーバーレイ、なければグレープレースホルダー */}
+      {card.bgImage ? (
+        <>
+          <Image
+            src={card.bgImage}
+            alt={card.title}
+            width={612}
+            height={748}
+            className={styles.bgImage}
+          />
+          <Image
+            src="/images/sections/service/card-overlay.png"
+            alt=""
+            width={612}
+            height={748}
+            className={styles.overlay}
+            aria-hidden="true"
+          />
+          <div className={styles.gradient} />
+        </>
+      ) : (
+        <div className={styles.placeholder} aria-hidden="true" />
+      )}
 
       {/* カード内コンテンツ */}
       <div className={styles.content}>
-        {/* VIEW ボタン（カード上部・赤背景） */}
+        {/* VIEW マーカー（カード上部・各行に赤帯） */}
         <div className={styles.viewButton}>
-          <span className={styles.viewButtonLine}>VIEW</span>
-          <span className={styles.viewButtonLine}>{card.title} &gt;</span>
+          <span
+            className={`${styles.viewButtonLine} ${styles.viewButtonLineTop}`}
+          >
+            <span className={styles.viewButtonText}>VIEW</span>
+          </span>
+          <span
+            className={`${styles.viewButtonLine} ${styles.viewButtonLineBottom}`}
+          >
+            <span className={styles.viewButtonText}>{card.title} &gt;</span>
+          </span>
         </div>
 
         {/* カード下部情報 */}
