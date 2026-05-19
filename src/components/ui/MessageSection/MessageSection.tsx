@@ -48,7 +48,8 @@ export default function MessageSection() {
         scrollTrigger: {
           trigger: section,
           start: 'top 80%',
-          end: 'bottom 60%',
+          // スクロール連動範囲を広げ、白→赤の切り替わりを緩やかに
+          end: 'bottom 20%',
           scrub: true,
         },
       });
