@@ -7,8 +7,7 @@
   width: 31.875vw; // 612 / 1920
   height: 38.96vw; // 748 / 1920
   flex-shrink: 0;
-  overflow: hidden;
-  border-radius: 8px;
+  overflow: hidden; // Figma: カードは角丸なし（直角）
 
   @include sp {
     width: 100%;
