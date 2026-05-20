@@ -218,10 +218,14 @@
   font-weight: var(--font-weight-light);
   @include fluid(font-size, 14, 20);
   @include fluid(letter-spacing, 1.4, 2.6);
-  transition: all var(--transition-base);
+  // WORKS ページネーション（WorksPagination）の NEXT/BACK と同じ hover 挙動：
+  // 背景は白のまま・文字色と枠線だけ primary に切り替え
+  transition:
+    color var(--transition-base),
+    border-color var(--transition-base);
 
   &:hover {
-    background: var(--color-black);
-    color: var(--color-white);
+    color: var(--color-primary);
+    border-color: var(--color-primary);
   }
 }
