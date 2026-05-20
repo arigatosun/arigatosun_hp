@@ -120,13 +120,8 @@ export default function ServiceSection() {
             </div>
 
             <ul className={styles.menuList} ref={menuRef}>
-              {SERVICE_MENU_ITEMS.map((item, index) => (
-                <li
-                  key={item}
-                  className={
-                    index === 0 ? styles.menuItemActive : styles.menuItem
-                  }
-                >
+              {SERVICE_MENU_ITEMS.map((item) => (
+                <li key={item} className={styles.menuItem}>
                   <span>{item}</span>
                 </li>
               ))}
