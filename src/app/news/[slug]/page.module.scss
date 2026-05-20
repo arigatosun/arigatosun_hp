@@ -2,191 +2,226 @@
 @use '@/styles/breakpoints' as *;
 
 .page {
-  @include fluid(padding-top, 100, 160);
-  @include fluid(padding-bottom, 60, 120);
+  padding-top: 80px; // Header(position: fixed) 分のオフセット
+  @include fluid(padding-bottom, 96, 240);
+}
+
+.inner {
   @include fluid(padding-left, 20, 200);
   @include fluid(padding-right, 20, 200);
+  @include fluid(padding-top, 48, 120);
 }
 
-.container {
-  max-width: 800px;
-  margin: 0 auto;
-}
+// ── 上部: アイキャッチ（左）＋ 記事情報（右）──
+.article {
+  display: flex;
+  align-items: flex-start;
+  @include fluid(gap, 40, 120);
 
-// ── 戻るリンク ──
-.backLink {
-  display: inline-block;
-  @include fluid(margin-bottom, 24, 40);
-  color: var(--color-gray-500);
-  font-family: var(--font-en);
-  @include fluid(font-size, 12, 14);
-  font-weight: var(--font-weight-light);
-  @include fluid(letter-spacing, 0.8, 1.2);
-  transition: color var(--transition-base);
-
-  &:hover {
-    color: var(--color-primary);
+  @include sp {
+    flex-direction: column;
+    @include fluid(gap, 24, 40);
   }
 }
 
-// ── 記事ヘッダー ──
-.articleHeader {
-  @include fluid(margin-bottom, 24, 40);
-}
-
-.meta {
-  display: flex;
-  align-items: baseline;
-  @include fluid(gap, 12, 24);
-  @include fluid(margin-bottom, 12, 20);
-}
-
-.date {
-  color: var(--color-gray-500);
-  font-family: var(--font-en);
-  @include fluid(font-size, 13, 16);
-  font-weight: var(--font-weight-light);
-  @include fluid(letter-spacing, 0.8, 1.6);
-}
-
-.tag {
-  color: var(--color-primary);
-  font-family: var(--font-en);
-  @include fluid(font-size, 12, 14);
-  font-weight: var(--font-weight-regular);
-  @include fluid(letter-spacing, 0.8, 1.2);
-}
-
-.title {
-  color: var(--color-black);
-  font-family: var(--font-jp);
-  @include fluid(font-size, 22, 36);
-  font-weight: var(--font-weight-bold);
-  @include fluid(line-height, 34, 52);
-  @include fluid(letter-spacing, 1, 2);
-}
-
-// ── アイキャッチ画像 ──
-.heroImage {
+.eyecatch {
   position: relative;
-  width: 100%;
-  aspect-ratio: 16 / 9;
+  flex-shrink: 0;
+  @include fluid(width, 280, 640);
+  aspect-ratio: 640 / 360;
   overflow: hidden;
-  border-radius: 8px;
-  @include fluid(margin-bottom, 32, 56);
+  background: var(--color-white);
+
+  @include sp {
+    width: 100%;
+  }
 }
 
-.heroImg {
-  width: 100%;
-  height: 100%;
+.eyecatchImg {
   object-fit: cover;
 }
 
-// ── 記事本文（WordPress HTML） ──
-.content {
+.eyecatchPlaceholder {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--color-white);
+}
+
+.rightColumn {
+  flex: 1;
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
   color: var(--color-black);
-  font-family: var(--font-jp);
-  @include fluid(font-size, 14, 17);
-  @include fluid(line-height, 26, 34);
-  @include fluid(letter-spacing, 0.5, 1);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  font-weight: var(--font-weight-regular);
+  @include fluid(font-size, 15, 20);
+  @include fluid(line-height, 28, 38);
+  @include fluid(letter-spacing, 2, 3.2);
+}
 
-  // WordPress本文のHTML要素に対するスタイル
-  p {
-    @include fluid(margin-bottom, 16, 24);
-  }
+.meta {
+  margin: 0;
+  @include fluid(margin-top, 20, 40);
+  display: flex;
+  align-items: baseline;
+  @include fluid(gap, 12, 24);
+}
 
-  h2 {
-    @include fluid(font-size, 20, 28);
-    font-weight: var(--font-weight-bold);
-    @include fluid(margin-top, 32, 48);
-    @include fluid(margin-bottom, 12, 20);
-    @include fluid(padding-bottom, 8, 12);
-    border-bottom: 2px solid var(--color-primary);
-  }
+.date,
+.category {
+  color: var(--color-text-secondary);
+  font-family: var(--font-en);
+  font-weight: var(--font-weight-light);
+  @include fluid(font-size, 14, 20);
+  @include fluid(letter-spacing, 1.4, 2.6);
+}
 
-  h3 {
-    @include fluid(font-size, 17, 22);
-    font-weight: var(--font-weight-bold);
-    @include fluid(margin-top, 24, 36);
-    @include fluid(margin-bottom, 8, 16);
-  }
+// カテゴリタグの背後に白帯（Figma: 164×13px / font 20px → 0.65em）。
+// Mozaic GEO の文字下寄り（0.094em）に合わせて帯位置も同量下げる。
+.category {
+  display: inline-block;
+  background-image: linear-gradient(
+    var(--color-white),
+    var(--color-white)
+  );
+  background-repeat: no-repeat;
+  background-position: right calc(50% + 0.094em);
+  background-size: 100% 0.65em;
+}
 
-  a {
-    color: var(--color-primary);
-    text-decoration: underline;
-    transition: opacity var(--transition-base);
+// SNS シェアアイコン（右寄せ）
+.share {
+  @include fluid(margin-top, 24, 48);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  @include fluid(gap, 12, 18);
+}
 
-    &:hover {
-      opacity: 0.7;
-    }
-  }
-
-  ul,
-  ol {
-    @include fluid(margin-bottom, 16, 24);
-    @include fluid(padding-left, 20, 32);
-  }
-
-  li {
-    @include fluid(margin-bottom, 6, 10);
-  }
-
-  blockquote {
-    @include fluid(margin-top, 16, 24);
-    @include fluid(margin-bottom, 16, 24);
-    @include fluid(padding-left, 16, 24);
-    border-left: 3px solid var(--color-primary);
-    color: var(--color-gray-500);
-    font-style: italic;
-  }
+// アイコンの基底（個別サイズは下記の修飾クラスで Figma 実測値に合わせる）
+.shareIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 4px;
-    @include fluid(margin-top, 12, 20);
-    @include fluid(margin-bottom, 12, 20);
-  }
-
-  figure {
-    @include fluid(margin-top, 16, 24);
-    @include fluid(margin-bottom, 16, 24);
-  }
-
-  figcaption {
-    @include fluid(margin-top, 4, 8);
-    color: var(--color-gray-500);
-    @include fluid(font-size, 12, 13);
-    text-align: center;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
   }
 }
 
-// ── 下部ナビ ──
-.bottomNav {
-  @include fluid(margin-top, 40, 72);
-  @include fluid(padding-top, 24, 40);
-  border-top: 1px solid var(--color-gray-200);
-  text-align: center;
+// Figma 実測：X 21×22 / FB 23.5×23.5 / LINE 24.3×23.1 / Link 20.4×20.4
+.shareIconX {
+  @include fluid(width, 17, 21);
+  @include fluid(height, 18, 22);
+}
+
+.shareIconFb {
+  @include fluid(width, 19, 24);
+  @include fluid(height, 19, 24);
+
+  // share-2.png は周囲に白い余白を含むため、object-fit:cover のままだと
+  // 黒丸が小さく見える。Figma マスク仕様（PNG 35.68 → 表示 23.508 ＝ ×1.518）と
+  // 同倍率で拡大し、.shareIconRound の overflow:hidden で円形クリップする。
+  img {
+    transform: scale(1.518);
+  }
+}
+
+.shareIconLine {
+  @include fluid(width, 19, 24);
+  @include fluid(height, 18, 23);
+}
+
+.shareIconLink {
+  @include fluid(width, 16, 20);
+  @include fluid(height, 16, 20);
+}
+
+.shareIconRound {
+  border-radius: 50%;
+  overflow: hidden;
+
+  img {
+    object-fit: cover;
+  }
+}
+
+.headerDivider {
+  display: block;
+  width: 100%;
+  height: 1px;
+  @include fluid(margin-top, 24, 42);
+  background: var(--color-black);
+}
+
+// ── 本文 ──
+.body {
+  @include fluid(margin-top, 40, 76);
+}
+
+.bodyHeading {
+  margin: 0;
+  color: var(--color-black);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  font-weight: var(--font-weight-medium);
+  @include fluid(font-size, 15, 18);
+  @include fluid(line-height, 28, 34);
+  @include fluid(letter-spacing, 2, 2.88);
+
+  &:not(:first-child) {
+    @include fluid(margin-top, 32, 60);
+  }
+}
+
+.bodyParagraphs {
+  @include fluid(margin-top, 6, 12);
+}
+
+.bodyParagraph {
+  margin: 0;
+  color: var(--color-black);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  font-weight: var(--font-weight-regular);
+  @include fluid(font-size, 13, 14);
+  @include fluid(line-height, 26, 32);
+  @include fluid(letter-spacing, 1.2, 1.82);
+
+  & + & {
+    @include fluid(margin-top, 16, 24);
+  }
+}
+
+// ── BACK TO LIST ──
+.backWrap {
+  display: flex;
+  justify-content: center;
+  @include fluid(margin-top, 60, 140);
 }
 
 .backButton {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  @include fluid(width, 200, 300);
-  @include fluid(height, 44, 56);
-  border-radius: 40px;
-  border: 1px solid var(--color-primary);
-  color: var(--color-primary);
-  background-color: var(--color-white);
+  @include fluid(width, 240, 380);
+  @include fluid(height, 48, 64);
+  border: 1px solid var(--color-black);
+  border-radius: 999px;
+  background: var(--color-white);
+  color: var(--color-black);
   font-family: var(--font-en);
-  @include fluid(font-size, 13, 16);
   font-weight: var(--font-weight-light);
-  @include fluid(letter-spacing, 0.8, 1.6);
+  @include fluid(font-size, 14, 20);
+  @include fluid(letter-spacing, 1.4, 2.6);
   transition: all var(--transition-base);
 
   &:hover {
-    background-color: var(--color-primary);
+    background: var(--color-black);
     color: var(--color-white);
   }
 }

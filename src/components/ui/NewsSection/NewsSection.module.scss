@@ -207,6 +207,17 @@
   font-weight: var(--font-weight-light);
   line-height: 24px;
   @include fluid(letter-spacing, 1.2, 2.6);
+
+  // カテゴリタグの背後に白帯（Figma /news と同手法・font 20px → 0.65em）。
+  // Mozaic GEO の文字下寄り（0.094em）に合わせて帯位置も同量下げる。
+  display: inline-block;
+  background-image: linear-gradient(
+    var(--color-white),
+    var(--color-white)
+  );
+  background-repeat: no-repeat;
+  background-position: right calc(50% + 0.094em);
+  background-size: 100% 0.65em;
 }
 
 // ── ホバー時に右から現れる矢印インジケーター ──

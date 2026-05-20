@@ -1,252 +1,96 @@
-'use client';
-
-import { useRef, useCallback, useState, useEffect } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
-import styles from './page.module.scss';
+import Image from 'next/image';
+import type { Metadata } from 'next';
 import SectionTitle from '@/components/ui/SectionTitle';
-import type { NewsItem } from '@/lib/wordpress';
+import { getNewsList } from '@/data/news';
+import styles from './page.module.scss';
 
-const API_URL = process.env.NEXT_PUBLIC_WORDPRESS_API_URL || '';
-const PER_PAGE = 8;
-
-const CATEGORIES = [
-  { label: '・ALL >', value: 'all', id: 0 },
-  { label: '・INFOMATION >', value: 'information', id: 0 },
-  { label: '・EVENTS >', value: 'events', id: 0 },
-  { label: '・PRESS >', value: 'press', id: 0 },
-];
-
-type WPPost = {
-  id: number;
-  slug: string;
-  date: string;
-  title: { rendered: string };
-  excerpt: { rendered: string };
-  featured_media: number;
-  categories: number[];
-  _embedded?: {
-    'wp:featuredmedia'?: Array<{ source_url: string }>;
-    'wp:term'?: Array<Array<{ id: number; name: string; slug: string }>>;
-  };
+export const metadata: Metadata = {
+  title: 'ニュース',
 };
 
-type WPCategory = { id: number; name: string; slug: string };
+// カテゴリは現状は見た目のみ（絞り込みは WordPress 連携時に実装）
+const CATEGORIES = ['・ALL >', '・INFOMATION >', '・EVENTS >', '・PRESS >'];
 
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, '').trim();
-}
-
-function formatDate(isoDate: string): string {
-  const d = new Date(isoDate);
-  const year = d.getFullYear();
-  const month = String(d.getMonth() + 1).padStart(2, '0');
-  const day = String(d.getDate()).padStart(2, '0');
-  return `${year}.${month}/${day}`;
-}
-
-function toNewsItem(post: WPPost): NewsItem {
-  const media = post._embedded?.['wp:featuredmedia']?.[0];
-  const terms = post._embedded?.['wp:term']?.[0];
-  const category = terms?.[0];
-
-  return {
-    id: post.id,
-    slug: post.slug,
-    title: stripHtml(post.title.rendered),
-    date: formatDate(post.date),
-    tag: category ? `#${category.name.toUpperCase()}` : '',
-    thumbnail: media?.source_url || '',
-    excerpt: stripHtml(post.excerpt.rendered),
-    content: '',
-  };
-}
-
-export default function NewsPage() {
-  const menuRef = useRef<HTMLUListElement>(null);
-  const activeRef = useRef(0);
-  const [news, setNews] = useState<NewsItem[]>([]);
-  const [categories, setCategories] = useState(CATEGORIES);
-  const [loading, setLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-
-  // カテゴリ一覧取得
-  useEffect(() => {
-    async function loadCategories() {
-      try {
-        const res = await fetch(`${API_URL}/categories?per_page=100`);
-        if (!res.ok) return;
-        const wpCats: WPCategory[] = await res.json();
-        setCategories(prev =>
-          prev.map(cat => {
-            if (cat.value === 'all') return cat;
-            const found = wpCats.find(wc => wc.slug === cat.value);
-            return found ? { ...cat, id: found.id } : cat;
-          })
-        );
-      } catch {
-        // カテゴリ取得失敗時はデフォルトのまま
-      }
-    }
-    loadCategories();
-  }, []);
-
-  // 記事取得（ページネーション対応）
-  const loadPosts = useCallback(async (page: number, categoryId?: number) => {
-    setLoading(true);
-    try {
-      const params = new URLSearchParams({
-        _embed: 'true',
-        per_page: String(PER_PAGE),
-        page: String(page),
-      });
-      if (categoryId) params.set('categories', String(categoryId));
-
-      const res = await fetch(`${API_URL}/posts?${params}`);
-      if (!res.ok) { setNews([]); setTotalPages(1); return; }
-
-      const total = res.headers.get('X-WP-TotalPages');
-      setTotalPages(total ? parseInt(total, 10) : 1);
-
-      const posts: WPPost[] = await res.json();
-      setNews(posts.map(toNewsItem));
-    } catch {
-      setNews([]);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  // 初回読み込み
-  useEffect(() => {
-    loadPosts(1);
-  }, [loadPosts]);
-
-  // カテゴリ切り替え
-  const handleCategoryClick = useCallback((index: number) => {
-    if (activeRef.current === index) return;
-    const menu = menuRef.current;
-    if (!menu) return;
-
-    const items = menu.children;
-    const prevItem = items[activeRef.current];
-    const nextItem = items[index];
-
-    if (prevItem) prevItem.className = styles.categoryItem;
-    if (nextItem) nextItem.className = styles.categoryItemActive;
-
-    activeRef.current = index;
-    setCurrentPage(1);
-
-    const cat = categories[index];
-    loadPosts(1, cat.value !== 'all' && cat.id > 0 ? cat.id : undefined);
-  }, [categories, loadPosts]);
-
-  // ページ切り替え
-  const handlePageChange = useCallback((page: number) => {
-    if (page < 1 || page > totalPages) return;
-    setCurrentPage(page);
-    const cat = categories[activeRef.current];
-    loadPosts(page, cat.value !== 'all' && cat.id > 0 ? cat.id : undefined);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [totalPages, categories, loadPosts]);
+export default async function NewsPage() {
+  const news = await getNewsList();
 
   return (
     <div className={styles.page}>
       <div className={styles.inner}>
-        {/* 左側: タイトル + カテゴリ + CONTACT */}
-        <div className={styles.left}>
-          <div className={styles.header}>
-            <SectionTitle
-              src="/images/sections/news/title-logo.png"
-              alt="ニュース"
-              width={183}
-              height={45}
-              label="NEWS"
-              as="h1"
-            />
-          </div>
-
-          <ul className={styles.categoryList} ref={menuRef}>
-            {categories.map((cat, index) => (
+        {/* 左: タイトル + カテゴリ + CONTACT */}
+        <aside className={styles.sidebar}>
+          <SectionTitle
+            src="/images/sections/news/title-logo.png"
+            alt="ニュース"
+            width={183}
+            height={45}
+            label="NEWS"
+            as="h1"
+            className={styles.titleSection}
+          />
+          <ul className={styles.categoryList}>
+            {CATEGORIES.map((label, index) => (
               <li
-                key={cat.value}
-                className={index === 0 ? styles.categoryItemActive : styles.categoryItem}
-                onClick={() => handleCategoryClick(index)}
+                key={label}
+                className={index === 0 ? styles.categoryActive : styles.category}
               >
-                <span>{cat.label}</span>
+                <span>{label}</span>
               </li>
             ))}
           </ul>
-
+          <span className={styles.sidebarDivider} aria-hidden="true" />
           <Link href="/contact" className={styles.contactLink}>
             ・CONTACT &gt;
           </Link>
-        </div>
+        </aside>
 
-        {/* 右側: 記事リスト + ページネーション */}
-        <div className={styles.right}>
-          {loading ? (
-            <p className={styles.statusText}>読み込み中...</p>
-          ) : news.length === 0 ? (
-            <p className={styles.statusText}>記事がありません</p>
-          ) : (
-            <>
-              {news.map((item, index) => (
-                <div key={item.id}>
-                  <Link href={`/news/${item.slug}`} className={styles.article}>
-                    <div className={styles.articleContent}>
-                      <h2 className={styles.articleTitle}>{item.title}</h2>
-                      <div className={styles.articleMeta}>
-                        <span className={styles.articleDate}>{item.date}</span>
-                        <span className={styles.articleTag}>{item.tag}</span>
-                      </div>
-                    </div>
-                    <div className={styles.articleThumbnail}>
-                      {item.thumbnail ? (
-                        <Image
-                          src={item.thumbnail}
-                          alt={item.title}
-                          fill
-                          className={styles.thumbnailImage}
-                          sizes="(max-width: 768px) 100vw, 300px"
-                        />
-                      ) : (
-                        <div className={styles.thumbnailPlaceholder} />
-                      )}
-                    </div>
-                  </Link>
-                  <div className={styles.articleDivider} />
-                  {index < news.length - 1 && <div className={styles.articleSpacer} />}
-                </div>
-              ))}
-
-              {/* ページネーション */}
-              {totalPages > 1 && (
-                <div className={styles.pagination}>
-                  <button
-                    className={`${styles.paginationButton} ${currentPage <= 1 ? styles.paginationDisabled : ''}`}
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    disabled={currentPage <= 1}
-                  >
-                    &lt; BACK
-                  </button>
-                  <span className={styles.paginationInfo}>
-                    {currentPage}/{totalPages}
-                  </span>
-                  <button
-                    className={`${styles.paginationButton} ${currentPage >= totalPages ? styles.paginationDisabled : ''}`}
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    disabled={currentPage >= totalPages}
-                  >
-                    NEXT &gt;
-                  </button>
-                </div>
-              )}
-            </>
-          )}
+        {/* 右: 記事リスト */}
+        <div className={styles.main}>
+          <ul className={styles.articleList}>
+            {news.map((item) => (
+              <li key={item.slug} className={styles.articleItem}>
+                <Link href={`/news/${item.slug}`} className={styles.article}>
+                  <div className={styles.articleContent}>
+                    <h2 className={styles.articleTitle}>{item.title}</h2>
+                    <p className={styles.articleMeta}>
+                      <span className={styles.articleDate}>{item.date}</span>
+                      <span className={styles.articleCategory}>
+                        #{item.category}
+                      </span>
+                    </p>
+                  </div>
+                  <div className={styles.articleThumbnail}>
+                    {item.thumbnail ? (
+                      <Image
+                        src={item.thumbnail}
+                        alt=""
+                        fill
+                        className={styles.thumbnailImage}
+                        sizes="(max-width: 1023px) 40vw, 266px"
+                      />
+                    ) : (
+                      <span
+                        className={styles.thumbnailPlaceholder}
+                        aria-hidden="true"
+                      />
+                    )}
+                  </div>
+                </Link>
+                <span className={styles.articleDivider} aria-hidden="true" />
+              </li>
+            ))}
+          </ul>
         </div>
+      </div>
+
+      {/* ページネーション（コンテンツ全幅で中央配置・見た目のみ） */}
+      <div className={styles.pagination}>
+        <span className={`${styles.pageButton} ${styles.pageButtonDisabled}`}>
+          &lt; BACK
+        </span>
+        <span className={styles.pageInfo}>1/2</span>
+        <span className={styles.pageButton}>NEXT &gt;</span>
       </div>
     </div>
   );
