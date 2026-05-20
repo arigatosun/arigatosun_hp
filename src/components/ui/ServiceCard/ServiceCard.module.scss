@@ -8,6 +8,11 @@
   height: 38.96vw; // 748 / 1920
   flex-shrink: 0;
   overflow: hidden; // Figma: カードは角丸なし（直角）
+  // Link 化のためのリセット
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
 
   @include sp {
     width: 100%;

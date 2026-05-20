@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import type { ServiceCardData } from '@/types/service';
 import styles from './ServiceCard.module.scss';
 
@@ -8,7 +9,7 @@ type ServiceCardProps = {
 
 export default function ServiceCard({ card }: ServiceCardProps) {
   return (
-    <div className={styles.card}>
+    <Link href={`/service/${card.id}`} className={styles.card} aria-label={`${card.title} の詳細を見る`}>
       {/* 背景: 画像があれば写真＋オーバーレイ、なければグレープレースホルダー */}
       {card.bgImage ? (
         <>
@@ -56,6 +57,6 @@ export default function ServiceCard({ card }: ServiceCardProps) {
           <p className={styles.cardDescription}>{card.description}</p>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }

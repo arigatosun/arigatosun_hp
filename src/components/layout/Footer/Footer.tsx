@@ -4,7 +4,7 @@ import FooterSitCharacterLoader from '@/components/three/FooterSitCharacterLoade
 import styles from './Footer.module.scss';
 
 const serviceSubmenu = [
-  { href: '/service/ai-development', label: '・AI / DEVELOPMENT' },
+  { href: '/service/ai-dev', label: '・AI / DEVELOPMENT' },
   { href: '/service/design-branding', label: '・DESIGN / BRANDING' },
   { href: '/service/ip-creative', label: '・IP / CREATIVE' },
 ];
