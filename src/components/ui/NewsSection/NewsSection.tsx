@@ -134,6 +134,7 @@ export default function NewsSection() {
               width={183}
               height={45}
               label="NEWS"
+              className={styles.newsTitle}
             />
           </div>
 

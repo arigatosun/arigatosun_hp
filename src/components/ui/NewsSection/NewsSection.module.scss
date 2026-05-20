@@ -32,11 +32,33 @@
 }
 
 .header {
-  @include fluid(margin-bottom, 60, 240);
+  // Figma: NEWSラベル下端 → ALLカテゴリ上端 197px（1920基準）
+  @include fluid(margin-bottom, 60, 197);
 
   @include sp {
     @include fluid(margin-bottom, 16, 24);
   }
+}
+
+// SectionTitle の中身を NEWS 専用サイズで上書き（Figma node 1578:41502/1578:41503）
+// 画像: 160×40（intrinsic 183×45 / 比4.067、width=160 で height=39.3≒40）
+// ラベル: font 20 / line-height 18、画像下から 28px
+// SectionTitle の .wrapper が持つ margin-top/bottom は .header が flex item で
+// マージン相殺が効かないため、NEWS 側では 0 にして .header の margin-bottom (197) で
+// Figma 通りの間隔を出す
+.header .newsTitle {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.newsTitle img {
+  @include fluid(width, 88, 160);
+  height: auto;
+}
+
+.newsTitle p {
+  @include fluid(margin-top, 16, 28);
+  line-height: 18px;
 }
 
 .titleLogo {
