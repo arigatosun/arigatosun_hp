@@ -2,11 +2,56 @@
 
 ## 概要
 
-トップページヒーローセクションで、IPキャラクター「アリガトクン」が左から右へ走り抜けるループ演出を実装する。
+TOP の Service セクションで、IPキャラクター「アリガトくん」が右→左へ歩く演出を実装している。React Three Fiber + Three.js + drei で組成。
 
 ## ステータス
 
-**待ち**: Blenderデザイナーによる走行アニメーション付きGLBの納品待ち
+**実装済み**（Phase 18 時点）。粘土風シェーディングの新モデルに差し替え済み。
+
+### 現状の構成
+
+| 要素 | パス | 説明 |
+|---|---|---|
+| Canvas | `src/components/three/GlobalCanvas.tsx` | ページ全体で 1 つだけのグローバル Canvas（OrthographicCamera）。fixed 配置・pointer-events: none |
+| Walker | `src/components/three/WalkingCharacter.tsx` | 汎用の歩行キャラ。`glbPath` を引数で受け取り、対象セクションのスクロール位置に追従して画面端を往復 |
+| Footer Bye | `src/components/three/FooterCharacter.tsx` | フッターの手振りキャラ（`arigatokun_bye.glb`） |
+| Footer Sit | `src/components/three/FooterSitCharacter.tsx` | フッターの座りキャラ（`arigatokun_sit.glb`） |
+| Debug | `src/app/debug/glb/page.tsx` | GLB 単体確認用デバッグページ |
+
+### モデルファイル
+
+| ファイル | サイズ | 用途 | アニメ |
+|---|---|---|---|
+| **`public/models/arigatokunn_web.glb`** | 14.87MB | **TOP 歩行（現行）** | 歩行ループ 150 フレーム / その場歩行 |
+| `public/models/walk.v3.glb` | 23MB | 旧バージョン（保管用） | 同上の旧版 |
+| `public/models/arigatokun_bye.glb` | 23MB | フッター手振り | 手振り |
+| `public/models/arigatokun_sit.glb` | 23MB | フッター座り | 座り |
+
+### 新モデル `arigatokunn_web.glb` の主な変更点（Blender 担当より）
+
+- ファイルサイズ 24.6MB → **14.87MB**（約 40% 削減）
+- メッシュ 1 個に統合（46k vertex / 60k poly）
+- マテリアル 3 種:
+  - **Procedural Clay**：ボディ・トゲの粘土風（baseColor / Roughness / Normal）
+  - **Material.001**：顔の白い部分
+  - **マテリアル.003**：目・口の黒単色
+- テクスチャは glb 内に埋め込み
+- ボーン 59 本（うち deform 56）／ ルートは `root` に統合（旧 `root.00` 廃止）
+- IK / コンストレイントはアニメに焼き込み済み（Bake）
+
+### 実装側の注意点
+
+- `WalkingCharacter` は `animations[0]` でアニメ取得 → アニメ名変更の影響なし
+- `root.00` 廃止により旧モデル対応の null セーフな分岐ロジックが no-op になるが、互換性のため残置
+- 粘土マテリアルは Metallic=0 / Roughness 高めなのでライトは明るめが推奨：
+  - 現状: `ambientLight 1.8` + `directionalLight(3,4,8) 1.4` + `fill directional(-4,2,5) 0.6`
+  - 沈んで見える場合は HDRI（drei `<Environment />`）の追加も検討
+
+---
+
+## 過去の検討メモ（参考）
+
+> 以下は **GLB 受け取り前の検討段階のメモ**。実装は上の「現状の構成」が正で、ここは仕様/コンポーネント名がずれている。歴史参照として残置。
 
 ## Blenderデザイナーへの依頼内容
 
