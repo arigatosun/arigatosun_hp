@@ -223,13 +223,9 @@ Figma上で対象要素を選択し、以下の値をメモ:
 @use '@/styles/breakpoints' as *;
 
 .layout {
-  // スマートフォン（〜767px）
+  // SP（スマホ & タブレット 〜1023px）
   @include sp {
     flex-direction: column;
-  }
-
-  // タブレット（768px〜1023px）
-  @include tab {
     grid-template-columns: repeat(2, 1fr);
   }
 
@@ -252,7 +248,7 @@ Figma上で対象要素を選択し、以下の値をメモ:
 | フォントサイズ | `@include fluid()` |
 | 余白（padding/margin/gap） | `@include fluid()` |
 | 幅（width/max-width） | `@include fluid()` |
-| カラム数の切り替え | `@include sp / tab / pc` |
+| カラム数の切り替え | `@include sp / pc`（2 パターン） |
 | 要素の表示/非表示 | `@include sp / pc` |
 | flex-direction の変更 | `@include sp / pc` |
 

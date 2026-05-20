@@ -16,15 +16,12 @@
 }
 
 // ── メンバーグリッド ──
+// SP/TAB 統合（〜1023）で 2 列、PC（1024〜）で 6 列の 2 パターン。
 .grid {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   @include fluid(gap, 12, 24);
   @include fluid(margin-top, 24, 60);
-
-  @include tab {
-    grid-template-columns: repeat(3, 1fr);
-  }
 
   @include sp {
     grid-template-columns: repeat(2, 1fr);

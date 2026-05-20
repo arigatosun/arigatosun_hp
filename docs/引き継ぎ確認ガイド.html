@@ -397,7 +397,7 @@ NEXT_PUBLIC_WORDPRESS_API_URL=   <span class="cm"># ニュース連携用。未�
 <pre>.row {
   display: flex;            <span class="cm"># PCでは横並び</span>
   gap: 40px;
-  @include sp {             <span class="cm"># スマホ（767px以下）では</span>
+  @include sp {             <span class="cm"># スマホ＆タブレット（1023px以下）では</span>
     flex-direction: column; <span class="cm">#   縦並びに切り替え</span>
     gap: 24px;
   }
@@ -432,7 +432,7 @@ gh pr create                            <span class="cm"># プルリクエスト
     <li><code class="inline">.env*</code> のコミット</li>
     <li>固定 px でスケーラブル値を書く ／ <code class="inline">#xxxxxx</code> の直書き</li>
     <li>Figma が出力した生コードをそのままコピペ（プロジェクトの規約と合わない）</li>
-    <li>4幅（320/375/768/1200px）のレスポンシブ確認をせずに PR を出す</li>
+    <li>5幅（320/375/768/1024/1200px）のレスポンシブ確認をせずに PR を出す</li>
   </ul>
 
   <h3>3-6. PR 前の品質チェック</h3>
