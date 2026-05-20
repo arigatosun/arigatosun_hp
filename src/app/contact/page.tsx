@@ -1,35 +1,115 @@
 'use client';
 
 import { useState } from 'react';
-import styles from './page.module.scss';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import SectionTitle from '@/components/ui/SectionTitle';
+import styles from './page.module.scss';
+
+type FormField = 'company' | 'name' | 'nameKana' | 'email' | 'phone' | 'message';
+type FormState = Record<FormField, string>;
+type Errors = Partial<Record<FormField, string>>;
+type Touched = Partial<Record<FormField, boolean>>;
+
+const INITIAL_STATE: FormState = {
+  company: '',
+  name: '',
+  nameKana: '',
+  email: '',
+  phone: '',
+  message: '',
+};
+
+// ── バリデーションルール ──
+// 必須項目: name / email / message。残りは任意だが、値があれば形式チェック。
+const validators: Record<FormField, (value: string) => string | undefined> = {
+  company: () => undefined,
+  name: (v) => (v.trim() ? undefined : 'お名前を入力してください。'),
+  nameKana: (v) => {
+    if (!v.trim()) return undefined;
+    // カタカナ / ひらがな / 長音 / 半角・全角スペース を許可
+    return /^[ァ-ヴーぁ-ゖ\s　]+$/.test(v.trim())
+      ? undefined
+      : 'カタカナまたはひらがなで入力してください。';
+  },
+  email: (v) => {
+    if (!v.trim()) return 'メールアドレスを入力してください。';
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim())
+      ? undefined
+      : '有効なメールアドレスを入力してください。';
+  },
+  phone: (v) => {
+    if (!v.trim()) return undefined;
+    return /^[\d\-+()\sー]+$/.test(v.trim())
+      ? undefined
+      : '電話番号は半角数字とハイフンで入力してください。';
+  },
+  message: (v) =>
+    v.trim() ? undefined : 'お問い合わせ内容を入力してください。',
+};
+
+function validateAll(data: FormState): Errors {
+  return (Object.keys(validators) as FormField[]).reduce<Errors>((errs, key) => {
+    const msg = validators[key](data[key]);
+    if (msg) errs[key] = msg;
+    return errs;
+  }, {});
+}
 
 export default function ContactPage() {
-  const [formData, setFormData] = useState({
-    company: '',
-    name: '',
-    nameKana: '',
-    email: '',
-    phone: '',
-    message: '',
-  });
+  const router = useRouter();
+  const [formData, setFormData] = useState<FormState>(INITIAL_STATE);
+  const [errors, setErrors] = useState<Errors>({});
+  const [touched, setTouched] = useState<Touched>({});
   const [agreed, setAgreed] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [submitErrorMessage, setSubmitErrorMessage] = useState('');
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    const field = name as FormField;
+    setFormData((prev) => ({ ...prev, [field]: value }));
+    // 一度 blur 済 or 既にエラー表示中 のフィールドはリアルタイムで再検証して
+    // 修正中に正しい状態になれば即エラーを消す。未触のフィールドは静かにする。
+    if (touched[field] || errors[field]) {
+      const msg = validators[field](value);
+      setErrors((prev) => ({ ...prev, [field]: msg }));
+    }
   };
 
-  const handleSubmit = async (e: React.FormEvent | React.MouseEvent) => {
+  const handleBlur = (
+    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    const field = e.target.name as FormField;
+    setTouched((prev) => ({ ...prev, [field]: true }));
+    const msg = validators[field](formData[field]);
+    setErrors((prev) => ({ ...prev, [field]: msg }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!agreed) return;
+    if (!agreed || isSubmitting) return;
+
+    const newErrors = validateAll(formData);
+    if (Object.keys(newErrors).length > 0) {
+      // 全フィールドを touched にしてエラーを表示
+      const allTouched = (Object.keys(formData) as FormField[]).reduce<Touched>(
+        (acc, key) => ((acc[key] = true), acc),
+        {},
+      );
+      setTouched(allTouched);
+      setErrors(newErrors);
+      // 最初のエラーフィールドへフォーカス（アクセシビリティ）
+      const firstErrorField = (Object.keys(newErrors) as FormField[])[0];
+      const el = document.getElementById(firstErrorField);
+      el?.focus();
+      return;
+    }
+
     setIsSubmitting(true);
-    setErrorMessage('');
+    setSubmitErrorMessage('');
 
     try {
       const res = await fetch('/api/contact', {
@@ -38,188 +118,249 @@ export default function ContactPage() {
         body: JSON.stringify(formData),
       });
 
-      const data = await res.json();
-
       if (!res.ok) {
-        setErrorMessage(data.error || '送信に失敗しました。');
+        const data = await res.json().catch(() => ({}));
+        setSubmitErrorMessage(data.error || '送信に失敗しました。');
         return;
       }
 
-      setSubmitted(true);
+      router.push('/contact/thanks');
     } catch {
-      setErrorMessage('通信エラーが発生しました。時間をおいて再度お試しください。');
+      setSubmitErrorMessage(
+        '通信エラーが発生しました。時間をおいて再度お試しください。',
+      );
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  if (submitted) {
-    return (
-      <div className={styles.page}>
-        <div className={styles.thanksContainer}>
-          <h2 className={styles.thanksTitle}>THANK YOU</h2>
-          <p className={styles.thanksText}>
-            お問い合わせいただきありがとうございます。
-            <br />
-            2～3営業日以内に担当者よりメールでご返信いたします。
-          </p>
-        </div>
-      </div>
-    );
-  }
+  // フィールド毎のエラー表示制御 + a11y 属性
+  const fieldA11y = (field: FormField) => {
+    const err = errors[field];
+    return {
+      'aria-invalid': err ? true : undefined,
+      'aria-describedby': err ? `${field}-error` : undefined,
+      className: err
+        ? `${styles.fieldInput} ${styles.fieldInputError}`
+        : styles.fieldInput,
+    };
+  };
 
   return (
     <div className={styles.page}>
-      <div className={styles.container}>
-        {/* 左カラム: タイトル + 説明 */}
-        <div className={styles.leftColumn}>
-          <div className={styles.titleArea}>
+      <form className={styles.formRoot} onSubmit={handleSubmit} noValidate>
+        <div className={styles.inner}>
+          {/* 左カラム: タイトル + リード文 */}
+          <aside className={styles.intro}>
             <SectionTitle
               src="/images/sections/contact/title-logo.png"
-              alt="CONTACT"
+              alt="お問い合わせ"
               width={250}
-              height={37}
+              height={43}
               label="CONTACT US"
               as="h1"
+              className={styles.titleSection}
             />
-          </div>
-          <p className={styles.description}>
-            アリガトサンにご関心をお寄せいただきありがとうございます。
-            <br />
-            AIは日々進化し、いままで「難しい」とされていたことも、
-            <br />
-            形にできる可能性が広がっています。
-            <br />
-            思い浮かべている課題や、まだ言語化しきれていない「もしも」の
-            <br />
-            話でも構いません。
-            <br />
-            2～3営業日以内に担当者よりメールでご返信いたしますので、
-            <br />
-            お気軽にご相談ください。
-          </p>
-        </div>
+            <p className={styles.introText}>
+              アリガトサンにご関心をお寄せいただきありがとうございます。
+              <br />
+              AIは日々進化し、いままで「難しい」とされていたことも、
+              <br />
+              形にできる可能性が広がっています。
+              <br />
+              思い浮かべている課題や、まだ言語化しきれていない
+              <br />
+              「もしも」の話でも構いません。
+              <br />
+              2～3営業日以内に担当者よりメールでご返信いたしますので、
+              <br />
+              お気軽にご相談ください。
+            </p>
+          </aside>
 
-        {/* 右カラム: フォーム */}
-        <div className={styles.rightColumn}>
-          <form onSubmit={handleSubmit} className={styles.form}>
-            <div className={styles.formGroup}>
-              <label className={styles.label}>御社名・部署名</label>
+          {/* 右カラム: フォームフィールド */}
+          <div className={styles.formFields}>
+            <div className={styles.field}>
+              <label htmlFor="company" className={styles.fieldLabel}>
+                御社名・部署名
+              </label>
               <input
-                type="text"
+                id="company"
                 name="company"
-                className={styles.input}
+                type="text"
                 placeholder="合同会社アリガトサン"
                 value={formData.company}
                 onChange={handleChange}
+                onBlur={handleBlur}
+                autoComplete="organization"
+                {...fieldA11y('company')}
               />
+              {errors.company && (
+                <p id="company-error" className={styles.fieldErrorMessage}>
+                  {errors.company}
+                </p>
+              )}
             </div>
 
-            <div className={styles.formGroup}>
-              <label className={styles.label}>お名前</label>
+            <div className={styles.field}>
+              <label htmlFor="name" className={styles.fieldLabel}>
+                お名前
+              </label>
               <input
-                type="text"
+                id="name"
                 name="name"
-                className={styles.input}
+                type="text"
                 placeholder="感謝 太陽"
                 value={formData.name}
                 onChange={handleChange}
+                onBlur={handleBlur}
+                autoComplete="name"
                 required
+                {...fieldA11y('name')}
               />
+              {errors.name && (
+                <p id="name-error" className={styles.fieldErrorMessage}>
+                  {errors.name}
+                </p>
+              )}
             </div>
 
-            <div className={styles.formGroup}>
-              <label className={styles.label}>ヨミガナ</label>
+            <div className={styles.field}>
+              <label htmlFor="nameKana" className={styles.fieldLabel}>
+                ヨミガナ
+              </label>
               <input
-                type="text"
+                id="nameKana"
                 name="nameKana"
-                className={styles.input}
+                type="text"
                 placeholder="カンシャ タイヨウ"
                 value={formData.nameKana}
                 onChange={handleChange}
-                required
+                onBlur={handleBlur}
+                inputMode="kana"
+                {...fieldA11y('nameKana')}
               />
+              {errors.nameKana && (
+                <p id="nameKana-error" className={styles.fieldErrorMessage}>
+                  {errors.nameKana}
+                </p>
+              )}
             </div>
 
-            <div className={styles.formGroup}>
-              <label className={`${styles.label} ${styles.labelEn}`}>MAIL</label>
+            <div className={styles.field}>
+              <label htmlFor="email" className={styles.fieldLabel}>
+                MAIL
+              </label>
               <input
-                type="email"
+                id="email"
                 name="email"
-                className={styles.input}
+                type="email"
                 placeholder="contact@arigatosun.com"
                 value={formData.email}
                 onChange={handleChange}
+                onBlur={handleBlur}
+                autoComplete="email"
                 required
+                {...fieldA11y('email')}
               />
+              {errors.email && (
+                <p id="email-error" className={styles.fieldErrorMessage}>
+                  {errors.email}
+                </p>
+              )}
             </div>
 
-            <div className={styles.formGroup}>
-              <label className={styles.label}>電話番号</label>
+            <div className={styles.field}>
+              <label htmlFor="phone" className={styles.fieldLabel}>
+                電話番号
+              </label>
               <input
-                type="tel"
+                id="phone"
                 name="phone"
-                className={styles.input}
+                type="tel"
                 placeholder="0123456789"
                 value={formData.phone}
                 onChange={handleChange}
+                onBlur={handleBlur}
+                autoComplete="tel"
+                {...fieldA11y('phone')}
               />
+              {errors.phone && (
+                <p id="phone-error" className={styles.fieldErrorMessage}>
+                  {errors.phone}
+                </p>
+              )}
             </div>
 
-            <div className={styles.formGroup}>
-              <label className={styles.label}>お問い合わせ内容</label>
+            <div className={styles.field}>
+              <label htmlFor="message" className={styles.fieldLabel}>
+                お問い合わせ内容
+              </label>
               <textarea
+                id="message"
                 name="message"
-                className={`${styles.input} ${styles.textarea}`}
                 placeholder="お問い合わせ内容を入力ください。"
                 value={formData.message}
                 onChange={handleChange}
+                onBlur={handleBlur}
                 required
+                className={`${
+                  errors.message
+                    ? `${styles.fieldInput} ${styles.fieldInputError}`
+                    : styles.fieldInput
+                } ${styles.fieldTextarea}`}
+                aria-invalid={errors.message ? true : undefined}
+                aria-describedby={errors.message ? 'message-error' : undefined}
               />
+              {errors.message && (
+                <p id="message-error" className={styles.fieldErrorMessage}>
+                  {errors.message}
+                </p>
+              )}
             </div>
-          </form>
+          </div>
         </div>
-      </div>
 
-      {/* プライバシーポリシー同意 — ページ全体の中央 */}
-      <div className={styles.agreementArea}>
-        <label className={styles.agreementLabel}>
-          <input
-            type="checkbox"
-            checked={agreed}
-            onChange={(e) => setAgreed(e.target.checked)}
-            className={styles.checkbox}
-          />
-          <span className={styles.agreementText}>
-            <a
-              href="/privacy-policy"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.privacyLink}
-            >
-              プライバシーポリシー
-            </a>
-            に同意する
-          </span>
-        </label>
-      </div>
+        {/* プライバシー同意（ページ全体の中央） */}
+        <div className={styles.privacyWrap}>
+          <label className={styles.privacy}>
+            <input
+              type="checkbox"
+              checked={agreed}
+              onChange={(e) => setAgreed(e.target.checked)}
+              className={styles.privacyCheck}
+            />
+            <span className={styles.privacyText}>
+              <Link
+                href="/privacy"
+                className={styles.privacyLink}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                プライバシーポリシー
+              </Link>
+              に同意する
+            </span>
+          </label>
+        </div>
 
-      {/* エラーメッセージ */}
-      {errorMessage && (
-        <p className={styles.errorMessage}>{errorMessage}</p>
-      )}
+        {submitErrorMessage && (
+          <p className={styles.errorMessage} role="alert">
+            {submitErrorMessage}
+          </p>
+        )}
 
-      {/* 送信ボタン — ページ全体の中央 */}
-      <div className={styles.submitArea}>
-        <button
-          type="button"
-          className={styles.submitButton}
-          disabled={!agreed || isSubmitting}
-          onClick={handleSubmit}
-        >
-          {isSubmitting ? 'SENDING...' : 'SEND MESSAGE >'}
-        </button>
-      </div>
+        {/* 送信ボタン（ページ全体の中央） */}
+        <div className={styles.submitWrap}>
+          <button
+            type="submit"
+            className={styles.submitButton}
+            disabled={!agreed || isSubmitting}
+          >
+            {isSubmitting ? 'SENDING...' : 'SEND MESSAGE >'}
+          </button>
+        </div>
+      </form>
     </div>
   );
 }
