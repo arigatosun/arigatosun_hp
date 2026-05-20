@@ -148,6 +148,13 @@
   cursor: pointer;
 }
 
+// 各メニュー項目内の Link — クリックでサービス詳細ページへ遷移
+.menuLink {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
 // 赤マーカー帯（Service 詳細ページ ServiceDetailHero 側面ナビと同方式）
 // Mozaic GEO は文字実体が行ボックス中心より約0.094em下に来るため、
 // 帯も同じだけ下げて文字の中央に重ねる。

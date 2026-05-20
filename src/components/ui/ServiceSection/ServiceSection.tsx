@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useCallback } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import styles from './ServiceSection.module.scss';
@@ -135,8 +136,10 @@ export default function ServiceSection() {
 
             <ul className={styles.menuList} ref={menuRef}>
               {SERVICE_MENU_ITEMS.map((item) => (
-                <li key={item} className={styles.menuItem}>
-                  <span>{item}</span>
+                <li key={item.label} className={styles.menuItem}>
+                  <Link href={item.href} className={styles.menuLink}>
+                    <span>{item.label}</span>
+                  </Link>
                 </li>
               ))}
             </ul>
