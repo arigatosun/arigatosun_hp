@@ -6,6 +6,8 @@ type WorkImageGridProps = {
   imageRatio: { w: number; h: number };
   caption: string;
   cardHeight: number;
+  /** true の時、各サムネにブラーを適用（機密の提案資料用） */
+  blur?: boolean;
 };
 
 export default function WorkImageGrid({
@@ -13,6 +15,7 @@ export default function WorkImageGrid({
   imageRatio,
   caption,
   cardHeight,
+  blur = false,
 }: WorkImageGridProps) {
   return (
     <div className={styles.wrap}>
@@ -24,7 +27,7 @@ export default function WorkImageGrid({
           ).toFixed(3)}vw, ${cardHeight}px)`,
         }}
       >
-        <div className={styles.grid}>
+        <div className={blur ? `${styles.grid} ${styles.blurred}` : styles.grid}>
           {images.map((src, index) => (
             <div
               key={index}

@@ -81,6 +81,8 @@ export type WorkContentBlock = { gap: number } & (
       images: string[];
       imageRatio: { w: number; h: number };
       caption: string;
+      /** true の時、各サムネにブラーを適用（機密の提案資料用）。省略時は no-blur */
+      blur?: boolean;
     }
   | {
       type: 'mockupCard'; // Web デザインモックアップ画像カード
