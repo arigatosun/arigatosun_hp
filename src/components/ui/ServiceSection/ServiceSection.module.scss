@@ -59,6 +59,8 @@
 }
 
 // ── 左側（sticky） ──
+// スクロール進行（--service-progress 0→1）に合わせて opacity を 1→0 にフェードアウト。
+// スクロールを戻すと scrub により progress が 1→0 となり、自動的にフェードインで戻る。
 .left {
   width: 50%;
   flex-shrink: 0;
@@ -67,6 +69,7 @@
   @include fluid(padding-left, 20, 200);
   @include fluid(padding-top, 40, 80);
   padding-right: 2vw;
+  opacity: calc(1 - var(--service-progress, 0));
 
   @include sp {
     width: 100%;
