@@ -45,6 +45,7 @@ export const members: Member[] = [
     slug: 'ryo-yoshikawa',
     name: 'RYO YOSHIKAWA',
     role: 'CTO',
+    photo: '/images/team/ryo-yoshikawa.png',
     catchphrase: 'テクノロジーで未来を切り拓く。',
     description:
       'ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。',
@@ -63,6 +64,7 @@ export const members: Member[] = [
     slug: 'katsuya-takahashi',
     name: 'KATSUYA TAKAHASHI',
     role: 'LEAD ENGINEER',
+    photo: '/images/team/katsuya-takahashi.png',
     catchphrase: 'コードに魂を込める。',
     description:
       'ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。',
@@ -76,6 +78,7 @@ export const members: Member[] = [
     slug: 'daichi-nakata',
     name: 'DAICHI NAKATA',
     role: 'ENGINEER',
+    photo: '/images/team/daichi-nakata.png',
     catchphrase: '最高の体験を、最高の技術で。',
     description:
       'ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。',
@@ -86,6 +89,7 @@ export const members: Member[] = [
     slug: 'hideya-mifuji',
     name: 'HIDEYA MIFUJI',
     role: 'ENGINEER',
+    photo: '/images/team/hideya-mifuji.png',
     catchphrase: '細部にこそ、本質が宿る。',
     description:
       'ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。',
@@ -99,6 +103,7 @@ export const members: Member[] = [
     slug: 'yugo-nishimoto',
     name: 'YUGO NISHIMOTO',
     role: 'CDO / DESIGN DIRECTOR',
+    photo: '/images/team/yugo-nishimoto.png',
     catchphrase: 'デザインで世界を変える。',
     description:
       'ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。',
@@ -113,6 +118,7 @@ export const members: Member[] = [
     slug: 'hyouga-hiromori',
     name: 'HYOUGA HIROMORI',
     role: 'CCO / KUSOMEGANE',
+    photo: '/images/team/hyouga-hiromori.png',
     catchphrase: '常識を壊し、新しい価値を創る。',
     description:
       'ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。',
@@ -126,6 +132,7 @@ export const members: Member[] = [
     slug: 'airu-matsuo',
     name: 'AIRU MATSUO',
     role: 'CREATIVE ENGINEER',
+    photo: '/images/team/airu-matsuo.png',
     catchphrase: 'クリエイティブとテクノロジーの架け橋。',
     description:
       'ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。',
@@ -136,11 +143,23 @@ export const members: Member[] = [
     slug: 'koushi-tsuchiga',
     name: 'KOUSHI TSUCHIGA',
     role: 'CORPORATE OPERATIONS',
+    photo: '/images/team/koushi-tsuchiga.png',
     catchphrase: '組織の力を最大化する。',
     description:
       'ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。',
     career:
       'ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。',
+  },
+  {
+    slug: 'arigato-kun',
+    name: 'ARIGATO KUN',
+    role: 'CHARACTER',
+    photo: '/images/team/arigato-kun.png',
+    catchphrase: 'アリガトサンの太陽キャラクター。',
+    description:
+      'アリガトサンを象徴するマスコットキャラクター。妥協なき愛と感謝の光で、関わるすべての人を照らす存在。',
+    career:
+      'アリガトサンと共に世界へ羽ばたく、唯一無二の存在。',
   },
 ];
 

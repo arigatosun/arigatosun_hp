@@ -151,10 +151,19 @@
   }
 }
 
+// 実写真（next/image） — Figma カード 231×231 のアスペクト 1:1
 .cardPhoto {
   width: 100%;
-  aspect-ratio: 233 / 235;
-  opacity: 0.4;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  display: block;
+}
+
+// photo 未設定時のグレー placeholder
+.cardPhotoFallback {
+  width: 100%;
+  aspect-ratio: 1 / 1;
   background: var(--color-placeholder);
 }
 

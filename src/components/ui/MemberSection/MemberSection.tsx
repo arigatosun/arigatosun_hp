@@ -2,6 +2,7 @@
 
 import { useRef, useCallback } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { members } from '@/data/members';
 import { useMediaQuery } from '@/lib/useMediaQuery';
 import SectionHeader from '@/components/ui/SectionHeader';
@@ -66,7 +67,18 @@ export default function MemberSection({ variant = 'grid' }: MemberSectionProps) 
       onMouseLeave={isPC ? (e) => handleMouseLeave(e, index) : undefined}
     >
       <div className={styles.cardPhotoWrap}>
-        <div className={styles.cardPhoto} />
+        {member.photo ? (
+          <Image
+            src={member.photo}
+            alt={`${member.name} の写真`}
+            width={231}
+            height={231}
+            className={styles.cardPhoto}
+            sizes="(max-width: 767px) 50vw, (max-width: 1023px) 33vw, 16vw"
+          />
+        ) : (
+          <div className={styles.cardPhotoFallback} />
+        )}
       </div>
       <p className={styles.cardRole}>{member.role}</p>
       <p className={styles.cardName}>{member.name}</p>
