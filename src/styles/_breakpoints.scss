@@ -4,6 +4,11 @@
 // clamp()ではカバーできないレイアウト構造の変更
 // （カラム切り替え、表示/非表示等）に使用する。
 // フォントサイズや余白には @include fluid() を優先して使うこと。
+//
+// 採用は **2 パターン構成** に統合済み（旧 SP/TAB → SP に統合）
+//   - SP（スマホ & タブレット）: 〜1023px → @include sp
+//   - PC（デスクトップ）: 1024px〜    → @include pc
+// 旧 `@include tab` は廃止。タブレット域専用のレイアウト分岐は持たない。
 // ============================================
 
 $breakpoint-sm: 480px;
@@ -12,18 +17,14 @@ $breakpoint-lg: 1024px;
 $breakpoint-xl: 1200px;
 $breakpoint-2xl: 1440px;
 
+// SP & タブレット — 〜1023px
 @mixin sp {
-  @media (max-width: #{$breakpoint-md - 1px}) {
+  @media (max-width: #{$breakpoint-lg - 1px}) {
     @content;
   }
 }
 
-@mixin tab {
-  @media (min-width: #{$breakpoint-md}) and (max-width: #{$breakpoint-lg - 1px}) {
-    @content;
-  }
-}
-
+// PC（デスクトップ） — 1024px〜
 @mixin pc {
   @media (min-width: #{$breakpoint-lg}) {
     @content;
