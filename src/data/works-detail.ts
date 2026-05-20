@@ -144,6 +144,7 @@ const CHORITZ_DETAIL: WorkDetailContent = {
       ),
       imageRatio: { w: 297, h: 167 },
       caption: '＜ロゴデザイン初回提案書(一部抜粋)＞',
+      blur: true,
     },
     {
       type: 'imageGrid',

@@ -46,6 +46,14 @@
   object-fit: cover;
 }
 
+// blur=true の時のみ各サムネにブラーを適用（機密の提案資料用）
+.blurred .image {
+  // Figma 準拠: 機密の提案資料サムネはぼかして表示する
+  filter: blur(clamp(3px, 0.4vw, 7px));
+  // ぼかし端のにじみをセル外へ逃がす（.cell の overflow:hidden でクリップ）
+  transform: scale(1.08);
+}
+
 // ＜…(一部抜粋)＞ キャプション（カード内・右寄せ）
 .caption {
   margin: 0;

@@ -107,6 +107,7 @@ export default async function WorkDetailPage({ params }: PageParams) {
               imageRatio={block.imageRatio}
               caption={block.caption}
               cardHeight={block.cardHeight}
+              blur={block.blur}
             />
           );
         } else if (block.type === 'mockupCard') {
