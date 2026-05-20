@@ -216,35 +216,47 @@
 }
 
 // ── 下部フッター（キャラクター + テキスト + ボタン） ──
+// Figma フレーム1920基準: ブロック x[400..1520]・幅1120・右マージン400（1920基準）
+// セクション padding-right 183 と合わせて 183+217=400 で右端 x=1520 に合わせる
 .footer {
   @include fluid(margin-top, 60, 200);
   display: flex;
   align-items: center;
-  justify-content: center;
-  @include fluid(gap, 16, 40);
+  justify-content: flex-end;
+  @include fluid(padding-right, 0, 217);
 
   @include max(1023px) {
     flex-direction: column;
+    justify-content: center;
     text-align: center;
+    padding-right: 0;
+    @include fluid(gap, 16, 40);
   }
 }
 
+// Figma: キャラ 156×161（1920基準）
 .footerCharacter {
   flex-shrink: 0;
-  @include fluid(width, 140, 240);
-  @include fluid(height, 140, 240);
+  @include fluid(width, 100, 156);
+  @include fluid(height, 100, 161);
 }
 
+// Figma: テキスト幅 593・右寄せ、キャラとの間 4px
 .footerText {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+  @include fluid(width, 280, 593);
+  @include fluid(margin-left, 2, 4);
 
   @include max(1023px) {
+    width: auto;
+    margin-left: 0;
     align-items: center;
   }
 }
 
+// Figma: font 14 / line-height 21 / letter-spacing 1.82
 .footerServices {
   color: var(--color-text-secondary);
   text-align: right;
@@ -252,7 +264,7 @@
   @include fluid(font-size, 11, 14);
   font-style: normal;
   font-weight: var(--font-weight-light);
-  @include fluid(line-height, 18, 24);
+  @include fluid(line-height, 16, 21);
   @include fluid(letter-spacing, 1, 1.82);
 
   @include max(1023px) {
@@ -260,22 +272,29 @@
   }
 }
 
+// Figma: font 12 / line-height 15.75 / letter-spacing 1.56、テキスト下から 12px
 .footerCopyright {
   @include fluid(margin-top, 8, 12);
   color: var(--color-text-secondary);
   text-align: right;
   font-family: var(--font-en);
-  @include fluid(font-size, 11, 14);
+  @include fluid(font-size, 10, 12);
   font-style: normal;
   font-weight: var(--font-weight-light);
-  @include fluid(line-height, 18, 21);
-  @include fluid(letter-spacing, 1, 1.82);
+  @include fluid(line-height, 13, 15.75);
+  @include fluid(letter-spacing, 0.8, 1.56);
 
   @include max(1023px) {
     text-align: center;
   }
 }
 
+// Figma: ボタン 332×64、テキストとの間 35px（Button コンポーネントが 332×64 で一致）
 .footerButton {
   flex-shrink: 0;
+  @include fluid(margin-left, 16, 35);
+
+  @include max(1023px) {
+    margin-left: 0;
+  }
 }
