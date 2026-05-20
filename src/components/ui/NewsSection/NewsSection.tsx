@@ -142,7 +142,7 @@ export default function NewsSection() {
             {categories.map((cat, index) => (
               <li
                 key={cat.value}
-                className={index === 0 ? styles.categoryItemActive : styles.categoryItem}
+                className={styles.categoryItem}
                 onClick={() => handleCategoryClick(index)}
               >
                 <span>{cat.label}</span>
