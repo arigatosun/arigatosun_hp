@@ -152,10 +152,11 @@
 }
 
 // ── 右側: 記事リスト ──
+// Figma: 1記事目の開始位置をタイトル画像下端と揃える（タイトル画像高さ ≈ 40px）
 .right {
   flex: 1;
   min-width: 0;
-  padding-top: 20px;
+  @include fluid(padding-top, 22, 40);
 
   @include sp {
     padding-top: 0;
