@@ -2,192 +2,177 @@
 @use '@/styles/breakpoints' as *;
 
 .page {
-  @include fluid(padding-top, 60, 200);
-  @include fluid(padding-bottom, 60, 120);
-  @include fluid(padding-left, 20, 200);
-  @include fluid(padding-right, 20, 200);
-  min-height: 100vh;
+  padding-top: 80px; // Header(position: fixed) 分のオフセット
+  @include fluid(padding-bottom, 96, 240);
 }
 
-// ── 2カラムレイアウト ──
-.container {
+.formRoot {
+  display: block;
+}
+
+// ── 2カラム（左: タイトル＋リード文 / 右: フォーム） ──
+.inner {
   display: flex;
-  @include fluid(gap, 40, 200);
-  max-width: 1400px;
-  margin: 0 auto;
+  align-items: flex-start;
+  justify-content: space-between;
+  @include fluid(padding-left, 20, 200);
+  @include fluid(padding-right, 20, 200);
+  @include fluid(padding-top, 56, 160); // Figma: ヘッダー直後 240 − header 80
+  @include fluid(gap, 32, 179); // Figma: intro 右端 (200+560) → form 左端 (939) ＝ 179
 
   @include sp {
     flex-direction: column;
-    gap: 40px;
+    @include fluid(gap, 32, 56);
   }
 }
 
-// ── 左カラム ──
-.leftColumn {
+// ── 左カラム: タイトル + リード文 ──
+.intro {
   flex-shrink: 0;
-  @include fluid(max-width, 280, 560);
-
-  @include sp {
-    max-width: 100%;
-  }
-}
-
-.titleArea {
-  @include fluid(margin-bottom, 30, 60);
-}
-
-.titleLogo {
-  width: auto;
-  height: auto;
-  @include fluid(margin-bottom, 8, 12);
-}
-
-.subtitle {
-  color: var(--color-text-secondary);
-  font-family: var(--font-en);
-  @include fluid(font-size, 14, 20);
-  font-weight: var(--font-weight-light);
-  font-style: normal;
-  line-height: 24px;
-  @include fluid(letter-spacing, 1.3, 2.6);
-}
-
-.description {
   @include fluid(width, 280, 560);
-  font-family: var(--font-jp);
-  @include fluid(font-size, 14, 16);
-  font-weight: var(--font-weight-regular);
-  font-style: normal;
-  @include fluid(line-height, 24, 34);
-  @include fluid(letter-spacing, 1.28, 2.56);
-  color: var(--color-black);
 
   @include sp {
     width: 100%;
   }
 }
 
-// ── 右カラム: フォーム ──
-.rightColumn {
+// SectionTitle を Figma 実測（ロゴ 250×43 / ラベル 24px / ラベルとの間 28px）に揃える上書き
+.titleSection {
+  margin-top: 0;
+  margin-bottom: 0;
+
+  img {
+    @include fluid(width, 160, 250);
+    height: auto;
+  }
+
+  p {
+    @include fluid(margin-top, 16, 28);
+    line-height: 24px;
+  }
+}
+
+.introText {
+  @include fluid(margin-top, 32, 60); // Figma: タイトルブロック下端 → リード文 約60px
+  font-family: var(--font-jp);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-black);
+  @include fluid(font-size, 14, 16);
+  @include fluid(line-height, 28, 36);
+  @include fluid(letter-spacing, 1.6, 2.56);
+}
+
+// ── 右カラム: フォームフィールド ──
+.formFields {
   flex: 1;
   min-width: 0;
-}
-
-.form {
+  @include fluid(max-width, 280, 781);
   display: flex;
   flex-direction: column;
-  @include fluid(gap, 16, 24);
+  @include fluid(gap, 20, 28); // 入力 → 次ラベル 28（Figma: 533-457）
+
+  @include sp {
+    max-width: 100%;
+    width: 100%;
+  }
 }
 
-.formGroup {
+.field {
   display: flex;
   flex-direction: column;
-  @include fluid(gap, 4, 8);
+  @include fluid(gap, 12, 16); // Figma: ラベル → 入力枠 16
 }
 
-// ラベル（日本語）
-.label {
+.fieldLabel {
   color: var(--color-black);
   font-family: var(--font-jp);
-  @include fluid(font-size, 14, 18);
   font-weight: var(--font-weight-regular);
-  font-style: normal;
-  @include fluid(line-height, 24, 32);
-  @include fluid(letter-spacing, 2.16, 4.32);
+  @include fluid(font-size, 15, 18);
+  @include fluid(line-height, 26, 32);
+  @include fluid(letter-spacing, 2.4, 4.32);
 }
 
-// ラベル（MAIL - 英語フォント）
-.labelEn {
-  font-family: var(--font-en);
-  font-weight: var(--font-weight-light);
-}
-
-// インプットフィールド — 下線のみ
-.input {
+// ── 入力欄（input / textarea 共通の基底） ──
+// Figma 仕様: 白塗りのみ・ボーダー無し・角丸無し（ページ背景 #F5F6F7 とのコントラストで枠を表現）
+.fieldInput {
   width: 100%;
-  max-width: 781px;
-  @include fluid(height, 36, 40);
   background: var(--color-white);
   border: none;
-  border-bottom: 1px solid var(--color-gray-300);
   border-radius: 0;
-  @include fluid(padding-left, 4, 8);
-  @include fluid(padding-right, 4, 8);
+  @include fluid(padding-inline, 12, 16);
   font-family: var(--font-jp);
-  @include fluid(font-size, 14, 16);
   font-weight: var(--font-weight-regular);
-  font-style: normal;
-  @include fluid(line-height, 28, 34);
-  @include fluid(letter-spacing, 1.28, 2.56);
   color: var(--color-black);
+  // SP は iOS 自動ズーム回避のため 16px から開始
+  @include fluid(font-size, 16, 16);
+  @include fluid(letter-spacing, 1.6, 2.56);
   outline: none;
-  transition: border-color var(--transition-base);
+  transition: box-shadow var(--transition-base);
 
   &::placeholder {
     color: var(--color-black);
     opacity: 0.5;
-    font-family: var(--font-jp);
-    @include fluid(font-size, 14, 16);
-    font-weight: var(--font-weight-regular);
-    @include fluid(line-height, 28, 34);
-    @include fluid(letter-spacing, 1.28, 2.56);
   }
 
-  &:focus {
-    border-bottom-color: var(--color-black);
+  // キーボード操作時のフォーカスのみアクセシビリティ用に内側ハイライト
+  &:focus-visible {
+    box-shadow: inset 0 0 0 2px var(--color-primary);
   }
 }
 
-// テキストエリア
-.textarea {
-  @include fluid(height, 120, 160);
+// 単一行 input（高さ 40px 固定 ≒ Figma 実測）
+input.fieldInput {
+  @include fluid(height, 40, 40);
+}
+
+// textarea 個別
+.fieldTextarea {
+  @include fluid(height, 160, 200);
+  @include fluid(padding-top, 12, 16);
+  @include fluid(padding-bottom, 12, 16);
+  @include fluid(line-height, 24, 28);
   resize: vertical;
-  @include fluid(padding-top, 8, 12);
-  border: 1px solid var(--color-gray-300);
 }
 
-// ── プライバシーポリシー同意（ページ全体の中央） ──
-.agreementArea {
+// ── プライバシー同意（ページ全体の中央） ──
+.privacyWrap {
   display: flex;
   justify-content: center;
-  @include fluid(margin-top, 32, 60);
+  @include fluid(margin-top, 60, 120); // Figma: textarea 下端 1197 → privacy 1317 ＝ 120
+  @include fluid(padding-left, 20, 200);
+  @include fluid(padding-right, 20, 200);
 }
 
-.agreementLabel {
-  display: flex;
+.privacy {
+  display: inline-flex;
   align-items: center;
-  @include fluid(gap, 6, 10);
+  @include fluid(gap, 8, 12);
   cursor: pointer;
 }
 
-.checkbox {
-  @include fluid(width, 14, 16);
-  @include fluid(height, 14, 16);
+.privacyCheck {
+  flex-shrink: 0;
+  @include fluid(width, 16, 20);
+  @include fluid(height, 16, 20);
+  border: 1px solid var(--color-text-soft-black);
+  border-radius: 0;
   cursor: pointer;
   accent-color: var(--color-black);
 }
 
-.agreementText {
-  color: var(--color-text-soft-black);
+.privacyText {
   font-family: var(--font-jp);
-  @include fluid(font-size, 14, 16);
   font-weight: var(--font-weight-regular);
-  font-style: normal;
-  line-height: normal;
-  @include fluid(letter-spacing, 0.8, 1.6);
+  color: var(--color-text-soft-black);
+  @include fluid(font-size, 14, 16);
+  line-height: 1.2;
+  @include fluid(letter-spacing, 1.2, 1.6);
 }
 
 .privacyLink {
   color: var(--color-link-blue);
-  font-family: var(--font-jp);
-  @include fluid(font-size, 14, 16);
-  font-weight: var(--font-weight-regular);
-  font-style: normal;
-  line-height: normal;
-  @include fluid(letter-spacing, 0.8, 1.6);
   text-decoration: underline;
-  text-underline-offset: auto;
-  text-underline-position: from-font;
+  text-underline-offset: 2px;
   transition: opacity var(--transition-base);
 
   &:hover {
@@ -197,6 +182,7 @@
 
 // ── エラーメッセージ ──
 .errorMessage {
+  margin: 0;
   text-align: center;
   color: var(--color-primary);
   font-family: var(--font-jp);
@@ -205,68 +191,42 @@
 }
 
 // ── 送信ボタン（ページ全体の中央） ──
-.submitArea {
+.submitWrap {
   display: flex;
   justify-content: center;
-  @include fluid(margin-top, 20, 40);
+  @include fluid(margin-top, 32, 48); // Figma: privacy 下端 1337 → button 1385 ＝ 48
+  @include fluid(padding-left, 20, 200);
+  @include fluid(padding-right, 20, 200);
 }
 
+// WORKS の WorksPagination .button と同方式：
+// 背景白のまま、文字 + 枠が hover で primary
 .submitButton {
-  @include fluid(width, 280, 380);
-  @include fluid(height, 52, 72);
-  border-radius: 43.2px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  @include fluid(width, 240, 380);
+  @include fluid(height, 48, 64);
+  border-radius: 999px;
   border: 1px solid var(--color-black);
   background: var(--color-white);
   color: var(--color-black);
-  text-align: center;
   font-family: var(--font-en);
-  @include fluid(font-size, 16, 24);
   font-weight: var(--font-weight-light);
-  font-style: normal;
-  line-height: 19.2px;
-  @include fluid(letter-spacing, 1.56, 3.12);
+  @include fluid(font-size, 14, 20);
+  @include fluid(letter-spacing, 1.4, 2.6);
   cursor: pointer;
-  transition: all var(--transition-base);
+  transition:
+    color var(--transition-base),
+    border-color var(--transition-base);
 
   &:hover:not(:disabled) {
-    background: var(--color-black);
-    color: var(--color-white);
+    color: var(--color-primary);
+    border-color: var(--color-primary);
   }
 
   &:disabled {
     opacity: 0.4;
     cursor: not-allowed;
   }
-
-  @include sp {
-    width: 100%;
-    max-width: 320px;
-  }
-}
-
-// ── 送信完了画面 ──
-.thanksContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 60vh;
-  text-align: center;
-}
-
-.thanksTitle {
-  font-family: var(--font-en);
-  @include fluid(font-size, 28, 56);
-  font-weight: var(--font-weight-light);
-  color: var(--color-black);
-  @include fluid(margin-bottom, 16, 32);
-  @include fluid(letter-spacing, 2, 4);
-}
-
-.thanksText {
-  font-family: var(--font-jp);
-  @include fluid(font-size, 14, 18);
-  font-weight: var(--font-weight-regular);
-  @include fluid(line-height, 24, 36);
-  color: var(--color-black);
 }

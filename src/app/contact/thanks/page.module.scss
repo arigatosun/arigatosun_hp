@@ -1,0 +1,73 @@
+@use '@/styles/fluid' as *;
+@use '@/styles/breakpoints' as *;
+
+.page {
+  padding-top: 80px; // Header(position: fixed) 分のオフセット
+  @include fluid(padding-bottom, 96, 240);
+}
+
+.inner {
+  @include fluid(padding-left, 20, 200);
+  @include fluid(padding-right, 20, 200);
+  @include fluid(padding-top, 56, 202); // Figma: 282 − header 80 ＝ 202
+}
+
+// SectionTitle を Figma 実測（ロゴ 250×43 / ラベル 24px / ラベルとの間 28px）に揃える上書き
+.titleSection {
+  margin-top: 0;
+  margin-bottom: 0;
+
+  img {
+    @include fluid(width, 160, 250);
+    height: auto;
+  }
+
+  p {
+    @include fluid(margin-top, 16, 28);
+    line-height: 24px;
+  }
+}
+
+.thanksText {
+  margin: 0;
+  @include fluid(margin-top, 32, 72); // Figma: 443 − 371 ＝ 72
+  max-width: 768px;
+  font-family: var(--font-jp);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-black);
+  @include fluid(font-size, 14, 16);
+  @include fluid(line-height, 28, 36);
+  @include fluid(letter-spacing, 1.6, 2.56);
+}
+
+.buttonWrap {
+  display: flex;
+  justify-content: center;
+  @include fluid(margin-top, 80, 180); // Figma: 545 → 725 ＝ 180
+}
+
+// WORKS の WorksPagination .button / フォーム送信ボタンと同方式：
+// 背景白のまま、文字 + 枠が hover で primary
+.topPageButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  @include fluid(width, 240, 380);
+  @include fluid(height, 48, 64);
+  border-radius: 999px;
+  border: 1px solid var(--color-black);
+  background: var(--color-white);
+  color: var(--color-black);
+  font-family: var(--font-en);
+  font-weight: var(--font-weight-light);
+  @include fluid(font-size, 14, 20);
+  @include fluid(letter-spacing, 1.4, 2.6);
+  transition:
+    color var(--transition-base),
+    border-color var(--transition-base);
+
+  &:hover {
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+  }
+}
