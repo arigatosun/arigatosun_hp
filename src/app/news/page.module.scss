@@ -2,207 +2,176 @@
 @use '@/styles/breakpoints' as *;
 
 .page {
-  @include fluid(padding-left, 20, 200);
-  @include fluid(padding-right, 20, 80);
-  @include fluid(padding-top, 100, 160);
-  @include fluid(padding-bottom, 60, 120);
+  padding-top: 80px; // Header(position: fixed) 分のオフセット
+  @include fluid(padding-bottom, 96, 240);
 }
 
 .inner {
   display: flex;
-  @include fluid(gap, 40, 140);
   align-items: flex-start;
+  @include fluid(padding-left, 20, 200);
+  @include fluid(padding-right, 20, 200);
+  @include fluid(padding-top, 56, 160);
+  @include fluid(gap, 40, 280);
 
   @include sp {
     flex-direction: column;
-    @include fluid(gap, 24, 40);
+    @include fluid(gap, 32, 56);
   }
 }
 
-// ── 左側: サイドバー ──
-.left {
+// ── 左サイドバー ──
+.sidebar {
   flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  position: sticky;
-  @include fluid(top, 80, 120);
+  @include fluid(width, 160, 240);
 
   @include sp {
-    position: static;
     width: 100%;
   }
 }
 
-.header {
-  @include fluid(margin-bottom, 60, 240);
+// SectionTitle を Figma 実測（ロゴ 160 / NEWS ラベル lh18 / ラベルとの間 28px）に揃える上書き
+.titleSection {
+  margin-top: 0;
+  margin-bottom: 0;
 
-  @include sp {
-    @include fluid(margin-bottom, 16, 24);
+  img {
+    @include fluid(width, 96, 160);
+  }
+
+  p {
+    @include fluid(margin-top, 16, 28);
+    line-height: 18px;
   }
 }
 
-.titleLogo {
-  display: flex;
-}
-
-.titleLogoImage {
-  width: auto;
-  height: auto;
-  max-width: 100%;
-}
-
-.label {
-  margin-top: 16px;
-  color: var(--color-text-secondary);
-  font-family: var(--font-en);
-  @include fluid(font-size, 14, 20);
-  font-weight: var(--font-weight-light);
-  font-style: normal;
-  line-height: 24px;
-  @include fluid(letter-spacing, 1.2, 2.6);
-}
-
-// ── カテゴリメニュー ──
 .categoryList {
   list-style: none;
+  @include fluid(margin-top, 48, 128);
   display: flex;
   flex-direction: column;
   @include fluid(gap, 16, 32);
-  @include fluid(margin-bottom, 24, 56);
 
   @include sp {
     flex-direction: row;
     flex-wrap: wrap;
-    @include fluid(gap, 8, 12);
-    @include fluid(margin-bottom, 16, 24);
+    @include fluid(gap, 8, 16);
   }
 }
 
-.categoryItem,
-.categoryItemActive {
-  display: block;
+.category,
+.categoryActive {
   font-family: var(--font-en);
-  @include fluid(font-size, 14, 20);
   font-weight: var(--font-weight-light);
-  font-style: normal;
-  line-height: 24px;
-  @include fluid(letter-spacing, 1.2, 2.6);
-  cursor: pointer;
-
-  span {
-    display: inline;
-    padding: 5px 12px;
-    transition: all var(--transition-base);
-  }
-
-  @include sp {
-    @include fluid(font-size, 11, 14);
-
-    span {
-      padding: 4px 8px;
-    }
-  }
-}
-
-.categoryItem {
-  span {
-    color: var(--color-text-secondary);
-    background-color: transparent;
-  }
-
-  &:hover span {
-    color: var(--color-white);
-    background-color: var(--color-primary);
-  }
-}
-
-.categoryItemActive {
-  span {
-    color: var(--color-white);
-    background-color: var(--color-primary);
-  }
-}
-
-// ── CONTACTリンク ──
-.contactLink {
-  font-family: var(--font-en);
   @include fluid(font-size, 14, 20);
-  font-weight: var(--font-weight-light);
-  font-style: normal;
-  line-height: 24px;
-  @include fluid(letter-spacing, 1.2, 2.6);
+  line-height: 1.2; // 赤帯がはみ出さない行ボックス高
+  @include fluid(letter-spacing, 1.4, 2.6);
+  white-space: nowrap;
+}
+
+// 赤マーカー帯（TOP ページ ServiceSection のメニューと同方式）。
+// Mozaic GEO は文字実体が行ボックス中心より約0.094em下に来るため帯も同じだけ下げる。
+// 非アクティブ＝帯幅0／アクティブ・hover＝右寄せで展開。
+.category span,
+.categoryActive span {
+  display: inline-block;
+  background-image: linear-gradient(
+    var(--color-primary),
+    var(--color-primary)
+  );
+  background-repeat: no-repeat;
+  background-position: right calc(50% + 0.044em);
+  background-size: 0 0.85em;
+  transition:
+    color var(--transition-base),
+    background-size var(--transition-base);
+}
+
+.category span {
   color: var(--color-text-secondary);
-  transition: color var(--transition-base);
+}
+
+.category:hover span {
+  color: var(--color-white);
+  background-size: calc(100% - 5px) 0.85em;
+}
+
+.categoryActive span {
+  color: var(--color-white);
+  background-size: calc(100% - 5px) 0.85em;
+}
+
+// PRESS と CONTACT の間の縦線（下向き矢印付き・Figma SVG）
+.sidebarDivider {
+  display: block;
+  width: 8px;
+  @include fluid(height, 28, 56);
+  margin-left: 11px;
+  @include fluid(margin-top, 12, 23); // Figma: PRESS→矢印 23px
+  @include fluid(margin-bottom, 14, 24); // 上の余白に揃え視覚バランスを取る（Figma実測 40px から詰め）
+  background: url('/images/sections/news/sidebar-divider.svg') center / contain
+    no-repeat;
+  transform: rotate(180deg); // Figma 同様に矢印を下向きへ
+}
+
+.contactLink {
+  display: inline-block;
+  font-family: var(--font-en);
+  font-weight: var(--font-weight-light);
+  @include fluid(font-size, 14, 20);
+  line-height: 1.2;
+  @include fluid(letter-spacing, 1.4, 2.6);
+  white-space: nowrap;
+  color: var(--color-text-secondary);
+  // カテゴリと同じ赤マーカー帯（hover で右から展開）
+  background-image: linear-gradient(
+    var(--color-primary),
+    var(--color-primary)
+  );
+  background-repeat: no-repeat;
+  background-position: right calc(50% + 0.044em);
+  background-size: 0 0.85em;
+  transition:
+    color var(--transition-base),
+    background-size var(--transition-base);
 
   &:hover {
-    color: var(--color-primary);
-  }
-
-  @include sp {
-    display: none;
+    color: var(--color-white);
+    background-size: calc(100% - 5px) 0.85em;
   }
 }
 
-// ── 右側: 記事リスト ──
-.right {
+// ── 右: 記事リスト ──
+.main {
   flex: 1;
   min-width: 0;
-  padding-top: 20px;
-
-  @include sp {
-    padding-top: 0;
-    width: 100%;
-  }
+  @include fluid(padding-top, 32, 100);
 }
 
-// ── 各記事 ──
+.articleList {
+  list-style: none;
+}
+
+.articleItem {
+  display: flex;
+  flex-direction: column;
+}
+
 .article {
   display: flex;
   align-items: flex-start;
-  @include fluid(gap, 16, 56);
-  padding: 24px 20px;
-  margin: -24px -20px;
-  border-radius: 8px;
-  transition:
-    background-color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-    transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-    box-shadow 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  justify-content: space-between;
+  @include fluid(gap, 24, 40);
+  @include fluid(padding-top, 26, 52);
+  @include fluid(padding-bottom, 26, 52);
 
-  &:hover {
-    background-color: rgba(255, 255, 255, 0.95);
-    transform: translateX(8px);
-    box-shadow:
-      0 4px 24px rgba(0, 0, 0, 0.06),
-      0 12px 40px rgba(0, 0, 0, 0.04);
-
-    .articleTitle {
-      color: var(--color-primary);
-    }
-
-    .articleDate,
-    .articleTag {
-      color: var(--color-black);
-    }
-
-    .thumbnailImage {
-      transform: scale(1.06);
-    }
-
-    .articleTitle::after {
-      transform: scaleX(1);
-    }
+  &:hover .articleTitle {
+    color: var(--color-primary);
   }
+}
 
-  @include sp {
-    flex-direction: column-reverse;
-    @include fluid(gap, 12, 16);
-    padding: 16px 12px;
-    margin: -16px -12px;
-
-    &:hover {
-      transform: none;
-    }
-  }
+.articleItem:first-child .article {
+  padding-top: 0;
 }
 
 .articleContent {
@@ -211,156 +180,110 @@
 }
 
 .articleTitle {
+  margin: 0;
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
-  @include fluid(font-size, 14, 20);
-  font-style: normal;
   font-weight: var(--font-weight-regular);
-  @include fluid(line-height, 24, 38);
-  @include fluid(letter-spacing, 1.5, 3.2);
-  transition: color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  position: relative;
-  padding-bottom: 4px;
-
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 60px;
-    height: 2px;
-    background-color: var(--color-primary);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.1s;
-  }
+  @include fluid(font-size, 14, 18);
+  @include fluid(line-height, 26, 34);
+  @include fluid(letter-spacing, 1.8, 2.88);
+  transition: color var(--transition-base);
 }
 
 .articleMeta {
-  @include fluid(margin-top, 16, 32);
+  margin: 0;
+  @include fluid(margin-top, 16, 30);
   display: flex;
   align-items: baseline;
-  @include fluid(gap, 12, 32);
+  @include fluid(gap, 12, 24);
 }
 
-.articleDate {
+.articleDate,
+.articleCategory {
   color: var(--color-text-secondary);
   font-family: var(--font-en);
-  @include fluid(font-size, 14, 20);
-  font-style: normal;
   font-weight: var(--font-weight-light);
-  line-height: 24px;
-  @include fluid(letter-spacing, 1.2, 2.6);
-  transition: color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  @include fluid(font-size, 14, 20);
+  @include fluid(letter-spacing, 1.4, 2.6);
 }
 
-.articleTag {
-  color: var(--color-text-secondary);
-  font-family: var(--font-en);
-  @include fluid(font-size, 14, 20);
-  font-style: normal;
-  font-weight: var(--font-weight-light);
-  line-height: 24px;
-  @include fluid(letter-spacing, 1.2, 2.6);
-  transition: color 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+// カテゴリタグの背後に白帯（Figma: 164×13px / font 20px → 0.65em）。
+// Mozaic GEO の文字下寄り（0.094em）に合わせて帯位置も同量下げる。
+.articleCategory {
+  display: inline-block;
+  background-image: linear-gradient(
+    var(--color-white),
+    var(--color-white)
+  );
+  background-repeat: no-repeat;
+  background-position: right calc(50% + 0.094em);
+  background-size: 100% 0.65em;
 }
 
-// ── サムネイル ──
 .articleThumbnail {
   position: relative;
   flex-shrink: 0;
-  @include fluid(width, 120, 300);
-  aspect-ratio: 300 / 169;
+  align-self: center; // 記事行の縦中央に配置（テキストは上揃えのまま）
+  @include fluid(width, 140, 266);
+  aspect-ratio: 266 / 150;
   overflow: hidden;
-  border-radius: 4px;
-
-  @include sp {
-    width: 100%;
-  }
+  background: var(--color-white);
 }
 
 .thumbnailImage {
-  width: 100%;
-  height: 100%;
   object-fit: cover;
-  transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .thumbnailPlaceholder {
+  display: block;
   width: 100%;
   height: 100%;
-  background-color: #e8e8e8;
+  background: var(--color-white);
 }
 
-// ── 装飾ライン ──
+// 記事間の区切り線（Figma: #808080 / 30%）
 .articleDivider {
+  display: block;
   width: 100%;
   height: 1px;
-  @include fluid(margin-top, 20, 40);
   background: var(--color-text-secondary);
   opacity: 0.3;
 }
 
-// ── 記事間のスペーサー ──
-.articleSpacer {
-  @include fluid(height, 30, 70);
-
-  @include sp {
-    @include fluid(height, 16, 30);
-  }
-}
-
-// ── ページネーション ──
+// ── ページネーション（コンテンツ全幅で中央配置） ──
 .pagination {
-  @include fluid(margin-top, 40, 80);
+  @include fluid(margin-top, 60, 170); // Figma: 最終記事下端→ページネーション 約170px
+  @include fluid(padding-left, 20, 200);
+  @include fluid(padding-right, 20, 200);
   display: flex;
   align-items: center;
   justify-content: center;
-  @include fluid(gap, 24, 40);
+  @include fluid(gap, 24, 46);
 }
 
-.paginationButton {
+.pageButton {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  @include fluid(width, 120, 180);
-  @include fluid(height, 44, 56);
-  border-radius: 40px;
+  @include fluid(width, 130, 200);
+  @include fluid(height, 48, 72);
   border: 1px solid var(--color-black);
-  background-color: var(--color-white);
+  border-radius: 999px;
   color: var(--color-black);
   font-family: var(--font-en);
-  @include fluid(font-size, 12, 16);
   font-weight: var(--font-weight-light);
-  @include fluid(letter-spacing, 0.8, 2);
-  cursor: pointer;
-  transition: all var(--transition-base);
-
-  &:hover {
-    background-color: var(--color-black);
-    color: var(--color-white);
-  }
+  @include fluid(font-size, 14, 20);
+  @include fluid(letter-spacing, 1.4, 2.6);
 }
 
-.paginationDisabled {
+.pageButtonDisabled {
   opacity: 0.3;
-  pointer-events: none;
 }
 
-.paginationInfo {
-  font-family: var(--font-en);
-  @include fluid(font-size, 14, 18);
-  font-weight: var(--font-weight-light);
+.pageInfo {
   color: var(--color-black);
-  @include fluid(letter-spacing, 1, 2);
-}
-
-// ── ステータステキスト ──
-.statusText {
-  color: var(--color-text-secondary);
   font-family: var(--font-en);
-  @include fluid(font-size, 13, 16);
   font-weight: var(--font-weight-light);
-  @include fluid(padding, 32, 60);
-  text-align: center;
+  @include fluid(font-size, 14, 20);
+  @include fluid(letter-spacing, 1.4, 2.6);
 }
