@@ -21,11 +21,20 @@
 }
 
 // ── 左サイドバー ──
+// position: sticky でビューポート上部に追従。親 .inner の末尾まで来た時に
+// 自然に解除されるので、ページネーション・フッターと重ならない。
+// top は「自然位置」に合わせて初動ズレ＆タイトル見切れを防ぐ：
+//   header(80) + .inner padding-top(fluid 56〜160) ＝ fluid(136, 240)
 .sidebar {
   flex-shrink: 0;
+  align-self: flex-start; // flex container 内で sticky を効かせるために必須
+  position: sticky;
+  @include fluid(top, 136, 240);
   @include fluid(width, 160, 240);
 
   @include sp {
+    position: static; // SP は縦積みなので sticky 解除
+    top: auto;
     width: 100%;
   }
 }
