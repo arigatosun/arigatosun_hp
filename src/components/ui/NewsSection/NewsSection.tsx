@@ -142,7 +142,11 @@ export default function NewsSection() {
             {categories.map((cat, index) => (
               <li
                 key={cat.value}
-                className={styles.categoryItem}
+                // 選択中カテゴリに赤帯。初回は activeRef = 0 と整合するよう ALL を active 表示。
+                // handleCategoryClick が activeRef.current を参照して active クラスを付け替える。
+                className={
+                  index === 0 ? styles.categoryItemActive : styles.categoryItem
+                }
                 onClick={() => handleCategoryClick(index)}
               >
                 <span>{cat.label}</span>
