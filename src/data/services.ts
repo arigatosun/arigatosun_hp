@@ -36,8 +36,9 @@ export const SERVICE_CARDS: readonly ServiceCardData[] = [
   },
 ] as const;
 
+// TOP の ServiceSection 左メニュー — クリックで各サービス詳細ページへ遷移
 export const SERVICE_MENU_ITEMS = [
-  '・AI / DEVELOPMENT >',
-  '・DESIGN / BRANDING >',
-  '・IP / CREATIVE >',
+  { label: '・AI / DEVELOPMENT >', href: '/service/ai-dev' },
+  { label: '・DESIGN / BRANDING >', href: '/service/design-branding' },
+  { label: '・IP / CREATIVE >', href: '/service/ip-creative' },
 ] as const;

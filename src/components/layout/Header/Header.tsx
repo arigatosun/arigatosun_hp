@@ -13,7 +13,7 @@ const leftNav = [
 ];
 
 const serviceDropdown = [
-  { href: '/service/ai-development', label: 'AI / DEVELOPMENT' },
+  { href: '/service/ai-dev', label: 'AI / DEVELOPMENT' },
   { href: '/service/design-branding', label: 'DESIGN / BRANDING' },
   { href: '/service/ip-creative', label: 'IP / CREATIVE' },
 ];
