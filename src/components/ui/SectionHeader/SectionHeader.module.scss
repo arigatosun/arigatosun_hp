@@ -28,10 +28,12 @@
 .headerTitle {
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
-  @include fluid(font-size, 16, 28);
+  // Figma 実測（アリガト3原則 / 事業領域と連携体制 / メンバー 共通）: 24px / ls 9.6
+  // 会社概要のみ 28px / ls 11.2 だが、CompanyProfileSection 側でローカル上書きする
+  @include fluid(font-size, 14, 24);
   font-weight: 500;
   line-height: 1.2;
-  @include fluid(letter-spacing, 5, 11.2);
+  @include fluid(letter-spacing, 4, 9.6);
 }
 
 .headerSub {

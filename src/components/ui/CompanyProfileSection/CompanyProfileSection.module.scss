@@ -1,0 +1,201 @@
+// Figma フレーム 1920px 準拠
+@use '@/styles/fluid' as * with (
+  $fluid-max-viewport: 1920
+);
+@use '@/styles/breakpoints' as *;
+
+// ── グレー帯（フルブリード 1920×1080） ──
+.section {
+  position: relative;
+  background-color: var(--color-bg);
+  @include fluid(margin-top, 60, 200);
+  @include fluid(padding-top, 100, 250);
+  @include fluid(padding-bottom, 100, 250);
+  @include fluid(padding-left, 20, 200);
+  @include fluid(padding-right, 20, 200);
+
+  @include sp {
+    @include fluid(padding-top, 40, 80);
+    @include fluid(padding-bottom, 40, 80);
+  }
+}
+
+// ── 白カード（1520×720） ──
+.card {
+  background-color: var(--color-white);
+  width: 100%;
+  @include fluid(min-height, 360, 720);
+  @include fluid(padding-top, 32, 100);
+  @include fluid(padding-bottom, 32, 100);
+  @include fluid(padding-left, 20, 80);
+  @include fluid(padding-right, 20, 80);
+
+  @include sp {
+    min-height: auto;
+  }
+}
+
+// ── セクションヘッダ（28px / ls 11.2 — Figma 会社概要 専用サイズ） ──
+.header {
+  display: flex;
+  align-items: center;
+  @include fluid(gap, 10, 20);
+  @include fluid(margin-bottom, 32, 80);
+}
+
+.headerLogo {
+  width: auto;
+  height: auto;
+  flex-shrink: 0;
+  @include fluid(width, 32, 61);
+}
+
+.headerText {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.headerTitle {
+  color: var(--color-black);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  // Figma: 28px / ls 11.2 / line-height 1.2 — 会社概要のみ専用サイズ
+  @include fluid(font-size, 16, 28);
+  font-weight: 500;
+  line-height: 1.2;
+  @include fluid(letter-spacing, 5, 11.2);
+}
+
+.headerSub {
+  color: var(--color-text-secondary);
+  font-family: var(--font-en);
+  @include fluid(font-size, 12, 16);
+  font-weight: var(--font-weight-light);
+  line-height: 24px;
+  @include fluid(letter-spacing, 1, 2.08);
+}
+
+// ── 中身: 画像 + テーブル ──
+.inner {
+  display: flex;
+  align-items: flex-start;
+  @include fluid(gap, 24, 62);
+
+  @include sp {
+    flex-direction: column;
+    @include fluid(gap, 20, 32);
+  }
+}
+
+// ── 画像エリア 520×520 ──
+.imageWrap {
+  flex-shrink: 0;
+  @include fluid(width, 200, 520);
+  aspect-ratio: 1 / 1;
+
+  @include sp {
+    width: 100%;
+    max-width: 520px;
+  }
+}
+
+.imagePlaceholder {
+  width: 100%;
+  height: 100%;
+  background-color: var(--color-placeholder);
+}
+
+// ── 情報テーブル ──
+.table {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  @include fluid(gap, 24, 76);
+  margin: 0;
+}
+
+// 1行 — 横並びセル
+.row {
+  display: flex;
+  align-items: flex-start;
+  @include fluid(gap, 24, 60);
+
+  @include sp {
+    flex-direction: column;
+    @include fluid(gap, 20, 32);
+  }
+}
+
+.rowFull {
+  flex-direction: column;
+}
+
+.cell {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  @include fluid(gap, 12, 22);
+}
+
+// セルラベル左の小さい縦線（1×17px）
+.cellHeader {
+  display: flex;
+  align-items: center;
+  gap: 17px;
+}
+
+.cellAccent {
+  display: inline-block;
+  width: 1px;
+  height: 17px;
+  background-color: var(--color-text-secondary);
+  flex-shrink: 0;
+}
+
+.cellLabel {
+  color: var(--color-text-secondary);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  // Figma: 16px medium / ls 4.48 / line-height 30
+  @include fluid(font-size, 13, 16);
+  font-weight: var(--font-weight-medium);
+  @include fluid(line-height, 22, 30);
+  @include fluid(letter-spacing, 1.6, 4.48);
+}
+
+.cellValue {
+  color: var(--color-black);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  // Figma: 16px regular / ls 4.48 / line-height 30
+  @include fluid(font-size, 13, 16);
+  font-weight: var(--font-weight-regular);
+  @include fluid(line-height, 22, 30);
+  @include fluid(letter-spacing, 1.6, 4.48);
+  margin: 0;
+}
+
+// 設立値「2024/05」だけ Mozaic GEO Light 18px / ls 5.04
+.cellValueEn {
+  font-family: var(--font-en);
+  @include fluid(font-size, 14, 18);
+  font-weight: var(--font-weight-light);
+  @include fluid(letter-spacing, 1.8, 5.04);
+}
+
+// 事業内容リスト
+.serviceList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.serviceItem {
+  color: var(--color-black);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  // Figma: 14px regular / ls 3.92 / line-height 32
+  @include fluid(font-size, 12, 14);
+  font-weight: var(--font-weight-regular);
+  @include fluid(line-height, 24, 32);
+  @include fluid(letter-spacing, 1.4, 3.92);
+}
