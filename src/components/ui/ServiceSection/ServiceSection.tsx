@@ -14,13 +14,15 @@ gsap.registerPlugin(ScrollTrigger);
 
 // スクロール連動の横スクロールアニメーションを有効にするフラグ
 // true: アニメーション有効 / false: アニメーション停止（静的表示）
-const ENABLE_SCROLL_ANIMATION = false;
+const ENABLE_SCROLL_ANIMATION = true;
 
 export default function ServiceSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLUListElement>(null);
-  const activeIndexRef = useRef(0);
+  // -1 を初期値にして、スクロール開始時 (progress 0 → newIndex 0) で
+  // 1項目目が明示的に active になるようにする（Phase 12 で初期 active 表示を廃止した整合）
+  const activeIndexRef = useRef(-1);
 
   // DOM直接操作でアクティブメニューを切り替え（React再レンダリングを回避）
   const updateActiveMenu = useCallback((newIndex: number) => {
@@ -49,11 +51,20 @@ export default function ServiceSection() {
     const mm = gsap.matchMedia();
 
     mm.add('(min-width: 768px)', () => {
-      // カードトラックの横スクロール量を計算（右側エリアの幅を基準）
+      // 終了位置: 3カード（カードコンテンツ）の中心がビューポート中央と一致するよう
+      // トラックを translateX する。画面幅に追従（invalidateOnRefresh で resize 対応）。
       const getScrollAmount = () => {
-        const rightArea = section.querySelector(`.${styles.right}`) as HTMLElement;
-        const rightWidth = rightArea ? rightArea.offsetWidth : window.innerWidth * 0.62;
-        return -(track.scrollWidth - rightWidth);
+        const rightArea = section.querySelector(`.${styles.right}`) as HTMLElement | null;
+        if (!rightArea) return 0;
+        const rightRect = rightArea.getBoundingClientRect();
+        // .cardsTrack の padding-right は最後のカード後の余白なので、
+        // 中央寄せの対象（カード本体の幅）からは除外する
+        const trackPaddingRight =
+          parseFloat(getComputedStyle(track).paddingRight) || 0;
+        const cardsContentWidth = track.scrollWidth - trackPaddingRight;
+        const viewportWidth = window.innerWidth;
+        const targetLeftX = (viewportWidth - cardsContentWidth) / 2;
+        return targetLeftX - rightRect.left;
       };
 
       // GPU合成レイヤーに昇格
@@ -72,6 +83,9 @@ export default function ServiceSection() {
           invalidateOnRefresh: true,
           onUpdate: (self) => {
             const progress = self.progress;
+            // 左サイドバーをスクロール進行に合わせてフェード（戻りも自動で再生）
+            section.style.setProperty('--service-progress', String(progress));
+            // 左メニューの active 更新
             const menuCount = SERVICE_MENU_ITEMS.length;
             const newIndex = Math.min(
               Math.floor(progress * menuCount),
