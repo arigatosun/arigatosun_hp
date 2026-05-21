@@ -79,6 +79,18 @@ export default function MemberSection({ variant = 'grid' }: MemberSectionProps) 
         ) : (
           <div className={styles.cardPhotoFallback} />
         )}
+        {/* カラー版を上に重ねて hover でフェード表示（モノクロ → カラー） */}
+        {member.photoColor && (
+          <Image
+            src={member.photoColor}
+            alt=""
+            aria-hidden="true"
+            width={231}
+            height={231}
+            className={styles.cardPhotoColor}
+            sizes="(max-width: 767px) 50vw, (max-width: 1023px) 33vw, 16vw"
+          />
+        )}
       </div>
       <p className={styles.cardRole}>{member.role}</p>
       <p className={styles.cardName}>{member.name}</p>

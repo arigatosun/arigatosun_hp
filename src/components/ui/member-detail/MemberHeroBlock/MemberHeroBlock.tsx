@@ -1,42 +1,43 @@
 import Image from 'next/image';
 import styles from './MemberHeroBlock.module.scss';
 
+// 写真カードのみの単一責務コンポーネント。テキスト情報（role/name/divider/INSTAGRAM）は
+// MemberInfoHeader で扱い、ページ側で 2-col レイアウトとして組む。
 interface MemberHeroBlockProps {
   photo: string;
   photoAlt: string;
-  roleJp: string;
-  roleEn: string;
-  nameEn: string;
+  photoColor?: string;
 }
 
 export default function MemberHeroBlock({
   photo,
   photoAlt,
-  roleJp,
-  roleEn,
-  nameEn,
+  photoColor,
 }: MemberHeroBlockProps) {
   return (
-    <section className={styles.root}>
-      <div className={styles.photoFrame}>
+    <div className={styles.photoFrame}>
+      <Image
+        src={photo}
+        alt={photoAlt}
+        width={293}
+        height={293}
+        className={styles.photo}
+        priority
+        unoptimized
+      />
+      {/* カラー版を上に重ねて hover でフェード表示（MemberSection 一覧と同方式） */}
+      {photoColor && (
         <Image
-          src={photo}
-          alt={photoAlt}
+          src={photoColor}
+          alt=""
+          aria-hidden="true"
           width={293}
           height={293}
-          className={styles.photo}
+          className={styles.photoColor}
           priority
           unoptimized
         />
-      </div>
-      <div className={styles.infoBlock}>
-        <p className={styles.role}>
-          <span className={styles.roleJp}>{roleJp} </span>
-          <span className={styles.roleEn}>{roleEn}</span>
-        </p>
-        <h1 className={styles.name}>{nameEn}</h1>
-        <div className={styles.divider} aria-hidden="true" />
-      </div>
-    </section>
+      )}
+    </div>
   );
 }

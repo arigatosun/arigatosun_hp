@@ -17,6 +17,8 @@ export type Member = {
   name: string;
   role: string;
   photo?: string;
+  // MemberSection 一覧の hover でカラーフェード切替に使う（ABOUT カラー版）
+  photoColor?: string;
   catchphrase: string;
   description: string;
   career: string;

@@ -1,0 +1,79 @@
+@use '@/styles/fluid' as *;
+@use '@/styles/breakpoints' as *;
+
+// Figma 実測（node 2498:46776 のテキスト列ヘッダー）:
+//   role "エンジニア" y=280 / name y=320 (+40) / divider y=417 (+57, w=52)
+//   INSTAGRAM 右上 x=1610, y=280
+.root {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  @include fluid(gap, 16, 40);
+
+  @include sp {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}
+
+.infoBlock {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+// Figma 実測（node 1649:298482）: Noto Sans JP Regular 14 / lh 24 / ls 1.82 / #808080
+.role {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-family: var(--font-jp);
+  font-weight: var(--font-weight-regular);
+  @include fluid(font-size, 12, 14);
+  @include fluid(line-height, 18, 24);
+  @include fluid(letter-spacing, 0.91, 1.82);
+}
+
+.name {
+  margin: 0;
+  @include fluid(margin-top, 8, 16);
+  color: var(--color-black);
+  font-family: var(--font-en);
+  font-weight: var(--font-weight-light);
+  @include fluid(font-size, 16, 28);
+  @include fluid(line-height, 22, 40);
+  @include fluid(letter-spacing, 1.82, 3.64);
+}
+
+// 短い区切り線（Figma: w=52, name 下端から 57px）
+.divider {
+  @include fluid(margin-top, 28, 57);
+  @include fluid(width, 26, 52);
+  height: 1px;
+  background-color: var(--color-black);
+}
+
+// 右上 SNS リンク群（Figma 実測 node 1649:298674: Mozaic GEO Light 16 / lh 24 / ls 2.08 / #808080 / underline）
+// Instagram / X 等、メンバーが保持する SNS だけを横並びで表示
+.snsLinks {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  @include fluid(gap, 12, 20);
+}
+
+.snsLink {
+  color: var(--color-text-secondary);
+  font-family: var(--font-en);
+  font-weight: var(--font-weight-light);
+  @include fluid(font-size, 12, 16);
+  @include fluid(line-height, 18, 24);
+  @include fluid(letter-spacing, 1.04, 2.08);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color var(--transition-base);
+
+  &:hover {
+    color: var(--color-primary);
+  }
+}

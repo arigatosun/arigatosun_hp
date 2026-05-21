@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { getMemberBySlug, getAllMemberSlugs } from '@/data/members';
 import MemberHeroBlock from '@/components/ui/member-detail/MemberHeroBlock';
-import MemberSocialLinks from '@/components/ui/member-detail/MemberSocialLinks';
+import MemberInfoHeader from '@/components/ui/member-detail/MemberInfoHeader';
 import MemberQuoteText from '@/components/ui/member-detail/MemberQuoteText';
 import MemberIntroText from '@/components/ui/member-detail/MemberIntroText';
 import MemberCareerSection from '@/components/ui/member-detail/MemberCareerSection';
@@ -13,6 +13,31 @@ import styles from './page.module.scss';
 type Props = {
   params: Promise<{ slug: string }>;
 };
+
+// member.role (英語) → 表示用の日本語ロール（member.roleJp が設定されていれば優先）
+const ROLE_JP_DEFAULTS: Record<string, string> = {
+  CEO: '代表社員',
+  CTO: '取締役',
+  'LEAD ENGINEER': 'リードエンジニア',
+  ENGINEER: 'エンジニア',
+  'CDO / DESIGN DIRECTOR': 'デザインディレクター',
+  'CCO / KUSOMEGANE': 'クリエイティブディレクター',
+  'CREATIVE ENGINEER': 'クリエイティブエンジニア',
+  'CORPORATE OPERATIONS': '経理 / 総務',
+  CHARACTER: 'キャラクター',
+};
+
+// データ未設定時のプレースホルダー（Figma node 2498:46776 の見本テキストと同じ）
+const PLACEHOLDER_QUOTE = '「〜〜〜。」';
+const PLACEHOLDER_INTRO_PARAGRAPH = 'ここに文章が入ります。'.repeat(40);
+const PLACEHOLDER_PROJECTS = [
+  { title: 'Project 1', slug: 'project-1' },
+  { title: 'Project 2', slug: 'project-2' },
+  { title: 'Project 3', slug: 'project-3' },
+  { title: 'Project 4', slug: 'project-4' },
+  { title: 'Project 5', slug: 'project-5' },
+  { title: 'Project 6', slug: 'project-6' },
+];
 
 export async function generateStaticParams() {
   return getAllMemberSlugs().map((slug) => ({ slug }));
@@ -36,48 +61,56 @@ export default async function MemberDetailPage({ params }: Props) {
     notFound();
   }
 
-  const roleJp = member.roleJp ?? '社員';
-  const roleEn = `(${member.role})`;
+  const roleJp = member.roleJp ?? ROLE_JP_DEFAULTS[member.role] ?? '社員';
+  // データ未設定でも Figma の標準レイアウト（quote → body → 経歴 → projects）を必ず描画する
+  const quote = member.quote ?? PLACEHOLDER_QUOTE;
+  const introParagraphs =
+    member.introParagraphs && member.introParagraphs.length > 0
+      ? member.introParagraphs
+      : [PLACEHOLDER_INTRO_PARAGRAPH];
+  const projects =
+    member.projects && member.projects.length > 0
+      ? member.projects
+      : PLACEHOLDER_PROJECTS;
 
   return (
     <div className={styles.page}>
-      <MemberHeroBlock
-        photo={member.photo ?? ''}
-        photoAlt={member.name}
-        roleJp={roleJp}
-        roleEn={roleEn}
-        nameEn={member.name}
-      />
+      {/* 上部: 左に写真 / 右にテキスト列 の 2 カラム */}
+      <div className={styles.detailRow}>
+        <aside className={styles.photoColumn}>
+          <MemberHeroBlock
+            photo={member.photo ?? ''}
+            photoAlt={member.name}
+            photoColor={member.photoColor}
+          />
+        </aside>
 
-      {member.social?.instagram && (
-        <div className={styles.socialBlock}>
-          <MemberSocialLinks instagramUrl={member.social.instagram} />
-        </div>
-      )}
+        <div className={styles.textColumn}>
+          <MemberInfoHeader
+            roleJp={roleJp}
+            nameEn={member.name}
+            social={member.social}
+          />
 
-      {member.quote && (
-        <div className={styles.quoteBlock}>
-          <MemberQuoteText text={member.quote} />
-        </div>
-      )}
+          <div className={styles.quoteBlock}>
+            <MemberQuoteText text={quote} />
+          </div>
 
-      {member.introParagraphs && member.introParagraphs.length > 0 && (
-        <div className={styles.introBlock}>
-          <MemberIntroText paragraphs={member.introParagraphs} />
-        </div>
-      )}
+          <div className={styles.introBlock}>
+            <MemberIntroText paragraphs={introParagraphs} />
+          </div>
 
-      {member.career && (
-        <div className={styles.careerBlock}>
-          <MemberCareerSection body={member.career} />
-        </div>
-      )}
+          {member.career && (
+            <div className={styles.careerBlock}>
+              <MemberCareerSection body={member.career} />
+            </div>
+          )}
 
-      {member.projects && member.projects.length > 0 && (
-        <div className={styles.projectsBlock}>
-          <MemberProjectGrid projects={member.projects} />
+          <div className={styles.projectsBlock}>
+            <MemberProjectGrid projects={projects} />
+          </div>
         </div>
-      )}
+      </div>
 
       <MemberSection variant="slider" />
     </div>
