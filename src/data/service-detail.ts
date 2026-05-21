@@ -205,44 +205,22 @@ const AI_DEV: ServiceDetailData = {
       visual: {
         kind: 'image',
         // AI/DEV 用クラウドダイアグラム (3 main bubbles + 2 small circles)
+        // 3 つの「ただ◯◯ではなく…」キャッチコピーは画像内に焼き込み済みのため
+        // overlays は使用しない
         src: '/images/sections/service/detail/concept-standard-ai.png',
-        alt: 'アリガトサン・スタンダード（AI/DEV）を表すクラウド型の概念図。3つの主バブル + 2つのサテライト円',
+        alt: 'アリガトサン・スタンダード（AI/DEV）を表すクラウド型の概念図。3つの主バブル + 2つのサテライト円、各バブル内に「ただ◯◯ではなく…」のキャッチコピー',
         // 線画 PNG 実寸
         width: 1376,
         height: 1343,
         // バブルシルエットのマスク（赤グローを形の中にクリップ）
-        // 線画(1376×1343) と マスク(1346×1282) の寸法差を size/position で吸収
-        // 横: 1346/1376 = 97.82% / 縦: 1282/1343 = 95.46% / 中央寄せ
+        // 線画(1376×1343) は外側 dashed border 含む / マスク(1346×1282) は bubble シルエットのみ
+        // 寸法差: 横 30px / 縦 61px → 左右 15px / 上下 30.5px の dashed margin と仮定
+        // size: 1346/1376 = 97.82%, 1282/1343 = 95.46% / position center で bubble area に被せる
         mask: {
           src: '/images/sections/service/detail/concept-standard-ai-mask.png',
           size: '97.82% 95.46%',
           position: '50% 50%',
         },
-        // 雲上に重ねる 3 標準テキスト
-        // Figma 実測（cloud 1070-1704 x 3794-4434 を 100% として配置）:
-        //   ・「ただ速いことではなく…」: x=1305 y=3909 w=220 → left 37.1% top 18.0% w 34.7%
-        //   ・「ただ安いことではなく…」: x=1124 y=4143 w=220 → left  8.5% top 54.5% w 34.7%
-        //   ・「ただAIを使うことでなく…」: x=1412 y=4187 w=241 → left 53.9% top 61.4% w 38.0%
-        overlays: [
-          {
-            text: 'ただ速いことではなく、\n意味のある状態に\n最短で到達すること。',
-            topPct: 18,
-            leftPct: 37,
-            widthPct: 35,
-          },
-          {
-            text: 'ただ安いことではなく、\n諦めかけていた構想を\n現実に落とし込むこと。',
-            topPct: 54.5,
-            leftPct: 8.5,
-            widthPct: 35,
-          },
-          {
-            text: 'ただAIを使うことでなく、\n人がAIの手足になる\n状態を終わらせること。',
-            topPct: 61.5,
-            leftPct: 54,
-            widthPct: 38,
-          },
-        ],
       },
     },
     // ⑤ PROCESS（進め方）(Figma y=4729〜)
