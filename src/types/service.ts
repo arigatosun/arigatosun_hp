@@ -40,7 +40,28 @@ export type ServiceConceptMask = {
   position: string;
 };
 
-/** コンセプトブロックのビジュアル（イラスト画像 or ピルリスト） */
+/** 画像オーバーレイ（雲ダイアグラム上の標準コピー等） */
+export type ServiceImageOverlay = {
+  /** 表示テキスト */
+  text: string;
+  /** 画像枠基準の絶対配置 (%) */
+  topPct: number;
+  leftPct: number;
+  /** テキスト幅（画像幅基準 %） */
+  widthPct: number;
+};
+
+/** PROCESS（進め方）の 1 ステップ */
+export type ServiceFlowStep = {
+  /** STEP.1 等のステップ番号ラベル */
+  step: string;
+  /** ステップ見出し（例: 現状整理・課題把握） */
+  title: string;
+  /** ステップ説明文（1行） */
+  description: string;
+};
+
+/** コンセプトブロックのビジュアル（イラスト画像 / ピルリスト / フローステップ） */
 export type ServiceConceptVisual =
   | {
       kind: 'image';
@@ -51,10 +72,16 @@ export type ServiceConceptVisual =
       height: number;
       /** グローを形の内側にクリップするマスク。null ならクリップなし */
       mask: ServiceConceptMask | null;
+      /** 画像の上に重ねるテキストオーバーレイ（AI/DEV アリガトサン・スタンダードの3標準等） */
+      overlays?: ServiceImageOverlay[];
     }
   | {
       kind: 'pills';
       rows: ServicePillRow[];
+    }
+  | {
+      kind: 'steps';
+      items: ServiceFlowStep[];
     };
 
 /** 詳細ページ中段のコンセプトブロック */
@@ -79,6 +106,22 @@ export type ServiceCaseStudy = {
   thumbnail: string | null;
 };
 
+/** 3カラム promise グリッドの 1 アイテム */
+export type ServicePromiseItem = {
+  /** 大見出し（キャッチコピー） */
+  catchphrase: string;
+  /** 本文（1段落） */
+  body: string;
+};
+
+/** 3カラム promise セクション（私たちが実現すること 等） */
+export type ServicePromiseSection = {
+  id: string;
+  title: string;
+  subtitle: string;
+  items: ServicePromiseItem[];
+};
+
 /** SERVICE 詳細ページ1件分のデータ */
 export type ServiceDetailData = {
   slug: string;
@@ -87,6 +130,8 @@ export type ServiceDetailData = {
   quote: string;
   description: string[];
   heroImage: string | null;
+  /** 「私たちが実現すること」「私たちが実現してきたこと」など Hero 直後の3カラムグリッド（複数可） */
+  promises?: ServicePromiseSection[];
   concepts: ServiceConcept[];
   caseStudies: ServiceCaseStudy[];
 };

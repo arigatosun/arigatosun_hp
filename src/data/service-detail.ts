@@ -129,16 +129,164 @@ const DESIGN_BRANDING: ServiceDetailData = {
   ],
 };
 
-// ── AI / DEVELOPMENT・IP / CREATIVE は後日 Figma 提供後に本実装 ──
+// ── AI / DEVELOPMENT (Figma node 2481:61546 / SERVICE(PC:1920px) より) ──
+// 構築中：① Hero 完了 / ②③④⑤ は順次追加
 const AI_DEV: ServiceDetailData = {
   slug: 'ai-dev',
   titleEn: 'AI / DEVELOPMENT',
   titleJa: 'AI・開発',
-  quote: '',
-  description: [],
+  // Hero quote (Figma x=200 y=487 w=920 h=112 / 2 セグメント)
+  quote: '人が本当に向き合うべき仕事へ、\n事業が価値を生む方向へ。',
+  // Hero description (Figma x=200 y=639 w=1163 h=152 / 4 段落)
+  description: [
+    'AIが当たり前になった世界で、ただ作るだけの開発は、もう価値にならない。',
+    '私たちは、止まっている業務を前に進め、止まりかけている構想を現実に変えるための基盤をつくる。',
+    '人が判断や企画、対話に立ち返るための仕組みを。挑戦が、価値を生み出す事業へ変わっていくための土台を。',
+    'そしてその先に、現代で最も魔法に近い技術で、目の前の現実を変えていく驚きを届けたい。',
+  ],
   heroImage: null,
-  concepts: [],
-  caseStudies: [],
+  // ② 私たちが実現すること (Figma y=2086〜)
+  // ③ 私たちが実現してきたこと (Figma y=2932〜)
+  // 共に 3 cols at x=200/760/1320, w=400 each
+  promises: [
+    {
+      id: 'realize',
+      title: '私たちが実現すること',
+      subtitle: 'WHAT WE REALIZE',
+      items: [
+        {
+          catchphrase: '人が本当に向き合うべき仕事へ、時間と思考を返す。',
+          body: '業務改善の目的は、単なる効率化ではありません。繰り返しの整理や準備を仕組みに変えることで、人が判断、対話、企画に集中できる環境をつくります。',
+        },
+        {
+          catchphrase: '構想を、価値を生む現実へ変える基盤を、早く形にする。',
+          body: '新しい事業に必要なのは、最初から完璧なシステムではなく、早く触れ、学び、改善できる土台です。私たちは、速度と継続可能性を両立させながら、挑戦を事業基盤へ変えていきます。',
+        },
+        {
+          catchphrase: '技術を、ただの便利さで終わらせない。',
+          body: 'AIもシステムも、機能の説明だけでは人の心を動かせません。想像を超える体験こそが、導入の確信になり、人と事業を前へ進める力になると、私たちは信じています。',
+        },
+      ],
+    },
+    {
+      id: 'realized',
+      title: '私たちが実現してきたこと',
+      subtitle: "WHAT WE'VE MADE REAL",
+      items: [
+        {
+          catchphrase: '諦めかけていた夢のアプリを、現実に。',
+          body: '実現しなかった構想を、本当に必要な要素へ整理し直し、現実のプロダクトとして形にしてきました。',
+        },
+        {
+          catchphrase: 'システムに縁のなかった会社が、新しい事業を立ち上げる。',
+          body: 'オンラインガチャという新しい挑戦に対し、展開性のある事業基盤の構築を可能にしました。',
+        },
+        {
+          catchphrase: '高額な見積もりに閉ざされていたSaaS構想を、前に進めた。',
+          body: '重くなっていた構想を、動くものを見ながら改善できる柔軟なプロジェクトへ変換しました。',
+        },
+      ],
+    },
+  ],
+  concepts: [
+    // ④ アリガトサン・スタンダード (Figma y=3785〜)
+    {
+      id: 'standard',
+      title: 'アリガトサン・スタンダード',
+      subtitle: 'ARIGATOSUN STANDARD',
+      // Figma 実測 (x=200 y=3991 w=700 h=149 / 4 セグメント)
+      body: [
+        '私たちは、言われたものをそのまま作るだけの開発会社ではありません。',
+        '要望の奥にある本質を見極め、何を作るべきか、どこまで作るべきかを再定義する。',
+        'そして、机上の仕様書ではなく、まず動くものをつくり、見えたものを起点に正解を更新していく。',
+        'そうして初めて、理想は現実に近づきます。',
+      ],
+      bodyTracking: 4.48,
+      visual: {
+        kind: 'image',
+        // AI/DEV 用クラウドダイアグラム (3 main bubbles + 2 small circles)
+        // 3 つの「ただ◯◯ではなく…」キャッチコピーは画像内に焼き込み済みのため
+        // overlays は使用しない
+        src: '/images/sections/service/detail/concept-standard-ai.png',
+        alt: 'アリガトサン・スタンダード（AI/DEV）を表すクラウド型の概念図。3つの主バブル + 2つのサテライト円、各バブル内に「ただ◯◯ではなく…」のキャッチコピー',
+        // 線画 PNG 実寸
+        width: 1376,
+        height: 1343,
+        // バブルシルエットのマスク（赤グローを形の中にクリップ）
+        // 線画(1376×1343) と マスク(1376×1342) はほぼ同寸（高さ1px差のみ）
+        // → size 100% 100% で線画にフィットさせる（1px の差は誤差レベルで吸収）
+        mask: {
+          src: '/images/sections/service/detail/concept-standard-ai-mask.png',
+          size: '100% 100%',
+          position: '50% 50%',
+        },
+      },
+    },
+    // ⑤ PROCESS（進め方）(Figma y=4729〜)
+    {
+      id: 'process',
+      title: '進め方',
+      subtitle: 'PROCESS',
+      // 本文 (Figma x=200 y=4935 w=700 h=114 / 3 セグメント)
+      body: [
+        'プロジェクトの数だけ、最適解へのルートは存在します。',
+        'だから私たちは、最初から固定されたフローへ当てはめません。',
+        '課題の核心に応じて、順番も、検証も、必要な実装も柔軟に再定義します。',
+      ],
+      bodyTracking: 4,
+      visual: {
+        kind: 'steps',
+        items: [
+          {
+            step: 'STEP.1',
+            title: '現状整理・課題把握',
+            description: '何が前進を止めているのかを整理します。',
+          },
+          {
+            step: 'STEP.2',
+            title: '最小構成での試作・PoC',
+            description: 'まず動く最小単位をつくります。',
+          },
+          {
+            step: 'STEP.3',
+            title: '見えたものを起点に再定義',
+            description: 'フィードバックを価値の更新として受け止めます。',
+          },
+          {
+            step: 'STEP.4',
+            title: '段階的な実装・改善',
+            description: '必要な機能を、必要な順番で積み上げます。',
+          },
+          {
+            step: 'STEP.5',
+            title: '運用・拡張',
+            description: '作って終わりではなく、使われ続ける状態まで育てます。',
+          },
+        ],
+      },
+    },
+  ],
+  // ⑥ 実績・事例 (Figma y=5715〜) — design-branding と同内容（Figma 上で共通使用）
+  caseStudies: [
+    {
+      id: 'tsukemono',
+      client: '全日本漬物協同組合連合会',
+      text: '何百年も続く日本の漬物文化を、この先も愛してもらえるカタチへ。| 最優秀賞から生まれたキャラクターデザインと、ポータルサイトのリブランディング',
+      thumbnail: null,
+    },
+    {
+      id: 'choritz',
+      client: '頂立輸入代行会社',
+      text: '数値では測れない想いや姿勢を、ブランドの核心へ宿す。| 社名からVIまで、一気通貫のブランド構築',
+      thumbnail: null,
+    },
+    {
+      id: 'nest',
+      client: 'NEST',
+      text: 'デジタルでは生まれない温もりと偶然性を、シンボルとして可視化する。| 拡張を見据えたロゴ・VI設計',
+      thumbnail: null,
+    },
+  ],
 };
 
 const IP_CREATIVE: ServiceDetailData = {

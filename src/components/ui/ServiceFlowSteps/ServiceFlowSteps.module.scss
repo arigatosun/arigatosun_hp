@@ -1,0 +1,105 @@
+@use '@/styles/fluid' as * with (
+  $fluid-max-viewport: 1920
+);
+@use '@/styles/breakpoints' as *;
+
+// レイアウト変数（PC 基準値）:
+// - 縦線 x 位置: list 左端から outer 中央
+// - 円外径: 50 / 内径 28（Group 911 PNG の比率に合わせて拡大）
+// - 円と STEP テキスト間 gap: 30 → padding-left = 50 + 30 = 80
+$indicator-col: 80px;
+$circle-outer: 50px;
+$circle-inner: 28px;
+$line-x: calc((#{$circle-outer} - 1px) / 2);
+
+// Figma 実測 (STEP.1 y=4729 → STEP.5 y=5321、5 ステップ間 148px 間隔)
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  padding-left: $indicator-col;
+  display: flex;
+  flex-direction: column;
+  // STEP 間距離 148 - 内側コンテンツ 112 = 36
+  @include fluid(row-gap, 24, 36, 320, 1920);
+  position: relative;
+
+  // 縦線（全 item を貫通）
+  &::before {
+    content: '';
+    position: absolute;
+    left: $line-x;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background-color: var(--color-text-secondary);
+    z-index: 0;
+  }
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+
+  // 外側 outline 円（白背景で line を隠す）
+  &::before {
+    content: '';
+    position: absolute;
+    left: calc(-1 * #{$indicator-col});
+    top: 4px; // STEP テキスト first-line baseline 寄せ
+    width: $circle-outer;
+    height: $circle-outer;
+    border: 1px solid var(--color-text-secondary);
+    border-radius: 50%;
+    background-color: var(--color-bg);
+    box-sizing: border-box;
+    z-index: 1;
+  }
+
+  // 内側 solid 円
+  &::after {
+    content: '';
+    position: absolute;
+    left: calc(-1 * #{$indicator-col} + (#{$circle-outer} - #{$circle-inner}) / 2);
+    top: calc(4px + (#{$circle-outer} - #{$circle-inner}) / 2);
+    width: $circle-inner;
+    height: $circle-inner;
+    border-radius: 50%;
+    background-color: var(--color-text-secondary);
+    z-index: 2;
+  }
+}
+
+// STEP.1〜.5 (Figma 38 tall / Mozaic GEO Light 24px / ls 0.13em)
+.step {
+  color: var(--color-black);
+  font-family: var(--font-en);
+  font-weight: var(--font-weight-light);
+  @include fluid(font-size, 16, 24);
+  @include fluid(line-height, 28, 38);
+  letter-spacing: 0.13em;
+}
+
+// ステップ見出し（現状整理・課題把握 等 / 36 tall / Noto Sans JP medium 16px）
+.title {
+  margin: 0;
+  color: var(--color-black);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  font-weight: var(--font-weight-medium);
+  @include fluid(font-size, 13, 16);
+  @include fluid(line-height, 28, 36);
+  letter-spacing: 0.2em;
+}
+
+// ステップ説明文 (Noto Sans JP regular 14px / lh 38 / ls 3.92 ≒ 0.28em)
+.description {
+  margin: 0;
+  @include fluid(margin-top, 4, 6);
+  color: var(--color-black);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  font-weight: var(--font-weight-regular);
+  @include fluid(font-size, 12, 14);
+  @include fluid(line-height, 24, 28);
+  letter-spacing: 0.28em;
+}
