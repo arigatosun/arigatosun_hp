@@ -3,36 +3,69 @@
 
 .page {
   background-color: var(--color-bg);
-  @include fluid(padding-bottom, 80, 160);
+  padding-top: 80px; // Header(position: fixed) 分のオフセット
+  @include fluid(padding-bottom, 110, 250);
 }
 
-// 共通の横余白
-.socialBlock,
+// 上部 2-col レイアウト（写真 ｜ テキスト列）
+// Figma 実測（node 2498:46775 / 2498:46776）:
+//   photo x=200, w=293 / text x=593, w=1127 → gap 100 / 左右余白 200
+//   text 開始 y=280（header 80 込み） → padding-top fluid(56, 200)
+.detailRow {
+  display: flex;
+  align-items: flex-start;
+  @include fluid(gap, 40, 100);
+  @include fluid(padding-inline, 20, 200);
+  @include fluid(padding-top, 56, 200);
+
+  @include sp {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+.photoColumn {
+  flex-shrink: 0;
+
+  @include sp {
+    display: flex;
+    justify-content: center;
+  }
+}
+
+.textColumn {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+// テキスト列内の各セクション間スペース。
+// 本文系（quote / intro / career）は Figma 実測の本文幅 839px で wrap させる。
+// projects だけは Figma で行 3 列のグリッドが幅広なので max-width を当てない。
 .quoteBlock,
 .introBlock,
-.careerBlock,
-.projectsBlock {
-  @include fluid(padding-inline, 20, 200);
-}
-
-.socialBlock {
-  display: flex;
-  justify-content: flex-end;
-  @include fluid(margin-top, 24, 60);
-}
-
-.quoteBlock {
-  @include fluid(margin-top, 40, 80);
-}
-
-.introBlock {
-  @include fluid(margin-top, 24, 60);
-}
-
 .careerBlock {
-  @include fluid(margin-top, 40, 80);
+  max-width: 839px;
 }
 
+// Figma: divider 下端(418) → quote 上端(473) = 55px
+.quoteBlock {
+  @include fluid(margin-top, 32, 55);
+}
+
+// Figma: quote 下端(505) → body 上端(529) = 24px
+.introBlock {
+  @include fluid(margin-top, 16, 24);
+}
+
+// Figma: body 下端(881) → 経歴 上端(953) = 72px
+.careerBlock {
+  @include fluid(margin-top, 40, 72);
+}
+
+// 関わったプロジェクト
+// Figma: career 本文下端(1157) → タイトル上端(1229) = 72px
 .projectsBlock {
-  @include fluid(margin-top, 40, 80);
+  @include fluid(margin-top, 40, 72);
 }

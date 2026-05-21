@@ -15,7 +15,8 @@
 .grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  @include fluid(gap, 12, 20);
+  // Figma 実測: テキスト列幅 1127, カード幅 357 × 3列 → gap = (1127 − 1071) / 2 = 28
+  @include fluid(gap, 16, 28);
 
   @include sp {
     grid-template-columns: repeat(2, 1fr);

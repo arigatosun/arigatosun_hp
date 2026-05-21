@@ -4,12 +4,15 @@ import type { Member } from '@/types/member';
 // 型は @/types/member に集約。後方互換のため再エクスポート。
 export type { Member, MemberSocial, MemberProject } from '@/types/member';
 
-export const members: Member[] = [
+// 原データ（hidden 含む）。public 用の `members` / `getMemberBySlug` 等は
+// 下記で hidden を除外したものを export するので、外から使うときは hidden を考慮しなくて OK。
+const allMembers: Member[] = [
   {
     slug: 'shuto-nakamura',
     name: 'SHUTO NAKAMURA',
     role: 'CEO',
-    photo: '/images/team/shuto-nakamura.png',
+    photo: '/images/team/shuto-nakamura.webp',
+    photoColor: '/images/team/shuto-nakamura-color.webp',
     catchphrase: '「できない理由」をゼロにする。',
     description:
       'ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。',
@@ -45,7 +48,8 @@ export const members: Member[] = [
     slug: 'ryo-yoshikawa',
     name: 'RYO YOSHIKAWA',
     role: 'CTO',
-    photo: '/images/team/ryo-yoshikawa.png',
+    photo: '/images/team/ryo-yoshikawa.webp',
+    photoColor: '/images/team/ryo-yoshikawa-color.webp',
     catchphrase: 'テクノロジーで未来を切り拓く。',
     description:
       'ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。',
@@ -64,7 +68,8 @@ export const members: Member[] = [
     slug: 'katsuya-takahashi',
     name: 'KATSUYA TAKAHASHI',
     role: 'LEAD ENGINEER',
-    photo: '/images/team/katsuya-takahashi.png',
+    photo: '/images/team/katsuya-takahashi.webp',
+    photoColor: '/images/team/katsuya-takahashi-color.webp',
     catchphrase: 'コードに魂を込める。',
     description:
       'ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。',
@@ -78,7 +83,8 @@ export const members: Member[] = [
     slug: 'daichi-nakata',
     name: 'DAICHI NAKATA',
     role: 'ENGINEER',
-    photo: '/images/team/daichi-nakata.png',
+    photo: '/images/team/daichi-nakata.webp',
+    photoColor: '/images/team/daichi-nakata-color.webp',
     catchphrase: '最高の体験を、最高の技術で。',
     description:
       'ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。',
@@ -89,7 +95,9 @@ export const members: Member[] = [
     slug: 'hideya-mifuji',
     name: 'HIDEYA MIFUJI',
     role: 'ENGINEER',
-    photo: '/images/team/hideya-mifuji.png',
+    hidden: true, // ← 再表示する時は false にするかこの行を削除
+    photo: '/images/team/hideya-mifuji.webp',
+    photoColor: '/images/team/hideya-mifuji-color.webp',
     catchphrase: '細部にこそ、本質が宿る。',
     description:
       'ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。',
@@ -103,7 +111,8 @@ export const members: Member[] = [
     slug: 'yugo-nishimoto',
     name: 'YUGO NISHIMOTO',
     role: 'CDO / DESIGN DIRECTOR',
-    photo: '/images/team/yugo-nishimoto.png',
+    photo: '/images/team/yugo-nishimoto.webp',
+    photoColor: '/images/team/yugo-nishimoto-color.webp',
     catchphrase: 'デザインで世界を変える。',
     description:
       'ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。',
@@ -118,7 +127,8 @@ export const members: Member[] = [
     slug: 'hyouga-hiromori',
     name: 'HYOUGA HIROMORI',
     role: 'CCO / KUSOMEGANE',
-    photo: '/images/team/hyouga-hiromori.png',
+    photo: '/images/team/hyouga-hiromori.webp',
+    photoColor: '/images/team/hyouga-hiromori-color.webp',
     catchphrase: '常識を壊し、新しい価値を創る。',
     description:
       'ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。',
@@ -132,7 +142,8 @@ export const members: Member[] = [
     slug: 'airu-matsuo',
     name: 'AIRU MATSUO',
     role: 'CREATIVE ENGINEER',
-    photo: '/images/team/airu-matsuo.png',
+    photo: '/images/team/airu-matsuo.webp',
+    photoColor: '/images/team/airu-matsuo-color.webp',
     catchphrase: 'クリエイティブとテクノロジーの架け橋。',
     description:
       'ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。',
@@ -143,7 +154,8 @@ export const members: Member[] = [
     slug: 'koushi-tsuchiga',
     name: 'KOUSHI TSUCHIGA',
     role: 'CORPORATE OPERATIONS',
-    photo: '/images/team/koushi-tsuchiga.png',
+    photo: '/images/team/koushi-tsuchiga.webp',
+    photoColor: '/images/team/koushi-tsuchiga-color.webp',
     catchphrase: '組織の力を最大化する。',
     description:
       'ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。',
@@ -154,7 +166,8 @@ export const members: Member[] = [
     slug: 'arigato-kun',
     name: 'ARIGATO KUN',
     role: 'CHARACTER',
-    photo: '/images/team/arigato-kun.png',
+    photo: '/images/team/arigato-kun.webp',
+    photoColor: '/images/team/arigato-kun-color.webp',
     catchphrase: 'アリガトサンの太陽キャラクター。',
     description:
       'アリガトサンを象徴するマスコットキャラクター。妥協なき愛と感謝の光で、関わるすべての人を照らす存在。',
@@ -163,10 +176,15 @@ export const members: Member[] = [
   },
 ];
 
+// public API: hidden を除外した一覧。MemberSection / detail page など外部はこれを使う。
+export const members: Member[] = allMembers.filter((m) => !m.hidden);
+
 export function getMemberBySlug(slug: string): Member | undefined {
+  // hidden member は undefined を返して詳細 URL を 404 にする
   return members.find((m) => m.slug === slug);
 }
 
 export function getAllMemberSlugs(): string[] {
+  // 静的ページ生成対象から hidden を除外
   return members.map((m) => m.slug);
 }

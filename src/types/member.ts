@@ -17,6 +17,11 @@ export type Member = {
   name: string;
   role: string;
   photo?: string;
+  // MemberSection 一覧の hover でカラーフェード切替に使う（ABOUT カラー版）
+  photoColor?: string;
+  // true にするとサイト全体（一覧 / スライダー / 詳細URL）から非表示。
+  // 再表示は false に戻すかこの行を削除するだけ。
+  hidden?: boolean;
   catchphrase: string;
   description: string;
   career: string;

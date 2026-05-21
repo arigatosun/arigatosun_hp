@@ -79,6 +79,18 @@ export default function MemberSection({ variant = 'grid' }: MemberSectionProps) 
         ) : (
           <div className={styles.cardPhotoFallback} />
         )}
+        {/* カラー版を上に重ねて hover でフェード表示（モノクロ → カラー） */}
+        {member.photoColor && (
+          <Image
+            src={member.photoColor}
+            alt=""
+            aria-hidden="true"
+            width={231}
+            height={231}
+            className={styles.cardPhotoColor}
+            sizes="(max-width: 767px) 50vw, (max-width: 1023px) 33vw, 16vw"
+          />
+        )}
       </div>
       <p className={styles.cardRole}>{member.role}</p>
       <p className={styles.cardName}>{member.name}</p>
@@ -90,8 +102,21 @@ export default function MemberSection({ variant = 'grid' }: MemberSectionProps) 
       id="member"
       className={`${styles.section} ${variant === 'slider' ? styles.sectionSlider : ''}`}
     >
-      {/* セクションタイトル */}
-      <SectionHeader title="メンバー" subtitle="MEMBER" />
+      {/* セクションタイトル（Figma node 1649:298718: 左にミニアリガトサンアイコン）*/}
+      {/* slider variant では .section padding を 0 にしてトラックを viewport 端まで延ばすので、
+          タイトルだけ専用 wrap で padding を再付与する */}
+      <div className={variant === 'slider' ? styles.sliderTitleWrap : undefined}>
+        <SectionHeader
+          title="メンバー"
+          subtitle="MEMBER"
+          logo={{
+            src: '/images/sections/about/member-icon.svg',
+            alt: '',
+            width: 61,
+            height: 58,
+          }}
+        />
+      </div>
 
       {variant === 'grid' ? (
         // グリッドモード（ABOUTページ用）
@@ -102,9 +127,11 @@ export default function MemberSection({ variant = 'grid' }: MemberSectionProps) 
         // スライダーモード（詳細ページ用）
         <div className={styles.sliderWrapper}>
           <div className={styles.sliderTrack}>
-            {/* 元データ + 複製でシームレスループ */}
+            {/* 2 セット連結 → translateX(-50%) で 1 セット分シフトしてシームレスループ */}
             {members.map((member, index) => renderCard(member, index))}
-            {members.map((member, index) => renderCard(member, index + members.length))}
+            {members.map((member, index) =>
+              renderCard(member, index + members.length),
+            )}
           </div>
         </div>
       )}

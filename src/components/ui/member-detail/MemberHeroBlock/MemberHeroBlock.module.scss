@@ -1,19 +1,7 @@
 @use '@/styles/fluid' as *;
 @use '@/styles/breakpoints' as *;
 
-.root {
-  display: flex;
-  align-items: flex-start;
-  @include fluid(gap, 24, 60);
-  @include fluid(padding-inline, 20, 200);
-  @include fluid(padding-top, 56, 160);
-
-  @include sp {
-    flex-direction: column;
-    align-items: center;
-  }
-}
-
+// Figma 実測（node 2498:46775）: 写真 293×293
 .photoFrame {
   flex-shrink: 0;
   position: relative;
@@ -28,48 +16,21 @@
   object-fit: cover;
 }
 
-.infoBlock {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+// カラー版を BW の上に絶対配置し、hover で opacity フェードイン
+.photoColor {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
 
-  @include sp {
-    width: 100%;
+// マウスデバイスのみ hover で切替（タッチ端末で stuck:hover を避ける）
+@media (hover: hover) {
+  .photoFrame:hover .photoColor {
+    opacity: 1;
   }
-}
-
-.role {
-  margin: 0;
-  color: var(--color-text-secondary);
-  @include fluid(line-height, 14, 24);
-  @include fluid(letter-spacing, 1.04, 2.08);
-}
-
-.roleJp {
-  font-family: var(--font-jp);
-  font-weight: var(--font-weight-regular);
-  @include fluid(font-size, 12, 15);
-}
-
-.roleEn {
-  font-family: var(--font-en);
-  font-weight: var(--font-weight-light);
-  @include fluid(font-size, 12, 16);
-}
-
-.name {
-  margin: 0;
-  @include fluid(margin-top, 8, 16);
-  color: var(--color-black);
-  font-family: var(--font-en);
-  font-weight: var(--font-weight-light);
-  @include fluid(font-size, 16, 28);
-  @include fluid(line-height, 22, 40);
-  @include fluid(letter-spacing, 1.82, 3.64);
-}
-
-.divider {
-  @include fluid(margin-top, 16, 40);
-  height: 1px;
-  background-color: var(--color-black);
 }
