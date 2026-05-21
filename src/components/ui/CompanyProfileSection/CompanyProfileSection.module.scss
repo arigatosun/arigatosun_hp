@@ -4,18 +4,25 @@
 );
 @use '@/styles/breakpoints' as *;
 
-// ── グレー帯（フルブリード 1920×1080） ──
+// ── 会社概要 section（白カード wrap） ──
+// グレー帯は親 /about 側 .companyImageArea で持つ。
+// 本 section は負 margin-top で帯の下端 350px に overlap し白カードを置く。
+// Figma 実測: 白カード top=4491, 帯 bottom=4841 → overlap 350
 .section {
   position: relative;
-  background-color: var(--color-bg);
-  @include fluid(margin-top, 60, 200);
-  @include fluid(padding-top, 100, 250);
+  z-index: 1;
+  background-color: transparent;
+  // 帯下端 → 白カード top の overlap: SP=160 / PC1920=350
+  // fluid() mixin は負値の min>max を扱えないため clamp() 直書き
+  // 公式: clamp(-350px, -122px - 11.875vw, -160px)
+  //   vw=320: -122 - 38  = -160 (overlap 160)
+  //   vw=1920: -122 - 228 = -350 (overlap 350)
+  margin-top: clamp(-350px, calc(-122px - 11.875vw), -160px);
   @include fluid(padding-bottom, 100, 250);
   @include fluid(padding-left, 20, 200);
   @include fluid(padding-right, 20, 200);
 
   @include sp {
-    @include fluid(padding-top, 40, 80);
     @include fluid(padding-bottom, 40, 80);
   }
 }
