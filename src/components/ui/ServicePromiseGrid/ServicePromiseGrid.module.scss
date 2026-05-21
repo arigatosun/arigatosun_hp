@@ -1,0 +1,60 @@
+@use '@/styles/fluid' as * with (
+  $fluid-max-viewport: 1920
+);
+@use '@/styles/breakpoints' as *;
+
+// Figma 実測:
+// - section header (title y=2086) → 3 col catchphrase top (y=2370) = 284 gap
+// - 3 col 各 w=400 / x=200, 760, 1320 → col gap = 160
+// - catchphrase (h=72, ~3行) → body (y=2466, 96 後ろ)
+.section {
+  @include fluid(padding-left, 20, 200);
+  @include fluid(padding-right, 20, 200);
+  @include fluid(padding-top, 80, 160);
+  @include fluid(padding-bottom, 80, 160);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  // Figma 実測: col gap 160 (between col1 right edge 600 → col2 left 760)
+  @include fluid(column-gap, 24, 160, 320, 1920);
+  // section header (y=2152) → catchphrase top (y=2370) = 218
+  @include fluid(margin-top, 60, 218);
+
+  @include sp {
+    grid-template-columns: 1fr;
+    @include fluid(row-gap, 40, 80);
+  }
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+}
+
+// キャッチコピー (Figma 実測: w=400 h=72 ~3行 → font-size ≒ 20, lh ≒ 36)
+.catchphrase {
+  margin: 0;
+  color: var(--color-black);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  font-weight: var(--font-weight-regular);
+  @include fluid(font-size, 16, 20);
+  @include fluid(line-height, 30, 36);
+  // Figma 字間 ≒ 0.2em
+  letter-spacing: 0.2em;
+}
+
+// 本文 (Figma 実測: w=400 / h=136 (col1,3) or h=170 (col2))
+// font-size 14 / lh 32 / ls 3.92 (≒ 0.28em)
+.body {
+  margin: 0;
+  // catchphrase 下 (y=2370+72=2442) → body top (y=2466) = 24
+  @include fluid(margin-top, 16, 24);
+  color: var(--color-black);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  font-weight: var(--font-weight-regular);
+  @include fluid(font-size, 13, 14);
+  @include fluid(line-height, 26, 32);
+  letter-spacing: 0.28em;
+}

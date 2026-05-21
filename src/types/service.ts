@@ -79,6 +79,22 @@ export type ServiceCaseStudy = {
   thumbnail: string | null;
 };
 
+/** 3カラム promise グリッドの 1 アイテム */
+export type ServicePromiseItem = {
+  /** 大見出し（キャッチコピー） */
+  catchphrase: string;
+  /** 本文（1段落） */
+  body: string;
+};
+
+/** 3カラム promise セクション（私たちが実現すること 等） */
+export type ServicePromiseSection = {
+  id: string;
+  title: string;
+  subtitle: string;
+  items: ServicePromiseItem[];
+};
+
 /** SERVICE 詳細ページ1件分のデータ */
 export type ServiceDetailData = {
   slug: string;
@@ -87,6 +103,8 @@ export type ServiceDetailData = {
   quote: string;
   description: string[];
   heroImage: string | null;
+  /** 「私たちが実現すること」など Hero 直後の3カラム promise グリッド（任意） */
+  promises?: ServicePromiseSection;
   concepts: ServiceConcept[];
   caseStudies: ServiceCaseStudy[];
 };

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import ServiceDetailHero from '@/components/ui/ServiceDetailHero';
+import ServicePromiseGrid from '@/components/ui/ServicePromiseGrid';
 import ServiceConceptBlock from '@/components/ui/ServiceConceptBlock';
 import ServiceScopePills from '@/components/ui/ServiceScopePills';
 import GlowImage from '@/components/ui/GlowImage';
@@ -46,6 +47,15 @@ export default async function ServiceDetailPage({ params }: PageParams) {
         description={data.description}
         heroImage={data.heroImage}
       />
+
+      {data.promises && (
+        <ServicePromiseGrid
+          id={data.promises.id}
+          title={data.promises.title}
+          subtitle={data.promises.subtitle}
+          items={data.promises.items}
+        />
+      )}
 
       {data.concepts.map((concept) => (
         <ServiceConceptBlock
