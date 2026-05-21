@@ -14,8 +14,8 @@
   // Figma: 左右 200px
   @include fluid(padding-left, 20, 200);
   @include fluid(padding-right, 20, 200);
-  // /about 統一基準: ヘッダー直下 → タイトル fluid(120, 260)
-  @include fluid(padding-top, 120, 260);
+  // Figma: サービスロゴ上端 y=240（固定ヘッダー分を内包）
+  @include fluid(padding-top, 100, 240);
 }
 
 .introTitle {

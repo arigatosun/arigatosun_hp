@@ -17,8 +17,7 @@
   justify-content: space-between;
   @include fluid(padding-left, 20, 200);
   @include fluid(padding-right, 20, 200);
-  // /about 統一基準: page top込み fluid(120, 260) − header 80（1920ベースで /about と完全一致）
-  @include fluid(padding-top, 40, 180, 320, 1920);
+  @include fluid(padding-top, 56, 160); // Figma: ヘッダー直後 240 − header 80
   @include fluid(gap, 32, 179); // Figma: intro 右端 (200+560) → form 左端 (939) ＝ 179
 
   @include sp {
