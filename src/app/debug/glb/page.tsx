@@ -70,7 +70,8 @@ const DEFAULT_PARAMS: DebugParams = {
   showWireframe: false,
 };
 
-const GLB_PATH = '/models/walk.v3.glb';
+// Phase 18: 新モデル（粘土風シェーディング・リグ刷新）に差し替え
+const GLB_PATH = '/models/arigatokunn_web.glb';
 
 // ─── Euler Y抽出ユーティリティ ───
 const _euler = new THREE.Euler();

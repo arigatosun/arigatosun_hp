@@ -39,7 +39,15 @@ export default async function Home() {
 
           <div className={styles.heroLabelsArea}>
             <div className={styles.heroCharacter}>
-              <FooterCharacterLoader />
+              {/* TOP Hero 用キャラ。位置調整：
+                  デフォルト -19.37 → -22.52（左に 3.15 world ≒ 40px シフト）。
+                  heroCharacter の transform: translate(20px, 0) で枠も右にシフト。
+                  charRotationY で body 向きを微調整して完全正面に。
+                  位置確認したい時は `debug` prop を付ければ視覚化される。 */}
+              <FooterCharacterLoader
+                charPosition={[-20.93, -0.75, 0]}
+                charRotationY={0.2}
+              />
             </div>
             <ul className={styles.heroLabels}>
               <li>AI / DEVELOPMENT</li>
