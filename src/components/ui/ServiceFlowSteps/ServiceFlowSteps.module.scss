@@ -1,0 +1,55 @@
+@use '@/styles/fluid' as * with (
+  $fluid-max-viewport: 1920
+);
+@use '@/styles/breakpoints' as *;
+
+// Figma 実測（STEP.1 y=4729 → STEP.5 y=5321、5 ステップ間 148px 間隔）:
+// 各 step は step 番号 + title (lh36) + description (lh38)
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  // STEP.1 → STEP.2 距離 148 から内側コンテンツ高さを引いた値
+  // ≒ STEP+title+desc 合計 ~112 → gap ~36
+  @include fluid(row-gap, 24, 36, 320, 1920);
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+}
+
+// STEP.1〜.5 (Figma 38 tall / Mozaic GEO Light 22px / ls ≒ 0.13em)
+.step {
+  color: var(--color-black);
+  font-family: var(--font-en);
+  font-weight: var(--font-weight-light);
+  @include fluid(font-size, 16, 22);
+  @include fluid(line-height, 28, 38);
+  letter-spacing: 0.13em;
+}
+
+// ステップ見出し（現状整理・課題把握 等 / 36 tall / Noto Sans JP 16px）
+.title {
+  margin: 0;
+  color: var(--color-black);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  font-weight: var(--font-weight-medium);
+  @include fluid(font-size, 13, 16);
+  @include fluid(line-height, 28, 36);
+  letter-spacing: 0.2em;
+}
+
+// ステップ説明文（38 tall / 14px / lh 38 / ls 3.92 ≒ 0.28em）
+.description {
+  margin: 0;
+  @include fluid(margin-top, 4, 6);
+  color: var(--color-black);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  font-weight: var(--font-weight-regular);
+  @include fluid(font-size, 12, 14);
+  @include fluid(line-height, 24, 28);
+  letter-spacing: 0.28em;
+}

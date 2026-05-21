@@ -4,6 +4,7 @@ import ServiceDetailHero from '@/components/ui/ServiceDetailHero';
 import ServicePromiseGrid from '@/components/ui/ServicePromiseGrid';
 import ServiceConceptBlock from '@/components/ui/ServiceConceptBlock';
 import ServiceScopePills from '@/components/ui/ServiceScopePills';
+import ServiceFlowSteps from '@/components/ui/ServiceFlowSteps';
 import GlowImage from '@/components/ui/GlowImage';
 import ServiceCaseStudies from '@/components/ui/ServiceCaseStudies';
 import ServiceCrossLinks from '@/components/ui/ServiceCrossLinks';
@@ -67,7 +68,7 @@ export default async function ServiceDetailPage({ params }: PageParams) {
           body={concept.body}
           bodyTracking={concept.bodyTracking}
         >
-          {concept.visual.kind === 'image' ? (
+          {concept.visual.kind === 'image' && (
             <GlowImage
               src={concept.visual.src}
               alt={concept.visual.alt}
@@ -76,8 +77,12 @@ export default async function ServiceDetailPage({ params }: PageParams) {
               mask={concept.visual.mask}
               overlays={concept.visual.overlays}
             />
-          ) : (
+          )}
+          {concept.visual.kind === 'pills' && (
             <ServiceScopePills rows={concept.visual.rows} />
+          )}
+          {concept.visual.kind === 'steps' && (
+            <ServiceFlowSteps items={concept.visual.items} />
           )}
         </ServiceConceptBlock>
       ))}

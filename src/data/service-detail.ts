@@ -238,8 +238,71 @@ const AI_DEV: ServiceDetailData = {
         ],
       },
     },
+    // ⑤ PROCESS（進め方）(Figma y=4729〜)
+    {
+      id: 'process',
+      title: '進め方',
+      subtitle: 'PROCESS',
+      // 本文 (Figma x=200 y=4935 w=700 h=114 / 3 セグメント)
+      body: [
+        'プロジェクトの数だけ、最適解へのルートは存在します。',
+        'だから私たちは、最初から固定されたフローへ当てはめません。',
+        '課題の核心に応じて、順番も、検証も、必要な実装も柔軟に再定義します。',
+      ],
+      bodyTracking: 4,
+      visual: {
+        kind: 'steps',
+        items: [
+          {
+            step: 'STEP.1',
+            title: '現状整理・課題把握',
+            description: '何が前進を止めているのかを整理します。',
+          },
+          {
+            step: 'STEP.2',
+            title: '最小構成での試作・PoC',
+            description: 'まず動く最小単位をつくります。',
+          },
+          {
+            step: 'STEP.3',
+            title: '見えたものを起点に再定義',
+            description: 'フィードバックを価値の更新として受け止めます。',
+          },
+          {
+            step: 'STEP.4',
+            title: '段階的な実装・改善',
+            description: '必要な機能を、必要な順番で積み上げます。',
+          },
+          {
+            step: 'STEP.5',
+            title: '運用・拡張',
+            description: '作って終わりではなく、使われ続ける状態まで育てます。',
+          },
+        ],
+      },
+    },
   ],
-  caseStudies: [],
+  // ⑥ 実績・事例 (Figma y=5715〜) — design-branding と同内容（Figma 上で共通使用）
+  caseStudies: [
+    {
+      id: 'tsukemono',
+      client: '全日本漬物協同組合連合会',
+      text: '何百年も続く日本の漬物文化を、この先も愛してもらえるカタチへ。| 最優秀賞から生まれたキャラクターデザインと、ポータルサイトのリブランディング',
+      thumbnail: null,
+    },
+    {
+      id: 'choritz',
+      client: '頂立輸入代行会社',
+      text: '数値では測れない想いや姿勢を、ブランドの核心へ宿す。| 社名からVIまで、一気通貫のブランド構築',
+      thumbnail: null,
+    },
+    {
+      id: 'nest',
+      client: 'NEST',
+      text: 'デジタルでは生まれない温もりと偶然性を、シンボルとして可視化する。| 拡張を見据えたロゴ・VI設計',
+      thumbnail: null,
+    },
+  ],
 };
 
 const IP_CREATIVE: ServiceDetailData = {

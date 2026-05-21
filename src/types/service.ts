@@ -51,7 +51,17 @@ export type ServiceImageOverlay = {
   widthPct: number;
 };
 
-/** コンセプトブロックのビジュアル（イラスト画像 or ピルリスト） */
+/** PROCESS（進め方）の 1 ステップ */
+export type ServiceFlowStep = {
+  /** STEP.1 等のステップ番号ラベル */
+  step: string;
+  /** ステップ見出し（例: 現状整理・課題把握） */
+  title: string;
+  /** ステップ説明文（1行） */
+  description: string;
+};
+
+/** コンセプトブロックのビジュアル（イラスト画像 / ピルリスト / フローステップ） */
 export type ServiceConceptVisual =
   | {
       kind: 'image';
@@ -68,6 +78,10 @@ export type ServiceConceptVisual =
   | {
       kind: 'pills';
       rows: ServicePillRow[];
+    }
+  | {
+      kind: 'steps';
+      items: ServiceFlowStep[];
     };
 
 /** 詳細ページ中段のコンセプトブロック */
