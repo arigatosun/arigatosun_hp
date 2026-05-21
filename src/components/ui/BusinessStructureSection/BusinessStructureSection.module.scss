@@ -17,13 +17,18 @@
 
 // ── 左側: タイトル + 説明 ──
 // Figma: width 660px。テキストの改行位置を Figma と一致させるため固定幅を持つ
+// Figma 実測: 右図 (Group 568) は y=1846（section top）に配置、
+// 左タイトル (Group 780) は y=2006（section top + 160）に配置
+// → .left に margin-top: 160 を追加し、右図は section top のまま
 .left {
   flex-shrink: 0;
   min-width: 0;
   @include fluid(width, 280, 660, 320, 1920);
+  @include fluid(margin-top, 0, 160, 320, 1920);
 
   @include sp {
     width: 100%;
+    margin-top: 0;
   }
 }
 
