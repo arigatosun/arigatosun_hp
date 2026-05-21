@@ -204,13 +204,20 @@ const AI_DEV: ServiceDetailData = {
       bodyTracking: 4.48,
       visual: {
         kind: 'image',
-        // 雲ダイアグラム画像 (Figma _レイヤー_1 x=1070 y=3794 w=634 h=640)
-        // 実画像は未用意のためプレースホルダー表示
-        src: null,
-        alt: 'アリガトサン・スタンダードを表すクラウド型の概念図（AI/DEV）',
-        width: 634,
-        height: 640,
-        mask: null,
+        // AI/DEV 用クラウドダイアグラム (3 main bubbles + 2 small circles)
+        src: '/images/sections/service/detail/concept-standard-ai.png',
+        alt: 'アリガトサン・スタンダード（AI/DEV）を表すクラウド型の概念図。3つの主バブル + 2つのサテライト円',
+        // 線画 PNG 実寸
+        width: 1376,
+        height: 1343,
+        // バブルシルエットのマスク（赤グローを形の中にクリップ）
+        // 線画(1376×1343) と マスク(1346×1282) の寸法差を size/position で吸収
+        // 横: 1346/1376 = 97.82% / 縦: 1282/1343 = 95.46% / 中央寄せ
+        mask: {
+          src: '/images/sections/service/detail/concept-standard-ai-mask.png',
+          size: '97.82% 95.46%',
+          position: '50% 50%',
+        },
         // 雲上に重ねる 3 標準テキスト
         // Figma 実測（cloud 1070-1704 x 3794-4434 を 100% として配置）:
         //   ・「ただ速いことではなく…」: x=1305 y=3909 w=220 → left 37.1% top 18.0% w 34.7%
