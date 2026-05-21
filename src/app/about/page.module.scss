@@ -88,7 +88,9 @@
 .philosophySection {
   @include fluid(padding-left, 20, 200);
   @include fluid(padding-right, 20, 200);
-  @include fluid(padding-top, 35, 100);
+  // ヘッダー直下 → タイトル「アバウト」までの余白。
+  // 既存 35/100 だと詰まって見える指摘あり → 60/180 に拡張
+  @include fluid(padding-top, 60, 180);
   @include fluid(padding-bottom, 80, 260);
 }
 
