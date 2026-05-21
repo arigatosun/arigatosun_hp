@@ -10,7 +10,13 @@ import styles from './PrinciplesSection.module.scss';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const principles = [
+type Principle = {
+  labelJa: string;
+  link: { text: string; href: string };
+  description: string[];
+};
+
+const principles: Principle[] = [
   {
     labelJa: '仲間に',
     link: { text: 'SERVICE', href: '/service' },
@@ -59,9 +65,9 @@ export default function PrinciplesSection() {
       items.forEach((item) => {
         if (item) gsap.set(item, { opacity: 0, y: 30 });
       });
-      gsap.set(glow1, { opacity: 0, scale: 0.3, yPercent: -50, filter: 'blur(24px)' });
-      gsap.set(glow2, { opacity: 0, scale: 0.4, yPercent: -50, filter: 'blur(28px)' });
-      gsap.set(glow3, { opacity: 0, scale: 0.4, yPercent: -50, filter: 'blur(28px)' });
+      gsap.set(glow1, { opacity: 0, scale: 0.3, filter: 'blur(24px)' });
+      gsap.set(glow2, { opacity: 0, scale: 0.4, filter: 'blur(28px)' });
+      gsap.set(glow3, { opacity: 0, scale: 0.4, filter: 'blur(28px)' });
 
       // SP判定（768px未満）
       const isSP = window.matchMedia('(max-width: 767px)').matches;
@@ -79,29 +85,32 @@ export default function PrinciplesSection() {
         },
       });
 
-      // Phase 1: 仲間にアリガトサン + ヒートマップが有機的に出現
+      // Phase 1: 仲間にアリガトサン + 内コアの赤グローが出現
       tl.to(items[0]!, { opacity: 1, y: 0, duration: 1.5, ease: 'power3.out' })
         .to(glow1, {
-          opacity: 1, scale: 1, yPercent: -50, filter: 'blur(6px)',
+          opacity: 1, scale: 1, filter: 'blur(8px)',
           duration: 2.5, ease: 'expo.out',
         }, '<0.15')
         .to({}, { duration: pauseDuration })
 
-      // Phase 2: お客様にアリガトサン + ヒートマップが滑らかに拡大
+        // Phase 2: お客様にアリガトサン + 中サイズのグローが拡大
         .to(items[1]!, { opacity: 1, y: 0, duration: 1.5, ease: 'power3.out' })
         .to(glow2, {
-          opacity: 1, scale: 1, yPercent: -50, filter: 'blur(8px)',
+          opacity: 1, scale: 1, filter: 'blur(10px)',
           duration: 3, ease: 'expo.out',
         }, '<0.2')
         .to({}, { duration: pauseDuration })
 
-      // Phase 3: 社会にアリガトサン + ヒートマップが完全に展開
+        // Phase 3: 社会にアリガトサン + 最大グローが完全展開（外側楕円に押さえ込み）
+        // glow1/2 は最終的に薄くして glow3 を主役にし、仲間→お客様→社会まで満遍なく赤が届くようにする
         .to(items[2]!, { opacity: 1, y: 0, duration: 1.5, ease: 'power3.out' })
         .to(glow3, {
-          opacity: 1, scale: 1, yPercent: -50, filter: 'blur(8px)',
+          opacity: 1, scale: 1, filter: 'blur(14px)',
           duration: 3, ease: 'expo.out',
         }, '<0.2')
-        .to({}, { duration: finalPause }); // 余韻（完成状態をしっかり見せてから解除）
+        .to(glow1, { opacity: 0.35, duration: 2.5, ease: 'power2.out' }, '<')
+        .to(glow2, { opacity: 0.55, duration: 2.5, ease: 'power2.out' }, '<')
+        .to({}, { duration: finalPause });
     }, sectionRef);
 
     return () => ctx.revert();
@@ -112,10 +121,10 @@ export default function PrinciplesSection() {
       {/* セクションタイトル */}
       <SectionHeader
         logo={{
-          src: '/images/sections/about/title-sun.png',
+          src: '/images/sections/about/title-sun.svg',
           alt: '',
-          width: 56,
-          height: 56,
+          width: 61,
+          height: 58,
         }}
         title="アリガト３原則"
         subtitle="ARIGATOSUN THREE PRINCIPLES"
@@ -123,36 +132,39 @@ export default function PrinciplesSection() {
 
       {/* メインコンテンツ */}
       <div className={styles.content}>
-        {/* 左側: ヒートマップダイアグラム */}
-        <div className={styles.mapArea}>
+        {/* 左側: 楕円ダイアグラム + 赤グロー（mask で外側楕円形にクリップ） */}
+        <div className={styles.diagramArea}>
+          {/* 線画: 3つの楕円 + 周回矢印 + 小装飾 */}
           <Image
-            src="/images/sections/about/principles-layer.png"
+            src="/images/sections/about/principles-diagram.svg"
             alt="アリガト３原則 ダイアグラム"
-            width={600}
-            height={460}
-            className={styles.mapImage}
+            width={590}
+            height={431}
+            className={styles.diagramBase}
           />
 
-          {/* テキストラベル - 横並び */}
+          {/* 赤グロー層: mask-image で外側楕円形にクリップ → はみ出さない */}
+          <div className={styles.glowMaskLayer} aria-hidden="true">
+            <div ref={glow1Ref} className={`${styles.heatmapGlow} ${styles.glow1}`} />
+            <div ref={glow2Ref} className={`${styles.heatmapGlow} ${styles.glow2}`} />
+            <div ref={glow3Ref} className={`${styles.heatmapGlow} ${styles.glow3}`} />
+          </div>
+
+          {/* テキストラベル 仲間 / お客様 / 社会 */}
           <div className={styles.mapLabels}>
             <div className={styles.mapLabel}>
               <span className={styles.mapLabelJa}>仲間</span>
               <span className={styles.mapLabelEn}>TEAM</span>
             </div>
-            <div className={`${styles.mapLabel} ${styles.mapLabelClient}`}>
+            <div className={styles.mapLabel}>
               <span className={styles.mapLabelJa}>お客様</span>
               <span className={styles.mapLabelEn}>CLIENT</span>
             </div>
-            <div className={`${styles.mapLabel} ${styles.mapLabelSociety}`}>
+            <div className={styles.mapLabel}>
               <span className={styles.mapLabelJa}>社会</span>
               <span className={styles.mapLabelEn}>SOCIETY</span>
             </div>
           </div>
-
-          {/* ヒートマップグロー効果 - 内側から累積的に広がる3層 */}
-          <div ref={glow1Ref} className={`${styles.heatmapGlow} ${styles.glow1}`} />
-          <div ref={glow2Ref} className={`${styles.heatmapGlow} ${styles.glow2}`} />
-          <div ref={glow3Ref} className={`${styles.heatmapGlow} ${styles.glow3}`} />
         </div>
 
         {/* 右側: 原則リスト */}
@@ -167,7 +179,7 @@ export default function PrinciplesSection() {
                 <div className={styles.principleHeadLeft}>
                   <span className={styles.principleLabel}>{principle.labelJa}</span>
                   <Image
-                    src="/images/sections/about/black-logo.png"
+                    src="/images/sections/about/arigatosun-logo.svg"
                     alt="アリガトサン"
                     width={200}
                     height={30}

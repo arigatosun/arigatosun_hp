@@ -95,6 +95,9 @@ export default function AboutPage() {
       {/* メンバーセクション */}
       <MemberSection />
 
+      {/* 会社写真エリア（Figma Rectangle 346: 1920×1080 のグレー帯 / 後で実画像差し替え） */}
+      <div className={styles.companyImageArea} aria-hidden="true" />
+
       {/* 会社概要セクション */}
       <CompanyProfileSection />
     </div>

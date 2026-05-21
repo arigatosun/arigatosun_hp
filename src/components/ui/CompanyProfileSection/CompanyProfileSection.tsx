@@ -38,7 +38,12 @@ export default function CompanyProfileSection() {
           {/* 情報テーブル */}
           <dl className={styles.table}>
             {COMPANY_INFO_ROWS.map((row, rowIndex) => (
-              <div key={rowIndex} className={styles.row}>
+              <div
+                key={rowIndex}
+                className={`${styles.row} ${
+                  row.cells.length === 3 ? styles.row3 : styles.row2
+                }`}
+              >
                 {row.cells.map((cell, cellIndex) => (
                   <div key={cellIndex} className={styles.cell}>
                     <div className={styles.cellHeader}>

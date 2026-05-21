@@ -3,10 +3,12 @@
 
 .section {
   display: flex;
-  @include fluid(gap, 24, 80);
+  // Figma 1920 frame 実測: left 660 + gap 163 + right 637 = 1460 (section 内容幅)
+  @include fluid(gap, 24, 163, 320, 1920);
   @include fluid(padding-left, 20, 200);
   @include fluid(padding-right, 20, 200);
-  @include fluid(padding-top, 56, 160);
+  // Figma 実測: PrinciplesSection 下端 1586 → 本セクション上端 1846 = ギャップ 260
+  @include fluid(padding-top, 80, 260, 320, 1920);
 
   @include sp {
     flex-direction: column;
@@ -14,9 +16,20 @@
 }
 
 // ── 左側: タイトル + 説明 ──
+// Figma: width 660px。テキストの改行位置を Figma と一致させるため固定幅を持つ
+// Figma 実測: 右図 (Group 568) は y=1846（section top）に配置、
+// 左タイトル (Group 780) は y=2006（section top + 160）に配置
+// → .left に margin-top: 160 を追加し、右図は section top のまま
 .left {
-  flex: 1;
+  flex-shrink: 0;
   min-width: 0;
+  @include fluid(width, 280, 660, 320, 1920);
+  @include fluid(margin-top, 0, 160, 320, 1920);
+
+  @include sp {
+    width: 100%;
+    margin-top: 0;
+  }
 }
 
 // セクションタイトルは SectionHeader 共通コンポーネントを使用
@@ -25,30 +38,51 @@
   @include fluid(margin-top, 24, 60);
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
+  // Figma 1578:66070 実測: 16 / lh 34 / ls 3.68 (em 換算 0.23em)
   @include fluid(font-size, 14, 16);
   font-weight: var(--font-weight-regular);
-  @include fluid(line-height, 28, 38);
-  @include fluid(letter-spacing, 2, 4.48);
+  @include fluid(line-height, 28, 34);
+  letter-spacing: 0.23em;
 }
 
 // ── 右側: 連携体制図 ──
+// Figma 1578:66075 実測: 637×647（外側小円含む）。fluid で画像も比率追従させる
 .right {
   position: relative;
   flex-shrink: 0;
+  @include fluid(width, 280, 637, 320, 1920);
+  aspect-ratio: 637 / 647;
 
   @include sp {
     width: 100%;
+    max-width: 480px;
+    margin-inline: auto;
+    aspect-ratio: 637 / 647;
   }
 }
 
 .structureImage {
-  width: auto;
-  height: auto;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
 
-  @include sp {
-    width: 100%;
-    height: auto;
-  }
+// ── 赤グロー mask 層 ──
+// .right を覆い、4-clover + 外側2小円のシルエット SVG で切り抜く。
+// マウス追従の glow が内側に置かれ、シルエット外には絶対に出ない。
+.glowMaskLayer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  mask-image: url('/images/sections/about/structure-mask.png');
+  -webkit-mask-image: url('/images/sections/about/structure-mask.png');
+  mask-size: 100% 100%;
+  -webkit-mask-size: 100% 100%;
+  mask-position: center;
+  -webkit-mask-position: center;
+  mask-repeat: no-repeat;
+  -webkit-mask-repeat: no-repeat;
 }
 
 // ── ヒートマップグロー共通（640×640px画像基準） ──
@@ -58,17 +92,14 @@
   height: 46.9%;                 // 300 / 640
   background: radial-gradient(
     circle,
-    rgba(218, 39, 25, 0.55) 0%,
-    rgba(218, 39, 25, 0.35) 22%,
-    rgba(218, 39, 25, 0.18) 42%,
-    rgba(218, 39, 25, 0.05) 62%,
-    transparent 78%
+    var(--color-primary-rgba-55) 0%,
+    var(--color-primary-rgba-25) 35%,
+    transparent 75%
   );
   border-radius: 50%;
   filter: blur(8px);
   pointer-events: none;
   transform: translate(-50%, -50%);
-  z-index: 1;
   // デフォルト位置（図の中心交差部付近）
   left: calc(55% + 3.75%);      // 24 / 640
   top: calc(50% + 2.8%);        // 18 / 640

@@ -4,31 +4,36 @@
 );
 @use '@/styles/breakpoints' as *;
 
-// ── グレー帯（フルブリード 1920×1080） ──
+// ── 会社概要 section（白カード wrap） ──
+// グレー帯は親 /about 側 .companyImageArea で持つ。
+// 本 section は負 margin-top で帯の下端 350px に overlap し白カードを置く。
+// Figma 実測: 白カード top=4491, 帯 bottom=4841 → overlap 350
 .section {
   position: relative;
-  background-color: var(--color-bg);
-  @include fluid(margin-top, 60, 200);
-  @include fluid(padding-top, 100, 250);
+  z-index: 1;
+  background-color: transparent;
+  // 帯下端 → 白カード top の overlap: SP=160 / PC1920=350
+  // fluid() mixin は負値の min>max を扱えないため clamp() 直書き
+  // 公式: clamp(-350px, -122px - 11.875vw, -160px)
+  //   vw=320: -122 - 38  = -160 (overlap 160)
+  //   vw=1920: -122 - 228 = -350 (overlap 350)
+  margin-top: clamp(-350px, calc(-122px - 11.875vw), -160px);
   @include fluid(padding-bottom, 100, 250);
   @include fluid(padding-left, 20, 200);
   @include fluid(padding-right, 20, 200);
 
   @include sp {
-    @include fluid(padding-top, 40, 80);
     @include fluid(padding-bottom, 40, 80);
   }
 }
 
 // ── 白カード（1520×720） ──
+// Figma: header は card 左上端に貼り付き / inner は asymmetric padding（左80 右100）
+// → card 自身は padding 0、各子要素で個別に padding を持つ
 .card {
   background-color: var(--color-white);
   width: 100%;
   @include fluid(min-height, 360, 720);
-  @include fluid(padding-top, 32, 100);
-  @include fluid(padding-bottom, 32, 100);
-  @include fluid(padding-left, 20, 80);
-  @include fluid(padding-right, 20, 80);
 
   @include sp {
     min-height: auto;
@@ -36,11 +41,13 @@
 }
 
 // ── セクションヘッダ（28px / ls 11.2 — Figma 会社概要 専用サイズ） ──
+// Figma 実測: icon at card x=0 / 会社概要 title at card x=84 (icon幅60.77 + gap 23)
+// header top = card top (margin/padding 上なし)、header bottom → inner top に 34px gap
 .header {
   display: flex;
   align-items: center;
-  @include fluid(gap, 10, 20);
-  @include fluid(margin-bottom, 32, 80);
+  @include fluid(gap, 12, 23);
+  @include fluid(margin-bottom, 17, 34);
 }
 
 .headerLogo {
@@ -76,21 +83,30 @@
 }
 
 // ── 中身: 画像 + テーブル ──
+// Figma 実測: 画像 x=80 / info x=662 / inner 右端 100px パディング
+// inner 自身が左右パディングを持つ（header はパディング無しでカード左上端に配置するため）
 .inner {
   display: flex;
   align-items: flex-start;
   @include fluid(gap, 24, 62);
+  @include fluid(padding-left, 20, 80);
+  @include fluid(padding-right, 20, 100);
+  @include fluid(padding-bottom, 32, 100);
 
   @include sp {
     flex-direction: column;
     @include fluid(gap, 20, 32);
+    @include fluid(padding-left, 20, 40);
+    @include fluid(padding-right, 20, 40);
+    @include fluid(padding-bottom, 32, 48);
   }
 }
 
 // ── 画像エリア 520×520 ──
+// Figma 比率: image 520 / table 758 = 0.686:1 を全 viewport で維持
 .imageWrap {
   flex-shrink: 0;
-  @include fluid(width, 200, 520);
+  @include fluid(width, 200, 520, 320, 1920);
   aspect-ratio: 1 / 1;
 
   @include sp {
@@ -106,20 +122,31 @@
 }
 
 // ── 情報テーブル ──
+// flex:1 だと viewport により画像との比率が崩れるため fluid 固定
 .table {
-  flex: 1;
+  flex-shrink: 0;
+  @include fluid(width, 280, 758, 320, 1920);
   min-width: 0;
   display: flex;
   flex-direction: column;
-  @include fluid(gap, 24, 76);
+  // Figma 実測: row 1 bottom(4697) → row 2 label top(4749) = 52
+  //             row 2 bottom(4825) → row 3 label top(4873) = 48 → 平均 50
+  @include fluid(gap, 16, 50, 320, 1920);
   margin: 0;
+
+  @include sp {
+    width: 100%;
+    flex: 1;
+  }
 }
 
 // 1行 — 横並びセル
+// Figma 実測: セル境界は accent 線（Rectangle 350 等）で示されており、
+// セル間に gap は無い。各セルは accent 線位置から次の accent までを占有。
 .row {
   display: flex;
   align-items: flex-start;
-  @include fluid(gap, 24, 60);
+  gap: 0;
 
   @include sp {
     flex-direction: column;
@@ -131,12 +158,45 @@
   flex-direction: column;
 }
 
+// Row 2 (会社名 / 所在地): Figma accent x=862→1266→1620 → 404 / 354
+.row2 {
+  .cell:nth-child(1) {
+    flex: 404 1 0;
+  }
+  .cell:nth-child(2) {
+    flex: 354 1 0;
+  }
+}
+
+// Row 3 (設立 / 代表者 / 従業員数): Figma accent x=862→1079→1266→1620 → 217 / 187 / 354
+// 従業員数 は 354 確保で 1 行表示 (Figma 値 303 だけだと足りない)
+.row3 {
+  .cell:nth-child(1) {
+    flex: 217 1 0;
+  }
+  .cell:nth-child(2) {
+    flex: 187 1 0;
+  }
+  .cell:nth-child(3) {
+    flex: 354 1 0;
+
+    .cellValue {
+      white-space: nowrap;
+    }
+  }
+}
+
 .cell {
-  flex: 1;
   min-width: 0;
   display: flex;
   flex-direction: column;
-  @include fluid(gap, 12, 22);
+  // Figma 実測: label top→value top 46 / label h=30 → 内部 gap = 16
+  @include fluid(gap, 8, 16, 320, 1920);
+}
+
+// rowFull (事業内容): 単一列
+.rowFull .cell {
+  flex: 1 0 100%;
 }
 
 // セルラベル左の小さい縦線（1×17px）

@@ -88,7 +88,9 @@
 .philosophySection {
   @include fluid(padding-left, 20, 200);
   @include fluid(padding-right, 20, 200);
-  @include fluid(padding-top, 35, 100);
+  // ヘッダー直下 → タイトル「アバウト」までの余白。
+  // 既存 35/100 だと詰まって見える指摘あり → 60/180 に拡張
+  @include fluid(padding-top, 60, 180);
   @include fluid(padding-bottom, 80, 260);
 }
 
@@ -151,5 +153,22 @@
   // 2 つの段落間も通常の行間（line-height 38）と同じで、余分な余白は無い。
   p {
     margin: 0;
+  }
+}
+
+// ── 会社写真エリア（Figma Rectangle 346: 1920×1080 のグレー帯） ──
+// 後から実画像差し替え予定の placeholder。
+// Figma 配置: y=3761（メンバーカード bottom 3506 から gap 255）, h=1080
+// → 会社概要セクションは margin-top -350 でこのグレー帯の下端 350px に
+//   白カードが overlap する形（Figma Rectangle 347 配置）
+.companyImageArea {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  background-color: var(--color-placeholder);
+  @include fluid(margin-top, 80, 255);
+  @include fluid(height, 360, 1080);
+
+  @include sp {
+    @include fluid(height, 240, 480);
   }
 }

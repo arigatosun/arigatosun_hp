@@ -79,11 +79,14 @@ export default function BusinessStructureSection() {
           height={640}
           className={styles.structureImage}
         />
-        {/* ヒートマップグロー */}
-        <div
-          ref={glowRef}
-          className={`${styles.heatmapGlow} ${styles.floating}`}
-        />
+        {/* 赤グロー層: mask-image で 4-clover + 外側2小円のシルエットに切り抜く
+            → 連携体制図の輪郭外には絶対にはみ出さない */}
+        <div className={styles.glowMaskLayer} aria-hidden="true">
+          <div
+            ref={glowRef}
+            className={`${styles.heatmapGlow} ${styles.floating}`}
+          />
+        </div>
       </div>
     </section>
   );
