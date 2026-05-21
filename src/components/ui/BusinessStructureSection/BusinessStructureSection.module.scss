@@ -40,23 +40,25 @@
 }
 
 // ── 右側: 連携体制図 ──
+// Figma 1578:66075 実測: 637×647（外側小円含む）。fluid で画像も比率追従させる
 .right {
   position: relative;
   flex-shrink: 0;
+  @include fluid(width, 280, 637, 320, 1920);
+  aspect-ratio: 637 / 647;
 
   @include sp {
     width: 100%;
+    max-width: 480px;
+    margin-inline: auto;
+    aspect-ratio: 637 / 647;
   }
 }
 
 .structureImage {
-  width: auto;
-  height: auto;
-
-  @include sp {
-    width: 100%;
-    height: auto;
-  }
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 
 // ── 赤グロー mask 層 ──
