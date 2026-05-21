@@ -129,13 +129,21 @@ const DESIGN_BRANDING: ServiceDetailData = {
   ],
 };
 
-// ── AI / DEVELOPMENT・IP / CREATIVE は後日 Figma 提供後に本実装 ──
+// ── AI / DEVELOPMENT (Figma node 2481:61546 / SERVICE(PC:1920px) より) ──
+// 構築中：① Hero 完了 / ②③④⑤ は順次追加
 const AI_DEV: ServiceDetailData = {
   slug: 'ai-dev',
   titleEn: 'AI / DEVELOPMENT',
   titleJa: 'AI・開発',
-  quote: '',
-  description: [],
+  // Hero quote (Figma x=200 y=487 w=920 h=112 / 2 セグメント)
+  quote: '人が本当に向き合うべき仕事へ、\n事業が価値を生む方向へ。',
+  // Hero description (Figma x=200 y=639 w=1163 h=152 / 4 段落)
+  description: [
+    'AIが当たり前になった世界で、ただ作るだけの開発は、もう価値にならない。',
+    '私たちは、止まっている業務を前に進め、止まりかけている構想を現実に変えるための基盤をつくる。',
+    '人が判断や企画、対話に立ち返るための仕組みを。挑戦が、価値を生み出す事業へ変わっていくための土台を。',
+    'そしてその先に、現代で最も魔法に近い技術で、目の前の現実を変えていく驚きを届けたい。',
+  ],
   heroImage: null,
   concepts: [],
   caseStudies: [],

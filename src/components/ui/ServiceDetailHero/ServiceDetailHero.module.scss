@@ -123,6 +123,8 @@
   @include fluid(font-size, 18, 28);
   @include fluid(line-height, 34, 56);
   @include fluid(letter-spacing, 4, 8.12);
+  // Figma で改行が含まれる quote (AI/DEVELOPMENT 等) を \n のまま反映
+  white-space: pre-line;
 }
 
 // ── 説明文 ──
