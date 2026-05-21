@@ -239,6 +239,8 @@
   flex-shrink: 0;
   @include fluid(width, 100, 156);
   @include fluid(height, 100, 161);
+  // Hero と同じく枠ごとシフト（中の 3D は変えず translate のみ）
+  transform: translate(20px, 0);
 }
 
 // Figma: テキスト幅 593・右寄せ、キャラとの間 4px

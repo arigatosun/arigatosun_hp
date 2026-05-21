@@ -67,10 +67,12 @@
 }
 
 .heroCharacter {
-  @include fluid(width, 108, 162);
-  @include fluid(height, 111, 166);
+  @include fluid(width, 160, 240);
+  @include fluid(height, 165, 246);
   flex-shrink: 0;
   overflow: visible;
+  // Hero キャラの枠ごとシフト（中の 3D は変えず translate のみ）
+  transform: translate(50px, 0);
 }
 
 .heroLabels {

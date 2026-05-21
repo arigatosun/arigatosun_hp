@@ -118,9 +118,18 @@ export default function WorksSection({ works }: WorksSectionProps) {
 
       {/* 下部: キャラクター + テキスト + ボタン */}
       <div className={styles.footer}>
-        {/* 3Dキャラクター（ありがとくん・手振り） */}
+        {/* 3Dキャラクター（ありがとくん・手振り）
+            WorksSection 底部用。
+              - charScale 3.0: Canvas（156×161）が Hero（240×246）より小さいので縮小
+              - charPosition: Armature 内部 x=4.49 を scale×4.49=13.47 で打ち消し
+              - charRotationY: 負の値で body に角度をつけて躍動感を出す
+            位置確認したい時は `debug` prop を付ければ視覚化される。 */}
         <div className={styles.footerCharacter}>
-          <FooterCharacterLoader />
+          <FooterCharacterLoader
+            charPosition={[-13.16, -0.75, 0]}
+            charScale={3.0}
+            charRotationY={-0.3}
+          />
         </div>
 
         <div className={styles.footerText}>
