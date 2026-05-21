@@ -139,11 +139,12 @@
 }
 
 // 1行 — 横並びセル
-// Figma 実測: 行内 cell の間隔は 17～26 と狭め（cell の位置は Figma の x 座標で決定）
+// Figma 実測: セル境界は accent 線（Rectangle 350 等）で示されており、
+// セル間に gap は無い。各セルは accent 線位置から次の accent までを占有。
 .row {
   display: flex;
   align-items: flex-start;
-  @include fluid(gap, 20, 26, 320, 1920);
+  gap: 0;
 
   @include sp {
     flex-direction: column;
@@ -155,14 +156,18 @@
   flex-direction: column;
 }
 
-// Row 2 (会社名 / 所在地): Figma 1283-879=404 / 1620-1283=337 → 約 1.2:1
-.row2 .cell {
-  flex: 1 0 0;
+// Row 2 (会社名 / 所在地): Figma accent x=862→1266→1620 → 404 / 354
+.row2 {
+  .cell:nth-child(1) {
+    flex: 404 1 0;
+  }
+  .cell:nth-child(2) {
+    flex: 354 1 0;
+  }
 }
 
-// Row 3 (設立 / 代表者 / 従業員数): Figma 217 / 187 / 303
-// 従業員数 は Figma 値 303 ピッタリだとフォントレンダリングの差で
-// 末尾「ー」が改行されるため weight を 340 に微増 + nowrap で確実に1行
+// Row 3 (設立 / 代表者 / 従業員数): Figma accent x=862→1079→1266→1620 → 217 / 187 / 354
+// 従業員数 は 354 確保で 1 行表示 (Figma 値 303 だけだと足りない)
 .row3 {
   .cell:nth-child(1) {
     flex: 217 1 0;
@@ -171,7 +176,7 @@
     flex: 187 1 0;
   }
   .cell:nth-child(3) {
-    flex: 340 1 0;
+    flex: 354 1 0;
 
     .cellValue {
       white-space: nowrap;
