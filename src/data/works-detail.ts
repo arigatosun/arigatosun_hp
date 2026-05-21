@@ -260,19 +260,11 @@ const CHORITZ_DETAIL: WorkDetailContent = {
 // ── パターンB: ロゴ・VI プロジェクトアーカイブ（スライダーカードのループ）──
 const ARCHIVE = '/images/works/archive';
 
-// 全エントリ共通の本文（Figma プレースホルダー。後で実データへ差し替え）
-const ARCHIVE_BODY = [
+// MAISON ORICHAN / NEST は Figma 上で IGC のプレースホルダー本文のままのため、
+// 同じ文言を共有用に切り出している。
+const ARCHIVE_PLACEHOLDER_BODY = [
   '頭文字「IGC」をベースに構成されたシンボルマークです。「I」はゴルフピンとボールをモチーフに、日本らしい要素を加えることで、上質さと信頼感を表現。特別な体験や出会いの場としての輝きを象徴しています。また、「G」と「C」は一部を重ね合わせることで、ボールの軌道やスイングの美しさを連想させ、プレーヤーのスコア向上やゴルフへの愛着が右肩上がりに深まっていく様子を表現しています。全体として、上質さ・親しみ・成長のストーリーを兼ね備えた、クラブの理念を体現するデザインです。',
 ];
-
-// CREDIT 行を組み立てる（CLIENT 以外は Figma プレースホルダー）
-const archiveCredit = (client: string): string[] => [
-  `<CREDIT> CLIENT : ${client}　|　PROJECT MANAGEMENT : RYO YOSHIKAWA　|　DESIGN DIRECTION / DESIGN : YUGO NISHIMOTO`,
-  '<SCOPE> LOGO / VI　<TERM> 2025.5 ~ 2025.8',
-];
-
-// スライダー画像は現状 Figma プレースホルダー1枚を共有（実画像は後日差し替え）
-const archiveImages = [`${ARCHIVE}/slide-placeholder.png`];
 
 const IGC_ARCHIVE: WorkDetailContent = {
   slug: 'work-2',
@@ -288,63 +280,87 @@ const IGC_ARCHIVE: WorkDetailContent = {
   entries: [
     {
       heading: '■ゴルフショップ「 IMANISHI GOLF CLUB 」のロゴ・VI設計',
-      body: ARCHIVE_BODY,
-      credit: archiveCredit('IMANISHI GOLF CLUB'),
-      images: archiveImages,
-    },
-    {
-      heading: '■「PROOSEL QUEST」のロゴデザイン',
-      body: ARCHIVE_BODY,
-      credit: archiveCredit('株式会社 PROOSEL'),
-      images: archiveImages,
+      body: [
+        '頭文字「IGC」を基点に構成したシンボルマーク。「I」はゴルフピンとボールをモチーフとし、日の丸を想起させる赤で日本らしさを織り込むことで、上質さと信頼感、そして特別な出会いの場としての輝きを表現した。「G」と「C」を一部重ね合わせた構成は、ボールの軌道とスイングの美しさを連想させ、右肩上がりにスコアとゴルフへの愛着が高まっていくクラブの物語を象徴している。',
+      ],
+      credit: [
+        '<CREDIT> CLIENT : IMANISHI GOLF CLUB　|　PROJECT MANAGEMENT : RYO YOSHIKAWA　|　DESIGN DIRECTION / DESIGN : YUGO NISHIMOTO',
+        '<SCOPE> LOGO / VI　<TERM> 2025.5 ~ 2025.8',
+      ],
+      images: [`${ARCHIVE}/logo-imanishi-golf-club.png`],
     },
     {
       heading: '■会計サービス「ハロタロ」のブランディング',
-      body: ARCHIVE_BODY,
-      credit: archiveCredit('ハロタロ'),
-      images: archiveImages,
+      body: [
+        '美容院とその利用者の関係を、より良く軽快につなぐサービス「ハロタロ」のロゴ・VI設計。 ロゴマークは、発信と双方の良い出会い、そして関西発であることを、ビリケン様の目をモチーフに表現。明るく陽気で親しみやすいかたちへ落とし込んだ。 新規サービスとしての信頼感を持たせるため、ロゴタイプは真面目でシンプルな書体を一から制作している。',
+      ],
+      credit: [
+        '<CREDIT> CLIENT : ハロタロ　|　PROJECT MANAGEMENT : RYO YOSHIKAWA　|　DESIGN DIRECTION / DESIGN / COPY WRITING : YUGO NISHIMOTO',
+        '<SCOPE> TAG LINE / LOGO　<TERM> 2024.6 ~ 2024.8',
+      ],
+      images: [`${ARCHIVE}/logo-halotaro-v2.png`],
     },
     {
       heading: '■歯科医と歯科助手を繋ぐ「 Thoot 」のロゴ・VI設計',
-      body: ARCHIVE_BODY,
-      credit: archiveCredit('Thoot'),
-      images: archiveImages,
+      body: [
+        '歯科医と歯科衛生士がつながり、連携をより円滑に、輝かせるサービス「Thoot（スート）」のロゴ・VI設計。 マークは円のモチーフのみで構成することで、つながることの円滑な印象と親しみやすさ、そしてシンプルさゆえの清潔感と誠実さを表現。 青を歯科医、ピンクを歯科衛生士に見立て、動きのある配置によって両者の結びつきと、つながることへの期待感を併せ持たせた。',
+      ],
+      credit: [
+        '<CREDIT> CLIENT : THOOT　|　PROJECT MANAGEMENT : RYO YOSHIKAWA　|　DESIGN DIRECTION / DESIGN : YUGO NISHIMOTO',
+        '<SCOPE> LOGO / VI　<TERM> 2024.5 ~ 2024.7',
+      ],
+      images: [`${ARCHIVE}/logo-thoot-v2.png`],
     },
     {
       heading: '■OEM・中国輸入代行会社「 CHORITZ 」のロゴ・VI設計',
-      body: ARCHIVE_BODY,
-      credit: archiveCredit('頂立輸入代行会社'),
-      images: archiveImages,
+      body: [
+        '中国のものづくりと日本の利用者をつなぐ「CHORITZ」のロゴ・VI設計。 ロゴは頂立の「頂」をモチーフに構成し、CHORITZが中心となって双方の価値を調和させながら、より良いプロダクトを生み出していく姿勢を表現した。 カラーは代表者の名に由来する「朱」の赤系を採用し、想いと誠実さの感じられる印象へと落とし込んでいる。',
+      ],
+      credit: [
+        '<CREDIT> CLIENT : 頂立輸入代行会社　|　PROJECT MANAGEMENT : RYO YOSHIKAWA　|　DESIGN DIRECTION / DESIGN : YUGO NISHIMOTO',
+        '<SCOPE> NAMING / TAG LINE / LOGO　<TERM> 2025.12 ~ 2026.4',
+      ],
+      images: [`${ARCHIVE}/logo-choritz-v2.png`],
     },
     {
       heading: '■理美容師検索予約アプリ「 Men’te 」のロゴ・VI設計',
-      body: ARCHIVE_BODY,
-      credit: archiveCredit('Men’te'),
-      images: archiveImages,
+      body: [
+        'シンプルなオリジナルフォントで構成した「Men’te」のロゴ・VI設計。 「メンズ」を想起させる「Men」を際立たせるため、「’」にのみ擬似金の装飾を加えた。 この「’」と、跳ねるように処理した「t」「e」によって、Men’teを通じて気分やモチベーションが前向きに高まっていく様子を表現している。',
+      ],
+      credit: [
+        '<CREDIT> CLIENT : Men’te　|　PROJECT MANAGEMENT : RYO YOSHIKAWA　|　DESIGN DIRECTION / DESIGN : YUGO NISHIMOTO',
+        '<SCOPE> LOGO / VI　<TERM> 2025.8 ~ 2026.2',
+      ],
+      images: [`${ARCHIVE}/logo-mente-v2.png`],
     },
     {
       heading: '■「 MAISON ORICHAN 」のロゴ・VI設計',
-      body: ARCHIVE_BODY,
-      credit: archiveCredit('株式会社 BUBBIC'),
-      images: archiveImages,
+      body: ARCHIVE_PLACEHOLDER_BODY,
+      credit: [
+        '<CREDIT> CLIENT : 株式会社 BUBBIC　|　PROJECT MANAGEMENT : RYO YOSHIKAWA　|　DESIGN DIRECTION / DESIGN : YUGO NISHIMOTO',
+        '<SCOPE> LOGO / VI　<TERM> 2025.10 ~ 2026.1',
+      ],
+      images: [`${ARCHIVE}/logo-maison-orichan.png`],
     },
     {
       heading: '■ヴィラ「 NEST 」のロゴ・VI設計',
-      body: ARCHIVE_BODY,
-      credit: archiveCredit('NEST'),
-      images: archiveImages,
+      body: ARCHIVE_PLACEHOLDER_BODY,
+      credit: [
+        '<CREDIT> CLIENT : NEST　|　PROJECT MANAGEMENT : RYO YOSHIKAWA　|　DESIGN DIRECTION / DESIGN : YUGO NISHIMOTO',
+        '<SCOPE> LOGO / VI　<TERM> NEST BIWAKO : 2024.7 ~ 2024.9　｜　NEST AMANO HASHIDATE : 2026.2',
+      ],
+      images: [`${ARCHIVE}/logo-nest.png`],
     },
     {
       heading: '■「 株式会社アリガトサン 」のブランディング',
-      body: ARCHIVE_BODY,
-      credit: archiveCredit('株式会社アリガトサン'),
-      images: archiveImages,
-    },
-    {
-      heading: '■「 全日本漬物協同組合連合会 」のロゴデザイン',
-      body: ARCHIVE_BODY,
-      credit: archiveCredit('全日本漬物協同組合連合会'),
-      images: archiveImages,
+      body: [
+        '自社「アリガトサン」のロゴ・VI設計。コンセプトは「ナシをアリにする」——非常識・不可能とされてきたことを実現し、正解とされる枠組みを疑い、不正解の中にも新たな美と価値を見出す思想を込めた。ロゴタイプはあえてアンバランスに組んだ文字を、絶妙な均衡で成り立つまで追求。AIを駆使する会社でありながら、機械的な計算では届かない最終的なバランスを、人の判断と執着に似た愛で成り立たせている。ロゴタイプの要素で太陽を象り、形も境遇も異なる9名の創業メンバーが一つの均衡を成す姿を、9本の放射線として落とし込んだ。',
+      ],
+      credit: [
+        '<CREDIT> CLIENT : 株式会社アリガトサン　|　DESIGN DIRECTION / DESIGN : YUGO NISHIMOTO',
+        '<SCOPE> LOGO / VI　<TERM> 2026.1 ~ 2026.7',
+      ],
+      images: [`${ARCHIVE}/logo-arigatosun.png`],
     },
   ],
 };
