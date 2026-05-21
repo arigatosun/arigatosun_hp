@@ -129,7 +129,9 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  @include fluid(gap, 24, 76);
+  // Figma 実測: row 1 bottom(4697) → row 2 label top(4749) = 52
+  //             row 2 bottom(4825) → row 3 label top(4873) = 48 → 平均 50
+  @include fluid(gap, 16, 50, 320, 1920);
   margin: 0;
 
   @include sp {
@@ -188,7 +190,8 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  @include fluid(gap, 12, 22);
+  // Figma 実測: label top→value top 46 / label h=30 → 内部 gap = 16
+  @include fluid(gap, 8, 16, 320, 1920);
 }
 
 // rowFull (事業内容): 単一列
