@@ -365,14 +365,148 @@ const IGC_ARCHIVE: WorkDetailContent = {
   ],
 };
 
+// ── パターンA: NEST ブランディング詳細ページ ──
+const NEST = '/images/works/nest';
+
+const NEST_DETAIL: WorkDetailContent = {
+  slug: 'work-3',
+  pattern: 'detail',
+  hero: {
+    // Figma の hero フレーム 2497:85745 実測 1920×820
+    width: 1920,
+    height: 820,
+    band: 'none',
+    // 1 枚画像（Figma の Mask group をそのまま書き出したコラージュ）でヒーロー全域を覆う。
+    photos: [
+      { src: `${NEST}/hero-collage-v3.png`, x: 0, y: 0, width: 1920, height: 820 },
+    ],
+  },
+  blocks: [
+    {
+      type: 'lead',
+      gap: 160,
+      heading: 'デジタルでは生まれない温もりと偶然性を、シンボルとして可視化する。',
+      subheading: '拡張を見据えたロゴ・VI設計',
+      body: [
+        'ヴィラブランド「NEST」のロゴ制作についてご相談をいただきました。',
+        'NESTという名前はすでに決まっており、その名前が持つ世界観をどのようにビジュアルへ落とし込むかが、',
+        'このプロジェクトの出発点でした。',
+      ],
+    },
+    // 母体 NEST ロゴ（白/黒ペアが 1 枚に焼き込まれた書き出し画像 1520×560）
+    {
+      type: 'mockupCard',
+      gap: 240,
+      src: `${NEST}/nest-main-pair.png`,
+      w: 1520,
+      h: 560,
+    },
+    {
+      type: 'textSection',
+      gap: 80,
+      level: 'main',
+      heading: '■ロゴデザイン',
+      body: [
+        'NESTの「N」を、実際のハケ・ローラー・判子を使って描きました。',
+        'デジタルで整えたラインではなく、手の温もりや偶然性が宿る質感をそのままロゴにしています。',
+        '50回以上の試作と検証を重ね、最もNESTらしい一枚を選び出し、組み立てて設計していきました。',
+        'NEST＝巣。家族や友人、恋人と過ごす特別な時間を提供する場所として、遊び心とこだわりが共存するサービスのシンボルを目指しました。',
+      ],
+    },
+    // NEST 琵琶湖（白/黒ペア 1 枚画像 1520×1100）
+    {
+      type: 'mockupCard',
+      gap: 260,
+      src: `${NEST}/nest-biwako-pair.png`,
+      w: 1520,
+      h: 1100,
+    },
+    // NEST 天橋立（白/黒ペア 1 枚画像 1520×1100）
+    {
+      type: 'mockupCard',
+      gap: 120,
+      src: `${NEST}/nest-amanohashidate-pair.png`,
+      w: 1520,
+      h: 1100,
+    },
+    {
+      type: 'textSection',
+      gap: 80,
+      level: 'main',
+      heading: '■施設ごとのVI展開',
+      body: [
+        '母体ロゴはモノクロで設計し、各施設のアクセントカラーで個性を持たせました。',
+        'NEST琵琶湖には湖面を想起させるブルー、NEST天橋立には温かみのあるオレンジを採用。',
+        '共通のマークを持ちながら、施設ごとの空気感や独自性が色で伝わる設計です。',
+        'また部屋名にも同様のロゴ展開を行い、「NEST琵琶湖 夢」「NEST天橋立 燈」のように、',
+        'ブランドの世界観が施設の隅々まで一貫して宿るようにしています。',
+      ],
+    },
+    // ロゴバリエーション大判画像（1520×942）
+    {
+      type: 'mockupCard',
+      gap: 260,
+      src: `${NEST}/logo-variations.png`,
+      w: 1520,
+      h: 942,
+    },
+    {
+      type: 'caption',
+      gap: 8,
+      text: '＜資料名の説明＞',
+    },
+    {
+      type: 'textSection',
+      gap: 120,
+      level: 'main',
+      heading: '■2施設目「NEST天橋立」への展開',
+      body: [
+        'NEST天橋立への展開は、すでに設計されたVI体系をもとに数日で完成しました。',
+        '最初の段階でルールを丁寧に設計しておくことで、新しい施設が加わった時も迷わず展開できる。',
+        'ブランドの拡張性を最初から意識した設計が、スムーズな展開につながりました。',
+      ],
+    },
+    { type: 'divider', gap: 180 },
+    {
+      type: 'creditList',
+      gap: 180,
+      groups: [
+        {
+          label: 'CREDIT',
+          lines: [
+            'CLIENT : NEST',
+            'PROJECT MANAGEMENT : RYO YOSHIKAWA',
+            'DESIGN DIRECTION / DESIGN : YUGO NISHIMOTO',
+            'PHOTOGRAPHY : HYOUGA HIROMORI , AIRU MATSUO',
+          ],
+        },
+        {
+          label: 'SCOPE',
+          lines: ['LOGO / VI'],
+        },
+        {
+          label: 'TERM',
+          lines: [
+            'NEST BIWAKO : 2024.7 ~ 2024.9',
+            'NEST AMANO HASHIDATE : 2026.2',
+          ],
+        },
+      ],
+    },
+    { type: 'divider', gap: 180 },
+    { type: 'relatedWorks', gap: 240 },
+  ],
+};
+
 /**
  * slug から詳細ページデータを取得する。
- * work-2 はパターンB（アーカイブ）、それ以外はパターンA（CHORITZ 詳細）を返す。
+ * work-2 はパターンB（アーカイブ）、work-3 は NEST 詳細、それ以外は CHORITZ 詳細を返す。
  * 「順番は後で変わる」前提のため、この分岐の差し替えだけで割当を変更できる。
  */
 export async function getWorkDetailBySlug(
   slug: string,
 ): Promise<WorkDetailContent | undefined> {
   if (slug === 'work-2') return { ...IGC_ARCHIVE, slug };
+  if (slug === 'work-3') return { ...NEST_DETAIL, slug };
   return { ...CHORITZ_DETAIL, slug };
 }

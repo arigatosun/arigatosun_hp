@@ -11,6 +11,7 @@ import WorkParagraph from '@/components/ui/WorkParagraph';
 import WorkShowcaseCard from '@/components/ui/WorkShowcaseCard';
 import WorkImageGrid from '@/components/ui/WorkImageGrid';
 import WorkMockupCard from '@/components/ui/WorkMockupCard';
+import WorkCaption from '@/components/ui/WorkCaption';
 import WorkDivider from '@/components/ui/WorkDivider';
 import WorkCreditList from '@/components/ui/WorkCreditList';
 import WorkRelatedSection from '@/components/ui/WorkRelatedSection';
@@ -112,6 +113,8 @@ export default async function WorkDetailPage({ params }: PageParams) {
           );
         } else if (block.type === 'mockupCard') {
           node = <WorkMockupCard src={block.src} w={block.w} h={block.h} />;
+        } else if (block.type === 'caption') {
+          node = <WorkCaption text={block.text} />;
         } else if (block.type === 'divider') {
           node = <WorkDivider />;
         } else if (block.type === 'creditList') {
