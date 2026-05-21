@@ -4,7 +4,8 @@
 .section {
   @include fluid(padding-left, 20, 200);
   @include fluid(padding-right, 20, 200);
-  @include fluid(padding-top, 56, 160);
+  // BusinessStructure 末尾 → メンバータイトル間ギャップ 260（ユーザー指示）
+  @include fluid(padding-top, 80, 260, 320, 1920);
 }
 
 // ── セクションタイトル（SectionHeader 共通コンポーネントを使用） ──
