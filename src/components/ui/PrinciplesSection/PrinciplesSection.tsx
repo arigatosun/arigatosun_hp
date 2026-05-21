@@ -102,11 +102,14 @@ export default function PrinciplesSection() {
         .to({}, { duration: pauseDuration })
 
         // Phase 3: 社会にアリガトサン + 最大グローが完全展開（外側楕円に押さえ込み）
+        // glow1/2 は最終的に薄くして glow3 を主役にし、仲間→お客様→社会まで満遍なく赤が届くようにする
         .to(items[2]!, { opacity: 1, y: 0, duration: 1.5, ease: 'power3.out' })
         .to(glow3, {
-          opacity: 1, scale: 1, filter: 'blur(12px)',
+          opacity: 1, scale: 1, filter: 'blur(14px)',
           duration: 3, ease: 'expo.out',
         }, '<0.2')
+        .to(glow1, { opacity: 0.35, duration: 2.5, ease: 'power2.out' }, '<')
+        .to(glow2, { opacity: 0.55, duration: 2.5, ease: 'power2.out' }, '<')
         .to({}, { duration: finalPause });
     }, sectionRef);
 

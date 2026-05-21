@@ -89,33 +89,37 @@
   );
 }
 
-// お客様: 中サイズ（お客様oval 中心寄り）
+// お客様: 中サイズ（仲間〜お客様の境界をふんわり覆う）
 .glow2 {
-  width: 55%;
-  height: 60%;
-  left: 32%;
+  width: 70%;
+  height: 70%;
+  left: 40%;
   top: 50%;
   transform: translate(-50%, -50%);
   background: radial-gradient(
     ellipse,
     var(--color-primary-rgba-55) 0%,
-    var(--color-primary-rgba-25) 35%,
-    transparent 75%
+    var(--color-primary-rgba-25) 40%,
+    transparent 80%
   );
 }
 
-// 社会: 最大グロー（Figma 最終状態 左寄り大ぼかし）
+// 社会: 最大グロー（仲間/お客様/社会 3ラベルの中央 ≒ 50% に配置）
+// mask 層が外側楕円形に切り抜くため、これより大きく取っても外にはみ出さない
 .glow3 {
-  width: 75%;
-  height: 80%;
-  left: 36%;
+  width: 120%;
+  height: 105%;
+  left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
+  // 中心から 80% まで赤を維持して 社会(80.4%)までしっかり届ける
   background: radial-gradient(
     ellipse,
     var(--color-primary-rgba-55) 0%,
-    var(--color-primary-rgba-25) 38%,
-    transparent 80%
+    var(--color-primary-rgba-55) 30%,
+    var(--color-primary-rgba-25) 60%,
+    var(--color-primary-rgba-25) 85%,
+    transparent 100%
   );
 }
 
