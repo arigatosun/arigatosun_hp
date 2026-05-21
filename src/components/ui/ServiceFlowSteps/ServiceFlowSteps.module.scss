@@ -3,45 +3,72 @@
 );
 @use '@/styles/breakpoints' as *;
 
-// レイアウト: [インジケーター] [STEP リスト]
-// Figma 実測: indicator x=1111 / STEP text x=1167 → gap 56px
-.wrap {
-  display: flex;
-  align-items: stretch;
-  @include fluid(gap, 24, 56, 320, 1920);
-}
-
-// 5 円 + 縦線インジケーター（PNG）
-// Figma Vector 143〜148 (x=1111, total h=705) + 5 ellipses
-// 実画像 64×1410 (2x scale) → 表示は 32×705
-.indicator {
-  flex-shrink: 0;
-  display: flex;
-  align-items: stretch;
-}
-
-.indicatorImage {
-  width: auto;
-  // 表示時の高さは list の総高さに追従させる
-  height: 100%;
-  object-fit: contain;
-  object-position: top center;
-}
+// レイアウト変数（PC 基準値）:
+// - 縦線 x 位置: list 左端から 15 (= circle 中央)
+// - 円外径: 30 / 内径 14
+// - 円と STEP テキスト間 gap: 26 → padding-left = 30 + 26 = 56
+$indicator-col: 56px;
+$circle-outer: 30px;
+$circle-inner: 14px;
+$line-x: calc((#{$circle-outer} - 1px) / 2);
 
 // Figma 実測 (STEP.1 y=4729 → STEP.5 y=5321、5 ステップ間 148px 間隔)
 .list {
   list-style: none;
   margin: 0;
   padding: 0;
+  padding-left: $indicator-col;
   display: flex;
   flex-direction: column;
-  // STEP.1 → STEP.2 距離 148 から内側コンテンツ高さを引いた値 ≒ 36
+  // STEP 間距離 148 - 内側コンテンツ 112 = 36
   @include fluid(row-gap, 24, 36, 320, 1920);
+  position: relative;
+
+  // 縦線（全 item を貫通）
+  &::before {
+    content: '';
+    position: absolute;
+    left: $line-x;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background-color: var(--color-text-secondary);
+    z-index: 0;
+  }
 }
 
 .item {
   display: flex;
   flex-direction: column;
+  position: relative;
+
+  // 外側 outline 円（白背景で line を隠す）
+  &::before {
+    content: '';
+    position: absolute;
+    left: calc(-1 * #{$indicator-col});
+    top: 4px; // STEP テキスト first-line baseline 寄せ
+    width: $circle-outer;
+    height: $circle-outer;
+    border: 1px solid var(--color-text-secondary);
+    border-radius: 50%;
+    background-color: var(--color-bg);
+    box-sizing: border-box;
+    z-index: 1;
+  }
+
+  // 内側 solid 円
+  &::after {
+    content: '';
+    position: absolute;
+    left: calc(-1 * #{$indicator-col} + (#{$circle-outer} - #{$circle-inner}) / 2);
+    top: calc(4px + (#{$circle-outer} - #{$circle-inner}) / 2);
+    width: $circle-inner;
+    height: $circle-inner;
+    border-radius: 50%;
+    background-color: var(--color-text-secondary);
+    z-index: 2;
+  }
 }
 
 // STEP.1〜.5 (Figma 38 tall / Mozaic GEO Light 24px / ls 0.13em)
