@@ -36,15 +36,52 @@ export default function GlobalCanvas() {
       <directionalLight position={[-4, 2, 5]} intensity={0.6} />
 
       <Suspense fallback={null}>
-        {/* Service: 右→左に歩行（セクション表示時にトリガー） */}
+        {/* Service: 奥→手前へサイズアップしながら歩いてくる depth-walk 演出。
+            Phase 18 追補:
+            - 正面向き（facingRotationY=0）
+            - 横走行をやめて depth-walk モードへ（X 移動なし、scale を 0.25→0.85 に補間）
+            - 5 秒かけて手前まで来る → waitMs(6 秒)後に奥へリセット
+            - 仕上がり感を見て startScale/endScale/durationMs/startY/endY で微調整可
+        */}
+        {/* Service: 右→左に横歩行（ゆっくり目）。
+            direction の既定どおり進行方向（カメラ-left）を向いて横向きに歩く。
+            look-at は無効。クリックでジャンプのみのシンプルな反応。 */}
         <WalkingCharacter
           glbPath={GLB_PATH}
           direction="right-to-left"
-          speed={1.8}
+          speed={1.0}
           sectionSelector='[data-section="service"]'
           triggerOnVisible
-          baseY={-2.8}
+          // 画面下 700px 内に Service セクションが近づいた時点で歩行開始。
+          // セクション到達時点ですでに数秒分歩いている状態にする。
+          approachMarginPx={700}
+          // Service セクション pin 中、キャラの足が viewport 下端付近に来るように上に上げる
+          baseY={-2.0}
           scale={0.6}
+          reactOnClick={{
+            durationMs: 600,
+            jumpHeight: 1.0,
+            spins: 0,
+            hitRadius: 180,
+          }}
+        />
+
+        {/* LogoSlider: 左→右に逆方向で歩く 2 体目 */}
+        <WalkingCharacter
+          glbPath={GLB_PATH}
+          direction="left-to-right"
+          speed={1.0}
+          sectionSelector='[data-section="logo-slider"]'
+          triggerOnVisible
+          approachMarginPx={700}
+          baseY={-1.5}
+          scale={0.6}
+          reactOnClick={{
+            durationMs: 600,
+            jumpHeight: 1.0,
+            spins: 0,
+            hitRadius: 180,
+          }}
         />
       </Suspense>
     </Canvas>

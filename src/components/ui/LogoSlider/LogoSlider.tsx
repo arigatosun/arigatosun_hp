@@ -46,7 +46,7 @@ export default function LogoSlider() {
   }, []);
 
   return (
-    <div className={styles.wrapper}>
+    <div className={styles.wrapper} data-section="logo-slider">
       <div
         ref={sliderRef}
         className={styles.slider}
