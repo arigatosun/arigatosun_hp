@@ -3,16 +3,39 @@
 );
 @use '@/styles/breakpoints' as *;
 
-// Figma 実測（STEP.1 y=4729 → STEP.5 y=5321、5 ステップ間 148px 間隔）:
-// 各 step は step 番号 + title (lh36) + description (lh38)
+// レイアウト: [インジケーター] [STEP リスト]
+// Figma 実測: indicator x=1111 / STEP text x=1167 → gap 56px
+.wrap {
+  display: flex;
+  align-items: stretch;
+  @include fluid(gap, 24, 56, 320, 1920);
+}
+
+// 5 円 + 縦線インジケーター（PNG）
+// Figma Vector 143〜148 (x=1111, total h=705) + 5 ellipses
+// 実画像 64×1410 (2x scale) → 表示は 32×705
+.indicator {
+  flex-shrink: 0;
+  display: flex;
+  align-items: stretch;
+}
+
+.indicatorImage {
+  width: auto;
+  // 表示時の高さは list の総高さに追従させる
+  height: 100%;
+  object-fit: contain;
+  object-position: top center;
+}
+
+// Figma 実測 (STEP.1 y=4729 → STEP.5 y=5321、5 ステップ間 148px 間隔)
 .list {
   list-style: none;
   margin: 0;
   padding: 0;
   display: flex;
   flex-direction: column;
-  // STEP.1 → STEP.2 距離 148 から内側コンテンツ高さを引いた値
-  // ≒ STEP+title+desc 合計 ~112 → gap ~36
+  // STEP.1 → STEP.2 距離 148 から内側コンテンツ高さを引いた値 ≒ 36
   @include fluid(row-gap, 24, 36, 320, 1920);
 }
 
@@ -21,17 +44,17 @@
   flex-direction: column;
 }
 
-// STEP.1〜.5 (Figma 38 tall / Mozaic GEO Light 22px / ls ≒ 0.13em)
+// STEP.1〜.5 (Figma 38 tall / Mozaic GEO Light 24px / ls 0.13em)
 .step {
   color: var(--color-black);
   font-family: var(--font-en);
   font-weight: var(--font-weight-light);
-  @include fluid(font-size, 16, 22);
+  @include fluid(font-size, 16, 24);
   @include fluid(line-height, 28, 38);
   letter-spacing: 0.13em;
 }
 
-// ステップ見出し（現状整理・課題把握 等 / 36 tall / Noto Sans JP 16px）
+// ステップ見出し（現状整理・課題把握 等 / 36 tall / Noto Sans JP medium 16px）
 .title {
   margin: 0;
   color: var(--color-black);
@@ -42,7 +65,7 @@
   letter-spacing: 0.2em;
 }
 
-// ステップ説明文（38 tall / 14px / lh 38 / ls 3.92 ≒ 0.28em）
+// ステップ説明文 (Noto Sans JP regular 14px / lh 38 / ls 3.92 ≒ 0.28em)
 .description {
   margin: 0;
   @include fluid(margin-top, 4, 6);
