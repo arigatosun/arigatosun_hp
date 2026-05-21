@@ -11,8 +11,8 @@
   // Figma: 左右 200px（pagination の全幅中央のため対称）
   @include fluid(padding-left, 20, 200);
   @include fluid(padding-right, 20, 200);
-  // Figma 実測: サイドバー上端 y=200 (page top 込み) − header 80 = 120
-  @include fluid(padding-top, 45, 120);
+  // /about 統一基準: page top込み fluid(120, 260) − header 80
+  @include fluid(padding-top, 40, 180);
   @include fluid(padding-bottom, 60, 200);
 }
 

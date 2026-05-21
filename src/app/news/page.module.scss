@@ -11,7 +11,8 @@
   align-items: flex-start;
   @include fluid(padding-left, 20, 200);
   @include fluid(padding-right, 20, 200);
-  @include fluid(padding-top, 56, 160);
+  // /about 統一基準: page top込み fluid(120, 260) − header 80（1920ベースで /about と完全一致）
+  @include fluid(padding-top, 40, 180, 320, 1920);
   @include fluid(gap, 40, 280);
 
   @include sp {
@@ -24,12 +25,12 @@
 // position: sticky でビューポート上部に追従。親 .inner の末尾まで来た時に
 // 自然に解除されるので、ページネーション・フッターと重ならない。
 // top は「自然位置」に合わせて初動ズレ＆タイトル見切れを防ぐ：
-//   header(80) + .inner padding-top(fluid 56〜160) ＝ fluid(136, 240)
+//   header(80) + .inner padding-top(fluid 40〜180) ＝ fluid(120, 260)（1920ベース）
 .sidebar {
   flex-shrink: 0;
   align-self: flex-start; // flex container 内で sticky を効かせるために必須
   position: sticky;
-  @include fluid(top, 136, 240);
+  @include fluid(top, 120, 260, 320, 1920);
   @include fluid(width, 160, 240);
 
   @include sp {
