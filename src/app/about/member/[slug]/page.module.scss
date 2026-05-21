@@ -4,7 +4,7 @@
 .page {
   background-color: var(--color-bg);
   padding-top: 80px; // Header(position: fixed) 分のオフセット
-  @include fluid(padding-bottom, 80, 160);
+  @include fluid(padding-bottom, 110, 250);
 }
 
 // 上部 2-col レイアウト（写真 ｜ テキスト列）

@@ -4,7 +4,9 @@ import type { Member } from '@/types/member';
 // 型は @/types/member に集約。後方互換のため再エクスポート。
 export type { Member, MemberSocial, MemberProject } from '@/types/member';
 
-export const members: Member[] = [
+// 原データ（hidden 含む）。public 用の `members` / `getMemberBySlug` 等は
+// 下記で hidden を除外したものを export するので、外から使うときは hidden を考慮しなくて OK。
+const allMembers: Member[] = [
   {
     slug: 'shuto-nakamura',
     name: 'SHUTO NAKAMURA',
@@ -93,6 +95,7 @@ export const members: Member[] = [
     slug: 'hideya-mifuji',
     name: 'HIDEYA MIFUJI',
     role: 'ENGINEER',
+    hidden: true, // ← 再表示する時は false にするかこの行を削除
     photo: '/images/team/hideya-mifuji.webp',
     photoColor: '/images/team/hideya-mifuji-color.webp',
     catchphrase: '細部にこそ、本質が宿る。',
@@ -173,10 +176,15 @@ export const members: Member[] = [
   },
 ];
 
+// public API: hidden を除外した一覧。MemberSection / detail page など外部はこれを使う。
+export const members: Member[] = allMembers.filter((m) => !m.hidden);
+
 export function getMemberBySlug(slug: string): Member | undefined {
+  // hidden member は undefined を返して詳細 URL を 404 にする
   return members.find((m) => m.slug === slug);
 }
 
 export function getAllMemberSlugs(): string[] {
+  // 静的ページ生成対象から hidden を除外
   return members.map((m) => m.slug);
 }
