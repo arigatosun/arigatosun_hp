@@ -48,14 +48,15 @@ export default async function ServiceDetailPage({ params }: PageParams) {
         heroImage={data.heroImage}
       />
 
-      {data.promises && (
+      {data.promises?.map((section) => (
         <ServicePromiseGrid
-          id={data.promises.id}
-          title={data.promises.title}
-          subtitle={data.promises.subtitle}
-          items={data.promises.items}
+          key={section.id}
+          id={section.id}
+          title={section.title}
+          subtitle={section.subtitle}
+          items={section.items}
         />
-      )}
+      ))}
 
       {data.concepts.map((concept) => (
         <ServiceConceptBlock

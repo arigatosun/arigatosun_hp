@@ -103,8 +103,8 @@ export type ServiceDetailData = {
   quote: string;
   description: string[];
   heroImage: string | null;
-  /** 「私たちが実現すること」など Hero 直後の3カラム promise グリッド（任意） */
-  promises?: ServicePromiseSection;
+  /** 「私たちが実現すること」「私たちが実現してきたこと」など Hero 直後の3カラムグリッド（複数可） */
+  promises?: ServicePromiseSection[];
   concepts: ServiceConcept[];
   caseStudies: ServiceCaseStudy[];
 };
