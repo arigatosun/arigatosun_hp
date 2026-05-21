@@ -213,12 +213,11 @@ const AI_DEV: ServiceDetailData = {
         width: 1376,
         height: 1343,
         // バブルシルエットのマスク（赤グローを形の中にクリップ）
-        // 線画(1376×1343) は外側 dashed border 含む / マスク(1346×1282) は bubble シルエットのみ
-        // 寸法差: 横 30px / 縦 61px → 左右 15px / 上下 30.5px の dashed margin と仮定
-        // size: 1346/1376 = 97.82%, 1282/1343 = 95.46% / position center で bubble area に被せる
+        // 線画(1376×1343) と マスク(1376×1342) はほぼ同寸（高さ1px差のみ）
+        // → size 100% 100% で線画にフィットさせる（1px の差は誤差レベルで吸収）
         mask: {
           src: '/images/sections/service/detail/concept-standard-ai-mask.png',
-          size: '97.82% 95.46%',
+          size: '100% 100%',
           position: '50% 50%',
         },
       },
