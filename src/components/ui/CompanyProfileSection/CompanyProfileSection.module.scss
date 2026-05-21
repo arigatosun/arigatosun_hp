@@ -103,9 +103,10 @@
 }
 
 // ── 画像エリア 520×520 ──
+// Figma 比率: image 520 / table 758 = 0.686:1 を全 viewport で維持
 .imageWrap {
   flex-shrink: 0;
-  @include fluid(width, 200, 520);
+  @include fluid(width, 200, 520, 320, 1920);
   aspect-ratio: 1 / 1;
 
   @include sp {
@@ -121,13 +122,20 @@
 }
 
 // ── 情報テーブル ──
+// flex:1 だと viewport により画像との比率が崩れるため fluid 固定
 .table {
-  flex: 1;
+  flex-shrink: 0;
+  @include fluid(width, 280, 758, 320, 1920);
   min-width: 0;
   display: flex;
   flex-direction: column;
   @include fluid(gap, 24, 76);
   margin: 0;
+
+  @include sp {
+    width: 100%;
+    flex: 1;
+  }
 }
 
 // 1行 — 横並びセル
