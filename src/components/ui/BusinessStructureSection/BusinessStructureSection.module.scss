@@ -51,6 +51,24 @@
   }
 }
 
+// ── 赤グロー mask 層 ──
+// .right を覆い、4-clover + 外側2小円のシルエット SVG で切り抜く。
+// マウス追従の glow が内側に置かれ、シルエット外には絶対に出ない。
+.glowMaskLayer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  mask-image: url('/images/sections/about/structure-mask.svg');
+  -webkit-mask-image: url('/images/sections/about/structure-mask.svg');
+  mask-size: 100% 100%;
+  -webkit-mask-size: 100% 100%;
+  mask-position: center;
+  -webkit-mask-position: center;
+  mask-repeat: no-repeat;
+  -webkit-mask-repeat: no-repeat;
+}
+
 // ── ヒートマップグロー共通（640×640px画像基準） ──
 .heatmapGlow {
   position: absolute;
@@ -58,17 +76,14 @@
   height: 46.9%;                 // 300 / 640
   background: radial-gradient(
     circle,
-    rgba(218, 39, 25, 0.55) 0%,
-    rgba(218, 39, 25, 0.35) 22%,
-    rgba(218, 39, 25, 0.18) 42%,
-    rgba(218, 39, 25, 0.05) 62%,
-    transparent 78%
+    var(--color-primary-rgba-55) 0%,
+    var(--color-primary-rgba-25) 35%,
+    transparent 75%
   );
   border-radius: 50%;
   filter: blur(8px);
   pointer-events: none;
   transform: translate(-50%, -50%);
-  z-index: 1;
   // デフォルト位置（図の中心交差部付近）
   left: calc(55% + 3.75%);      // 24 / 640
   top: calc(50% + 2.8%);        // 18 / 640
