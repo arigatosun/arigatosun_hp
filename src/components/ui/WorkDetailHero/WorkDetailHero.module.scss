@@ -4,7 +4,8 @@
 );
 @use '@/styles/breakpoints' as *;
 
-// ヒーロー全体。1920×760 の比率を保ったまま viewport 幅に追従。
+// ヒーロー全体。Figma 基準サイズの比率を保ったまま viewport 幅に追従。
+// aspect-ratio はインライン style（コンポーネント側で hero.width / hero.height から算出）で上書きする。
 .hero {
   position: relative;
   width: 100%;
