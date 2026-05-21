@@ -218,17 +218,20 @@
 }
 
 .principleLink {
+  // Figma 実測 (2481:51627): 白背景 121×17, テキスト 120×17 right-align
+  // → 背景帯はテキストとほぼ同寸（左右の余白ほぼ無し / 高さは cap height 相当）
   flex-shrink: 0;
+  display: inline-block;
   color: var(--color-black);
-  text-align: right;
   font-family: var(--font-en);
   @include fluid(font-size, 14, 20);
   font-weight: var(--font-weight-light);
-  line-height: 1.2;
+  // 帯の縦寸を Figma の 17/20 ≒ 0.85 に揃える
+  line-height: calc(17 / 20);
   letter-spacing: 0.13em;
   text-decoration: none;
   background-color: var(--color-white);
-  padding: 4px 8px;
+  padding: 0;
   transition: color var(--transition-base);
 
   &:hover {
