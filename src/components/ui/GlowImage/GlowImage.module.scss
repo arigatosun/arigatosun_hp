@@ -83,3 +83,26 @@
     transform: translate(-50%, -50%) translate(-4%, 2%);
   }
 }
+
+// ── テキストオーバーレイ層（AI/DEV アリガトサン・スタンダードの3標準等） ──
+// 画像枠基準で絶対配置。各 overlay の top/left/width は呼び出し側で % 指定。
+.overlays {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.overlay {
+  position: absolute;
+  margin: 0;
+  color: var(--color-black);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  font-weight: var(--font-weight-regular);
+  // Figma 実測: 16〜18px / lh 26〜32 / ls ≒ 0.2em
+  @include fluid(font-size, 13, 16);
+  @include fluid(line-height, 22, 26);
+  letter-spacing: 0.2em;
+  text-align: center;
+  white-space: pre-line;
+}

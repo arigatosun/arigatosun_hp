@@ -40,6 +40,17 @@ export type ServiceConceptMask = {
   position: string;
 };
 
+/** 画像オーバーレイ（雲ダイアグラム上の標準コピー等） */
+export type ServiceImageOverlay = {
+  /** 表示テキスト */
+  text: string;
+  /** 画像枠基準の絶対配置 (%) */
+  topPct: number;
+  leftPct: number;
+  /** テキスト幅（画像幅基準 %） */
+  widthPct: number;
+};
+
 /** コンセプトブロックのビジュアル（イラスト画像 or ピルリスト） */
 export type ServiceConceptVisual =
   | {
@@ -51,6 +62,8 @@ export type ServiceConceptVisual =
       height: number;
       /** グローを形の内側にクリップするマスク。null ならクリップなし */
       mask: ServiceConceptMask | null;
+      /** 画像の上に重ねるテキストオーバーレイ（AI/DEV アリガトサン・スタンダードの3標準等） */
+      overlays?: ServiceImageOverlay[];
     }
   | {
       kind: 'pills';

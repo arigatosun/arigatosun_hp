@@ -3,7 +3,7 @@
 import { useCallback, useRef, type CSSProperties } from 'react';
 import Image from 'next/image';
 import { useMediaQuery } from '@/lib/useMediaQuery';
-import type { ServiceConceptMask } from '@/types/service';
+import type { ServiceConceptMask, ServiceImageOverlay } from '@/types/service';
 import styles from './GlowImage.module.scss';
 
 type GlowImageProps = {
@@ -14,6 +14,8 @@ type GlowImageProps = {
   height: number;
   /** グローを形の内側だけにクリップするマスク。null ならクリップなし */
   mask?: ServiceConceptMask | null;
+  /** 画像の上に重ねるテキストオーバーレイ */
+  overlays?: ServiceImageOverlay[];
 };
 
 /**
@@ -27,6 +29,7 @@ export default function GlowImage({
   width,
   height,
   mask = null,
+  overlays = [],
 }: GlowImageProps) {
   const glowRef = useRef<HTMLDivElement>(null);
   const isPC = useMediaQuery('(min-width: 768px)');
@@ -96,6 +99,24 @@ export default function GlowImage({
       <div className={styles.glowClip} style={clipStyle} aria-hidden="true">
         <div ref={glowRef} className={`${styles.glow} ${styles.floating}`} />
       </div>
+
+      {overlays.length > 0 && (
+        <div className={styles.overlays} aria-hidden="false">
+          {overlays.map((o, i) => (
+            <p
+              key={i}
+              className={styles.overlay}
+              style={{
+                top: `${o.topPct}%`,
+                left: `${o.leftPct}%`,
+                width: `${o.widthPct}%`,
+              }}
+            >
+              {o.text}
+            </p>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
