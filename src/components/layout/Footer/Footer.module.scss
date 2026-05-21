@@ -1,19 +1,24 @@
 @use '@/styles/fluid' as *;
 @use '@/styles/breakpoints' as *;
 
+// Figma 1920 基準: footer 全高 1364
+//   - y=0..201: 白い領域（キャラが座る上半身分）
+//   - y=201..  : 赤いアーチ + 内容部分
 .footer {
   position: relative;
   @include fluid(margin-top, 40, 120);
+  @include fluid(padding-top, 80, 201);
   overflow: visible;
 }
 
 // ── 背景マスクオーバーレイ ──
+// 白い領域 (footer top 〜 201px) より下から始める。bg-mask.png の上端 = アーチ頂点。
 .maskOverlay {
   position: absolute;
-  top: 0;
+  @include fluid(top, 80, 201);
   left: 0;
-  width: 100%;
-  height: 100%;
+  right: 0;
+  bottom: 0;
   z-index: 0;
 }
 
@@ -23,24 +28,28 @@
 }
 
 // ── アーチ上のキャラクター ──
+// Figma 1920基準: 182×186、footer 上端から top=15 の位置に配置（footer 内側、白い領域）。
+// キャラ下端 (y=201) がアーチ頂点に重なる。
 .sitCharacter {
   position: absolute;
-  @include fluid(top, -184, -354);
+  @include fluid(top, 8, 15);
   left: 50%;
   transform: translateX(-50%);
-  @include fluid(width, 150, 300);
-  @include fluid(height, 150, 300);
+  @include fluid(width, 96, 182);
+  @include fluid(height, 98, 186);
   z-index: 2;
   pointer-events: none;
 }
 
 // ── CONTACT US ボタンエリア ──
+// Figma: アーチ頂点 (y=201) → button top (y=324) = 123px、button bottom (y=396) → LOGO top (y=596) = 200px
+// .footer 側で padding-top: 201 を取っているので contactArea の padding-top は 123 を直接指定。
 .contactArea {
   position: relative;
   z-index: 1;
   display: flex;
   justify-content: center;
-  @include fluid(padding-top, 60, 200);
+  @include fluid(padding-top, 50, 123);
   @include fluid(padding-bottom, 80, 200);
 }
 
@@ -100,6 +109,7 @@
 }
 
 .logoWrap {
+  // Figma: ロゴ下端 (676) → ABOUT 上端 (736) = 60px
   @include fluid(margin-bottom, 24, 60);
 }
 
@@ -112,7 +122,8 @@
 .mainMenu {
   display: flex;
   flex-direction: column;
-  @include fluid(gap, 16, 32);
+  // Figma: line-to-line 52px = font line-height 24 + gap 28
+  @include fluid(gap, 12, 28);
   list-style: none;
 }
 
@@ -141,9 +152,11 @@
 .subMenu {
   display: flex;
   flex-direction: column;
-  @include fluid(gap, 12, 24);
+  // Figma: line-to-line 41px = font line-height 22 + gap 19
+  @include fluid(gap, 8, 19);
   list-style: none;
-  @include fluid(margin-top, 14, 28);
+  // Figma: SERVICE 下 → AI/DEV top = 24px
+  @include fluid(margin-top, 10, 24);
 }
 
 .subMenuItem {
@@ -245,6 +258,9 @@
 }
 
 // ── 最下部 ──
+// Figma: 最終メニュー (INSTAGRAM bottom y=1158) → Copyright top (y=1266) = 108px
+// 右カラム 飲み深呼吸 bottom (y=1140) → Copyright top = 126px
+// 左カラム駆動でコンテンツ底が決まるため margin-top は左基準 108 に寄せる
 .bottom {
   position: relative;
   z-index: 1;
@@ -252,7 +268,7 @@
   justify-content: center;
   align-items: center;
   @include fluid(gap, 24, 70);
-  @include fluid(margin-top, 40, 120);
+  @include fluid(margin-top, 36, 108);
   @include fluid(padding-bottom, 28, 74);
 
   @include sp {
