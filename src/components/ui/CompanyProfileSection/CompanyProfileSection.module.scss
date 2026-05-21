@@ -28,14 +28,12 @@
 }
 
 // ── 白カード（1520×720） ──
+// Figma: header は card 左上端に貼り付き / inner は asymmetric padding（左80 右100）
+// → card 自身は padding 0、各子要素で個別に padding を持つ
 .card {
   background-color: var(--color-white);
   width: 100%;
   @include fluid(min-height, 360, 720);
-  @include fluid(padding-top, 32, 100);
-  @include fluid(padding-bottom, 32, 100);
-  @include fluid(padding-left, 20, 80);
-  @include fluid(padding-right, 20, 80);
 
   @include sp {
     min-height: auto;
@@ -43,11 +41,13 @@
 }
 
 // ── セクションヘッダ（28px / ls 11.2 — Figma 会社概要 専用サイズ） ──
+// Figma 実測: icon at card x=0 / 会社概要 title at card x=84 (icon幅60.77 + gap 23)
+// header top = card top (margin/padding 上なし)、header bottom → inner top に 34px gap
 .header {
   display: flex;
   align-items: center;
-  @include fluid(gap, 10, 20);
-  @include fluid(margin-bottom, 32, 80);
+  @include fluid(gap, 12, 23);
+  @include fluid(margin-bottom, 17, 34);
 }
 
 .headerLogo {
@@ -83,14 +83,22 @@
 }
 
 // ── 中身: 画像 + テーブル ──
+// Figma 実測: 画像 x=80 / info x=662 / inner 右端 100px パディング
+// inner 自身が左右パディングを持つ（header はパディング無しでカード左上端に配置するため）
 .inner {
   display: flex;
   align-items: flex-start;
   @include fluid(gap, 24, 62);
+  @include fluid(padding-left, 20, 80);
+  @include fluid(padding-right, 20, 100);
+  @include fluid(padding-bottom, 32, 100);
 
   @include sp {
     flex-direction: column;
     @include fluid(gap, 20, 32);
+    @include fluid(padding-left, 20, 40);
+    @include fluid(padding-right, 20, 40);
+    @include fluid(padding-bottom, 32, 48);
   }
 }
 
