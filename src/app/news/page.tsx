@@ -9,11 +9,35 @@ export const metadata: Metadata = {
   title: 'ニュース',
 };
 
+// 1ページあたりの記事数
+const PAGE_SIZE = 6;
+
 // カテゴリは現状は見た目のみ（絞り込みは WordPress 連携時に実装）
 const CATEGORIES = ['・ALL >', '・INFOMATION >', '・EVENTS >', '・PRESS >'];
 
-export default async function NewsPage() {
+type NewsPageProps = {
+  searchParams: Promise<{ page?: string }>;
+};
+
+export default async function NewsPage({ searchParams }: NewsPageProps) {
   const news = await getNewsList();
+  const { page } = await searchParams;
+
+  const totalPages = Math.max(1, Math.ceil(news.length / PAGE_SIZE));
+  // 不正・範囲外のページ番号は 1〜totalPages にクランプ
+  const requested = Number.parseInt(page ?? '1', 10);
+  const currentPage = Math.min(
+    totalPages,
+    Math.max(1, Number.isFinite(requested) ? requested : 1),
+  );
+  const pagedNews = news.slice(
+    (currentPage - 1) * PAGE_SIZE,
+    currentPage * PAGE_SIZE,
+  );
+
+  const prevHref = currentPage > 1 ? `/news?page=${currentPage - 1}` : null;
+  const nextHref =
+    currentPage < totalPages ? `/news?page=${currentPage + 1}` : null;
 
   return (
     <div className={styles.page}>
@@ -48,7 +72,7 @@ export default async function NewsPage() {
         {/* 右: 記事リスト */}
         <div className={styles.main}>
           <ul className={styles.articleList}>
-            {news.map((item) => (
+            {pagedNews.map((item) => (
               <li key={item.slug} className={styles.articleItem}>
                 <Link href={`/news/${item.slug}`} className={styles.article}>
                   <div className={styles.articleContent}>
@@ -84,13 +108,43 @@ export default async function NewsPage() {
         </div>
       </div>
 
-      {/* ページネーション（コンテンツ全幅で中央配置・見た目のみ） */}
+      {/* ページネーション（コンテンツ全幅で中央配置） */}
       <div className={styles.pagination}>
-        <span className={`${styles.pageButton} ${styles.pageButtonDisabled}`}>
-          &lt; BACK
+        {prevHref ? (
+          <Link
+            href={prevHref}
+            className={styles.pageButton}
+            aria-label="前のページへ"
+          >
+            &lt; BACK
+          </Link>
+        ) : (
+          <span
+            className={`${styles.pageButton} ${styles.pageButtonDisabled}`}
+            aria-disabled="true"
+          >
+            &lt; BACK
+          </span>
+        )}
+        <span className={styles.pageInfo}>
+          {currentPage}/{totalPages}
         </span>
-        <span className={styles.pageInfo}>1/2</span>
-        <span className={styles.pageButton}>NEXT &gt;</span>
+        {nextHref ? (
+          <Link
+            href={nextHref}
+            className={styles.pageButton}
+            aria-label="次のページへ"
+          >
+            NEXT &gt;
+          </Link>
+        ) : (
+          <span
+            className={`${styles.pageButton} ${styles.pageButtonDisabled}`}
+            aria-disabled="true"
+          >
+            NEXT &gt;
+          </span>
+        )}
       </div>
     </div>
   );
