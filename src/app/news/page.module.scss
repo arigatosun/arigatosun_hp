@@ -16,7 +16,10 @@
 
   @include sp {
     flex-direction: column;
-    @include fluid(gap, 32, 56);
+    // Figma SP(390): 左右 padding 42 / sidebar→記事 60 をターゲット
+    @include fluid(padding-left, 30, 42, 320, 390);
+    @include fluid(padding-right, 30, 42, 320, 390);
+    @include fluid(gap, 40, 60, 320, 390);
   }
 }
 
@@ -46,11 +49,21 @@
 
   img {
     @include fluid(width, 96, 160);
+
+    // Figma SP(390): ニュース画像 118×29
+    @include sp {
+      @include fluid(width, 96, 118, 320, 390);
+    }
   }
 
   p {
     @include fluid(margin-top, 16, 28);
     line-height: 18px;
+
+    // Figma SP(390): NEWS ラベル font 14 / ls 1.82 = 0.13em
+    @include sp {
+      letter-spacing: 0.13em;
+    }
   }
 }
 
@@ -62,9 +75,13 @@
   @include fluid(gap, 16, 32);
 
   @include sp {
-    flex-direction: row;
-    flex-wrap: wrap;
-    @include fluid(gap, 8, 16);
+    // Figma SP: ALL/INFOMATION / EVENTS/PRESS の 2x2 グリッド
+    // col1 x=42 / col2 x=173 → 列ピッチ 131px 固定（content width 306 = 390-2×42）
+    // 131fr 175fr で content を 131:175 に分割（col2 start = 131px from content left）
+    display: grid;
+    grid-template-columns: 131fr 175fr;
+    column-gap: 0;
+    @include fluid(row-gap, 28, 38, 320, 390);
   }
 }
 
@@ -76,6 +93,12 @@
   line-height: 1.2; // 赤帯がはみ出さない行ボックス高
   @include fluid(letter-spacing, 1.4, 2.6);
   white-space: nowrap;
+
+  @include sp {
+    // Figma SP: font 16 / ls 2.08px → 0.13em
+    @include fluid(font-size, 14, 16, 320, 390);
+    letter-spacing: 0.13em;
+  }
 }
 
 // 赤マーカー帯（TOP ページ ServiceSection のメニューと同方式）。
@@ -121,6 +144,11 @@
   background: url('/images/sections/news/sidebar-divider.svg') center / contain
     no-repeat;
   transform: rotate(180deg); // Figma 同様に矢印を下向きへ
+
+  // Figma SP では CONTACT 関連を非表示
+  @include sp {
+    display: none;
+  }
 }
 
 .contactLink {
@@ -148,6 +176,11 @@
     color: var(--color-white);
     background-size: calc(100% - 5px) 0.85em;
   }
+
+  // Figma SP では CONTACT 関連を非表示
+  @include sp {
+    display: none;
+  }
 }
 
 // ── 右: 記事リスト ──
@@ -155,6 +188,10 @@
   flex: 1;
   min-width: 0;
   @include fluid(padding-top, 32, 100);
+
+  @include sp {
+    padding-top: 0; // sidebar との間は .inner の gap で確保
+  }
 }
 
 .articleList {
@@ -177,6 +214,15 @@
   &:hover .articleTitle {
     color: var(--color-primary);
   }
+
+  @include sp {
+    // Figma SP: サムネ → タイトル → メタ の縦積み
+    flex-direction: column-reverse;
+    align-items: stretch;
+    @include fluid(gap, 18, 24, 320, 390); // サムネ→タイトル 24px
+    @include fluid(padding-top, 38, 49, 320, 390); // 区切り→次のサムネ 49px
+    @include fluid(padding-bottom, 30, 41, 320, 390); // メタ→区切り 41px
+  }
 }
 
 .articleItem:first-child .article {
@@ -186,6 +232,10 @@
 .articleContent {
   flex: 1;
   min-width: 0;
+
+  @include sp {
+    flex: 0 0 auto; // 縦積み時はコンテンツ高さに合わせる
+  }
 }
 
 .articleTitle {
@@ -197,6 +247,13 @@
   @include fluid(line-height, 26, 34);
   @include fluid(letter-spacing, 1.8, 2.88);
   transition: color var(--transition-base);
+
+  @include sp {
+    // Figma SP: font 16 / lh 26 / ls 2.56 → 0.16em
+    @include fluid(font-size, 14, 16, 320, 390);
+    line-height: 26px;
+    letter-spacing: 0.16em;
+  }
 }
 
 .articleMeta {
@@ -205,6 +262,13 @@
   display: flex;
   align-items: baseline;
   @include fluid(gap, 12, 24);
+
+  @include sp {
+    // Figma SP: title 下端→date 22px（lh 26 の余り含む）
+    @include fluid(margin-top, 18, 22, 320, 390);
+    // Figma SP: 日付右端(128) → カテゴリ文字(162) のギャップ = 34px
+    @include fluid(gap, 24, 34, 320, 390);
+  }
 }
 
 .articleDate,
@@ -214,6 +278,12 @@
   font-weight: var(--font-weight-light);
   @include fluid(font-size, 14, 20);
   @include fluid(letter-spacing, 1.4, 2.6);
+
+  @include sp {
+    // Figma SP: font 14 / lh 10.8 / ls 1.82 → 0.13em
+    font-size: 14px;
+    letter-spacing: 0.13em;
+  }
 }
 
 // カテゴリタグの背後に白帯（Figma: 164×13px / font 20px → 0.65em）。
@@ -237,6 +307,13 @@
   aspect-ratio: 266 / 150;
   overflow: hidden;
   background: var(--color-white);
+
+  @include sp {
+    // Figma SP: 310×175 を full-width に
+    align-self: stretch;
+    width: 100%;
+    aspect-ratio: 310 / 175;
+  }
 }
 
 .thumbnailImage {
@@ -268,6 +345,14 @@
   align-items: center;
   justify-content: center;
   @include fluid(gap, 24, 46);
+
+  @include sp {
+    // Figma SP: BACK 左端 / NEXT 右端 / 1/2 中央 → space-between
+    @include fluid(padding-left, 30, 42, 320, 390);
+    @include fluid(padding-right, 30, 42, 320, 390);
+    justify-content: space-between;
+    gap: 0;
+  }
 }
 
 .pageButton {
@@ -283,10 +368,29 @@
   font-weight: var(--font-weight-light);
   @include fluid(font-size, 14, 20);
   @include fluid(letter-spacing, 1.4, 2.6);
+  text-decoration: none; // <a> 化したときの下線除去
+  transition:
+    color var(--transition-base),
+    border-color var(--transition-base);
+
+  @include sp {
+    // Figma SP: 116×56 / font 16 / ls 2.08
+    @include fluid(width, 96, 116, 320, 390);
+    @include fluid(height, 48, 56, 320, 390);
+    @include fluid(font-size, 14, 16, 320, 390);
+    letter-spacing: 0.13em;
+  }
+}
+
+// 有効リンク時のみホバー反応
+a.pageButton:hover {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
 }
 
 .pageButtonDisabled {
   opacity: 0.3;
+  pointer-events: none;
 }
 
 .pageInfo {
@@ -295,4 +399,9 @@
   font-weight: var(--font-weight-light);
   @include fluid(font-size, 14, 20);
   @include fluid(letter-spacing, 1.4, 2.6);
+
+  @include sp {
+    @include fluid(font-size, 14, 16, 320, 390);
+    letter-spacing: 0.13em;
+  }
 }
