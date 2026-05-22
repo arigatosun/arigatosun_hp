@@ -4,12 +4,25 @@
 .page {
   padding-top: 80px; // Header(position: fixed) 分のオフセット
   @include fluid(padding-bottom, 96, 240);
+
+  // Figma SP(390): ボタン下端 630 → Footer top 731 ＝ 101
+  @include sp {
+    @include fluid(padding-bottom, 80, 100);
+  }
 }
 
 .inner {
   @include fluid(padding-left, 20, 200);
   @include fluid(padding-right, 20, 200);
   @include fluid(padding-top, 56, 202); // Figma: 282 − header 80 ＝ 202
+
+  // Figma SP(390): 左右 padding 40 / ヘッダー下 padding 80（ロゴ y=160 - header 80）
+  // 320→390 範囲で fluid を完結させ、vw≥390 で Figma SP 値にクランプ
+  @include sp {
+    @include fluid(padding-left, 32, 40, 320, 390);
+    @include fluid(padding-right, 32, 40, 320, 390);
+    @include fluid(padding-top, 56, 80, 320, 390);
+  }
 }
 
 // SectionTitle を Figma 実測（ロゴ 250×43 / ラベル 24px / ラベルとの間 28px）に揃える上書き
@@ -38,12 +51,27 @@
   @include fluid(font-size, 14, 16);
   @include fluid(line-height, 28, 36);
   @include fluid(letter-spacing, 1.6, 2.56);
+
+  // Figma SP(390): CONTACT US ラベル下端 218 → 本文 top 278 ＝ 60
+  @include sp {
+    @include fluid(margin-top, 48, 60, 320, 390);
+
+    // PC 用の <br> を非表示にし、コンテナ幅 310 で自然折り返し
+    br {
+      display: none;
+    }
+  }
 }
 
 .buttonWrap {
   display: flex;
   justify-content: center;
   @include fluid(margin-top, 80, 180); // Figma: 545 → 725 ＝ 180
+
+  // Figma SP(390): 本文下端 494 → ボタン top 574 ＝ 80
+  @include sp {
+    @include fluid(margin-top, 60, 80, 320, 390);
+  }
 }
 
 // WORKS の WorksPagination .button / フォーム送信ボタンと同方式：
@@ -69,5 +97,13 @@
   &:hover {
     color: var(--color-primary);
     border-color: var(--color-primary);
+  }
+
+  // Figma SP(390): フル幅 310×56（親 .buttonWrap content-area）
+  @include sp {
+    width: 100%;
+    max-width: none;
+    @include fluid(height, 48, 56);
+    @include fluid(font-size, 14, 16);
   }
 }

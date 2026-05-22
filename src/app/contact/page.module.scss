@@ -4,6 +4,11 @@
 .page {
   padding-top: 80px; // Header(position: fixed) 分のオフセット
   @include fluid(padding-bottom, 96, 240);
+
+  // Figma SP(390): ボタン下端 1599 → Footer top 1719 ＝ 120
+  @include sp {
+    @include fluid(padding-bottom, 96, 120);
+  }
 }
 
 .formRoot {
@@ -20,9 +25,14 @@
   @include fluid(padding-top, 56, 160); // Figma: ヘッダー直後 240 − header 80
   @include fluid(gap, 32, 179); // Figma: intro 右端 (200+560) → form 左端 (939) ＝ 179
 
+  // Figma SP(390): 左右 padding 40 / ヘッダー下 padding 80 / リード文↔フォーム gap 60
+  // 320→390 範囲で fluid を完結させ、vw≥390 で Figma SP 値にクランプ
   @include sp {
     flex-direction: column;
-    @include fluid(gap, 32, 56);
+    @include fluid(padding-left, 32, 40, 320, 390);
+    @include fluid(padding-right, 32, 40, 320, 390);
+    @include fluid(padding-top, 56, 80, 320, 390);
+    @include fluid(gap, 48, 60, 320, 390);
   }
 }
 
@@ -60,6 +70,13 @@
   @include fluid(font-size, 14, 16);
   @include fluid(line-height, 28, 36);
   @include fluid(letter-spacing, 1.6, 2.56);
+
+  // Figma SP(390): PC 用の <br> を非表示にし、コンテナ幅 310 で自然折り返し
+  @include sp {
+    br {
+      display: none;
+    }
+  }
 }
 
 // ── 右カラム: フォームフィールド ──
@@ -71,9 +88,11 @@
   flex-direction: column;
   @include fluid(gap, 20, 28); // 入力 → 次ラベル 28（Figma: 533-457）
 
+  // Figma SP(390): フィールド間 gap 24（vw≥390 で Figma SP 値にクランプ）
   @include sp {
     max-width: 100%;
     width: 100%;
+    @include fluid(gap, 20, 24, 320, 390);
   }
 }
 
@@ -81,6 +100,11 @@
   display: flex;
   flex-direction: column;
   @include fluid(gap, 12, 16); // Figma: ラベル → 入力枠 16
+
+  // Figma SP(390): ラベル → input gap 8
+  @include sp {
+    gap: 8px;
+  }
 }
 
 .fieldLabel {
@@ -118,11 +142,21 @@
   &:focus-visible {
     box-shadow: inset 0 0 0 2px var(--color-primary);
   }
+
+  // Figma SP(390): placeholder の x=20 ＝ input 左 padding 20
+  @include sp {
+    @include fluid(padding-inline, 16, 20, 320, 390);
+  }
 }
 
-// 単一行 input（高さ 40px 固定 ≒ Figma 実測）
+// 単一行 input（PC: 40px 固定 / SP: Figma 実測 48px）
 input.fieldInput {
   @include fluid(height, 40, 40);
+
+  // Figma SP(390): input 高さ 48（vw≥390 でクランプ）
+  @include sp {
+    @include fluid(height, 44, 48, 320, 390);
+  }
 }
 
 // textarea 個別
@@ -132,6 +166,11 @@ input.fieldInput {
   @include fluid(padding-bottom, 12, 16);
   @include fluid(line-height, 24, 28);
   resize: vertical;
+
+  // Figma SP(390): textarea 高さ 200（vw≥390 でクランプ）
+  @include sp {
+    @include fluid(height, 180, 200, 320, 390);
+  }
 }
 
 // ── バリデーションエラー状態 ──
@@ -163,6 +202,13 @@ input.fieldInput {
   @include fluid(margin-top, 60, 120); // Figma: textarea 下端 1197 → privacy 1317 ＝ 120
   @include fluid(padding-left, 20, 200);
   @include fluid(padding-right, 20, 200);
+
+  // Figma SP(390): 左右 padding 40 / textarea 下端 → privacy 60
+  @include sp {
+    @include fluid(padding-left, 32, 40, 320, 390);
+    @include fluid(padding-right, 32, 40, 320, 390);
+    @include fluid(margin-top, 48, 60, 320, 390);
+  }
 }
 
 .privacy {
@@ -219,6 +265,13 @@ input.fieldInput {
   @include fluid(margin-top, 32, 48); // Figma: privacy 下端 1337 → button 1385 ＝ 48
   @include fluid(padding-left, 20, 200);
   @include fluid(padding-right, 20, 200);
+
+  // Figma SP(390): 左右 padding 40 / privacy 下端 → button 40
+  @include sp {
+    @include fluid(padding-left, 32, 40, 320, 390);
+    @include fluid(padding-right, 32, 40, 320, 390);
+    @include fluid(margin-top, 32, 40, 320, 390);
+  }
 }
 
 // WORKS の WorksPagination .button と同方式：
@@ -250,5 +303,13 @@ input.fieldInput {
   &:disabled {
     opacity: 0.4;
     cursor: not-allowed;
+  }
+
+  // Figma SP(390): フル幅 310×56（親 .submitWrap 内の content-area = 310）
+  @include sp {
+    width: 100%;
+    max-width: none;
+    @include fluid(height, 48, 56);
+    @include fluid(font-size, 14, 16);
   }
 }
