@@ -29,6 +29,30 @@ const SHARE_ICONS = [
   { src: '/images/sections/news/share-4.svg', label: 'リンクをコピー', round: false, sizeKey: 'link' as const },
 ];
 
+const renderShareIcons = () =>
+  SHARE_ICONS.map((icon) => {
+    const sizeClass =
+      icon.sizeKey === 'x'
+        ? styles.shareIconX
+        : icon.sizeKey === 'fb'
+        ? styles.shareIconFb
+        : icon.sizeKey === 'line'
+        ? styles.shareIconLine
+        : styles.shareIconLink;
+    return (
+      <span
+        key={icon.src}
+        className={`${styles.shareIcon} ${sizeClass} ${
+          icon.round ? styles.shareIconRound : ''
+        }`}
+        role="img"
+        aria-label={icon.label}
+      >
+        <Image src={icon.src} alt="" width={24} height={24} />
+      </span>
+    );
+  });
+
 export default async function NewsDetailPage({ params }: Props) {
   const { slug } = await params;
   const entry = await getNewsBySlug(slug);
@@ -60,30 +84,7 @@ export default async function NewsDetailPage({ params }: Props) {
               <span className={styles.date}>{entry.date}</span>
               <span className={styles.category}>#{entry.category}</span>
             </p>
-            <div className={styles.share}>
-              {SHARE_ICONS.map((icon) => {
-                const sizeClass =
-                  icon.sizeKey === 'x'
-                    ? styles.shareIconX
-                    : icon.sizeKey === 'fb'
-                    ? styles.shareIconFb
-                    : icon.sizeKey === 'line'
-                    ? styles.shareIconLine
-                    : styles.shareIconLink;
-                return (
-                  <span
-                    key={icon.src}
-                    className={`${styles.shareIcon} ${sizeClass} ${
-                      icon.round ? styles.shareIconRound : ''
-                    }`}
-                    role="img"
-                    aria-label={icon.label}
-                  >
-                    <Image src={icon.src} alt="" width={24} height={24} />
-                  </span>
-                );
-              })}
-            </div>
+            <div className={styles.share}>{renderShareIcons()}</div>
             <span className={styles.headerDivider} aria-hidden="true" />
 
             <div className={styles.body}>
@@ -103,12 +104,27 @@ export default async function NewsDetailPage({ params }: Props) {
                 ),
               )}
             </div>
+
+            {/* SP のみ: 本文下に区切り線 + シェアアイコン（中央寄せ） */}
+            <span className={styles.bottomDividerSp} aria-hidden="true" />
+            <div className={styles.shareBottomSp}>{renderShareIcons()}</div>
           </div>
         </div>
 
         <div className={styles.backWrap}>
-          <Link href="/news" className={styles.backButton}>
+          {/* PC: BACK TO LIST → /news */}
+          <Link
+            href="/news"
+            className={`${styles.backButton} ${styles.backButtonPc}`}
+          >
             &lt; BACK TO LIST
+          </Link>
+          {/* SP: TOP PAGE → / */}
+          <Link
+            href="/"
+            className={`${styles.backButton} ${styles.backButtonSp}`}
+          >
+            &lt; TOP PAGE
           </Link>
         </div>
       </div>

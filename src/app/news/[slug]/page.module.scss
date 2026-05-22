@@ -10,6 +10,13 @@
   @include fluid(padding-left, 20, 200);
   @include fluid(padding-right, 20, 200);
   @include fluid(padding-top, 48, 120);
+
+  @include sp {
+    // Figma SP(390): 左右 padding 42 / 上 40
+    @include fluid(padding-left, 30, 42, 320, 390);
+    @include fluid(padding-right, 30, 42, 320, 390);
+    @include fluid(padding-top, 32, 40, 320, 390);
+  }
 }
 
 // ── 上部: アイキャッチ（左）＋ 記事情報（右）──
@@ -61,6 +68,13 @@
   @include fluid(font-size, 15, 20);
   @include fluid(line-height, 28, 38);
   @include fluid(letter-spacing, 2, 3.2);
+
+  @include sp {
+    // Figma SP: 16 / lh 26 / ls 2.56 = 0.16em
+    @include fluid(font-size, 14, 16, 320, 390);
+    line-height: 26px;
+    letter-spacing: 0.16em;
+  }
 }
 
 .meta {
@@ -69,6 +83,12 @@
   display: flex;
   align-items: baseline;
   @include fluid(gap, 12, 24);
+
+  @include sp {
+    // Figma SP: title 末→meta 20 / 日付右端→カテゴリ文字 34
+    @include fluid(margin-top, 18, 20, 320, 390);
+    @include fluid(gap, 24, 34, 320, 390);
+  }
 }
 
 .date,
@@ -78,6 +98,11 @@
   font-weight: var(--font-weight-light);
   @include fluid(font-size, 14, 20);
   @include fluid(letter-spacing, 1.4, 2.6);
+
+  @include sp {
+    // Figma SP: 14 / ls 1.82 = 0.13em
+    letter-spacing: 0.13em;
+  }
 }
 
 // カテゴリタグの背後に白帯（Figma: 164×13px / font 20px → 0.65em）。
@@ -100,6 +125,41 @@
   align-items: center;
   justify-content: flex-end;
   @include fluid(gap, 12, 18);
+
+  @include sp {
+    // Figma SP: meta(469+13=482) → share(522.73) = ~40 / gap 18
+    @include fluid(margin-top, 32, 40, 320, 390);
+    @include fluid(gap, 14, 18, 320, 390);
+  }
+}
+
+// ── 本文下のシェア（SP のみ・中央寄せ） ──
+.shareBottomSp {
+  display: none;
+
+  @include sp {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    @include fluid(gap, 14, 18, 320, 390);
+    // Figma SP: bottom divider(1689) → share(1729) = 40
+    @include fluid(margin-top, 32, 40, 320, 390);
+  }
+}
+
+// ── 本文下の区切り線（SP のみ） ──
+.bottomDividerSp {
+  display: none;
+
+  @include sp {
+    display: block;
+    width: 100%;
+    height: 1px;
+    background: var(--color-text-secondary);
+    opacity: 0.3;
+    // Figma SP: body 末(1627) → divider(1689) = 62
+    @include fluid(margin-top, 48, 62, 320, 390);
+  }
 }
 
 // アイコンの基底（個別サイズは下記の修飾クラスで Figma 実測値に合わせる）
@@ -116,14 +176,25 @@
 }
 
 // Figma 実測：X 21×22 / FB 23.5×23.5 / LINE 24.3×23.1 / Link 20.4×20.4
+// SP(390) でも Figma は PC 同サイズなので、SP は 320→390 で max 値までスケール
 .shareIconX {
   @include fluid(width, 17, 21);
   @include fluid(height, 18, 22);
+
+  @include sp {
+    @include fluid(width, 18, 21, 320, 390);
+    @include fluid(height, 19, 22, 320, 390);
+  }
 }
 
 .shareIconFb {
   @include fluid(width, 19, 24);
   @include fluid(height, 19, 24);
+
+  @include sp {
+    @include fluid(width, 20, 24, 320, 390);
+    @include fluid(height, 20, 24, 320, 390);
+  }
 
   // share-2.png は周囲に白い余白を含むため、object-fit:cover のままだと
   // 黒丸が小さく見える。Figma マスク仕様（PNG 35.68 → 表示 23.508 ＝ ×1.518）と
@@ -136,11 +207,21 @@
 .shareIconLine {
   @include fluid(width, 19, 24);
   @include fluid(height, 18, 23);
+
+  @include sp {
+    @include fluid(width, 20, 24, 320, 390);
+    @include fluid(height, 19, 23, 320, 390);
+  }
 }
 
 .shareIconLink {
   @include fluid(width, 16, 20);
   @include fluid(height, 16, 20);
+
+  @include sp {
+    @include fluid(width, 17, 20, 320, 390);
+    @include fluid(height, 17, 20, 320, 390);
+  }
 }
 
 .shareIconRound {
@@ -158,11 +239,23 @@
   height: 1px;
   @include fluid(margin-top, 24, 42);
   background: var(--color-black);
+
+  @include sp {
+    // Figma SP: share 末(546.73) → divider(575.73) = 29 / #808080 op 0.3
+    @include fluid(margin-top, 24, 29, 320, 390);
+    background: var(--color-text-secondary);
+    opacity: 0.3;
+  }
 }
 
 // ── 本文 ──
 .body {
   @include fluid(margin-top, 40, 76);
+
+  @include sp {
+    // Figma SP: divider(575.73) → body heading(623.73) = 48
+    @include fluid(margin-top, 40, 48, 320, 390);
+  }
 }
 
 .bodyHeading {
@@ -177,10 +270,27 @@
   &:not(:first-child) {
     @include fluid(margin-top, 32, 60);
   }
+
+  @include sp {
+    // Figma SP: 16 / lh 30 / ls 2.08 = 0.13em
+    @include fluid(font-size, 14, 16, 320, 390);
+    line-height: 30px;
+    letter-spacing: 0.13em;
+
+    &:not(:first-child) {
+      // Figma SP: 段落末(1091) → 次の見出し(1159) = 68
+      @include fluid(margin-top, 48, 68, 320, 390);
+    }
+  }
 }
 
 .bodyParagraphs {
   @include fluid(margin-top, 6, 12);
+
+  @include sp {
+    // Figma SP: 見出し末(683) → 段落(699) = 16
+    @include fluid(margin-top, 10, 16, 320, 390);
+  }
 }
 
 .bodyParagraph {
@@ -195,13 +305,30 @@
   & + & {
     @include fluid(margin-top, 16, 24);
   }
+
+  @include sp {
+    // Figma SP: 14 / lh 28 / ls 1.82 = 0.13em
+    @include fluid(font-size, 13, 14, 320, 390);
+    line-height: 28px;
+    letter-spacing: 0.13em;
+
+    & + & {
+      // Figma SP: 段落間 0（連続して流れる）
+      margin-top: 0;
+    }
+  }
 }
 
-// ── BACK TO LIST ──
+// ── BACK TO LIST（PC） / TOP PAGE（SP） ──
 .backWrap {
   display: flex;
   justify-content: center;
   @include fluid(margin-top, 60, 140);
+
+  @include sp {
+    // Figma SP: share 末(1753) → button(1793) = 40
+    @include fluid(margin-top, 32, 40, 320, 390);
+  }
 }
 
 .backButton {
@@ -223,9 +350,34 @@
   transition:
     color var(--transition-base),
     border-color var(--transition-base);
+  text-decoration: none;
 
   &:hover {
     color: var(--color-primary);
     border-color: var(--color-primary);
+  }
+
+  @include sp {
+    // Figma SP: 310×56 / font 16 / ls 2.08 = 0.13em（コンテンツ全幅）
+    width: 100%;
+    @include fluid(height, 48, 56, 320, 390);
+    @include fluid(font-size, 14, 16, 320, 390);
+    letter-spacing: 0.13em;
+  }
+}
+
+// PC のみ表示（BACK TO LIST）
+.backButtonPc {
+  @include sp {
+    display: none;
+  }
+}
+
+// SP のみ表示（TOP PAGE）
+.backButtonSp {
+  display: none;
+
+  @include sp {
+    display: inline-flex;
   }
 }
