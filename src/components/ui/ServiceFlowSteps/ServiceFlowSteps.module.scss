@@ -3,13 +3,13 @@
 );
 @use '@/styles/breakpoints' as *;
 
-// レイアウト変数（PC 基準値）:
+// レイアウト変数（PC 基準値 / Group 898.svg 準拠）:
 // - 縦線 x 位置: list 左端から outer 中央
-// - 円外径: 50 / 内径 28（Group 911 PNG の比率に合わせて拡大）
-// - 円と STEP テキスト間 gap: 30 → padding-left = 50 + 30 = 80
-$indicator-col: 80px;
-$circle-outer: 50px;
-$circle-inner: 28px;
+// - 円外径: 31 / 内径 19（Figma Group 898 SVG の半径 15.5 / 9.5 に合わせる）
+// - 円と STEP テキスト間 gap: 29 → padding-left = 31 + 29 = 60
+$indicator-col: 60px;
+$circle-outer: 31px;
+$circle-inner: 19px;
 $line-x: calc((#{$circle-outer} - 1px) / 2);
 
 // Figma 実測 (STEP.1 y=4729 → STEP.5 y=5321、5 ステップ間 148px 間隔)
