@@ -28,15 +28,27 @@
 }
 
 // ── アーチ上のキャラクター ──
-// Figma 1920基準: 182×186、footer 上端から top=15 の位置に配置（footer 内側、白い領域）。
-// キャラ下端 (y=201) がアーチ頂点に重なる。
+// Figma 1920基準: キャラ視覚エリアは 182×186、キャラ下端 (y=201) がアーチ頂点。
+//
+// 3D Canvas は描画余白を最大限取るため、Figma の視覚エリアより大幅に拡張している:
+//   - 縦 600 / 横 500（PC max）
+//   - top を -200 まで前倒しして Canvas が footer 内側の上下に余裕を持って広がる
+//   - Canvas 下端 = 400（アーチを跨いで赤い領域までかぶる）
+// Canvas は透明・pointer-events:none・z-index:2（アーチより上）なので、
+// 視覚的にどこにキャラを配置しても Canvas 外で切れることがない。
+// 実際の見た目位置は FooterSitCharacter の charPosition（3D coords）で制御する。
 .sitCharacter {
   position: absolute;
-  @include fluid(top, 8, 15);
+  // Canvas を上下方向にずらしてキャラ位置を微調整する。
+  // PC max: アーチ頂点に足元が乗る基準値 -219 から 130px 上方向（= -349）に持ち上げ。
+  // SP min: 同じ比率（PC max × 0.594）でスケール → -208。
+  @include fluid(top, -208, -349);
   left: 50%;
   transform: translateX(-50%);
-  @include fluid(width, 96, 182);
-  @include fluid(height, 98, 186);
+  // 左方向シフト。PC max -135 / SP min -80（同比率）。
+  @include fluid(margin-left, -80, -135);
+  @include fluid(width, 250, 500);
+  @include fluid(height, 300, 600);
   z-index: 2;
   pointer-events: none;
 }
