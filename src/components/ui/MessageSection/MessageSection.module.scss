@@ -11,6 +11,11 @@
   @include fluid(padding-right, 20, 40);
   // 本文末尾とフッターの 3D キャラクターの間に 160px の余白を確保
   @include fluid(padding-bottom, 54, 108);
+
+  @include sp {
+    // Figma SP @390: LogoSlider 末尾 y=9069 → Message 見出し y=9229 = gap 160px
+    @include fluid(margin-top, 160, 360);
+  }
 }
 
 // ── RISE WITH THANKS. ──
@@ -23,6 +28,12 @@
   font-weight: var(--font-weight-light);
   line-height: 1.056;
   @include fluid(letter-spacing, 4.32, 8.64);
+
+  @include sp {
+    // Figma SP: 20px / letter-spacing 4.8
+    @include fluid(font-size, 20, 36);
+    @include fluid(letter-spacing, 4.8, 8.64);
+  }
 }
 
 // ── メッセージ本文 ──
@@ -37,6 +48,14 @@
   font-weight: var(--font-weight-regular);
   line-height: 2.583;
   @include fluid(letter-spacing, 2.16, 4.32);
+
+  @include sp {
+    // Figma SP: 14px / line-height 38 / letter-spacing 2.24
+    @include fluid(margin-top, 60, 104);
+    @include fluid(font-size, 14, 24);
+    line-height: 2.714; // 38px / 14px
+    @include fluid(letter-spacing, 2.24, 4.32);
+  }
 }
 
 // ── スクロール連動カラーリベール対象（1文字単位） ──

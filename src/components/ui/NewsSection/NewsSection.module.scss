@@ -7,6 +7,14 @@
   @include fluid(padding-right, 20, 200); // Figma: 記事リスト右端 x1720 → ページ右端まで200px
   @include fluid(padding-top, 60, 180); // Figma: WORKS末尾→NEWS 320px に合わせ調整
   @include fluid(padding-bottom, 60, 120);
+
+  @include sp {
+    // Figma SP @390: セクション padding-left/right 40px
+    @include fluid(padding-left, 40, 200);
+    @include fluid(padding-right, 40, 200);
+    // Figma SP @390: Works フッター末尾 y=6571 → News タイトル y=6747 = gap 176px
+    @include fluid(padding-top, 176, 180);
+  }
 }
 
 .inner {
@@ -54,6 +62,11 @@
 .newsTitle img {
   @include fluid(width, 88, 160);
   height: auto;
+
+  @include sp {
+    // Figma SP: ニュース画像 118px
+    @include fluid(width, 118, 160);
+  }
 }
 
 .newsTitle p {
@@ -91,10 +104,12 @@
   @include fluid(margin-bottom, 24, 56);
 
   @include sp {
-    flex-direction: row;
-    flex-wrap: wrap;
-    @include fluid(gap, 8, 12);
-    @include fluid(margin-bottom, 16, 24);
+    // Figma SP: 2 カラム × 2 行のグリッド配置
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    @include fluid(column-gap, 16, 24);
+    @include fluid(row-gap, 20, 28);
+    @include fluid(margin-bottom, 32, 56);
   }
 }
 
@@ -111,7 +126,9 @@
   cursor: pointer;
 
   @include sp {
-    @include fluid(font-size, 11, 14);
+    // Figma SP: 16px / letter-spacing 2.08
+    @include fluid(font-size, 16, 20);
+    @include fluid(letter-spacing, 2.08, 2.6);
   }
 }
 
@@ -148,6 +165,17 @@
 
   @include sp {
     display: none; // SP時はカテゴリ横にボタンは不要（下部に配置検討）
+  }
+}
+
+// ── SP 専用 VIEW NEWS ボタン行（記事リスト後に表示） ──
+.spButtonRow {
+  display: none;
+
+  @include sp {
+    display: flex;
+    justify-content: center;
+    @include fluid(margin-top, 32, 60);
   }
 }
 
@@ -293,7 +321,8 @@
   @include fluid(height, 30, 60); // Figma: 区切り線→次記事 60px
 
   @include sp {
-    @include fluid(height, 16, 30);
+    // Figma SP: 区切り線→次記事 48px
+    @include fluid(height, 40, 60);
   }
 }
 

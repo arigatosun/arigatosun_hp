@@ -7,6 +7,11 @@
   overflow-x: clip; // 横スクロールバー防止
   overflow-y: visible; // 装飾マスクのはみ出しを許容
 
+  @include sp {
+    // Figma SP @390: About ボタン下端 y=1998 → Service タイトル y=2239 = gap 241px
+    // .left padding-top SP 40 を引いた 201px をここで取る
+    @include fluid(margin-top, 201, 250);
+  }
 }
 
 // ── 装飾マスク ──
@@ -83,6 +88,27 @@
 .leftContent {
   display: flex;
   flex-direction: column;
+
+  // SP では VIEW SERVICE ボタンをカード後の spButtonRow に移動するため、
+  // leftContent 直下の Button（最後の a 要素）を非表示にする
+  @include sp {
+    > a:last-child {
+      display: none;
+    }
+  }
+}
+
+// ── SP 専用 VIEW SERVICE ボタン行（PC では非表示） ──
+.spButtonRow {
+  display: none;
+
+  @include sp {
+    display: flex;
+    justify-content: center;
+    @include fluid(margin-top, 24, 60);
+    @include fluid(padding-left, 20, 40);
+    @include fluid(padding-right, 20, 40);
+  }
 }
 
 .sectionTitle {
@@ -90,12 +116,17 @@
   margin-bottom: 0;
 
   img {
-    @include fluid(width, 80, 180);
+    // Figma SP: 136 / Figma PC: 180
+    @include fluid(width, 136, 180);
   }
 
   p {
     margin-top: 22px;
     line-height: 18px; // Figma: SERVICE ラベル行高
+  }
+
+  @include sp {
+    margin-top: 0;
   }
 }
 
@@ -119,6 +150,15 @@
   font-style: normal;
   @include fluid(line-height, 30, 44); // Figma: 44px
   @include fluid(letter-spacing, 1.8, 4.4);
+
+  @include sp {
+    // Figma SP @390: タイトル下端 y=2298 → description y=2330 = gap 32px
+    // font 14 / line-height 28 / letter-spacing 3.08
+    @include fluid(margin-top, 32, 68);
+    @include fluid(font-size, 14, 20);
+    @include fluid(line-height, 28, 44);
+    @include fluid(letter-spacing, 3.08, 4.4);
+  }
 }
 
 // ── メニューリスト ──
@@ -131,7 +171,11 @@
   @include fluid(margin-bottom, 29, 64);
 
   @include sp {
-    display: none; // 1024px未満はメニューリスト非表示（カード縦積みのため）
+    // Figma SP @390: description 下端 y=2442 → menu y=2494 = gap 52px
+    // 項目ピッチ 42px → line-box 18 + gap 24
+    @include fluid(margin-top, 52, 60);
+    @include fluid(gap, 24, 28);
+    @include fluid(margin-bottom, 32, 64);
   }
 }
 
@@ -146,6 +190,12 @@
   @include fluid(letter-spacing, 1.4, 2.6);
   white-space: nowrap;
   cursor: pointer;
+
+  @include sp {
+    // Figma SP: font 16 / letter-spacing 2.08
+    @include fluid(font-size, 16, 20);
+    @include fluid(letter-spacing, 2.08, 2.6);
+  }
 }
 
 // 各メニュー項目内の Link — クリックでサービス詳細ページへ遷移

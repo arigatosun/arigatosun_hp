@@ -197,6 +197,11 @@ export default function NewsSection() {
             ))
           )}
         </div>
+
+        {/* SP 専用 VIEW NEWS ボタン（記事リスト後に配置） */}
+        <div className={styles.spButtonRow}>
+          <Button href="/news" size="sm">VIEW NEWS &gt;</Button>
+        </div>
       </div>
     </section>
   );

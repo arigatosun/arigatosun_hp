@@ -48,10 +48,10 @@ export default function ServiceSection() {
     const track = trackRef.current;
     if (!section || !track) return;
 
-    // gsap.matchMedia でPC時のみ横スクロールを有効化
+    // gsap.matchMedia でPC時のみ横スクロールを有効化（SP=〜1023px は縦積みのため除外）
     const mm = gsap.matchMedia();
 
-    mm.add('(min-width: 768px)', () => {
+    mm.add('(min-width: 1024px)', () => {
       // 終了位置: 3カード（カードコンテンツ）の中心がビューポート中央と一致するよう
       // トラックを translateX する。画面幅に追従（invalidateOnRefresh で resize 対応）。
       const getScrollAmount = () => {
@@ -155,6 +155,11 @@ export default function ServiceSection() {
               <ServiceCard key={card.id} card={card} />
             ))}
           </div>
+        </div>
+
+        {/* SP 専用 VIEW SERVICE ボタン（カードの後ろに配置） */}
+        <div className={styles.spButtonRow}>
+          <Button href="/service">VIEW SERVICE &gt;</Button>
         </div>
       </div>
 

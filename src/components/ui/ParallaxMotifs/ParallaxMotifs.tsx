@@ -2,9 +2,11 @@
 
 import { useEffect, useRef } from 'react';
 import styles from './ParallaxMotifs.module.scss';
+import { SP_MOTIFS, SP_MOTIFS_CONTAINER } from './motifs-sp-data';
 
 // 赤モチーフ装飾（Figma「Group 870」書き出しの17シェイプ）。
 // 基準位置は Figma 準拠。各モチーフのゆっくりした浮遊 + 全体のマウス追従（微視差）。
+// SP（〜1023px）では Figma SP 専用の motif レイアウト（motifs-sp-data）を使う。
 export default function ParallaxMotifs() {
   const svgRef = useRef<SVGSVGElement>(null);
 
@@ -33,6 +35,47 @@ export default function ParallaxMotifs() {
 
   return (
     <div className={styles.container}>
+      {/* ── SP 専用 motif レイアウト（Figma SP 準拠） ── */}
+      <div
+        className={styles.spMotifs}
+        style={{
+          top: `${SP_MOTIFS_CONTAINER.frameY}px`,
+          left: `${SP_MOTIFS_CONTAINER.frameX}px`,
+          width: `${SP_MOTIFS_CONTAINER.width}px`,
+          height: `${SP_MOTIFS_CONTAINER.height}px`,
+        }}
+        aria-hidden="true"
+      >
+        {SP_MOTIFS.map((m) => {
+          // AABB 中心の Figma フレーム座標
+          const aabbCenterX = m.frameX + m.width / 2;
+          const aabbCenterY = m.frameY + m.height / 2;
+          // ネイティブ寸法 img を AABB 中心に置く（コンテナ相対座標）
+          const imgLeft =
+            aabbCenterX - m.nativeW / 2 - SP_MOTIFS_CONTAINER.frameX;
+          const imgTop =
+            aabbCenterY - m.nativeH / 2 - SP_MOTIFS_CONTAINER.frameY;
+          return (
+            // SVG 装飾。next/image は SVG の最適化対象外なので素の <img> を使う
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              key={m.id}
+              src={m.src}
+              alt=""
+              className={styles.spMotif}
+              style={{
+                left: `${imgLeft}px`,
+                top: `${imgTop}px`,
+                width: `${m.nativeW}px`,
+                height: `${m.nativeH}px`,
+                transform: `rotate(${m.rotation}deg)`,
+              }}
+            />
+          );
+        })}
+      </div>
+
+      {/* ── PC 用 SVG（〜1023px では非表示） ── */}
       <svg
         ref={svgRef}
         className={styles.svg}
