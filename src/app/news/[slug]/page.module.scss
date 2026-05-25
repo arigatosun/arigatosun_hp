@@ -3,7 +3,25 @@
 
 .page {
   padding-top: 80px; // Header(position: fixed) 分のオフセット
+  // SP（vw < 1024）は元の fluid を維持
   @include fluid(padding-bottom, 96, 240);
+
+  // PC（vw ≥ 1024）は 112 固定（news 一覧・contact 各ページと同じ仕様）。
+  // 目標: ボタン下端 → 赤いアーチ上端 = 313px。
+  //   Footer.padding-top  : 201（アーチは Footer 上端から 201px 下、維持）
+  //   Footer.margin-top   : 0（下の :global で詳細ページ限定で打ち消し）
+  //   .page.padding-bottom: 112（112 + 0 + 201 = 313）
+  @include pc {
+    padding-bottom: 112px;
+  }
+}
+
+// news 詳細ページに限り Footer.margin-top を PC で打ち消す。
+// data-news-detail を持つ要素を含む body の中の footer のみが対象。
+:global(body:has([data-news-detail]) footer) {
+  @include pc {
+    margin-top: 0;
+  }
 }
 
 .inner {

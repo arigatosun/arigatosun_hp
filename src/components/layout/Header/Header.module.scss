@@ -24,11 +24,12 @@
     justify-content: center;
   }
 
-  // Figma SP(390): 左右 padding 28 / padding-top 24 / padding-bottom 0
-  // ヘッダー総高さ = 24(pad) + 53(logo) = 77px
+  // SP: padding-top 24 を維持しつつ padding-bottom も 24 にして上下対称に。
+  // ロゴ（53px）が白い背景の上下中央に配置される。
+  // ヘッダー総高さ = 24 + 53 + 24 = 101px
   @include sp {
     @include fluid(padding-top, 20, 24, 320, 390);
-    padding-bottom: 0;
+    @include fluid(padding-bottom, 20, 24, 320, 390);
     @include fluid(padding-left, 24, 28, 320, 390);
     @include fluid(padding-right, 24, 28, 320, 390);
   }

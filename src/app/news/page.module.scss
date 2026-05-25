@@ -3,7 +3,27 @@
 
 .page {
   padding-top: 80px; // Header(position: fixed) 分のオフセット
+  // SP（vw < 1024）は元の挙動: fluid(96, 240) の min 96 にクランプ
   @include fluid(padding-bottom, 96, 240);
+
+  // PC（vw ≥ 1024）は 112 固定。
+  // 目標: ボタン下端 → 赤いアーチ上端 = 313px（293 + 20）。
+  //   Footer.padding-top  : 201（アーチは Footer 上端から 201px 下、維持）
+  //   Footer.margin-top   : 0（下の :global で news 限定で打ち消し）
+  //   .page.padding-bottom: 112（112 + 0 + 201 = 313）
+  // Footer 内部（白い領域 + 座りキャラ）は contact / thanks と同じデザインを維持。
+  @include pc {
+    padding-bottom: 112px;
+  }
+}
+
+// news 一覧ページに限り Footer.margin-top を PC で打ち消す。
+// data-news-list を持つ要素を含む body の中の footer のみが対象なので、
+// 他ページ（contact / thanks / about 等）の Footer デザインには影響しない。
+:global(body:has([data-news-list]) footer) {
+  @include pc {
+    margin-top: 0;
+  }
 }
 
 .inner {
@@ -336,11 +356,25 @@
   opacity: 0.3;
 }
 
+// SP では最終記事下の区切り線は非表示（記事リストの末尾を視覚的に閉じない）
+.articleItem:last-child .articleDivider {
+  @include sp {
+    display: none;
+  }
+}
+
 // ── ページネーション（コンテンツ全幅で中央配置） ──
 .pagination {
-  @include fluid(margin-top, 60, 170); // Figma: 最終記事下端→ページネーション 約170px
+  // SP（vw < 1024）は元の挙動: fluid(60, 170) の min 60 にクランプ
+  @include fluid(margin-top, 60, 170);
   @include fluid(padding-left, 20, 200);
   @include fluid(padding-right, 20, 200);
+
+  // PC（vw ≥ 1024）は 240 固定。Figma 想定の PC（vw ≥ 1200）で 240 ピッタリ、
+  // 1024 ≤ vw < 1200 の狭い範囲も 240 で固定（下とは違い Footer の影響を受けない）。
+  @include pc {
+    margin-top: 240px;
+  }
   display: flex;
   align-items: center;
   justify-content: center;

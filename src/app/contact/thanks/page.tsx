@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function ContactThanksPage() {
   return (
-    <div className={styles.page}>
+    <div className={styles.page} data-contact-page>
       <div className={styles.inner}>
         <SectionTitle
           src="/images/sections/contact/title-logo.png"
