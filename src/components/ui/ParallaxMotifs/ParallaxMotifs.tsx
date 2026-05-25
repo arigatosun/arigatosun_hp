@@ -1,14 +1,30 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styles from './ParallaxMotifs.module.scss';
-import { SP_MOTIFS, SP_MOTIFS_CONTAINER } from './motifs-sp-data';
+import { SP_MOTIFS_CONTAINER } from './motifs-sp-data';
+
+// Figma SP (Group 1040 = ABOUT セクション全体): セクション上端 y=970、Group 933 (motifs container) 上端 y=1244。
+// つまり motifs container はセクション上端から +274px の位置にあるが、
+// 実装側の本文行間や letter-spacing 込みの体感差を吸収するため +20 して 294 にしている。
+const SP_MOTIFS_OFFSET_FROM_ABOUT_TOP = 294;
+// Figma SVG エクスポート (840×964) は内部の Group 933 コンテンツが (12.3, 46.4) オフセットされている。
+// 実装側で SVG を配置する際にこの分を相殺する。
+const SP_SVG_CONTENT_OFFSET_X = 12.3;
+const SP_SVG_CONTENT_OFFSET_Y = 46.4;
 
 // 赤モチーフ装飾（Figma「Group 870」書き出しの17シェイプ）。
 // 基準位置は Figma 準拠。各モチーフのゆっくりした浮遊 + 全体のマウス追従（微視差）。
 // SP（〜1023px）では Figma SP 専用の motif レイアウト（motifs-sp-data）を使う。
+//   - Figma SP のモチーフコンテナ Y は固定の絶対座標 (1244) なので、そのまま使うと
+//     実装側の ABOUT セクション位置（hero 高さなどに依存）と整合しない。
+//   - useEffect で .about の offsetTop を取得し、Figma のコンテナ↔ABOUT 内部オフセットを
+//     考慮した位置に動的に補正する。
 export default function ParallaxMotifs() {
   const svgRef = useRef<SVGSVGElement>(null);
+  const [spMotifsTop, setSpMotifsTop] = useState<number>(
+    SP_MOTIFS_CONTAINER.frameY,
+  );
 
   // マウス追従: カーソル位置に応じてモチーフ全体をわずかにずらす（微視差）
   useEffect(() => {
@@ -33,47 +49,52 @@ export default function ParallaxMotifs() {
     };
   }, []);
 
+  // SP モチーフ container の top を .about セクション位置から動的に算出
+  // Figma SP: motifs container = section top + 274 に配置
+  useEffect(() => {
+    const compute = () => {
+      const aboutSection = document.querySelector(
+        'section[class*="about"]:not([class*="aboutContent"]):not([class*="aboutHeading"]):not([class*="aboutMessage"])',
+      ) as HTMLElement | null;
+      if (!aboutSection) return;
+      setSpMotifsTop(
+        aboutSection.offsetTop + SP_MOTIFS_OFFSET_FROM_ABOUT_TOP,
+      );
+    };
+    compute();
+    window.addEventListener('resize', compute);
+    // フォント・画像ロード等で layout が後追いで変わるケースに対応
+    const observer = new ResizeObserver(compute);
+    observer.observe(document.body);
+    return () => {
+      window.removeEventListener('resize', compute);
+      observer.disconnect();
+    };
+  }, []);
+
   return (
     <div className={styles.container}>
       {/* ── SP 専用 motif レイアウト（Figma SP 準拠） ── */}
-      <div
+      {/* SP 専用 motif: Figma が Group 1002 を 1 枚 SVG として書き出したもの (sp-motifs-combined.svg)。
+          viewBox 840×964 は Group 933 (803×863) + shadow padding を含む。
+          Figma SVG 内では Group 933 コンテンツが (12.3, 46.4) オフセットされているので、
+          実装側でこの分を相殺した位置に配置する。 */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/images/sections/about/sp-motifs-combined.svg"
+        alt=""
         className={styles.spMotifs}
         style={{
-          top: `${SP_MOTIFS_CONTAINER.frameY}px`,
-          left: `${SP_MOTIFS_CONTAINER.frameX}px`,
-          width: `${SP_MOTIFS_CONTAINER.width}px`,
-          height: `${SP_MOTIFS_CONTAINER.height}px`,
+          // Group 933 の左端 (frame x=-209) が viewport SP_MOTIFS_CONTAINER.frameX に来るように
+          // SVG 左端を SVG コンテンツ x オフセット分だけ更に左にずらす
+          left: `${SP_MOTIFS_CONTAINER.frameX - SP_SVG_CONTENT_OFFSET_X}px`,
+          // Group 933 の上端が spMotifsTop に来るように SVG 上端を SVG コンテンツ y オフセット分ずらす
+          top: `${spMotifsTop - SP_SVG_CONTENT_OFFSET_Y}px`,
+          width: '840px',
+          height: '964px',
         }}
         aria-hidden="true"
-      >
-        {SP_MOTIFS.map((m) => {
-          // AABB 中心の Figma フレーム座標
-          const aabbCenterX = m.frameX + m.width / 2;
-          const aabbCenterY = m.frameY + m.height / 2;
-          // ネイティブ寸法 img を AABB 中心に置く（コンテナ相対座標）
-          const imgLeft =
-            aabbCenterX - m.nativeW / 2 - SP_MOTIFS_CONTAINER.frameX;
-          const imgTop =
-            aabbCenterY - m.nativeH / 2 - SP_MOTIFS_CONTAINER.frameY;
-          return (
-            // SVG 装飾。next/image は SVG の最適化対象外なので素の <img> を使う
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              key={m.id}
-              src={m.src}
-              alt=""
-              className={styles.spMotif}
-              style={{
-                left: `${imgLeft}px`,
-                top: `${imgTop}px`,
-                width: `${m.nativeW}px`,
-                height: `${m.nativeH}px`,
-                transform: `rotate(${m.rotation}deg)`,
-              }}
-            />
-          );
-        })}
-      </div>
+      />
 
       {/* ── PC 用 SVG（〜1023px では非表示） ── */}
       <svg

@@ -4,7 +4,9 @@
 
 .line {
   display: block;
-  width: fit-content;
+  // width: fit-content; を外すことで、各「行（= Figma の1段落）」が container 幅で
+  // 自然改行できるようにする。Figma SP のテキストは段落単位でラップする設計のため、
+  // 旧仕様 (fit-content) では長い段落が container をはみ出してしまう。
 }
 
 .lineInner {

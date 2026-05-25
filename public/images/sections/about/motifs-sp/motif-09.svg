@@ -1,6 +1,6 @@
 <svg preserveAspectRatio="none" width="100%" height="100%" overflow="visible" style="display: block;" viewBox="0 0 310.095 396.673" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g id="Vector" filter="url(#filter0_d_2599_30188)">
-<path d="M178.885 43.2L149.179 184.238C139.489 230.255 98.1805 263.814 51.0074 264.132H46.8L83.2636 319.873L84.7935 319.555C145.417 306.208 193.037 258.856 206.679 198.666L236.895 55.4034L178.885 43.2636V43.2Z" fill="#DA2719"/>
+<path d="M178.885 43.2L149.179 184.238C139.489 230.255 98.1805 263.814 51.0074 264.132H46.8L83.2636 319.873L84.7935 319.555C145.417 306.208 193.037 258.856 206.679 198.666L236.895 55.4034L178.885 43.2636V43.2Z" fill="var(--fill-0, #E8291C)"/>
 </g>
 <defs>
 <filter id="filter0_d_2599_30188" x="-9.53674e-07" y="-1.90735e-06" width="310.095" height="396.673" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">

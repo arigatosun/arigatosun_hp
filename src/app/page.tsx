@@ -96,9 +96,11 @@ export default async function Home() {
 
           <RevealText className={styles.aboutMessage}>
             <RevealBlock className={styles.aboutBlock}>
+              {/* Figma SP の段落構造に合わせて、長い1文は 1 つの RevealLine 内で自然改行させる */}
               <RevealLine>株式会社アリガトサンは、</RevealLine>
-              <RevealLine>AI(LLM)システムの開発からデザイン・ブランディング、</RevealLine>
-              <RevealLine>IPコンテンツ制作を行うクリエイティブスタジオです。</RevealLine>
+              <RevealLine>
+                AI(LLM)システムの開発からデザイン・ブランディング、IPコンテンツ制作を行うクリエイティブスタジオです。
+              </RevealLine>
             </RevealBlock>
 
             <RevealBlock className={styles.aboutBlock}>

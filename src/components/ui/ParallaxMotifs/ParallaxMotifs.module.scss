@@ -31,24 +31,20 @@
 }
 
 // ── SP 専用 motif 配置（Figma SP Group 933 準拠） ──
+// Figma の Group 1002 エクスポート SVG (viewBox 840×964) を 1 枚 <img> として配置。
+// globals.scss の img { max-width: 100%; } を上書きしないと SVG が viewport 幅に
+// 強制縮小されて潰れるため、ここで明示的に max-width: none を指定。
 .spMotifs {
   position: absolute;
   pointer-events: none;
   overflow: visible;
   display: none;
+  // globals.scss の制約を解除（インラインの width: 840px を有効化）
+  max-width: none;
 
   @include sp {
     display: block;
   }
-}
-
-.spMotif {
-  position: absolute;
-  display: block;
-  pointer-events: none;
-  // SVG は preserveAspectRatio="none" で AABB に伸縮される
-  // transform-origin: center で AABB 中心を軸に回転
-  transform-origin: center;
 }
 
 // ── 各モチーフのゆっくりした浮遊 ──

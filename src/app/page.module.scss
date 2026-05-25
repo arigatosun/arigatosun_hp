@@ -251,9 +251,12 @@
   @include fluid(padding-right, 20, 80);
 
   @include sp {
-    // Hero との重なりを SP では解除し、Figma SP @390 の y 配置（hero 終端 y=730 → about 開始 y=970 = gap 240px）を確保
-    margin-top: 0;
-    @include fluid(padding-top, 240, 240);
+    // Hero との重なりを SP では解除し、Figma SP @390 の y 配置を確保。
+    // gap 240 はセクションの margin として外側に取り、padding-top は 0 にする
+    // (こうすると Figma の「section top = content top」モデルと一致し、motifs container の
+    //  .about.offsetTop + 274 という anchor 計算が Figma 仕様に揃う)
+    @include fluid(margin-top, 240, 240);
+    padding-top: 0;
     @include fluid(padding-left, 40, 200);
     @include fluid(padding-right, 40, 80);
   }
@@ -303,10 +306,10 @@
     // Figma SP @390: font 20 / line-height 32 (= 1.6) / letter-spacing 12.8
     @include fluid(font-size, 20, 32);
     line-height: 1.6;
-    // Figma SP @390: ABOUT label 下端 y=1026 → heading 上端 y=1106 = gap 80px
-    @include fluid(margin-top, 80, 80);
-    // Figma SP @390: heading 下端 y=1138 → body1 上端 y=1156 = gap 18px
-    @include fluid(margin-bottom, 18, 64);
+    // Figma SP (Group 1040): title block 下端 y=1027 → heading 上端 y=1095.6 = gap 68px
+    @include fluid(margin-top, 68, 80);
+    // Figma SP (Group 1040): heading 下端 y=1116 → body1 上端 y=1156 = gap 40px
+    @include fluid(margin-bottom, 40, 64);
   }
 }
 
@@ -336,20 +339,22 @@
   }
 
   @include sp {
-    // Figma SP @390: Block 1 → Block 2 = 116px
-    @include fluid(margin-bottom, 116, 62);
+    // Figma SP (Group 1040 / 2749-28730): 段落間 gap = 40px
+    @include fluid(margin-bottom, 40, 62);
   }
 }
 
-// Figma SP @390: Block 2 → Block 3 = 78px（最後の block の前）
+// PC では Block 2 → Block 3 を別値にしていたが、Figma SP は全て 40px なので SP は base と同じ。
 .aboutMessage > .aboutBlock + .aboutBlock {
   @include sp {
-    @include fluid(margin-bottom, 78, 62);
+    @include fluid(margin-bottom, 40, 62);
   }
 }
 
 .aboutLastRow {
   margin-top: -4px;
+  // PC 用の line-height 上書き (PC は 62 で揃える)。
+  // SP では aboutMessage の line-height 38 をそのまま継承させたいので、SP 側で再オーバーライドする。
   @include fluid(line-height, 32, 62);
   display: flex;
   align-items: flex-end;
@@ -364,12 +369,22 @@
     flex-direction: column;
     // Figma SP: ボタンは本文と同じ x=40 開始で width=310（=セクション padding を除いた幅）
     align-items: stretch;
+    // flex column 内の aboutBlock と Button の間隔は Button の margin-top で確保するので gap は 0
+    gap: 0;
+    // Body 3 段落（aboutLastRow > aboutBlock）の line-height を Body 1/2 と同じ 38 に揃える。
+    // 旧 fluid(32, 62) のままだと SP で 32 になり Body 3 だけ縦に圧縮されて Figma と差分が出る。
+    @include fluid(line-height, 38, 62);
+
+    // aboutLastRow 内の .aboutBlock は margin-bottom を 0 にする（Button との間隔は Button 側で取る）
+    > .aboutBlock {
+      margin-bottom: 0;
+    }
 
     > a {
       margin-left: 0;
       margin-bottom: 0;
-      // Figma SP @390: 本文末尾 y=1730 → ボタン y=1942 = gap 212px
-      @include fluid(margin-top, 212, 64);
+      // Figma SP (Group 1040): 本文末尾 y=1882.6 → ボタン上端 y=1942.6 = gap 60px
+      @include fluid(margin-top, 60, 64);
     }
   }
 }
