@@ -7,8 +7,8 @@ import WorksPagination from '@/components/ui/WorksPagination';
 import type { WorkItem } from '@/types/work';
 import styles from './WorksListSection.module.scss';
 
-// Figma の /works ページは 2 列 × 4 行 = 8 件 / ページ
-const PER_PAGE = 8;
+// /works ページは 2 列 × 3 行 = 6 件 / ページ
+const PER_PAGE = 6;
 
 type WorksListSectionProps = {
   works: readonly WorkItem[];
