@@ -9,6 +9,11 @@
   @include fluid(margin-top, 40, 120);
   @include fluid(padding-top, 80, 201);
   overflow: visible;
+
+  // Figma SP(390): フレーム上端 → CONTACT US ボタン top = 203
+  @include sp {
+    @include fluid(padding-top, 160, 203, 320, 390);
+  }
 }
 
 // ── 背景マスクオーバーレイ ──
@@ -20,11 +25,31 @@
   right: 0;
   bottom: 0;
   z-index: 0;
+
+  // Figma SP(390): bg-mask-sp.png(780×2892) は footer 全体(390×1446)用にデザインされているため
+  // top: 0 で footer 全体をカバー（画像内にアーチ位置が組み込まれている）
+  @include sp {
+    top: 0;
+  }
 }
 
 .maskImage {
   object-fit: cover;
   object-position: top center;
+}
+
+// PC 用画像（1920×1220）— SP では非表示
+.maskImagePc {
+  @include sp {
+    display: none;
+  }
+}
+
+// SP 用画像（780×2892 縦長）— PC では非表示
+.maskImageSp {
+  @include pc {
+    display: none;
+  }
 }
 
 // ── アーチ上のキャラクター ──
@@ -37,6 +62,7 @@
 // Canvas は透明・pointer-events:none・z-index:2（アーチより上）なので、
 // 視覚的にどこにキャラを配置しても Canvas 外で切れることがない。
 // 実際の見た目位置は FooterSitCharacter の charPosition（3D coords）で制御する。
+// Figma SP にはキャラが登場しないため SP は display:none。
 .sitCharacter {
   position: absolute;
   // Canvas を上下方向にずらしてキャラ位置を微調整する。
@@ -51,6 +77,10 @@
   @include fluid(height, 300, 600);
   z-index: 2;
   pointer-events: none;
+
+  @include sp {
+    display: none;
+  }
 }
 
 // ── CONTACT US ボタンエリア ──
@@ -63,6 +93,16 @@
   justify-content: center;
   @include fluid(padding-top, 50, 123);
   @include fluid(padding-bottom, 80, 200);
+
+  // Figma SP(390): footer.padding-top 側で 203 を消化済 → ここの padding-top は 0
+  // button bottom (y=259) → logo top (y=419) = 160
+  // 左右 padding 40 でボタンを 310 フル幅に
+  @include sp {
+    padding-top: 0;
+    @include fluid(padding-bottom, 120, 160, 320, 390);
+    @include fluid(padding-left, 32, 40, 320, 390);
+    @include fluid(padding-right, 32, 40, 320, 390);
+  }
 }
 
 // ── CONTACT US ボタン（フッター専用 / Figma: 380×72・枠線なし） ──
@@ -93,9 +133,12 @@
     color: var(--color-white);
   }
 
+  // Figma SP(390): 親 .contactArea の 40 padding 内でフル幅 = 310×56
   @include sp {
     width: 100%;
-    max-width: 320px;
+    max-width: none;
+    @include fluid(height, 48, 56, 320, 390);
+    @include fluid(font-size, 14, 16, 320, 390);
   }
 }
 
@@ -108,9 +151,13 @@
   @include fluid(padding-left, 20, 200);
   @include fluid(padding-right, 20, 200);
 
+  // Figma SP(390): .left（ナビ）と .right（CREATIVE）で左右 padding が異なる（40 vs 20）ため
+  // ここの padding は 0 にして個別に持たせる。ナビ底 → CREATIVE top = 80
   @include sp {
     flex-direction: column;
-    @include fluid(gap, 40, 60);
+    padding-left: 0;
+    padding-right: 0;
+    @include fluid(gap, 60, 80, 320, 390);
   }
 }
 
@@ -118,17 +165,33 @@
 .left {
   display: flex;
   flex-direction: column;
+
+  // Figma SP(390): 左右 padding 40
+  @include sp {
+    @include fluid(padding-left, 32, 40, 320, 390);
+    @include fluid(padding-right, 32, 40, 320, 390);
+  }
 }
 
 .logoWrap {
   // Figma: ロゴ下端 (676) → ABOUT 上端 (736) = 60px
   @include fluid(margin-bottom, 24, 60);
+
+  // Figma SP(390): ロゴ下端 490 → ABOUT top 542 = 52
+  @include sp {
+    @include fluid(margin-bottom, 40, 52, 320, 390);
+  }
 }
 
 .footerLogo {
   @include fluid(width, 200, 367);
   height: auto;
   max-width: 100%;
+
+  // Figma SP(390): フッターロゴ幅 310 = 親 .left の content area いっぱい
+  @include sp {
+    @include fluid(width, 260, 310, 320, 390);
+  }
 }
 
 .mainMenu {
@@ -137,6 +200,11 @@
   // Figma: line-to-line 52px = font line-height 24 + gap 28
   @include fluid(gap, 12, 28);
   list-style: none;
+
+  // Figma SP(390): line-to-line 46 = text 20 + gap 26
+  @include sp {
+    @include fluid(gap, 20, 26, 320, 390);
+  }
 }
 
 .mainMenuItem {
@@ -169,6 +237,12 @@
   list-style: none;
   // Figma: SERVICE 下 → AI/DEV top = 24px
   @include fluid(margin-top, 10, 24);
+
+  // Figma SP(390): SERVICE 下 → AI/DEV top = 26、sub item line-to-line = 約30
+  @include sp {
+    @include fluid(margin-top, 20, 26, 320, 390);
+    @include fluid(gap, 12, 16, 320, 390);
+  }
 }
 
 .subMenuItem {
@@ -193,8 +267,11 @@
   flex-direction: column;
   width: 47.37%;
 
+  // Figma SP(390): 左右 padding 20（ナビの 40 と違うので個別指定）
   @include sp {
     width: 100%;
+    @include fluid(padding-left, 16, 20, 320, 390);
+    @include fluid(padding-right, 16, 20, 320, 390);
   }
 }
 
@@ -207,12 +284,22 @@
   line-height: normal;
   @include fluid(letter-spacing, 1.4, 2.88);
   @include fluid(margin-bottom, 8, 14);
+
+  // Figma SP(390): タイトル下端 1016 → KUSOMEGANE top 1028 = 12
+  @include sp {
+    @include fluid(margin-bottom, 10, 12, 320, 390);
+  }
 }
 
 .projectImages {
   display: flex;
   flex-direction: column;
   @include fluid(gap, 10, 20);
+
+  // Figma SP(390): KUSOMEGANE 下端 1143 → ASEAVE top 1159 = 16
+  @include sp {
+    @include fluid(gap, 12, 16, 320, 390);
+  }
 }
 
 .projectImageWrap {
@@ -283,9 +370,14 @@
   @include fluid(margin-top, 36, 108);
   @include fluid(padding-bottom, 28, 74);
 
+  // Figma SP(390): ASEAVE 下端 1274 → Arigatosun Inc. top 1374 = 100
+  // footer 下端 1446 → copyright 下端 1422 = 24 (padding-bottom)
+  // 2行（Arigatosun Inc. / © 2026...）は line-height 24 で重なるため gap 0
   @include sp {
     flex-direction: column;
-    @include fluid(gap, 8, 16);
+    gap: 0;
+    @include fluid(margin-top, 80, 100, 320, 390);
+    @include fluid(padding-bottom, 20, 24, 320, 390);
   }
 }
 

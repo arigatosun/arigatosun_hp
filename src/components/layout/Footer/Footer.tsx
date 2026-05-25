@@ -12,13 +12,19 @@ const serviceSubmenu = [
 export default function Footer() {
   return (
     <footer className={styles.footer}>
-      {/* 背景マスクオーバーレイ */}
+      {/* 背景マスクオーバーレイ（PC 用 / SP 用で別画像） */}
       <div className={styles.maskOverlay}>
         <Image
           src="/images/sections/footer/bg-mask.png"
           alt=""
           fill
-          className={styles.maskImage}
+          className={`${styles.maskImage} ${styles.maskImagePc}`}
+        />
+        <Image
+          src="/images/sections/footer/bg-mask-sp.png"
+          alt=""
+          fill
+          className={`${styles.maskImage} ${styles.maskImageSp}`}
         />
       </div>
 
