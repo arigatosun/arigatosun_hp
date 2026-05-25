@@ -59,7 +59,7 @@ export default async function NewsDetailPage({ params }: Props) {
   if (!entry) notFound();
 
   return (
-    <div className={styles.page}>
+    <div className={styles.page} data-news-detail>
       <div className={styles.inner}>
         <div className={styles.article}>
           {/* 左: アイキャッチ画像 */}

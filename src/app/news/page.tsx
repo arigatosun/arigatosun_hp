@@ -40,7 +40,7 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
     currentPage < totalPages ? `/news?page=${currentPage + 1}` : null;
 
   return (
-    <div className={styles.page}>
+    <div className={styles.page} data-news-list>
       <div className={styles.inner}>
         {/* 左: タイトル + カテゴリ + CONTACT */}
         <aside className={styles.sidebar}>

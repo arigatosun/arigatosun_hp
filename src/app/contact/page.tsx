@@ -147,7 +147,7 @@ export default function ContactPage() {
   };
 
   return (
-    <div className={styles.page}>
+    <div className={styles.page} data-contact-page>
       <form className={styles.formRoot} onSubmit={handleSubmit} noValidate>
         <div className={styles.inner}>
           {/* 左カラム: タイトル + リード文 */}

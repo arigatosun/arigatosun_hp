@@ -3,13 +3,30 @@
 
 .page {
   padding-top: 80px; // Header(position: fixed) 分のオフセット
-  // ボタン下端 → Footer 上端を 240 にする。Footer 側に margin-top: fluid(40, 120)
-  // が乗るため、ここでは差分 120 を担う（contact 本体と同じ調整）。
+  // SP（vw < 1024）は元の fluid を維持
   @include fluid(padding-bottom, 48, 120);
 
   // Figma SP(390): ボタン下端 630 → Footer top 731 ＝ 101
   @include sp {
     @include fluid(padding-bottom, 80, 100);
+  }
+
+  // PC（vw ≥ 1024）は 112 固定（contact 本体・news と同じ仕様）。
+  // 目標: ボタン下端 → 赤いアーチ上端 = 313px（293 + 20）。
+  //   Footer.padding-top  : 201（アーチは Footer 上端から 201px 下、維持）
+  //   Footer.margin-top   : 0（下の :global で contact 限定で打ち消し）
+  //   .page.padding-bottom: 112（112 + 0 + 201 = 313）
+  @include pc {
+    padding-bottom: 112px;
+  }
+}
+
+// contact 配下のページ（本体 / thanks）に限り Footer.margin-top を PC で打ち消す。
+// data-contact-page を持つ要素を含む body の中の footer のみが対象なので、
+// 他ページの Footer デザインには影響しない。
+:global(body:has([data-contact-page]) footer) {
+  @include pc {
+    margin-top: 0;
   }
 }
 
