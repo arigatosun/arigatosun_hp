@@ -23,6 +23,32 @@
   transform: translateX(-50%) translate(var(--mx, 0px), var(--my, 0px));
   transition: transform 0.5s ease-out;
   overflow: visible;
+
+  @include sp {
+    // SP では PC 用 SVG を非表示にして、Figma SP 専用の .spMotifs を表示する
+    display: none;
+  }
+}
+
+// ── SP 専用 motif 配置（Figma SP Group 933 準拠） ──
+.spMotifs {
+  position: absolute;
+  pointer-events: none;
+  overflow: visible;
+  display: none;
+
+  @include sp {
+    display: block;
+  }
+}
+
+.spMotif {
+  position: absolute;
+  display: block;
+  pointer-events: none;
+  // SVG は preserveAspectRatio="none" で AABB に伸縮される
+  // transform-origin: center で AABB 中心を軸に回転
+  transform-origin: center;
 }
 
 // ── 各モチーフのゆっくりした浮遊 ──

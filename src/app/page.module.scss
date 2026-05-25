@@ -17,6 +17,8 @@
 
   @include sp {
     min-height: auto;
+    // heroContent 側で SP の左 padding を取るため、.hero 側は解除
+    padding-left: 0;
     @include fluid(padding-bottom, 40, 80);
   }
 }
@@ -40,6 +42,10 @@
   display: flex;
   justify-content: center;
   padding-left: 22px;
+
+  @include sp {
+    padding-left: 0;
+  }
 }
 
 .heroLogoImage {
@@ -47,7 +53,9 @@
   height: auto;
 
   @include sp {
-    max-width: 90%;
+    // Figma SP @390: width 306px
+    @include fluid(width, 306, 572);
+    max-width: 100%;
   }
 }
 
@@ -62,7 +70,14 @@
 
   @include sp {
     flex-direction: column;
+    // Figma SP: 3D キャラを持たず、ラベルだけ右寄せで配置
+    align-self: flex-end;
+    align-items: flex-end;
     transform: none;
+    // Figma SP @390: labels 右端 x=320。heroContent padding-right 20px と合わせて
+    // フレーム右端から 70px → 追加 margin-right 50px
+    @include fluid(margin-right, 50, 0);
+    @include fluid(margin-top, 30, 60);
   }
 }
 
@@ -73,6 +88,11 @@
   overflow: visible;
   // Hero キャラの枠ごとシフト（中の 3D は変えず translate のみ）
   transform: translate(50px, 0);
+
+  @include sp {
+    // Figma SP では 3D キャラを表示しない
+    display: none;
+  }
 }
 
 .heroLabels {
@@ -91,8 +111,12 @@
   @include fluid(letter-spacing, 1.2, 2.34);
 
   @include sp {
-    align-items: center;
-    text-align: center;
+    align-items: flex-end;
+    text-align: right;
+    // Figma SP @390: font 12.48px / letter-spacing 1.6224px / 項目ピッチ 25.27px
+    @include fluid(font-size, 12.48, 18);
+    @include fluid(letter-spacing, 1.6224, 2.34);
+    @include fluid(gap, 12, 29);
   }
 }
 
@@ -109,10 +133,12 @@
     position: relative;
     top: auto;
     right: auto;
-    text-align: center;
-    @include fluid(margin-top, 40, 60);
-    @include fluid(padding-left, 20, 40);
-    @include fluid(padding-right, 20, 40);
+    // Figma SP @390: heroLabels 下端 y=438 → heroInfo 開始 y=648 = gap 210px
+    // 右寄せ・フレーム右端から 24px インセット
+    text-align: right;
+    @include fluid(margin-top, 210, 240);
+    padding-left: 0;
+    @include fluid(padding-right, 24, 60);
   }
 }
 
@@ -125,6 +151,12 @@
   line-height: 24px;
   letter-spacing: 2.4px;
   margin-bottom: 2px;
+
+  @include sp {
+    // Figma SP: 14px / line-height 16 / letter-spacing 1.68
+    line-height: 16px;
+    @include fluid(letter-spacing, 1.68, 2.4);
+  }
 }
 
 .heroInfoBody {
@@ -137,7 +169,10 @@
   letter-spacing: 1.82px;
 
   @include sp {
-    font-size: 12px;
+    // Figma SP: 10px / line-height 16 / letter-spacing 1.3
+    @include fluid(font-size, 10, 14);
+    line-height: 16px;
+    @include fluid(letter-spacing, 1.3, 1.82);
   }
 }
 
@@ -151,7 +186,10 @@
   letter-spacing: 1.82px;
 
   @include sp {
-    font-size: 12px;
+    // Figma SP: 10px / letter-spacing 1.3
+    @include fluid(font-size, 10, 14);
+    line-height: 16px;
+    @include fluid(letter-spacing, 1.3, 1.82);
   }
 }
 
@@ -195,6 +233,14 @@
   padding-bottom: 0;
   @include fluid(padding-left, 20, 200);
   @include fluid(padding-right, 20, 80);
+
+  @include sp {
+    // Hero との重なりを SP では解除し、Figma SP @390 の y 配置（hero 終端 y=730 → about 開始 y=970 = gap 240px）を確保
+    margin-top: 0;
+    @include fluid(padding-top, 240, 240);
+    @include fluid(padding-left, 40, 200);
+    @include fluid(padding-right, 40, 80);
+  }
 }
 
 .aboutHeader {
@@ -236,6 +282,16 @@
   line-height: 2.0625; // Figma: 66px / 32px
   @include fluid(letter-spacing, 12.8, 25.6);
   @include fluid(margin-bottom, 40, 64);
+
+  @include sp {
+    // Figma SP @390: font 20 / line-height 32 (= 1.6) / letter-spacing 12.8
+    @include fluid(font-size, 20, 32);
+    line-height: 1.6;
+    // Figma SP @390: ABOUT label 下端 y=1026 → heading 上端 y=1106 = gap 80px
+    @include fluid(margin-top, 80, 80);
+    // Figma SP @390: heading 下端 y=1138 → body1 上端 y=1156 = gap 18px
+    @include fluid(margin-bottom, 18, 64);
+  }
 }
 
 .aboutMessage {
@@ -247,6 +303,13 @@
   font-style: normal;
   @include fluid(line-height, 33, 62);
   @include fluid(letter-spacing, 1.8, 3.6);
+
+  @include sp {
+    // Figma SP @390: font 14 / line-height 38 / letter-spacing 2.24
+    @include fluid(font-size, 14, 20);
+    @include fluid(line-height, 38, 62);
+    @include fluid(letter-spacing, 2.24, 3.6);
+  }
 }
 
 .aboutBlock {
@@ -254,6 +317,18 @@
 
   &:last-child {
     margin-bottom: 0;
+  }
+
+  @include sp {
+    // Figma SP @390: Block 1 → Block 2 = 116px
+    @include fluid(margin-bottom, 116, 62);
+  }
+}
+
+// Figma SP @390: Block 2 → Block 3 = 78px（最後の block の前）
+.aboutMessage > .aboutBlock + .aboutBlock {
+  @include sp {
+    @include fluid(margin-bottom, 78, 62);
   }
 }
 
@@ -271,11 +346,14 @@
 
   @include sp {
     flex-direction: column;
-    align-items: flex-start;
+    // Figma SP: ボタンは本文と同じ x=40 開始で width=310（=セクション padding を除いた幅）
+    align-items: stretch;
 
     > a {
+      margin-left: 0;
       margin-bottom: 0;
-      @include fluid(margin-top, 20, 40);
+      // Figma SP @390: 本文末尾 y=1730 → ボタン y=1942 = gap 212px
+      @include fluid(margin-top, 212, 64);
     }
   }
 }

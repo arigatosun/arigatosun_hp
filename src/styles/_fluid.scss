@@ -13,7 +13,10 @@
 // ============================================
 
 // デフォルトのビューポート範囲（px）
-$fluid-min-viewport: 320 !default;
+// 注: SP デザインの基準ビューポートは Figma SP=390px。
+//     `@include fluid(min, max)` の min は「390 viewport で出る値」になる。
+//     320 など 390 未満では min 値で clamp される。
+$fluid-min-viewport: 390 !default;
 $fluid-max-viewport: 1200 !default;
 
 // ベースフォントサイズ（rem計算用）

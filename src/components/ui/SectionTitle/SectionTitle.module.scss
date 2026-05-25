@@ -4,6 +4,11 @@
 .wrapper {
   @include fluid(margin-top, 12, 20);
   @include fluid(margin-bottom, 24, 48);
+
+  @include sp {
+    // SP ではセクション padding-top 側で gap を確保するため wrapper の margin-top は 0
+    margin-top: 0;
+  }
 }
 
 .titleLogo {
@@ -11,17 +16,24 @@
 }
 
 .titleLogoImage {
-  @include fluid(width, 100, 220);
+  // Figma SP: 144px / Figma PC: 220px
+  @include fluid(width, 144, 220);
   height: auto;
 }
 
 .label {
-  @include fluid(margin-top, 10, 20);
+  // Figma SP: gap 16px / Figma PC: 20px
+  @include fluid(margin-top, 16, 20);
   color: var(--color-text-secondary);
   font-family: var(--font-en);
   @include fluid(font-size, 14, 20);
   font-weight: var(--font-weight-light);
   font-style: normal;
+  // Figma SP: line-height 11.52px → SP では行間タイト目
   line-height: 24px;
-  @include fluid(letter-spacing, 1.2, 2.6);
+  @include fluid(letter-spacing, 1.82, 2.6);
+
+  @include sp {
+    line-height: 16px;
+  }
 }
