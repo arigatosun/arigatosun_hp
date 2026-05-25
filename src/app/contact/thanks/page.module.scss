@@ -3,7 +3,9 @@
 
 .page {
   padding-top: 80px; // Header(position: fixed) 分のオフセット
-  @include fluid(padding-bottom, 96, 240);
+  // ボタン下端 → Footer 上端を 240 にする。Footer 側に margin-top: fluid(40, 120)
+  // が乗るため、ここでは差分 120 を担う（contact 本体と同じ調整）。
+  @include fluid(padding-bottom, 48, 120);
 
   // Figma SP(390): ボタン下端 630 → Footer top 731 ＝ 101
   @include sp {
@@ -52,14 +54,20 @@
   @include fluid(line-height, 28, 36);
   @include fluid(letter-spacing, 1.6, 2.56);
 
+  // 3 段落（<p>）を 1 ブロックで表示。PC では各段落が幅 768 内に 1 行ずつ収まり、
+  // 段落間は <br> 改行と同じ見た目。SP では各段落が自然折り返しで複数行になる。
+  p {
+    margin: 0;
+  }
+
   // Figma SP(390): CONTACT US ラベル下端 218 → 本文 top 278 ＝ 60
+  // Figma SP: font 16 / letter-spacing 1.6 / line-height 36（PC の fluid 既定では
+  // SP で min 14/28 にクランプされてしまうため、SP は Figma SP 値に固定 override）
   @include sp {
     @include fluid(margin-top, 48, 60, 320, 390);
-
-    // PC 用の <br> を非表示にし、コンテナ幅 310 で自然折り返し
-    br {
-      display: none;
-    }
+    font-size: 16px;
+    line-height: 36px;
+    letter-spacing: 1.6px;
   }
 }
 
