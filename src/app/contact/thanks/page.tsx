@@ -22,13 +22,11 @@ export default function ContactThanksPage() {
           className={styles.titleSection}
         />
 
-        <p className={styles.thanksText}>
-          お問い合わせいただき、誠にありがとうございます。
-          <br />
-          2～3営業日以内に担当者よりメールでご返信させていただきます。
-          <br />
-          ※お問い合わせが立て込んだ場合、7～10営業日程度になる可能性あります。
-        </p>
+        <div className={styles.thanksText}>
+          <p>お問い合わせいただき、誠にありがとうございます。</p>
+          <p>2～3営業日以内に担当者よりメールでご返信させていただきます。</p>
+          <p>※お問い合わせが立て込んだ場合、7～10営業日程度になる可能性あります。</p>
+        </div>
 
         <div className={styles.buttonWrap}>
           <Link href="/" className={styles.topPageButton}>

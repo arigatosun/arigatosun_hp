@@ -165,11 +165,11 @@ export default function ContactPage() {
               アリガトサンにご関心をお寄せいただきありがとうございます。
               <br />
               AIは日々進化し、いままで「難しい」とされていたことも、
-              <br />
+              <br className={styles.brPcOnly} />
               形にできる可能性が広がっています。
               <br />
               思い浮かべている課題や、まだ言語化しきれていない
-              <br />
+              <br className={styles.brPcOnly} />
               「もしも」の話でも構いません。
               <br />
               2～3営業日以内に担当者よりメールでご返信いたしますので、

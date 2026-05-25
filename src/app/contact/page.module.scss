@@ -3,7 +3,9 @@
 
 .page {
   padding-top: 80px; // Header(position: fixed) 分のオフセット
-  @include fluid(padding-bottom, 96, 240);
+  // Figma 1920: ボタン下端 1449 → Footer top 1689 ＝ 240
+  // Footer 側に margin-top: fluid(40, 120) があるので、ここでは差分 120 を担う
+  @include fluid(padding-bottom, 48, 120);
 
   // Figma SP(390): ボタン下端 1599 → Footer top 1719 ＝ 120
   @include sp {
@@ -71,11 +73,17 @@
   @include fluid(line-height, 28, 36);
   @include fluid(letter-spacing, 1.6, 2.56);
 
-  // Figma SP(390): PC 用の <br> を非表示にし、コンテナ幅 310 で自然折り返し
+  // Figma SP(390): PC のみの <br>（2→3 行 / 4→5 行の間）を非表示にし、
+  // 残り 4 つの <br> で Figma SP の改行位置（3 ブロック構造）を再現
+  // letter-spacing は Figma SP の 3.08px に合わせる
   @include sp {
-    br {
-      display: none;
-    }
+    @include fluid(letter-spacing, 2.53, 3.08, 320, 390);
+  }
+}
+
+.brPcOnly {
+  @include sp {
+    display: none;
   }
 }
 
@@ -146,6 +154,15 @@
   // Figma SP(390): placeholder の x=20 ＝ input 左 padding 20
   @include sp {
     @include fluid(padding-inline, 16, 20, 320, 390);
+
+    // Figma SP: placeholder は font 14px / letter-spacing 1.82px（textarea の
+    // 「お問い合わせ内容を入力ください。」が content width 270 に 1 行で収まる前提）。
+    // input 本体の font-size 16px は iOS 自動ズーム回避のため維持し、
+    // ::placeholder のみフォント設定を Figma SP に合わせる。
+    &::placeholder {
+      @include fluid(font-size, 13, 14, 320, 390);
+      @include fluid(letter-spacing, 1.6, 1.82, 320, 390);
+    }
   }
 }
 
