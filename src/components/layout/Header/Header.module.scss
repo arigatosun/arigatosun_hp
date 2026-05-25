@@ -23,6 +23,15 @@
   @include pc {
     justify-content: center;
   }
+
+  // Figma SP(390): 左右 padding 28 / padding-top 24 / padding-bottom 0
+  // ヘッダー総高さ = 24(pad) + 53(logo) = 77px
+  @include sp {
+    @include fluid(padding-top, 20, 24, 320, 390);
+    padding-bottom: 0;
+    @include fluid(padding-left, 24, 28, 320, 390);
+    @include fluid(padding-right, 24, 28, 320, 390);
+  }
 }
 
 // ── PC ナビゲーション ──
@@ -130,6 +139,7 @@
 }
 
 // ── モバイルロゴ（PC時は非表示） ──
+// Figma SP(390): 56×53、vw≥390 でクランプ
 .mobileLogo {
   display: flex;
   align-items: center;
@@ -137,16 +147,22 @@
   @include pc {
     display: none;
   }
+
+  img {
+    @include fluid(width, 48, 56, 320, 390);
+    height: auto;
+  }
 }
 
 // ── モバイルメニューボタン ──
+// Figma SP(390): 48×20 の横長ハンバーガー
+// space-between で 3 本の線を上端/中央/下端に均等配置
 .menuButton {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  gap: 6px;
-  width: 32px;
-  height: 32px;
+  justify-content: space-between;
+  @include fluid(width, 40, 48, 320, 390);
+  @include fluid(height, 18, 20, 320, 390);
 
   @include pc {
     display: none;
@@ -156,22 +172,48 @@
 .menuLine {
   display: block;
   width: 100%;
-  height: 1.5px;
+  // 整数値 2px にしてサブピクセルレンダリングのバラつきを回避
+  // コンテナ 20px なら 2×3=6 + space-between で gap 7px ずつ全てピクセルグリッドに整列
+  height: 2px;
   background-color: var(--color-black);
   transition: transform var(--transition-base), opacity var(--transition-base);
 }
 
-.menuOpen {
-  .menuLine {
-    &:nth-child(1) {
-      transform: rotate(45deg) translate(5px, 5px);
-    }
-    &:nth-child(2) {
-      opacity: 0;
-    }
-    &:nth-child(3) {
-      transform: rotate(-45deg) translate(5px, -5px);
-    }
+// メニュー展開時はハンバーガーを非表示にし、専用の閉じるボタンに置き換える
+.menuButtonHidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+// ── モバイルメニュー内 × 閉じるボタン ──
+// ハンバーガーと同じ位置（top-right）に配置して操作感を統一
+.closeButton {
+  position: absolute;
+  @include fluid(top, 20, 24, 320, 390);
+  @include fluid(right, 24, 28, 320, 390);
+  @include fluid(width, 28, 32, 320, 390);
+  @include fluid(height, 28, 32, 320, 390);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  @include pc {
+    display: none;
+  }
+}
+
+.closeLine {
+  position: absolute;
+  width: 100%;
+  // ハンバーガーの線と太さを揃える
+  height: 2px;
+  background-color: var(--color-black);
+
+  &:nth-child(1) {
+    transform: rotate(45deg);
+  }
+  &:nth-child(2) {
+    transform: rotate(-45deg);
   }
 }
 

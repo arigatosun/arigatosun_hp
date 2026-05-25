@@ -126,15 +126,15 @@ export default function Header() {
           <Image
             src="/images/icons/mini-logo.svg"
             alt="合同会社アリガトサン"
-            width={32}
-            height={30}
+            width={56}
+            height={53}
             priority
           />
         </Link>
 
         <button
-          className={`${styles.menuButton} ${isMenuOpen ? styles.menuOpen : ''}`}
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          className={`${styles.menuButton} ${isMenuOpen ? styles.menuButtonHidden : ''}`}
+          onClick={() => setIsMenuOpen(true)}
           aria-label="メニューを開く"
           aria-expanded={isMenuOpen}
         >
@@ -146,6 +146,15 @@ export default function Header() {
 
       {/* モバイルメニュー */}
       <div className={`${styles.mobileMenu} ${isMenuOpen ? styles.mobileMenuOpen : ''}`}>
+        <button
+          className={styles.closeButton}
+          onClick={() => setIsMenuOpen(false)}
+          aria-label="メニューを閉じる"
+          type="button"
+        >
+          <span className={styles.closeLine} />
+          <span className={styles.closeLine} />
+        </button>
         <ul className={styles.mobileNavList}>
           {[...leftNav, ...rightNav].map((item) => (
             <li key={item.href}>
