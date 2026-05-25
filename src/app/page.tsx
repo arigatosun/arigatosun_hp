@@ -43,11 +43,20 @@ export default async function Home() {
                   デフォルト -19.37 → -22.52（左に 3.15 world ≒ 40px シフト）。
                   heroCharacter の transform: translate(20px, 0) で枠も右にシフト。
                   charRotationY で body 向きを微調整して完全正面に。
-                  位置確認したい時は `debug` prop を付ければ視覚化される。 */}
-              <FooterCharacterLoader
-                charPosition={[-20.93, -0.75, 0]}
-                charRotationY={0.2}
-              />
+                  位置確認したい時は `debug` prop を付ければ視覚化される。
+                  cameraPosition Z=28 はデフォルト 14 の 2x。SCSS 側で Canvas を
+                  2x に拡張しているので、カメラを引いて見た目のキャラサイズを維持しつつ
+                  手振り等の動きが見切れないよう描画余白を確保している。
+                  cameraPosition Y=-5 は、キャラ本体 (armature root が world Y≒-1.79) より
+                  さらに下に降ろし、見下ろし気味だった視点を正面〜やや下からの見え方に補正。
+                  キャラ自体の回転は変えていない。 */}
+              <div className={styles.heroCharacterCanvas}>
+                <FooterCharacterLoader
+                  charPosition={[-20.93, -0.75, 0]}
+                  charRotationY={0.2}
+                  cameraPosition={[2, -5, 28]}
+                />
+              </div>
             </div>
             <ul className={styles.heroLabels}>
               <li>AI / DEVELOPMENT</li>

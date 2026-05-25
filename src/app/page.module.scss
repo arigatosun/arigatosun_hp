@@ -82,6 +82,7 @@
 }
 
 .heroCharacter {
+  position: relative;
   @include fluid(width, 160, 240);
   @include fluid(height, 165, 246);
   flex-shrink: 0;
@@ -93,6 +94,20 @@
     // Figma SP では 3D キャラを表示しない
     display: none;
   }
+}
+
+// 3D キャラの動き（手振り等）がフレーム端で見切れないよう、Canvas 自体の描画領域を
+// レイアウト箱（heroCharacter）より 2 倍大きく確保。レイアウト箱は据え置きなので
+// 隣の heroLabels 位置はずれない。Three.js のカメラ Z を 14→28（2x）に引いて
+// 見た目のキャラサイズと画面上の位置は維持している（FooterCharacterLoader 側で指定）。
+.heroCharacterCanvas {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  @include fluid(width, 320, 480);
+  @include fluid(height, 330, 492);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
 }
 
 .heroLabels {
