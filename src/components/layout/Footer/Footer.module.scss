@@ -6,7 +6,8 @@
 //   - y=201..  : 赤いアーチ + 内容部分
 .footer {
   position: relative;
-  @include fluid(margin-top, 40, 120);
+  // オーバーレイ上で Figma とフッター位置を合わせるため SP/PC とも 100 に統一
+  margin-top: 100px;
   @include fluid(padding-top, 80, 201);
   overflow: visible;
 
@@ -84,15 +85,15 @@
 }
 
 // ── CONTACT US ボタンエリア ──
-// Figma: アーチ頂点 (y=201) → button top (y=324) = 123px、button bottom (y=396) → LOGO top (y=596) = 200px
-// .footer 側で padding-top: 201 を取っているので contactArea の padding-top は 123 を直接指定。
+// PC max は 130 (ユーザー指定 = ユーザーのオーバーレイ計測で Figma と一致する値)。
+// padding-bottom は Figma PC 1920 値 195 を維持。
 .contactArea {
   position: relative;
   z-index: 1;
   display: flex;
   justify-content: center;
-  @include fluid(padding-top, 50, 123);
-  @include fluid(padding-bottom, 80, 200);
+  @include fluid(padding-top, 100, 130);
+  @include fluid(padding-bottom, 80, 195);
 
   // Figma SP(390): footer.padding-top 側で 203 を消化済 → ここの padding-top は 0
   // button bottom (y=259) → logo top (y=419) = 160
@@ -184,7 +185,8 @@
 }
 
 .footerLogo {
-  @include fluid(width, 200, 367);
+  // Figma PC 1920: ロゴ width=370, height=85 (aspect 740/170 = 4.35)
+  @include fluid(width, 200, 370);
   height: auto;
   max-width: 100%;
 

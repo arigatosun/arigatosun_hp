@@ -15,7 +15,7 @@ export type CompanyInfoRow = {
 export const COMPANY_INFO_ROWS: CompanyInfoRow[] = [
   {
     cells: [
-      { label: '会社名', value: '合同会社アリガトサン' },
+      { label: '会社名', value: '株式会社アリガトサン' },
       { label: '所在地', value: '兵庫県尼崎市東難波町４丁目６−２６ ZEROビル ８０２号' },
     ],
   },

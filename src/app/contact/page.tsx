@@ -188,7 +188,7 @@ export default function ContactPage() {
                 id="company"
                 name="company"
                 type="text"
-                placeholder="合同会社アリガトサン"
+                placeholder="株式会社アリガトサン"
                 value={formData.company}
                 onChange={handleChange}
                 onBlur={handleBlur}

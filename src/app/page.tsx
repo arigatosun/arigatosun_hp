@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import styles from './page.module.scss';
 import Button from '@/components/ui/Button';
 import SectionTitle from '@/components/ui/SectionTitle';
@@ -27,14 +26,20 @@ export default async function Home() {
       <section className={styles.hero} data-section="hero">
         <div className={styles.heroContent}>
           <h1 className={styles.heroLogo}>
-            <Image
-              src="/images/sections/hero/title-logo.png"
-              alt="合同会社アリガトサン"
-              width={632}
-              height={120}
-              priority
-              className={styles.heroLogoImage}
-            />
+            {/* PC/SP で別書き出し画像を出し分け。<picture> で SP は title-logo-sp.png（612x142）、
+                PC は title-logo.png（1144x264）。next/image を picture で囲むと <source> が
+                解釈されないため、ここは素の <img> を使う（PNG なので priority 相当の preload は
+                ヘッダーで別途指定可能）。 */}
+            <picture>
+              <source media="(max-width: 1023px)" srcSet="/images/sections/hero/title-logo-sp.png" />
+              <img
+                src="/images/sections/hero/title-logo.png"
+                alt="株式会社アリガトサン"
+                width={1144}
+                height={264}
+                className={styles.heroLogoImage}
+              />
+            </picture>
           </h1>
 
           <div className={styles.heroLabelsArea}>
@@ -68,7 +73,7 @@ export default async function Home() {
 
         <div className={styles.heroInfo}>
           <p className={styles.heroInfoTitle}>RISE WITH THANKS.</p>
-          <p className={styles.heroInfoBody}>Arigatosun Limited Liability Company</p>
+          <p className={styles.heroInfoBody}>Arigatosun Inc.</p>
           <p className={styles.heroInfoBody}>Address : Room 802, ZERO Bldg. 4-6-26</p>
           <p className={styles.heroInfoBody}>Nishinaniwa-cho, Amagasaki-shi Hyogo Japan</p>
           <p className={styles.heroInfoCopyright}>&copy; 2026 ARIGATOSUN. ALL RIGHTS RESEAVED.</p>
@@ -91,7 +96,7 @@ export default async function Home() {
 
           <RevealText className={styles.aboutMessage}>
             <RevealBlock className={styles.aboutBlock}>
-              <RevealLine>合同会社アリガトサンは、</RevealLine>
+              <RevealLine>株式会社アリガトサンは、</RevealLine>
               <RevealLine>AI(LLM)システムの開発からデザイン・ブランディング、</RevealLine>
               <RevealLine>IPコンテンツ制作を行うクリエイティブスタジオです。</RevealLine>
             </RevealBlock>

@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import FooterSitCharacterLoader from '@/components/three/FooterSitCharacterLoader';
 import styles from './Footer.module.scss';
 
@@ -28,10 +29,10 @@ export default function Footer() {
         />
       </div>
 
-      {/* アーチ上のキャラクター */}
-      <div className={styles.sitCharacter}>
+      {/* アーチ上のキャラクター（確認用に一時非表示。戻す時はコメントを外す） */}
+      {/* <div className={styles.sitCharacter}>
         <FooterSitCharacterLoader />
-      </div>
+      </div> */}
 
       {/* CONTACT US ボタン */}
       <div className={styles.contactArea}>
@@ -47,9 +48,9 @@ export default function Footer() {
           <div className={styles.logoWrap}>
             <Image
               src="/images/sections/footer/logo.png"
-              alt="合同会社アリガトサン"
-              width={420}
-              height={113}
+              alt="株式会社アリガトサン"
+              width={740}
+              height={170}
               className={styles.footerLogo}
             />
           </div>
@@ -149,7 +150,7 @@ export default function Footer() {
       {/* 最下部 */}
       <div className={styles.bottom}>
         <span className={styles.companyName}>
-          Arigatosun Limited Liability Company
+          Arigatosun Inc.
         </span>
         <span className={styles.copyright}>
           &copy; 2026 ARIGATOSUN. ALL RIGHTS RESERVED.

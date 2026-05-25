@@ -6,14 +6,14 @@ import '@/styles/globals.scss';
 
 export const metadata: Metadata = {
   title: {
-    default: '合同会社アリガトサン | ARIGATOSUN',
-    template: '%s | 合同会社アリガトサン',
+    default: '株式会社アリガトサン | ARIGATOSUN',
+    template: '%s | 株式会社アリガトサン',
   },
   description:
     'AI(LLM)システムの開発からデザイン・ブランディング、IPコンテンツ制作を行うクリエイティブスタジオです。',
   keywords: ['アリガトサン', 'AI開発', 'LLM', 'デザイン', 'ブランディング', 'IPコンテンツ'],
   openGraph: {
-    title: '合同会社アリガトサン | ARIGATOSUN',
+    title: '株式会社アリガトサン | ARIGATOSUN',
     description:
       'AI(LLM)システムの開発からデザイン・ブランディング、IPコンテンツ制作を行うクリエイティブスタジオです。',
     locale: 'ja_JP',
