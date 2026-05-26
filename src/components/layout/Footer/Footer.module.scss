@@ -304,9 +304,11 @@
   @include fluid(letter-spacing, 1.4, 2.88);
   @include fluid(margin-bottom, 8, 14);
 
-  // Figma SP(390): タイトル下端 1016 → KUSOMEGANE top 1028 = 12
+  // Figma SP @390: タイトル x=28（右パネル枠 x=20 から +8px インデント）
+  // KUSOMEGANE top 3082.67 → title bottom 3070.67 = 12
   @include sp {
-    @include fluid(margin-bottom, 10, 12, 320, 390);
+    @include fluid(padding-left, 8, 8);
+    @include fluid(margin-bottom, 12, 12, 320, 390);
   }
 }
 
@@ -315,9 +317,9 @@
   flex-direction: column;
   @include fluid(gap, 10, 20);
 
-  // Figma SP(390): KUSOMEGANE 下端 1143 → ASEAVE top 1159 = 16
+  // Figma SP @390: KUSOMEGANE 下端 3197.39 → ASEAVE top 3213.39 = 16
   @include sp {
-    @include fluid(gap, 12, 16, 320, 390);
+    @include fluid(gap, 16, 16, 320, 390);
   }
 }
 

@@ -24,13 +24,11 @@ export default function ServicePage() {
         </h1>
         <p className={styles.introLabel}>SERVICE</p>
         <div className={styles.introText}>
-          <p>最先端のAI開発技術で、アイデアや理想を形に。</p>
-          <p>ブランディングで、世の中に届けるところまで。</p>
-          <p>構想からリリースまで一気通貫で進めます。</p>
+          <p>最先端のAI開発技術で、アイデアや理想を形に。ブランディングで、世の中に届けるところまで。構想からリリースまで一気通貫で進めます。</p>
         </div>
       </section>
 
-      {/* サービス3カード */}
+      {/* サービス3カード（動画背景付き） */}
       <ServiceCardGrid />
     </div>
   );

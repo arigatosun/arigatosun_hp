@@ -16,6 +16,15 @@
   @include fluid(padding-right, 20, 200);
   // Figma: サービスロゴ上端 y=240（固定ヘッダー分を内包）
   @include fluid(padding-top, 100, 240);
+
+  // Figma SP @390: 左右 padding 40 / padding-top 160 (= jp title y=160 from frame top)
+  // 実装のヘッダーは fixed (高さ 101) で content と重なるので、padding-top で
+  // ヘッダー領域+Figma gap を吸収する。
+  @include sp {
+    @include fluid(padding-left, 40, 40);
+    @include fluid(padding-right, 40, 40);
+    @include fluid(padding-top, 160, 160);
+  }
 }
 
 .introTitle {
@@ -27,6 +36,11 @@
   // Figma: サービスロゴ 180×41
   @include fluid(width, 90, 180);
   height: auto;
+
+  // Figma SP @390: ロゴ 136×31
+  @include sp {
+    @include fluid(width, 136, 136);
+  }
 }
 
 // SERVICE ラベル（Figma: Mozaic GEO Variable Light / 20px / #808080）
@@ -40,6 +54,13 @@
   font-weight: var(--font-weight-light);
   line-height: 1;
   @include fluid(letter-spacing, 1.3, 2.6);
+
+  // Figma SP @390: ロゴ下端 y=191 → ラベル top y=207 → 16px、font 14、ls 1.82
+  @include sp {
+    @include fluid(margin-top, 16, 16);
+    @include fluid(font-size, 14, 14);
+    @include fluid(letter-spacing, 1.82, 1.82);
+  }
 }
 
 // 導入コピー（Figma: Noto Sans JP / 20px / line-height 44 / #140700）
@@ -55,5 +76,13 @@
 
   p {
     margin: 0;
+  }
+
+  // Figma SP @390: ラベル下端 y=219 → 本文 top y=251 → 32px、font 14、line-height 28、ls 3.08
+  @include sp {
+    @include fluid(margin-top, 32, 32);
+    @include fluid(font-size, 14, 14);
+    @include fluid(line-height, 28, 28);
+    @include fluid(letter-spacing, 3.08, 3.08);
   }
 }
