@@ -131,6 +131,7 @@ export default function Footer() {
                 width={400}
                 height={130}
                 className={styles.projectImage}
+                loading="eager"
               />
             </div>
             <div className={styles.projectImageWrap}>
@@ -140,6 +141,7 @@ export default function Footer() {
                 width={400}
                 height={130}
                 className={styles.projectImage}
+                loading="eager"
               />
             </div>
           </div>

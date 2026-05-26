@@ -10,6 +10,15 @@ export type ServiceCardData = {
   viewLabel: string;
   /** カード背景画像。未用意なら null（グレープレースホルダー表示） */
   bgImage: string | null;
+  /** カード背景動画。指定があれば bgImage より優先（mp4 / webm のペアを想定） */
+  bgVideo?: {
+    /** WebM ソース (vp9) — 軽量・モダンブラウザ向け */
+    webm: string;
+    /** MP4 ソース (h264) — フォールバック */
+    mp4: string;
+    /** ローディング前 / 再生失敗時に表示する静止画 (必要なら) */
+    poster?: string;
+  };
 };
 
 export type ServiceMenuItem = string;

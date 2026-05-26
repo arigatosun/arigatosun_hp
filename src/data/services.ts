@@ -13,6 +13,10 @@ export const SERVICE_CARDS: readonly ServiceCardData[] = [
       'ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。',
     viewLabel: 'VIEW AI / DEVELOPMENT >',
     bgImage: null,
+    bgVideo: {
+      webm: '/videos/services/ai-dev.webm',
+      mp4: '/videos/services/ai-dev.mp4',
+    },
   },
   {
     id: 'design-branding',
@@ -23,6 +27,10 @@ export const SERVICE_CARDS: readonly ServiceCardData[] = [
       'ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。',
     viewLabel: 'VIEW DESIGN / BRANDING >',
     bgImage: null,
+    bgVideo: {
+      webm: '/videos/services/design-branding.webm',
+      mp4: '/videos/services/design-branding.mp4',
+    },
   },
   {
     id: 'ip-creative',
@@ -33,6 +41,10 @@ export const SERVICE_CARDS: readonly ServiceCardData[] = [
       'ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。',
     viewLabel: 'VIEW IP / CREATIVE >',
     bgImage: null,
+    bgVideo: {
+      webm: '/videos/services/ip-creative.webm',
+      mp4: '/videos/services/ip-creative.mp4',
+    },
   },
 ] as const;
 

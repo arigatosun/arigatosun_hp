@@ -208,9 +208,9 @@
   @include fluid(gap, 12, 28);
   list-style: none;
 
-  // Figma SP(390): line-to-line 46 = text 20 + gap 26
+  // Figma SP(390): line-to-line 46 = text box 20 + gap 26
   @include sp {
-    @include fluid(gap, 20, 26, 320, 390);
+    @include fluid(gap, 26, 26, 320, 390);
   }
 }
 
@@ -230,6 +230,12 @@
   &:hover {
     color: var(--color-primary);
   }
+
+  // Figma SP(390): font-size 16 / letter-spacing 1.4 程度（SP は固定）
+  @include sp {
+    @include fluid(font-size, 16, 16);
+    @include fluid(letter-spacing, 1.4, 1.4);
+  }
 }
 
 .externalIcon {
@@ -245,10 +251,10 @@
   // Figma: SERVICE 下 → AI/DEV top = 24px
   @include fluid(margin-top, 10, 24);
 
-  // Figma SP(390): SERVICE 下 → AI/DEV top = 26、sub item line-to-line = 約30
+  // Figma SP(390): SERVICE 下 → AI/DEV top = 26、sub item line-to-line = 38 (box18 + gap20)
   @include sp {
     @include fluid(margin-top, 20, 26, 320, 390);
-    @include fluid(gap, 12, 16, 320, 390);
+    @include fluid(gap, 20, 20, 320, 390);
   }
 }
 
@@ -264,6 +270,12 @@
 
   &:hover {
     color: var(--color-white);
+  }
+
+  // Figma SP(390): font-size 14 / letter-spacing 1.2 程度（SP は固定）
+  @include sp {
+    @include fluid(font-size, 14, 14);
+    @include fluid(letter-spacing, 1.2, 1.2);
   }
 }
 
@@ -312,7 +324,6 @@
 .projectImageWrap {
   position: relative;
   overflow: hidden;
-  border-radius: 4px;
 
   // ホバー時のオーバーレイ光彩
   &::after {
@@ -348,7 +359,6 @@
   display: block;
   width: 100%;
   height: auto;
-  border-radius: 4px;
   transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
               filter 0.5s ease,
               box-shadow 0.5s ease;

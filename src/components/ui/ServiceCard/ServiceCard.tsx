@@ -10,8 +10,28 @@ type ServiceCardProps = {
 export default function ServiceCard({ card }: ServiceCardProps) {
   return (
     <Link href={`/service/${card.id}`} className={styles.card} aria-label={`${card.title} の詳細を見る`}>
-      {/* 背景: 画像があれば写真＋オーバーレイ、なければグレープレースホルダー */}
-      {card.bgImage ? (
+      {/* 背景: 動画 > 画像 > プレースホルダー の優先順 */}
+      {card.bgVideo ? (
+        <>
+          <video
+            className={styles.bgVideo}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            poster={card.bgVideo.poster}
+            aria-hidden="true"
+          >
+            <source src={card.bgVideo.webm} type="video/webm" />
+            <source src={card.bgVideo.mp4} type="video/mp4" />
+          </video>
+          {/* 下半分の黒色グラデーション（滑らかな暗化） */}
+          <div className={styles.gradient} />
+          {/* 細かいドット（ハーフトーン風）— 下に行くほど密度が増す */}
+          <div className={styles.dots} aria-hidden="true" />
+        </>
+      ) : card.bgImage ? (
         <>
           <Image
             src={card.bgImage}
