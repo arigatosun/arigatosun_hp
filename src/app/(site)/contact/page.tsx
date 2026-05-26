@@ -237,6 +237,8 @@ export default function ContactPage() {
                 value={formData.nameKana}
                 onChange={handleChange}
                 onBlur={handleBlur}
+                // Android Gboard 向けの非標準値（HTML spec 外 / 未対応ブラウザは text 扱い）
+                // @ts-expect-error -- "kana" は React 型に未収録だが意図的に維持
                 inputMode="kana"
                 {...fieldA11y('nameKana')}
               />

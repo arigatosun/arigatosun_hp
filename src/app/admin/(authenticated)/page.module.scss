@@ -1,0 +1,47 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-black);
+  margin: 0;
+}
+
+.lead {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.cardDisabled {
+  background: var(--color-white);
+  border: 1px solid var(--color-gray-200);
+  border-radius: 12px;
+  padding: 20px;
+  opacity: 0.5;
+}
+
+.cardTitle {
+  font-size: 16px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-black);
+  margin: 0 0 8px;
+}
+
+.cardBody {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  margin: 0;
+}

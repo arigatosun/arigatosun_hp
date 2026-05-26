@@ -1,0 +1,79 @@
+.root {
+  background: var(--color-white);
+  border-bottom: 1px solid var(--color-gray-200);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.brand {
+  font-family: var(--font-en);
+  font-weight: var(--font-weight-bold);
+  font-size: 14px;
+  color: var(--color-black);
+  text-decoration: none;
+  letter-spacing: 0.08em;
+}
+
+.brandSub {
+  color: var(--color-primary);
+  margin-left: 4px;
+}
+
+.nav {
+  display: flex;
+  gap: 16px;
+  flex: 1;
+}
+
+.navLink {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  padding: 4px 0;
+  transition: color 0.15s;
+
+  &:hover {
+    color: var(--color-primary);
+  }
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.email {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.signOut {
+  padding: 6px 12px;
+  background: var(--color-white);
+  color: var(--color-black);
+  border: 1px solid var(--color-gray-300);
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+
+  &:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+  }
+}

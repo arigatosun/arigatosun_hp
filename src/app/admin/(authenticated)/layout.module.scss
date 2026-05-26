@@ -1,0 +1,11 @@
+.root {
+  min-height: 100vh;
+  background: var(--color-bg);
+  color: var(--color-black);
+}
+
+.main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}

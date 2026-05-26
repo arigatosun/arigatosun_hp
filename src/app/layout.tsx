@@ -1,6 +1,4 @@
 import type { Metadata } from 'next';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
 import '@/styles/fonts.css';
 import '@/styles/globals.scss';
 
@@ -21,6 +19,8 @@ export const metadata: Metadata = {
   },
 };
 
+// マーケ用ページの Header / Footer / <main> は app/(site)/layout.tsx で適用。
+// /admin 配下は (site) を経由しないため、ここではグローバル CSS と html/body のみ持つ。
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -28,11 +28,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
-      <body>
-        <Header />
-        <main>{children}</main>
-        <Footer />
-      </body>
+      <body>{children}</body>
     </html>
   );
 }
