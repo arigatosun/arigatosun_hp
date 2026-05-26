@@ -36,9 +36,10 @@ export async function generateMetadata({
 }
 
 // ブロック間の上余白（Figma 実測 px・1920基準）を fluid な margin-top に変換
+// SP(390)目安は PC値×0.33 程度（Figma SP の section 間 80/60/40 ≒ PC 240/180/120 の比率）。
 function gapStyle(gap: number) {
   return {
-    marginTop: `clamp(${(gap * 0.42).toFixed(1)}px, ${(gap / 19.2).toFixed(
+    marginTop: `clamp(${(gap * 0.33).toFixed(1)}px, ${(gap / 19.2).toFixed(
       3,
     )}vw, ${gap}px)`,
   };

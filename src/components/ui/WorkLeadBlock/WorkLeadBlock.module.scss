@@ -4,12 +4,18 @@
 );
 @use '@/styles/breakpoints' as *;
 
-// 導入リードブロック。テキスト左端は Figma 実測 x=200。
+// 導入リードブロック。テキスト左端は Figma PC=200 / SP(390)=40。
 .lead {
   @include fluid(padding-left, 20, 200);
   @include fluid(padding-right, 20, 200);
+
+  @include sp {
+    padding-left: 40px;
+    padding-right: 40px;
+  }
 }
 
+// Figma SP(390): heading h=72 / 2行 / font ~24 / line-height 36 / letter-spacing ~4
 .heading {
   margin: 0;
   color: var(--color-black);
@@ -18,8 +24,15 @@
   @include fluid(font-size, 18, 28);
   @include fluid(line-height, 36, 56);
   @include fluid(letter-spacing, 4, 8.12);
+
+  @include sp {
+    font-size: 18px;
+    line-height: 36px;
+    letter-spacing: 2.6px;
+  }
 }
 
+// Figma SP(390): subheading h=64 / 2行 / font ~16 / line-height 32 / letter-spacing ~3.5
 .subheading {
   margin: 0;
   @include fluid(margin-top, 4, 8);
@@ -29,6 +42,12 @@
   @include fluid(font-size, 16, 24);
   @include fluid(line-height, 32, 56);
   @include fluid(letter-spacing, 3.5, 6.96);
+
+  @include sp {
+    font-size: 14px;
+    line-height: 32px;
+    letter-spacing: 2.4px;
+  }
 }
 
 // 見出し群と本文の間の短い横線（Figma: 48×1px / #140700）
@@ -39,8 +58,15 @@
   @include fluid(width, 32, 48);
   height: 1px;
   background: var(--color-black);
+
+  @include sp {
+    margin-top: 32px;
+    margin-bottom: 32px;
+    width: 48px;
+  }
 }
 
+// Figma SP(390): body h=150 / 5行 / font ~13 / line-height 30 / letter-spacing ~2
 .body {
   margin: 0;
   color: var(--color-black);
@@ -49,4 +75,10 @@
   @include fluid(font-size, 13, 16);
   @include fluid(line-height, 28, 36);
   @include fluid(letter-spacing, 2, 3.84);
+
+  @include sp {
+    font-size: 13px;
+    line-height: 30px;
+    letter-spacing: 1.8px;
+  }
 }

@@ -6,11 +6,17 @@
 
 // ヒーロー全体。Figma 基準サイズの比率を保ったまま viewport 幅に追従。
 // aspect-ratio はインライン style（コンポーネント側で hero.width / hero.height から算出）で上書きする。
+// SP(390): hero.spAspect="390/540" が指定されたページは縦長レイアウトに切替（コラージュ型用）。
 .hero {
   position: relative;
   width: 100%;
-  aspect-ratio: 1920 / 760;
+  aspect-ratio: var(--data-aspect, 1920 / 760);
   overflow: hidden;
+
+  // データで spAspect="390/540" を渡したコラージュ型ヒーローは SP で縦長レイアウトに切替
+  @include sp {
+    aspect-ratio: var(--sp-aspect, var(--data-aspect, 1920 / 760));
+  }
 }
 
 // 背景ピンク帯（Figma: #F9E7EA / opacity 75%）
@@ -38,6 +44,7 @@
 }
 
 // 中央のクライアントロゴ（ワードマーク＋マークを縦に重ねる）
+// Figma SP(390): ロゴ x=95 y=340 w=200 h=104 → 中心 (50%, 73%) / 幅 51.3%
 .logo {
   position: absolute;
   left: 50%;
@@ -50,6 +57,11 @@
   // ロゴ全体幅 = マーク幅 310.5 / ヒーロー 1920
   width: 16.17%;
   @include fluid(gap, 4, 8);
+
+  @include sp {
+    top: 73%;
+    width: 51%;
+  }
 }
 
 // ワードマーク（logo-2.svg / viewBox 367.41×106.086）。背景画像はインライン style で指定。

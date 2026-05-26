@@ -4,10 +4,15 @@
 );
 @use '@/styles/breakpoints' as *;
 
-// 白カードを本文と同じ左右 x=200 基準に収める枠
+// 白カードを本文と同じ左右 x=200 基準に収める枠 (Figma SP は 40 + 16 ≒ 56 で内寄せ)
 .wrap {
   @include fluid(padding-left, 20, 200);
   @include fluid(padding-right, 20, 200);
+
+  @include sp {
+    padding-left: 40px;
+    padding-right: 40px;
+  }
 }
 
 // 白カード本体（Figma: 1520×480 / 背景白）

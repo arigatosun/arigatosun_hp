@@ -10,6 +10,8 @@ const CHORITZ_DETAIL: WorkDetailContent = {
   slug: 'work-1',
   pattern: 'detail',
   hero: {
+    // SP(390) は Figma 縦長レイアウト 390×540 に切替
+    spAspect: '390 / 540',
     photos: [
       { src: `${CHORITZ}/rect-220.jpg`, x: 561, y: -37, width: 302, height: 197 },
       { src: `${CHORITZ}/rect-4684.jpg`, x: 1319, y: -27, width: 564, height: 377 },

@@ -41,6 +41,7 @@ export default function WorksListSection({ works }: WorksListSectionProps) {
                 imageWidth={work.imageWidth}
                 imageHeight={work.imageHeight}
                 href={`/works/${work.id}`}
+                spBreakAtPipe={work.spBreakAtPipe}
               />
             ))}
           </div>

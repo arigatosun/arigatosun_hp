@@ -4,10 +4,15 @@
 );
 @use '@/styles/breakpoints' as *;
 
-// グレーカードを本文と同じ左右 x=200 基準に収める枠
+// グレーカードを本文と同じ左右 x=200 基準に収める枠 (Figma SP は画面端まで広げる)
 .wrap {
   @include fluid(padding-left, 20, 200);
   @include fluid(padding-right, 20, 200);
+
+  @include sp {
+    padding-left: 0;
+    padding-right: 0;
+  }
 }
 
 // グレーカード本体（Figma: 背景 #EBEDEE）。高さは min-height（インライン）で Figma 実測に合わせ、

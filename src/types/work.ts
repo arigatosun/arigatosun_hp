@@ -15,6 +15,11 @@ export type WorkItem = {
   image: string;
   imageWidth: number;
   imageHeight: number;
+  /**
+   * SP (<=1023px) で title 内の "|" を改行に置き換えるか。
+   * true: Figma SP の 2 段落表示 (pipe 非表示) / false (既定): pipe を " | " として可視表示。
+   */
+  spBreakAtPipe?: boolean;
 };
 
 // ── 詳細ページ（/works/[slug]）用 ──
@@ -33,6 +38,8 @@ export type WorkHero = {
   /** ヒーロー全体サイズ（Figma 基準）。省略時は 1920×760。 */
   width?: number;
   height?: number;
+  /** SP(<=1023px) 時の aspect-ratio。"390/540" 等の文字列で指定。省略時は PC と同じ比率を継続。 */
+  spAspect?: string;
   /** 背景帯のスタイル。省略時は pink。 */
   band?: 'pink' | 'none';
   photos: WorkHeroPhoto[];

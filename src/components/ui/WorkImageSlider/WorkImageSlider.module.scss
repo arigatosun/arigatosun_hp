@@ -4,12 +4,17 @@
 );
 @use '@/styles/breakpoints' as *;
 
-// 全幅の白バンド。左右 x=200 内側にスライダー枠を収める。
+// 全幅の白バンド。左右 PC=200 / SP=0 (Figma SP は画面端まで広げる)
 .band {
   width: 100%;
   background: var(--color-white);
   @include fluid(padding-left, 20, 200);
   @include fluid(padding-right, 20, 200);
+
+  @include sp {
+    padding-left: 0;
+    padding-right: 0;
+  }
 }
 
 // スライダー枠（Figma 実測 1520×480）

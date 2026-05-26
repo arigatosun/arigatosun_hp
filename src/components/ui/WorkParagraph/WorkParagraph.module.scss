@@ -4,10 +4,15 @@
 );
 @use '@/styles/breakpoints' as *;
 
-// 見出しを持たない単独の本文ブロック。左端は Figma 実測 x=200。
+// 見出しを持たない単独の本文ブロック。左端は Figma PC=200 / SP(390)=40。
 .paragraph {
   @include fluid(padding-left, 20, 200);
   @include fluid(padding-right, 20, 200);
+
+  @include sp {
+    padding-left: 40px;
+    padding-right: 40px;
+  }
 }
 
 .body {
@@ -18,4 +23,10 @@
   @include fluid(font-size, 13, 16);
   @include fluid(line-height, 28, 36);
   @include fluid(letter-spacing, 2, 3.84);
+
+  @include sp {
+    font-size: 13px;
+    line-height: 30px;
+    letter-spacing: 1.8px;
+  }
 }

@@ -4,10 +4,15 @@
 );
 @use '@/styles/breakpoints' as *;
 
-// 色付きカードを本文と同じ左右 x=200 基準に収める枠
+// 色付きカードを本文と同じ左右 x=200 基準に収める枠 (Figma SP は画面端まで広げる)
 .wrap {
   @include fluid(padding-left, 20, 200);
   @include fluid(padding-right, 20, 200);
+
+  @include sp {
+    padding-left: 0;
+    padding-right: 0;
+  }
 }
 
 // カード本体。高さは aspect-ratio（インライン style）で Figma 比率を維持。
