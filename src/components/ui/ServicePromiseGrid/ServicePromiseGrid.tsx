@@ -29,6 +29,7 @@ export default function ServicePromiseGrid({
         }}
         title={title}
         subtitle={subtitle}
+        size="service-detail"
       />
 
       <div className={styles.grid}>

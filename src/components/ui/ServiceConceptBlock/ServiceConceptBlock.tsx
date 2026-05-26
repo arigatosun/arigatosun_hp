@@ -10,6 +10,8 @@ type ServiceConceptBlockProps = {
   body: string[];
   /** 本文の字間（Figma 実測 px・16px 基準で em 換算） */
   bodyTracking: number;
+  /** レイアウトバリアント — 'phases' は ECOSYSTEM PROCESS 用 (gap 195 / visual 585) */
+  variant?: 'default' | 'phases';
   /** 右側のビジュアル（GlowImage or ServiceScopePills） */
   children: ReactNode;
 };
@@ -21,10 +23,17 @@ export default function ServiceConceptBlock({
   subtitle,
   body,
   bodyTracking,
+  variant = 'default',
   children,
 }: ServiceConceptBlockProps) {
+  const blockClass = [
+    styles.block,
+    variant === 'phases' ? styles.variantPhases : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
   return (
-    <section className={styles.block} id={id}>
+    <section className={blockClass} id={id}>
       <div className={styles.text}>
         <SectionHeader
           logo={{
@@ -35,6 +44,7 @@ export default function ServiceConceptBlock({
           }}
           title={title}
           subtitle={subtitle}
+          size="service-detail"
         />
         <p
           className={styles.body}

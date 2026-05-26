@@ -1,6 +1,5 @@
 // SERVICE 詳細ページ（/service/[slug]）の静的データソース。
 // 将来 CMS / API へ差し替え予定。
-// 現状 design-branding のみ Figma 準拠で本実装。ai-dev / ip-creative は後日。
 
 import type {
   ServiceDetailData,
@@ -29,6 +28,21 @@ const DESIGN_BRANDING: ServiceDetailData = {
   ],
   // Figma ではプレースホルダー画像。実画像が用意でき次第 src を設定。
   heroImage: null,
+  // Hero メイン画像はスライドショー (Figma Rectangle 4702/4716/4717)
+  heroSlides: [
+    {
+      src: '/images/sections/service/detail/design-branding-hero/slide-1.png',
+      alt: 'デザイナーがノート PC で資料を確認しながら作業している風景',
+    },
+    {
+      src: '/images/sections/service/detail/design-branding-hero/slide-2.png',
+      alt: '手書きで設計やアイデアを書き出したノートのクローズアップ',
+    },
+    {
+      src: '/images/sections/service/detail/design-branding-hero/slide-3.png',
+      alt: '机に広げられたアリガトくんモチーフのロゴ・VI 検証用プリント群',
+    },
+  ],
   concepts: [
     {
       id: 'standard',
@@ -145,6 +159,25 @@ const AI_DEV: ServiceDetailData = {
     'そしてその先に、現代で最も魔法に近い技術で、目の前の現実を変えていく驚きを届けたい。',
   ],
   heroImage: null,
+  // Hero メイン画像はスライドショー (Figma Rectangle 4660/4718/4719/4720)
+  heroSlides: [
+    {
+      src: '/images/sections/service/detail/ai-dev-hero/slide-1.png',
+      alt: '開発者がデュアルディスプレイの前でコードを書いている風景',
+    },
+    {
+      src: '/images/sections/service/detail/ai-dev-hero/slide-2.png',
+      alt: 'IoT 基板に接続された配線群のクローズアップ',
+    },
+    {
+      src: '/images/sections/service/detail/ai-dev-hero/slide-3.png',
+      alt: 'デスクでキーボードを打つ手元と作業画面',
+    },
+    {
+      src: '/images/sections/service/detail/ai-dev-hero/slide-4.png',
+      alt: 'チームメンバーがディスプレイを見て議論している様子',
+    },
+  ],
   // ② 私たちが実現すること (Figma y=2086〜)
   // ③ 私たちが実現してきたこと (Figma y=2932〜)
   // 共に 3 cols at x=200/760/1320, w=400 each
@@ -289,15 +322,232 @@ const AI_DEV: ServiceDetailData = {
   ],
 };
 
+// ── IP / CREATIVE (Figma node 2692:37929 / SERVICE(PC:1920px) より) ──
 const IP_CREATIVE: ServiceDetailData = {
   slug: 'ip-creative',
   titleEn: 'IP / CREATIVE',
   titleJa: 'IP・クリエイティブ',
-  quote: '',
-  description: [],
+  // Hero 太字キャッチ (Figma 2692:38184 / x=200 y=487 w=920 h=112 / 28px / 8.12px tracking / 2 セグメント)
+  quote: 'ひとつのアイデンティティを、\n世界が愛するカルチャーへ。',
+  // Hero 小キャッチ (Figma 2697:43669 / x=200 y=659 w=1163 h=38 / 22px / 5.28px tracking)
+  subQuote: '「個性の熱量」を真ん中に置き、時代を超える物語を創り出す。',
+  // Hero 説明 (Figma 2692:38185 / x=200 y=725 w=1163 h=152 / 16px / 3.84px tracking)
+  // Figma 構造: 3 <p> で中央 <p> に <br> 1 本 → 実体は 4 セグメント
+  description: [
+    'クリエイターの脳内にある純粋な衝動や、固有のパーソナル・スタイル ―――',
+    'それこそが、すべての偉大なIPの原点です。',
+    '私たちはそのアイデンティティを誰よりも深く理解し、磨き上げ、ファンと深く結びつけることで、',
+    '一過性のブームではない『愛され続けるカルチャー』へと伴走します。',
+  ],
+  // Figma Rectangle 4704 (x=200 y=957 w=1520 h=800) — メインヒーロー画像枠
   heroImage: null,
-  concepts: [],
-  caseStudies: [],
+  // Hero メイン画像はスライドショー (Figma Rectangle 4704/4705/4706/4707/4709)
+  heroSlides: [
+    {
+      src: '/images/sections/service/detail/ip-hero/slide-1.png',
+      alt: 'KUSOMEGANE の作品コマ：ジェット・ソファ・スイカ割り等のシーン集',
+    },
+    {
+      src: '/images/sections/service/detail/ip-hero/slide-2.png',
+      alt: 'クリエイターがタブレットで作品を制作している風景',
+    },
+    {
+      src: '/images/sections/service/detail/ip-hero/slide-3.png',
+      alt: 'タブレットの画面に描かれた KUSOMEGANE のキャラクター',
+    },
+    {
+      src: '/images/sections/service/detail/ip-hero/slide-4.png',
+      alt: '刺繍機で KUSOMEGANE キャラクターを刺繍しているところ',
+    },
+    {
+      src: '/images/sections/service/detail/ip-hero/slide-5.png',
+      alt: 'KUSOMEGANE のキーホルダーやブラインドボックス等のグッズ展示',
+    },
+  ],
+  // Hero 右上のキャラクター (Figma 2692:38187 Group 867 / x=1397 y=260 w=286 h=296)
+  heroCharacter: null,
+  // ②' クリエイター紹介セクション (Figma 2817:35484 Group 1119 / x=190 y=1733 w=1787 h=833)
+  // KUSOMEGANE という具体的 IP 事例を Hero 下に紹介
+  creatorProfile: {
+    // Figma 2734:26518 アイコン1 (x=190 y=1795 w=294 h=294 / 2x export 588x588)
+    avatar: {
+      src: '/images/sections/service/detail/kusomegane-avatar.png',
+      alt: 'KUSOMEGANE のメインキャラクター（青いクマと羊のキャラ）',
+    },
+    // Figma 2702:43682 KUSOMEGANE© ロゴ (x=518 y=1856 w=409 h=40) — 現状はテキストで代用、後で SVG 化可能
+    title: 'KUSOMEGANE©',
+    // Figma 2702:43700 (x=518 y=1924 w=1042 h=102 / 16px / 3.84px tracking / 34px line-height / 3 段落)
+    description: [
+      'SNS発、圧倒的なパーソナル・スタイルとシュールな世界観でファンの心を掴むオリジナルIP。',
+      '日常の違和感を切り取る独自の視点と、思わず誰かに見せたくなるユーモアで、静かに支持を広げています。',
+      'ヴィレッジヴァンガード等でのポップアップ展開も実施。',
+    ],
+    // Figma 2704:43762 SNS アイコン (Instagram / TikTok / YouTube)
+    snsLinks: {
+      instagram: '#',
+      tiktok: '#',
+      youtube: '#',
+    },
+  },
+  // ② 私たちが実現すること WHAT WE REALIZE (Figma 2704:43923 / x=200 y=2362 w=1520 h=526)
+  promises: [
+    {
+      id: 'realize',
+      title: '私たちが実現すること',
+      subtitle: 'WHAT WE REALIZE',
+      items: [
+        {
+          // Figma 2704:43765 (x=200 y=2616 w=400 h=72) — 明示的 2 行
+          catchphrase: '固有のアイデンティティを\n解放する',
+          // Figma 2704:43796 (x=200 y=2712 w=400 h=136)
+          body: '誰かに合わされた表現ではなく、その人・その場所にしか無い『固有のパーソナル・スタイル』を徹底的に肯定し、純度の高いコンテンツとして結晶化させます。',
+        },
+        {
+          // Figma 2704:43797 (x=760 y=2616 w=400 h=72) — 明示的 2 行
+          catchphrase: '『消費』ではなく\n『愛着』を生む',
+          // Figma 2704:43799 (x=760 y=2712 w=400 h=136) — 「なく、」の後で明示的に改行
+          body: '数字を追うだけのトレンド消費ではなく、\nファンの人生に長く寄り添い、記憶に残り続ける深い愛着（ロイヤリティ）を市場に生み出します。',
+        },
+        {
+          // Figma 2704:43766 (x=1320 y=2616 w=400 h=72) — 明示的 2 行
+          catchphrase: 'クリエイティブで\n境界線を越える',
+          // Figma 2704:43800 (x=1320 y=2712 w=400 h=102)
+          body: '国境、世代、そしてメディアの枠組みを越え、一つの熱狂が次の熱狂を呼ぶ『感情の循環』を世界中に広げていきます。',
+        },
+      ],
+    },
+  ],
+  concepts: [
+    // ③ アリガトサン・スタンダード ARIGATOSUN STANDARD (Figma 2692:38222 / y=3168〜)
+    {
+      id: 'standard',
+      title: 'アリガトサン・スタンダード',
+      subtitle: 'ARIGATOSUN STANDARD',
+      // Figma 2692:38221 (x=200 y=3374 w=700 h=190 / 16px)
+      body: [
+        '私たちがIPを生み出す上で、決して譲らない3つの判断軸。',
+        '平均点なキャラクターは作らない。広く浅い認知ではなく、まず最初の100人を熱狂させる世界観をつくる。そして、10年先もその個性が輝き続けるための生態系を設計する ―――',
+        'この3つの判断が、IP事業部のすべての制作と展開を支えています。',
+      ],
+      bodyTracking: 3.84,
+      visual: {
+        kind: 'callouts',
+        // 3 つの callout テキストは線画 PNG に焼き込み済みのため overlay は出さない
+        items: [],
+        // 線画 (Group 1136) + マスク (Group 1134) は 1376x1343 同寸
+        image: {
+          src: '/images/sections/service/detail/concept-standard-ip.png',
+          alt: 'アリガトサン・スタンダード（IP/CREATIVE）を表す 3 つの大バブル + 衛星円の概念図',
+          width: 1376,
+          height: 1343,
+          mask: {
+            src: '/images/sections/service/detail/concept-standard-ip-mask.png',
+            size: '100% 100%',
+            position: '50% 50%',
+          },
+        },
+      },
+    },
+    // ④ クリエイターの才能を活かす、ギルド型組織 CREATOR FIRST (Figma 2704:43909 / x=284 y=4147)
+    // Figma 改行: 「活かす、」の後で 1 回改行
+    {
+      id: 'creator-first',
+      title: 'クリエイターの才能を活かす、\nギルド型組織。',
+      subtitle: 'CREATOR FIRST',
+      // Figma 2704:43805 (x=200 y=4353 w=700 h=228 / 16px)
+      // Figma 改行 (ユーザー指定): 「グッズ / 管」「『トライブ / （族）」「純度の高 / さがコンテ」
+      body: [
+        '才能が、雑務に埋もれてしまわないように。企画・制作はもちろん、グッズ',
+        '管理やコラボの調整、3D素材・アプリ・ゲーム開発まで、創作のまわりで必要なすべてを社内で担います。',
+        'プロデューサー・ディレクター陣をハブに、IPごとに最適な『トライブ',
+        '（族）』を形成。作者は、本当に必要な工程だけに集中でき、その純度の高',
+        'さがコンテンツの強さになります。',
+      ],
+      bodyTracking: 3.84,
+      visual: {
+        kind: 'image',
+        // 線画 (Group 1138, 1337x1337) — 9 つのバブルと全テキストが焼き込み済み
+        src: '/images/sections/service/detail/concept-creator-first-ip.png',
+        alt: 'CREATOR FIRST のギルド型組織図。中央「作者」を内周「プロデュース／ディレクション」が囲み、外周にコラボレーション・コンテンツ企画制作・アプリゲーム開発・グッズ管理・EC・3D デザイン等が並ぶ',
+        width: 1337,
+        height: 1337,
+        // マスク (Group 1137, 1335x1335) — 線画と 2px 差は size 100% 100% で吸収
+        mask: {
+          src: '/images/sections/service/detail/concept-creator-first-ip-mask.png',
+          size: '100% 100%',
+          position: '50% 50%',
+        },
+      },
+    },
+    // ⑤ IPの育て方・進め方 ECOSYSTEM PROCESS (Figma 2692:38348 / x=284 y=5100〜)
+    {
+      id: 'ecosystem-process',
+      title: 'IPの育て方・進め方',
+      subtitle: 'ECOSYSTEM PROCESS',
+      // Figma 2692:38347 (x=200 y=5306 w=700 h=228 / 16px / Figma 内の改行 = 5 セグメント)
+      body: [
+        'IPは一度生み出して終わりではなく、',
+        '育てながら次の世代に手渡していくものです。',
+        '発掘・言語化から、世界観構築、メディアミックスによる多角展開、',
+        'そして10年20年と愛され続ける運用フェーズまで ―――',
+        '各段階に最適な座組みでプロジェクトを進行します。',
+      ],
+      bodyTracking: 3.84,
+      visual: {
+        kind: 'phases',
+        // Figma 4 PHASES (x=1167 / 親右側)
+        // description は Figma 内に明示的改行 \n あり（ServicePhaseSteps 側で white-space: pre-line で受ける）
+        items: [
+          {
+            // 2692:41778 PHASE.1 (y=5100) / 2692:41780 (y=5138) / 2692:41779 (y=5182)
+            step: 'PHASE.1',
+            title: '発掘・言語化',
+            description: 'クリエイターのパーソナルな衝動を抽出し、\nIPの核（アイデンティティ）を定義する。',
+          },
+          {
+            // 2704:43871 PHASE.2 (y=5286) / 2704:43873 (y=5324) / 2704:43872 (y=5368)
+            step: 'PHASE.2',
+            title: '世界観構築',
+            description: 'ビジュアルとストーリーを練り上げ、最初の熱狂的なファン層（コアコミュニティ）を形成する。',
+          },
+          {
+            // 2704:43874 PHASE.3 (y=5472) / 2704:43876 (y=5510) / 2704:43875 (y=5554)
+            step: 'PHASE.3',
+            title: '多角化展開',
+            description: 'グッズ、リアル店舗、タイアップなど、\n世界観を壊さない最適なメディアミックスを実行する。',
+          },
+          {
+            // 2704:43877 PHASE.4 (y=5658) / 2704:43879 (y=5696) / 2704:43878 (y=5740)
+            step: 'PHASE.4',
+            title: '運用・継続',
+            description: '時代に合わせてチューニングしながら、\n10年20年と愛され続ける定番ブランドへと育成する。',
+          },
+        ],
+      },
+    },
+  ],
+  // ⑥ 実績・事例 (Figma 2692:41742 / y=6124〜) — Figma 上の subtitle は "DESIGN & BRANDING SCOPE" コピー残り
+  // 内容は他サービスと共通（Figma 上で同じカードを使い回し）
+  caseStudies: [
+    {
+      id: 'tsukemono',
+      client: '全日本漬物協同組合連合会',
+      text: '何百年も続く日本の漬物文化を、この先も愛してもらえるカタチへ。| 最優秀賞から生まれたキャラクターデザインと、ポータルサイトのリブランディング',
+      thumbnail: null,
+    },
+    {
+      id: 'choritz',
+      client: '頂立輸入代行会社',
+      text: '数値では測れない想いや姿勢を、ブランドの核心へ宿す。| 社名からVIまで、一気通貫のブランド構築',
+      thumbnail: null,
+    },
+    {
+      id: 'nest',
+      client: 'NEST',
+      text: 'デジタルでは生まれない温もりと偶然性を、シンボルとして可視化する。| 拡張を見据えたロゴ・VI設計',
+      thumbnail: null,
+    },
+  ],
 };
 
 export const SERVICE_DETAIL: Record<string, ServiceDetailData> = {

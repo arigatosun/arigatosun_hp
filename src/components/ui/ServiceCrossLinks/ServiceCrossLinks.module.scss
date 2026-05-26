@@ -7,7 +7,8 @@
   @include fluid(padding-left, 20, 200);
   @include fluid(padding-right, 20, 200);
   @include fluid(margin-top, 64, 121);
-  @include fluid(padding-bottom, 96, 240);
+  // 上余白 margin-top と対称にして、フッターまでが間延びしないようにする
+  @include fluid(padding-bottom, 64, 121);
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   // Figma: カード間 80px
@@ -20,6 +21,7 @@
 }
 
 .card {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -27,15 +29,70 @@
   aspect-ratio: 720 / 400;
   background-color: var(--color-placeholder);
   text-decoration: none;
+  overflow: hidden;
 }
 
-.label {
-  color: var(--color-black);
+.cardImage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  transition: transform var(--transition-base);
+
+  .card:hover & {
+    transform: scale(1.04);
+  }
+}
+
+// 暗化は PNG 側に焼き込み済み（Figma Group 1170/1171 はそのまま貼ると暗い）。
+// CSS では追加トーンを乗せず、ホバー時のみほんのり明るくする方向で扱う。
+.cardOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background-color: transparent;
+  transition: background-color var(--transition-base);
+
+  .card:hover & {
+    background-color: rgba(255, 255, 255, 0.08);
+  }
+}
+
+.cardText {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  // Figma: ja 上端 7052 → en 下端 7124 = 72 / 中央配置
+  @include fluid(gap, 6, 18);
+}
+
+// 上段 日本語サブ (Figma 2837:49368: Noto Sans JP Regular / 16px / 2.08px tracking / lh24 / opacity .5 / white)
+.cardLabelJa {
+  color: var(--color-white);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  font-weight: var(--font-weight-regular);
+  @include fluid(font-size, 12, 16);
+  line-height: 1.5;
+  @include fluid(letter-spacing, 1, 2.08);
+  opacity: 0.5;
+  text-align: center;
+  white-space: nowrap;
+}
+
+// 下段 英語タイトル (Figma 2837:49367: Mozaic GEO Light / 32px / 4.16px tracking / white)
+.cardLabelEn {
+  color: var(--color-white);
   font-family: var(--font-en);
-  @include fluid(font-size, 22, 32);
   font-weight: var(--font-weight-light);
+  @include fluid(font-size, 22, 32);
+  line-height: 1;
   @include fluid(letter-spacing, 2.8, 4.16);
   text-align: center;
+  white-space: nowrap;
   transition: color var(--transition-base);
 
   .card:hover & {

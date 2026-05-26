@@ -44,3 +44,15 @@
   line-height: 24px;
   @include fluid(letter-spacing, 1, 2.08);
 }
+
+// SERVICE 詳細ページ向けバリアント: 28px / ls 11.2 / Medium (Figma 2704:43769 等)
+.sizeServiceDetail {
+  .headerTitle {
+    @include fluid(font-size, 18, 28);
+    @include fluid(line-height, 32, 48); // Figma leading-[48px]
+    @include fluid(letter-spacing, 5.6, 11.2);
+    font-weight: var(--font-weight-medium);
+    // data 側 \n を改行として表示（例: CREATOR FIRST タイトル）
+    white-space: pre-line;
+  }
+}

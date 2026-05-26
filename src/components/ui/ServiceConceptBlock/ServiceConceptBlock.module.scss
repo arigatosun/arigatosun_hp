@@ -6,7 +6,8 @@
 .block {
   display: flex;
   align-items: flex-start;
-  @include fluid(gap, 40, 140);
+  // Figma: text 右端 x=900 → visual 左端 x=1042 → gap 142px
+  @include fluid(gap, 40, 142);
   @include fluid(padding-left, 20, 200);
   @include fluid(padding-right, 20, 200);
   @include fluid(margin-top, 96, 280);
@@ -19,11 +20,10 @@
 }
 
 // ── 左: 見出し + 本文 ──
+// Figma: 本文幅 700 / コンテンツ幅 1520 = 46.05%
 .text {
   flex: 0 0 auto;
-  // Figma: 本文幅 700 / コンテンツ幅 1520 ≒ 46%
-  width: 46%;
-  // Figma の本文ボックス幅 700px を上限に固定 → 広い画面でも改行位置が Figma と一致
+  width: 46.05%;
   max-width: 700px;
 
   @include max(1023px) {
@@ -49,11 +49,32 @@
 }
 
 // ── 右: ビジュアル ──
+// Figma: visual 幅 667 / コンテンツ幅 1520 = 43.88%
 .visual {
-  flex: 1 1 0;
+  flex: 0 0 auto;
+  width: 43.88%;
+  max-width: 667px;
   min-width: 0;
 
   @include max(1023px) {
     width: 100%;
+    max-width: none;
+  }
+}
+
+// ── variant: phases (ECOSYSTEM PROCESS) ──
+// Figma Group 1146: text 700 + gap 195 + visual 585 = 1480
+// STANDARD/CREATOR_FIRST (visual 666-667) と違って visual が狭く gap が広い
+.variantPhases {
+  @include fluid(gap, 48, 195);
+
+  .visual {
+    width: 38.49%; // 585/1520
+    max-width: 585px;
+
+    @include max(1023px) {
+      width: 100%;
+      max-width: none;
+    }
   }
 }

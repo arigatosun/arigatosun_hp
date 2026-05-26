@@ -1,6 +1,9 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { SERVICE_NAV } from '@/data/service-detail';
+import ServiceHeroSlideshow, {
+  type ServiceHeroSlide,
+} from '@/components/ui/ServiceHeroSlideshow';
 import styles from './ServiceDetailHero.module.scss';
 
 type ServiceDetailHeroProps = {
@@ -8,8 +11,12 @@ type ServiceDetailHeroProps = {
   titleEn: string;
   titleJa: string;
   quote: string;
+  /** 大キャッチの下に置く小キャッチ（IP/CREATIVE: 「個性の熱量」を真ん中に置き… 22px） */
+  subQuote?: string;
   description: string[];
   heroImage: string | null;
+  /** 指定があれば heroImage は無視されスライドショーが表示される */
+  heroSlides?: ServiceHeroSlide[];
 };
 
 export default function ServiceDetailHero({
@@ -17,8 +24,10 @@ export default function ServiceDetailHero({
   titleEn,
   titleJa,
   quote,
+  subQuote,
   description,
   heroImage,
+  heroSlides,
 }: ServiceDetailHeroProps) {
   return (
     <section className={styles.hero}>
@@ -70,6 +79,8 @@ export default function ServiceDetailHero({
 
       {quote && <p className={styles.quote}>{quote}</p>}
 
+      {subQuote && <p className={styles.subQuote}>{subQuote}</p>}
+
       {description.length > 0 && (
         <div className={styles.description}>
           {description.map((line, i) => (
@@ -79,7 +90,9 @@ export default function ServiceDetailHero({
       )}
 
       <div className={styles.heroImage}>
-        {heroImage ? (
+        {heroSlides && heroSlides.length > 0 ? (
+          <ServiceHeroSlideshow slides={heroSlides} />
+        ) : heroImage ? (
           <Image
             src={heroImage}
             alt={`${titleEn} のイメージ`}
