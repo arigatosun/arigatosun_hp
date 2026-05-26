@@ -61,8 +61,8 @@ export default function LogoSlider() {
               <Image
                 src={logo.src}
                 alt={logo.alt}
-                width={865}
-                height={188}
+                width={649}
+                height={150}
                 className={styles.logoImage}
               />
             </div>
@@ -77,8 +77,8 @@ export default function LogoSlider() {
                 <Image
                   src={logo.colorSrc}
                   alt=""
-                  width={636}
-                  height={138}
+                  width={572}
+                  height={132}
                   className={styles.logoImageColor}
                 />
               </div>

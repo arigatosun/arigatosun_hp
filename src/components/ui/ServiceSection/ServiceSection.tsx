@@ -129,9 +129,7 @@ export default function ServiceSection() {
             />
 
             <div className={styles.description}>
-              <p>最先端のAI開発技術で、アイデアや理想を形に。</p>
-              <p>ブランディングで、世の中に届けるところまで。</p>
-              <p>構想からリリースまで一気通貫で進めます。</p>
+              <p>最先端のAI開発技術で、アイデアや理想を形に。ブランディングで、世の中に届けるところまで。構想からリリースまで一気通貫で進めます。</p>
             </div>
 
             <ul className={styles.menuList} ref={menuRef}>

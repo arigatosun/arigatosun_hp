@@ -134,8 +134,7 @@ export default function WorksSection({ works }: WorksSectionProps) {
 
         <div className={styles.footerText}>
           <p className={styles.footerServices}>
-            AI / DEVELOPMENT / APPLICATION / DESIGN / UI / UX / BRANDING /<br />
-            WEB DESIGN / VI / IP / MARKETING / 3D / PHOTOGRAPHY / MOVIE etc...
+            AI / DEVELOPMENT / APPLICATION / DESIGN / UI / UX / BRANDING / WEB DESIGN / VI / IP / MARKETING / 3D / PHOTOGRAPHY / MOVIE etc...
           </p>
           <p className={styles.footerCopyright}>
             &copy; 2026 ARIGATOSUN. ALL RIGHTS RESEAVED.

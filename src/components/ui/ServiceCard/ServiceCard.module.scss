@@ -78,14 +78,14 @@
   padding: 12.375vw 3.125vw 3.125vw;
 
   @include sp {
-    // Figma SP: コンテンツは下端寄せ（VIEW マーカー非表示のため）
+    // Figma SP @390: コンテンツは下端寄せ（VIEW マーカー非表示のため）
+    // Figma SP: カード内 左右 padding 28px（カード x=20+48=68 / w=294 → カード 350 内 左右 28px）
+    // Figma SP: カード下端から本文末まで 28px（カード bottom 3125 − Group939 bottom 3097）
     justify-content: flex-end;
     padding-top: 0;
-    // Figma SP: カード内 左右 padding 28px（カード幅 350 - content 幅 294 → 左右 28px）
-    @include fluid(padding-left, 20, 40);
-    @include fluid(padding-right, 20, 40);
-    // Figma SP: カード下端から本文末まで 28px
-    @include fluid(padding-bottom, 24, 40);
+    @include fluid(padding-left, 28, 40);
+    @include fluid(padding-right, 28, 40);
+    @include fluid(padding-bottom, 28, 40);
   }
 }
 
@@ -182,10 +182,13 @@
 
   @include sp {
     // Figma SP @390: 24px / letter-spacing 3.12
+    // 「DESIGN / BRANDING」等が container 幅 (≈294px) で 2 行折返しになるため
+    // SP は強制 1 行表示にする
     @include fluid(margin-top, 12, 20);
     @include fluid(font-size, 24, 26);
     line-height: 1.2;
     @include fluid(letter-spacing, 3.12, 3.315);
+    white-space: nowrap;
   }
 }
 

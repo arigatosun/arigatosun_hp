@@ -173,8 +173,10 @@
   display: none;
 
   @include sp {
+    // .inner の align-items: flex-start 配下で content 幅に縮むのを防ぐ
     display: flex;
     justify-content: center;
+    width: 100%;
     @include fluid(margin-top, 32, 60);
   }
 }
@@ -211,8 +213,9 @@
   }
 
   @include sp {
+    // Figma SP @390: thumbnail 下端 y=7155 → title 上端 y=7179 = 24px
     flex-direction: column-reverse; // サムネイルを上に表示
-    @include fluid(gap, 12, 16);
+    @include fluid(gap, 24, 16);
   }
 }
 
@@ -237,6 +240,11 @@
   display: flex;
   align-items: baseline;
   @include fluid(gap, 12, 32);
+
+  @include sp {
+    // Figma SP @390: title 下端 y=7309 → meta 上端 y=7329 = 20px
+    @include fluid(margin-top, 20, 24);
+  }
 }
 
 .articleDate {
@@ -314,6 +322,11 @@
   @include fluid(margin-top, 24, 48); // Figma: 日付→区切り線 48px
   background: var(--color-text-secondary);
   opacity: 0.3;
+
+  @include sp {
+    // Figma SP @390: meta 下端 y=7342 → divider 上端 y=7383 = 41px
+    @include fluid(margin-top, 41, 48);
+  }
 }
 
 // ── 記事間のスペーサー ──
@@ -321,8 +334,8 @@
   @include fluid(height, 30, 60); // Figma: 区切り線→次記事 60px
 
   @include sp {
-    // Figma SP: 区切り線→次記事 48px
-    @include fluid(height, 40, 60);
+    // Figma SP @390: divider 下端 y=7384 → 次記事 thumbnail 上端 y=7431 = 47px
+    @include fluid(height, 47, 60);
   }
 }
 

@@ -19,8 +19,9 @@
   // 1920pxベースのデザインを現在のビューポート幅にスケール
   width: 100vw;
   height: auto;
-  // translateX(-50%) で中央寄せ + マウス追従の微視差（--mx / --my）
-  transform: translateX(-50%) translate(var(--mx, 0px), var(--my, 0px));
+  // translateX(-50%) で中央寄せ + マウス追従の微視差（--mx / --my）+ scroll parallax (--py)
+  transform: translateX(-50%) translate(var(--mx, 0px), var(--my, 0px))
+    translateY(var(--py, 0px));
   transition: transform 0.5s ease-out;
   overflow: visible;
 
@@ -34,6 +35,10 @@
 // Figma の Group 1002 エクスポート SVG (viewBox 840×964) を 1 枚 <img> として配置。
 // globals.scss の img { max-width: 100%; } を上書きしないと SVG が viewport 幅に
 // 強制縮小されて潰れるため、ここで明示的に max-width: none を指定。
+//
+// 動き: PC と同じくマウス追従 (--mx / --my)、加えて SP では scroll パララックス
+// (--py) と SVG 全体のゆっくりした浮遊 (spMotifsFloat) を当てて、PC で個別 motif に
+// 効いている雰囲気を SP でも再現する。
 .spMotifs {
   position: absolute;
   pointer-events: none;
@@ -44,6 +49,58 @@
 
   @include sp {
     display: block;
+    // ラッパー: マウス追従 (--mx/--my) + scroll パララックス (--py) のみ。
+    // 個別 motif の動きは inline SVG 内の各 <g class=spMotif> に当てる。
+    transform: translate(var(--mx, 0px), var(--my, 0px))
+      translateY(var(--py, 0px));
+    transition: transform 0.5s ease-out;
+
+    // inline SVG が container を埋める
+    svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+  }
+}
+
+// ── SP 個別 motif フロート ──
+// inline SVG 内の各 <g class=spMotif> に当たる。
+// 動きは小さめ (±4px の上下 + 微回転) で nth-of-type ごとに duration/delay を散らす。
+.spMotif {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: spMotifFloatSm 6s ease-in-out infinite;
+}
+
+.spMotif:nth-of-type(5n + 1) {
+  animation-duration: 7.2s;
+  animation-delay: -0.4s;
+}
+.spMotif:nth-of-type(5n + 2) {
+  animation-duration: 5.4s;
+  animation-delay: -2.1s;
+}
+.spMotif:nth-of-type(5n + 3) {
+  animation-duration: 6.8s;
+  animation-delay: -3.7s;
+}
+.spMotif:nth-of-type(5n + 4) {
+  animation-duration: 5.0s;
+  animation-delay: -1.3s;
+}
+.spMotif:nth-of-type(5n) {
+  animation-duration: 8.0s;
+  animation-delay: -2.8s;
+}
+
+@keyframes spMotifFloatSm {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-4px) rotate(0.8deg);
   }
 }
 

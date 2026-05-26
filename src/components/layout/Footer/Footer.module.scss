@@ -63,7 +63,7 @@
 // Canvas は透明・pointer-events:none・z-index:2（アーチより上）なので、
 // 視覚的にどこにキャラを配置しても Canvas 外で切れることがない。
 // 実際の見た目位置は FooterSitCharacter の charPosition（3D coords）で制御する。
-// Figma SP にはキャラが登場しないため SP は display:none。
+// PC max を 130 のスケールで SP も表示する。
 .sitCharacter {
   position: absolute;
   // Canvas を上下方向にずらしてキャラ位置を微調整する。
@@ -80,7 +80,12 @@
   pointer-events: none;
 
   @include sp {
-    display: none;
+    // SP はアーチ頂点中央に乗せ、サイズを拡大
+    // 微調整: 左に 50 / top -205
+    @include fluid(top, -205, -205);
+    @include fluid(margin-left, -50, -50);
+    @include fluid(width, 350, 350);
+    @include fluid(height, 420, 420);
   }
 }
 

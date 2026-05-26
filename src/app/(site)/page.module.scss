@@ -36,6 +36,8 @@
   @include fluid(padding-top, 60, 202);
 
   @include sp {
+    // 画面上端からタイトルロゴまで 276px (= .page padding-top 80 + heroContent padding-top 196)
+    padding-top: 196px;
     @include fluid(padding-left, 20, 40);
     @include fluid(padding-right, 20, 40);
   }

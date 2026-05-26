@@ -21,18 +21,32 @@
   animation: scrollLoop 60s linear infinite;
 }
 
+// 各ロゴ枠は固定アスペクト (アウトライン SVG の 649×150 ≒ 4.33:1) で揃え、
+// ベース層・カラー層が同じスロット幅に重なるようにする。
+// 元の corporate-logo PNG (865×188) のサイズ感に合わせて fluid(300, 648) を採用。
+// SP は Figma SP 実測 (518.78×119.72) に合わせて拡大。
 .logoItem {
   flex-shrink: 0;
   display: flex;
   align-items: center;
+  @include fluid(width, 300, 648);
+  aspect-ratio: 649 / 150;
+  position: relative;
+
+  @include sp {
+    width: 518.78px;
+  }
 }
 
-// ベース層のロゴ（グレースケール・低不透明度）
+// ベース層のロゴ（低不透明度）
+// アウトライン SVG (649×150) はスロット内ピッタリ収まる。
+// SVG 自体が文字＝黒(#140700)/太陽=赤(#DA2719) の差を持っているため、
+// grayscale は当てず opacity のみで濃淡を出す（太陽の縁が赤のまま）。
 .logoImage {
-  @include fluid(width, 300, 648); // Figma: ロゴ1個 648×141
-  @include fluid(height, 65, 141);
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
   opacity: 0.4;
-  filter: grayscale(100%);
 }
 
 // ── カラー層（カーソル追従の放射状マスク）──
@@ -70,9 +84,12 @@
 }
 
 // カラー層のロゴ（フルカラー）
+// カラー版 SVG (572×132) はアウトライン (649×150) とほぼ同アスペクトのため
+// スロット内に object-fit: contain でセンタリングして配置（位置揃え）。
 .logoImageColor {
-  @include fluid(width, 300, 648);
-  @include fluid(height, 65, 141);
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 @keyframes scrollLoop {

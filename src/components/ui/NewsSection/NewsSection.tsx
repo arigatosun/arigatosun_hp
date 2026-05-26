@@ -191,16 +191,20 @@ export default function NewsSection() {
                     )}
                   </div>
                 </a>
-                <div className={styles.articleDivider} />
-                {index < arr.length - 1 && <div className={styles.articleSpacer} />}
+                {index < arr.length - 1 && (
+                  <>
+                    <div className={styles.articleDivider} />
+                    <div className={styles.articleSpacer} />
+                  </>
+                )}
               </div>
             ))
           )}
         </div>
 
-        {/* SP 専用 VIEW NEWS ボタン（記事リスト後に配置） */}
+        {/* SP 専用 VIEW NEWS ボタン（記事リスト後に配置・VIEW SERVICE 等と同サイズ） */}
         <div className={styles.spButtonRow}>
-          <Button href="/news" size="sm">VIEW NEWS &gt;</Button>
+          <Button href="/news">VIEW NEWS &gt;</Button>
         </div>
       </div>
     </section>

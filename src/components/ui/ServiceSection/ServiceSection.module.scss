@@ -77,11 +77,13 @@
   opacity: calc(1 - var(--service-progress, 0));
 
   @include sp {
+    // Figma SP @390: section x=20 + 内側コンテンツ x=40 → page 端から 40px
     width: 100%;
-    @include fluid(padding-left, 20, 40);
-    @include fluid(padding-right, 20, 40);
+    @include fluid(padding-left, 40, 200);
+    @include fluid(padding-right, 40, 80);
     @include fluid(padding-top, 40, 60);
-    @include fluid(padding-bottom, 24, 40);
+    // メニュー→カード1 のギャップ(32px)は .menuList margin-bottom で取るためここは 0
+    padding-bottom: 0;
   }
 }
 
@@ -103,11 +105,13 @@
   display: none;
 
   @include sp {
+    // Figma SP @390: カード3下端 y=4159 → ボタン上端 y=4219 = 60px
+    // ボタン x=40 / w=310 → page 端から 40px padding
     display: flex;
     justify-content: center;
-    @include fluid(margin-top, 24, 60);
-    @include fluid(padding-left, 20, 40);
-    @include fluid(padding-right, 20, 40);
+    @include fluid(margin-top, 60, 60);
+    @include fluid(padding-left, 40, 80);
+    @include fluid(padding-right, 40, 80);
   }
 }
 
@@ -247,7 +251,11 @@
   padding-top: 30px;
 
   @include sp {
+    // Figma SP @390: カード x=20 / w=350 → page 端から 20px padding
+    // PC 用の margin-left:-38 / padding-top:30 は SP では完全リセット
     overflow: hidden;
+    margin-left: 0;
+    padding-top: 0;
     @include fluid(padding-left, 20, 40);
     @include fluid(padding-right, 20, 40);
   }

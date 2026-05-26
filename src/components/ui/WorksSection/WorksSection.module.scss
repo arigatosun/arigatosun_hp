@@ -15,6 +15,9 @@
     @include fluid(padding-right, 28, 40);
     // Figma SP @390: Service ボタン下端 y=4275 → Works タイトル y=4435 = gap 160px
     @include fluid(padding-top, 160, 240);
+    // Figma SP @390: Works copyright 下端 → News タイトル = 176px は .news の padding-top で取る
+    // PC の padding-bottom 60 を継承すると 236px になり余白過多 → SP は 0 にする
+    padding-bottom: 0;
   }
 }
 
@@ -77,9 +80,11 @@
   padding-top: 20px;
 
   @include max(1023px) {
-    // Figma SP: 画像下端→CLIENT行 約 40px
-    @include fluid(padding-top, 24, 40);
-    // Figma SP: テキストは画像より少し内側に置く（image x=28, text x=40 → 内側 12px）
+    // Figma SP @390: 画像下端 y=4713 → CLIENT行 y=4753 = 40px
+    // Figma SP: テキストは画像より内側に 12px 置く（image x=28, text x=40）
+    @include fluid(padding-top, 40, 40);
+    @include fluid(padding-left, 12, 12);
+    @include fluid(padding-right, 12, 12);
     width: 100%;
   }
 }
@@ -96,6 +101,8 @@
 
   @include sp {
     // Figma SP: CLIENT 16px / line-height 18 / letter-spacing 2.6
+    // PC の margin-top 12 は SP では使わず .itemLeft padding-top で gap を取る
+    margin-top: 0;
     @include fluid(font-size, 16, 20);
     @include fluid(line-height, 18, 28);
     @include fluid(letter-spacing, 2.08, 2.6);
@@ -158,6 +165,13 @@
   @include fluid(width, 25, 43);
   height: 1px;
   background: var(--color-black);
+
+  @include max(1023px) {
+    // Figma SP @390: タイトル下端 y=4931 → 区切り線 y=4955 = 24px
+    // Figma SP: Rectangle 334 width=60 / height=1
+    @include fluid(margin-top, 24, 52);
+    @include fluid(width, 60, 60);
+  }
 }
 
 // ── 詳細情報 ──
@@ -166,6 +180,11 @@
   display: flex;
   flex-direction: column;
   @include fluid(gap, 5, 11); // Figma: D/B行→TERM行 約11px
+
+  @include max(1023px) {
+    // Figma SP @390: 区切り線下端 y=4956 → D/B行 y=4984 = 28px
+    @include fluid(margin-top, 28, 52);
+  }
 }
 
 .detailRow {
@@ -319,6 +338,13 @@
     @include fluid(width, 140, 156);
     @include fluid(height, 144, 161);
     transform: none;
+    // SP では 3D キャラを文字の上レイヤーに被せる（z-index 上）
+    // Figma SP: button 下端 → text 上端 = 45px。キャラは現位置を維持。
+    // 計算: gap(16) + char_h(144) + gap(16) + margin_bottom = 45
+    //   → margin_bottom = -131 で text を 71px 引き上げて重ねる
+    position: relative;
+    z-index: 2;
+    @include fluid(margin-bottom, -131, -131);
   }
 }
 
@@ -331,9 +357,15 @@
   @include fluid(margin-left, 2, 4);
 
   @include max(1023px) {
-    width: auto;
+    // Figma SP @390: テキスト x=40 / width=310（page 端から 40px）
+    // 4 行折返し（services） + 1 行 copyright が Figma の構造
+    width: 100%;
+    @include fluid(max-width, 310, 310);
     margin-left: 0;
     align-items: center;
+    // 3D キャラ（z-index 2）の下レイヤーに置く
+    position: relative;
+    z-index: 1;
   }
 }
 
@@ -349,7 +381,12 @@
   @include fluid(letter-spacing, 1, 1.82);
 
   @include max(1023px) {
+    // Figma SP @390: 14px / line-height 21 / letter-spacing 1.82
+    // 4 行折返しになるよう SP も Figma の数値そのままを採用
     text-align: center;
+    @include fluid(font-size, 14, 14);
+    @include fluid(line-height, 21, 21);
+    @include fluid(letter-spacing, 1.82, 1.82);
   }
 }
 
@@ -366,7 +403,12 @@
   @include fluid(letter-spacing, 0.8, 1.56);
 
   @include max(1023px) {
+    // Figma SP @390: 12px / line-height 15.75
+    // letter-spacing は Figma 1.56 だと 310 幅で 10px はみ出すため 1.2 に絞って 1 行に収める
     text-align: center;
+    @include fluid(font-size, 12, 12);
+    @include fluid(line-height, 15.75, 15.75);
+    @include fluid(letter-spacing, 1.2, 1.56);
   }
 }
 
@@ -376,6 +418,13 @@
   @include fluid(margin-left, 16, 35);
 
   @include max(1023px) {
+    // SP は column flex の align-items:center 配下で content 幅に縮むのを防ぐ
+    // .works padding 28 + ここで 12 → page 端から 40px に揃え（VIEW SERVICE と一致）
     margin-left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    @include fluid(padding-left, 12, 12);
+    @include fluid(padding-right, 12, 12);
   }
 }

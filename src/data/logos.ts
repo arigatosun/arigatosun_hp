@@ -10,9 +10,12 @@ export type Logo = {
 };
 
 // 仮データ（後日クライアントロゴに差し替え）
+// 株式会社化に伴い corporate-logo を SVG 版に更新:
+//   - src      : Group 1039 (1920×150 アウトライン / マーキー用ストリップ)
+//   - colorSrc : Group 1103 (572×132 ベタ塗り / カーソル追従カラーリビール用)
 export const LOGOS: readonly Logo[] = Array.from({ length: 8 }, (_, i) => ({
   id: `logo-${i}`,
-  src: '/images/partners/corporate-logo.png',
-  colorSrc: '/images/partners/corporate-logo-color.png',
+  src: '/images/partners/corporate-logo.svg',
+  colorSrc: '/images/partners/corporate-logo-color.svg',
   alt: 'ARIGATOSUN',
 })) as readonly Logo[];

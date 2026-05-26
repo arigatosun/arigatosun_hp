@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import WalkingCharacter from './WalkingCharacter';
 import ScrollWalkCharacter from './ScrollWalkCharacter';
@@ -16,6 +16,22 @@ const UNIFIED_GLB_PATH = '/models/arigatokunn_unified.glb';
 // ページ全体で1つだけのグローバルCanvas
 // OrthographicCameraで描画（遠近法による見かけの回転を防止）
 export default function GlobalCanvas() {
+  // SP (≤1023px) では歩く 3D キャラを小さく描画する
+  const [isSp, setIsSp] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 1023px)');
+    const update = () => setIsSp(mq.matches);
+    update();
+    mq.addEventListener('change', update);
+    return () => mq.removeEventListener('change', update);
+  }, []);
+  // PC 0.6 → SP 0.35（約 58% に縮小）
+  const walkScale = isSp ? 0.35 : 0.6;
+  // SP は両キャラを 70px (camera zoom 150 → +0.467 world unit) 上にオフセット
+  const SP_OFFSET_Y = 0.467;
+  const serviceBaseY = isSp ? -2.0 + SP_OFFSET_Y : -2.0;
+  const logoBaseY = isSp ? -1.5 + SP_OFFSET_Y : -1.5;
+
   return (
     <Canvas
       orthographic
@@ -48,8 +64,8 @@ export default function GlobalCanvas() {
           glbPath={UNIFIED_GLB_PATH}
           sectionSelector='[data-section="service"]'
           approachMarginPx={700}
-          baseY={-2.0}
-          scale={0.6}
+          baseY={serviceBaseY}
+          scale={walkScale}
           progressVar="--service-progress"
           initialX={-2}
         />
@@ -63,8 +79,8 @@ export default function GlobalCanvas() {
           sectionSelector='[data-section="logo-slider"]'
           triggerOnVisible
           approachMarginPx={1500}
-          baseY={-1.5}
-          scale={0.6}
+          baseY={logoBaseY}
+          scale={walkScale}
           reactOnClick={{
             durationMs: 600,
             jumpHeight: 1.0,

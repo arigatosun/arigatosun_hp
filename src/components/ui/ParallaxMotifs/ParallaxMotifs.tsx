@@ -22,15 +22,42 @@ const SP_SVG_CONTENT_OFFSET_Y = 46.4;
 //     考慮した位置に動的に補正する。
 export default function ParallaxMotifs() {
   const svgRef = useRef<SVGSVGElement>(null);
+  const spImgRef = useRef<HTMLDivElement>(null);
   const [spMotifsTop, setSpMotifsTop] = useState<number>(
     SP_MOTIFS_CONTAINER.frameY,
   );
+  // SP 用 combined SVG を inline 取得し、各 motif <g> に class を付与。
+  // これで PC と同じく motif ごとにバラバラのフロート animation を当てられる。
+  const [spInlineSvg, setSpInlineSvg] = useState<string>('');
+  useEffect(() => {
+    let cancelled = false;
+    fetch('/images/sections/about/sp-motifs-combined.svg')
+      .then((r) => r.text())
+      .then((text) => {
+        if (cancelled) return;
+        // 各 motif <g filter="url(#filter*_d_*)">: そのまま class 追加
+        let idx = 0;
+        const withClass = text.replace(
+          /<g filter="url\(#filter\d+_d_[^)]+\)">/g,
+          (match) => {
+            const i = idx++;
+            return match.replace('<g ', `<g class="${styles.spMotif}" data-motif-idx="${i}" `);
+          },
+        );
+        setSpInlineSvg(withClass);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   // マウス追従: カーソル位置に応じてモチーフ全体をわずかにずらす（微視差）
+  // PC は SVG、SP は spImg の両方に同じ CSS 変数（--mx / --my）を反映する。
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const svg = svgRef.current;
-    if (!svg) return;
+    const spImg = spImgRef.current;
     const AMP = 18; // 最大ずれ幅(px)
     let raf = 0;
     const onMove = (e: MouseEvent) => {
@@ -38,13 +65,66 @@ export default function ParallaxMotifs() {
       raf = requestAnimationFrame(() => {
         const x = (e.clientX / window.innerWidth - 0.5) * 2 * AMP;
         const y = (e.clientY / window.innerHeight - 0.5) * 2 * AMP;
-        svg.style.setProperty('--mx', `${x.toFixed(1)}px`);
-        svg.style.setProperty('--my', `${y.toFixed(1)}px`);
+        const xStr = `${x.toFixed(1)}px`;
+        const yStr = `${y.toFixed(1)}px`;
+        if (svg) {
+          svg.style.setProperty('--mx', xStr);
+          svg.style.setProperty('--my', yStr);
+        }
+        if (spImg) {
+          spImg.style.setProperty('--mx', xStr);
+          spImg.style.setProperty('--my', yStr);
+        }
       });
     };
     window.addEventListener('mousemove', onMove);
     return () => {
       window.removeEventListener('mousemove', onMove);
+      cancelAnimationFrame(raf);
+    };
+  }, []);
+
+  // スクロールパララックス: ABOUT セクションの中央付近をビューポート中央に
+  // 合わせた時に進行度=0、上下にスクロールすると progress が ±1 に近づく。
+  // その progress を CSS 変数 --py に反映してモチーフを「逆方向にゆっくり」ずらす。
+  // PC・SP どちらも同じロジックで適用（CSS 側で transform に --py を組み込む）。
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const PARALLAX_AMP = 30; // 最大上下移動 (px) — 控えめ
+    let raf = 0;
+    const onScroll = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        const spImg = spImgRef.current;
+        const svg = svgRef.current;
+        if (!spImg && !svg) return;
+        const aboutSection = document.querySelector(
+          'section[class*="about"]:not([class*="aboutContent"]):not([class*="aboutHeading"]):not([class*="aboutMessage"])',
+        ) as HTMLElement | null;
+        if (!aboutSection) return;
+        const rect = aboutSection.getBoundingClientRect();
+        const sectionCenter = rect.top + rect.height / 2;
+        const vh = window.innerHeight;
+        // -1 (section above viewport) ～ +1 (section below viewport)
+        const progress = (sectionCenter - vh / 2) / (vh / 2 + rect.height / 2);
+        const clamped = Math.max(-1, Math.min(1, progress));
+        // 上にスクロール (section が上に流れる) → モチーフはさらに下に残り見える効果に
+        const py = -clamped * PARALLAX_AMP;
+        const pyStr = `${py.toFixed(1)}px`;
+        if (spImg) spImg.style.setProperty('--py', pyStr);
+        if (svg) svg.style.setProperty('--py', pyStr);
+      });
+    };
+    // body が scroll container（globals.scss の overflow-x: hidden 起因）の場合、
+    // window では scroll イベントが飛ばないため body にも listener を貼る。
+    window.addEventListener('scroll', onScroll, { passive: true });
+    document.addEventListener('scroll', onScroll, { passive: true, capture: true });
+    document.body.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      document.removeEventListener('scroll', onScroll, true);
+      document.body.removeEventListener('scroll', onScroll);
       cancelAnimationFrame(raf);
     };
   }, []);
@@ -79,21 +159,19 @@ export default function ParallaxMotifs() {
           viewBox 840×964 は Group 933 (803×863) + shadow padding を含む。
           Figma SVG 内では Group 933 コンテンツが (12.3, 46.4) オフセットされているので、
           実装側でこの分を相殺した位置に配置する。 */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="/images/sections/about/sp-motifs-combined.svg"
-        alt=""
+      {/* inline SVG: 各 <g> に .spMotif class が付くので、SCSS 側で nth-of-type
+          で異なる timing のフロート animation を当てる（バラバラに動く）。 */}
+      <div
+        ref={spImgRef}
         className={styles.spMotifs}
         style={{
-          // Group 933 の左端 (frame x=-209) が viewport SP_MOTIFS_CONTAINER.frameX に来るように
-          // SVG 左端を SVG コンテンツ x オフセット分だけ更に左にずらす
           left: `${SP_MOTIFS_CONTAINER.frameX - SP_SVG_CONTENT_OFFSET_X}px`,
-          // Group 933 の上端が spMotifsTop に来るように SVG 上端を SVG コンテンツ y オフセット分ずらす
           top: `${spMotifsTop - SP_SVG_CONTENT_OFFSET_Y}px`,
           width: '840px',
           height: '964px',
         }}
         aria-hidden="true"
+        dangerouslySetInnerHTML={{ __html: spInlineSvg }}
       />
 
       {/* ── PC 用 SVG（〜1023px では非表示） ── */}
