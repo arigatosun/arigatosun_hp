@@ -1,0 +1,189 @@
+@use '@/styles/fluid' as * with (
+  $fluid-max-viewport: 1920
+);
+@use '@/styles/breakpoints' as *;
+
+// Figma Group 1141 (64x1488) と整列。
+// - 4 円が縦線で繋がれており、インジケーター全体が 4 PHASE の総高さに対応
+// - 各 PHASE ブロックは PHASE(lh38) + title(lh36) + 8 + desc(lh32 ×2) = ~146px、
+//   隣接 PHASE top 間 = 186px。最後の item は内容高のみ。
+// - インジケーター幅 / item 高さを同じ比率で fluid させて、SVG 縦横比が
+//   常に list 全体と一致するようにする。
+//
+// 4 点 discrete のホバー演出:
+// - .item は root 全幅を覆い、左の円をホバーしても onMouseEnter が発火する
+// - active 行に限り、.dot（赤丸）と .glow（process-glow.svg）が opacity:1
+
+// Figma Group 1015 (visual frame): x=1095, w=585, h=744
+// 0-32: indicator (circles 32x32)
+// 32-72: gap 40px
+// 72-585: PHASE 本文領域 513px
+// .root の width 制約は親 (ServiceConceptBlock の .visual を variant="phases" で max-width 585 に
+// 絞る) に委ねるため、ここでは width: 100% のみ。
+.root {
+  position: relative;
+  display: flex;
+  width: 100%;
+}
+
+.indicator {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1;
+  // Group 1141 ネイティブ 64x1488。アスペクト比 1:23.25 で、
+  // 4 items × 186 = 744 ≈ 残コンテンツ込みで list 全高に近づく width を狙う
+  @include fluid(width, 16, 32);
+  height: auto;
+  user-select: none;
+  pointer-events: none;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+}
+
+.item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  // padding-left でインジケーター幅 + ギャップ分のインデント
+  @include fluid(padding-left, 36, 72);
+  // 最後以外は 186px 固定にして円間隔と一致
+  @include fluid(height, 93, 186);
+
+  &:last-child {
+    height: auto;
+  }
+}
+
+// ── 赤丸（.dot）: phase-indicator-mask.png でマスクし、該当行の円形だけ赤で塗りつぶす
+// 各 .dot は item top から item 全高をカバーする赤背景の矩形。
+// mask は Group 1145 (64x1488) を mask-size: 100% 400% で element の 4 倍高さに引き伸ばし、
+// item ごとに mask-position-y を 1 行分ずつシフトして、対応する 1 円だけを露出させる。
+.dot {
+  position: absolute;
+  z-index: 3;
+  left: 0;
+  top: 0;
+  @include fluid(width, 16, 32); // インジケーター幅と一致
+  // 高さは item と同じ値で固定（最後の item は auto で短いが mask-size 計算が変わらないように）
+  @include fluid(height, 93, 186);
+  background: var(--color-primary);
+  -webkit-mask-image: url('/images/sections/service/detail/phase-indicator-mask.png');
+  mask-image: url('/images/sections/service/detail/phase-indicator-mask.png');
+  -webkit-mask-size: 100% 400%;
+  mask-size: 100% 400%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease-out;
+}
+
+// 各 item でマスクの可視範囲をシフトし、対応する 1 円のみを露出
+// fluid mixin は負の値範囲だと clamp(min, ..., max) の min>max になり常に min を返してしまう。
+// → fluid-value() で正の値を生成し calc(-1 * ...) で反転する。
+.item:nth-child(1) > .dot {
+  -webkit-mask-position-y: 0;
+  mask-position-y: 0;
+}
+.item:nth-child(2) > .dot {
+  --phase-shift: #{fluid-value(93, 186)};
+  -webkit-mask-position-y: calc(-1 * var(--phase-shift));
+  mask-position-y: calc(-1 * var(--phase-shift));
+}
+.item:nth-child(3) > .dot {
+  --phase-shift: #{fluid-value(186, 372)};
+  -webkit-mask-position-y: calc(-1 * var(--phase-shift));
+  mask-position-y: calc(-1 * var(--phase-shift));
+}
+.item:nth-child(4) > .dot {
+  --phase-shift: #{fluid-value(279, 558)};
+  -webkit-mask-position-y: calc(-1 * var(--phase-shift));
+  mask-position-y: calc(-1 * var(--phase-shift));
+}
+
+// ── ソフトグロー（process-glow.svg）: テキスト周辺に赤いボヤッとした halo
+.glow {
+  position: absolute;
+  z-index: 0;
+  @include fluid(left, 110, 220);
+  transform: translate(-50%, -50%);
+  @include fluid(width, 390, 770);
+  aspect-ratio: 868 / 566;
+  background: url('/images/sections/service/detail/process-glow.svg') center / contain
+    no-repeat;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease-out;
+}
+
+// .glow は item top からのオフセットで配置（halo の中心位置）
+// .dot はマスクで位置決めしているので top:0 のまま
+.item:nth-child(1),
+.item:nth-child(2),
+.item:nth-child(3),
+.item:nth-child(4) {
+  > .glow {
+    @include fluid(top, 28.5, 57);
+  }
+}
+
+.itemActive {
+  .glow,
+  .dot {
+    opacity: 1;
+  }
+}
+
+// テキストは glow（z=0）より前面、dot（z=3）より背面に来るよう z-index:1
+.step,
+.title,
+.description {
+  position: relative;
+  z-index: 1;
+}
+
+// PHASE.1〜4 (Mozaic GEO Light 16 / ls 4px = 0.25em / #808080)
+.step {
+  color: var(--color-text-secondary);
+  font-family: var(--font-en);
+  font-weight: var(--font-weight-light);
+  @include fluid(font-size, 14, 16);
+  @include fluid(line-height, 28, 38);
+  letter-spacing: 0.25em;
+}
+
+// PHASE 見出し (Noto Sans JP Regular 20 / lh 36 / ls 4.8px = 0.24em / #140700)
+.title {
+  margin: 0;
+  color: var(--color-black);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  font-weight: var(--font-weight-regular);
+  @include fluid(font-size, 14, 20);
+  @include fluid(line-height, 26, 36);
+  letter-spacing: 0.24em;
+}
+
+// 説明文 (Noto Sans JP Regular 16 / lh 32 / ls 3.84px = 0.24em / #140700)
+// Figma: title 下端 y=5174 → description 上端 y=5182 = 8px
+.description {
+  margin: 0;
+  @include fluid(margin-top, 4, 8);
+  color: var(--color-black);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  font-weight: var(--font-weight-regular);
+  @include fluid(font-size, 13, 16);
+  @include fluid(line-height, 22, 32);
+  @include fluid(letter-spacing, 1.2, 3.84);
+  // data 側 \n を改行として保持
+  white-space: pre-line;
+}

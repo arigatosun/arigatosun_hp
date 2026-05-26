@@ -11,7 +11,9 @@
   @include fluid(padding-left, 20, 200);
   @include fluid(padding-right, 20, 200);
   @include fluid(padding-top, 80, 160);
-  @include fluid(padding-bottom, 80, 160);
+  // Figma IP/CREATIVE: 本文下端 y=2848 → STANDARD title y=3168 = 320px。
+  // ConceptBlock 側 margin-top が 280 取れているのでここでは 40 のみ持つ。
+  @include fluid(padding-bottom, 24, 40);
 }
 
 .grid {
@@ -20,9 +22,8 @@
   // Figma 実測: col 400 + gap 80 + 区切り 1px + gap 80 + col 400 + gap 80 + 区切り 1px + gap 80 + col 400 = 1522
   grid-template-columns: 1fr auto 1fr auto 1fr;
   @include fluid(column-gap, 12, 80, 320, 1920);
-  // section header (y=2152) → step number top (y=2304) = 152
-  // step number h=38 → catchphrase top (y=2370) なので catchphrase 基準なら +66
-  @include fluid(margin-top, 60, 152);
+  // Figma 実測 (IP/CREATIVE): subtitle 下端 y=2428 → 「01.」視覚上端 y=2550 = 122px
+  @include fluid(margin-top, 48, 122);
 
   @include sp {
     grid-template-columns: 1fr;
@@ -47,41 +48,46 @@
   }
 }
 
-// ステップ番号 01. / 02. / 03. (Figma 実測: y=2304 h=38 / Mozaic GEO Light)
+// ステップ番号 01. / 02. / 03.
+// Figma 2704:43767 等: Mozaic GEO Light / 36px / 5.04px tracking / 38px line-height / #808080
 .step {
   display: block;
-  color: var(--color-black);
+  color: var(--color-text-secondary);
   font-family: var(--font-en);
   font-weight: var(--font-weight-light);
-  @include fluid(font-size, 18, 24);
-  @include fluid(line-height, 30, 38);
-  letter-spacing: 0.13em;
-  // step number bottom → catchphrase top の gap 28px
-  @include fluid(margin-bottom, 14, 28);
+  @include fluid(font-size, 22, 36);
+  @include fluid(line-height, 26, 38);
+  letter-spacing: 0.14em; // 5.04/36
+  // step number bottom (y=2588) → catchphrase top (y=2616) = 28px
+  @include fluid(margin-bottom, 16, 28);
 }
 
-// キャッチコピー (Figma 実測: w=400 h=72 ~3行 → font-size ≒ 20, lh ≒ 36)
+// キャッチコピー
+// Figma 2704:43765 等: Noto Sans JP Regular / 22px / 5.28px tracking / 36px line-height / #140700
+// 明示的改行を持つため pre-line で受ける（data 側 \n をそのまま反映）
 .catchphrase {
   margin: 0;
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
   font-weight: var(--font-weight-regular);
-  @include fluid(font-size, 16, 20);
+  @include fluid(font-size, 16, 22);
   @include fluid(line-height, 30, 36);
-  // Figma 字間 ≒ 0.2em
-  letter-spacing: 0.2em;
+  letter-spacing: 0.24em; // 5.28/22
+  white-space: pre-line;
 }
 
-// 本文 (Figma 実測: w=400 / h=136 (col1,3) or h=170 (col2))
-// font-size 14 / lh 32 / ls 3.92 (≒ 0.28em)
+// 本文
+// Figma 2704:43796 等: Noto Sans JP Regular / 16px / 3.84px tracking / 34px line-height / #140700
 .body {
   margin: 0;
-  // catchphrase 下 (y=2370+72=2442) → body top (y=2466) = 24
+  // catchphrase 下 (y=2616+72=2688) → body top (y=2712) = 24
   @include fluid(margin-top, 16, 24);
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
   font-weight: var(--font-weight-regular);
-  @include fluid(font-size, 13, 14);
-  @include fluid(line-height, 26, 32);
-  letter-spacing: 0.28em;
+  @include fluid(font-size, 14, 16);
+  @include fluid(line-height, 28, 34);
+  letter-spacing: 0.24em; // 3.84/16
+  // data 側 \n を改行として保持
+  white-space: pre-line;
 }

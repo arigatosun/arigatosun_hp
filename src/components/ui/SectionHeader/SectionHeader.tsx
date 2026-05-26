@@ -19,6 +19,8 @@ type SectionHeaderProps = {
   align?: 'left' | 'center';
   /** 見出しタグ — デフォルト 'h2' */
   as?: 'h1' | 'h2' | 'h3';
+  /** タイポサイズ — 'default' (24px) / 'service-detail' (28px / ls 11.2 / Medium) */
+  size?: 'default' | 'service-detail';
   /** 親側で margin 等を上書きしたい場合に渡す */
   className?: string;
 };
@@ -29,11 +31,13 @@ export default function SectionHeader({
   subtitle,
   align = 'left',
   as: Tag = 'h2',
+  size = 'default',
   className,
 }: SectionHeaderProps) {
   const rootClass = [
     styles.header,
     align === 'center' ? styles.headerCenter : '',
+    size === 'service-detail' ? styles.sizeServiceDetail : '',
     className || '',
   ]
     .filter(Boolean)

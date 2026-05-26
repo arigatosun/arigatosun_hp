@@ -1,10 +1,14 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import ServiceDetailHero from '@/components/ui/ServiceDetailHero';
+import ServiceCreatorProfile from '@/components/ui/ServiceCreatorProfile';
 import ServicePromiseGrid from '@/components/ui/ServicePromiseGrid';
 import ServiceConceptBlock from '@/components/ui/ServiceConceptBlock';
 import ServiceScopePills from '@/components/ui/ServiceScopePills';
 import ServiceFlowSteps from '@/components/ui/ServiceFlowSteps';
+import ServicePhaseSteps from '@/components/ui/ServicePhaseSteps';
+import ServiceCallouts from '@/components/ui/ServiceCallouts';
+import ServiceOrgBubbles from '@/components/ui/ServiceOrgBubbles';
 import GlowImage from '@/components/ui/GlowImage';
 import ServiceCaseStudies from '@/components/ui/ServiceCaseStudies';
 import ServiceCrossLinks from '@/components/ui/ServiceCrossLinks';
@@ -13,6 +17,8 @@ import {
   SERVICE_DETAIL_SLUGS,
   SERVICE_NAV,
 } from '@/data/service-detail';
+import { getAllWorks } from '@/data/works';
+import type { ServiceCaseStudy } from '@/types/service';
 import styles from './page.module.scss';
 
 type PageParams = {
@@ -38,6 +44,17 @@ export default async function ServiceDetailPage({ params }: PageParams) {
 
   const crossLinks = SERVICE_NAV.filter((item) => item.slug !== slug);
 
+  // 事例 3 枠は SERVICE 全ページで Works データから取り出す（現状は記入がある先頭 3 件）。
+  // 将来 Works が増えたら slice → シャッフル / 抽選ロジックに差し替えれば各ページが自動で別 3 件になる。
+  const allWorks = await getAllWorks();
+  const caseStudies: ServiceCaseStudy[] = allWorks.slice(0, 3).map((w) => ({
+    id: w.id,
+    client: w.client,
+    // works の title に含まれる \n（カード内表示用の改行）は実績カードでは除去
+    text: w.title.replace(/\n/g, ''),
+    thumbnail: w.image,
+  }));
+
   return (
     <div className={styles.page}>
       <ServiceDetailHero
@@ -45,9 +62,20 @@ export default async function ServiceDetailPage({ params }: PageParams) {
         titleEn={data.titleEn}
         titleJa={data.titleJa}
         quote={data.quote}
+        subQuote={data.subQuote}
         description={data.description}
         heroImage={data.heroImage}
+        heroSlides={data.heroSlides}
       />
+
+      {data.creatorProfile && (
+        <ServiceCreatorProfile
+          avatar={data.creatorProfile.avatar}
+          title={data.creatorProfile.title}
+          description={data.creatorProfile.description}
+          snsLinks={data.creatorProfile.snsLinks}
+        />
+      )}
 
       {data.promises?.map((section) => (
         <ServicePromiseGrid
@@ -67,6 +95,7 @@ export default async function ServiceDetailPage({ params }: PageParams) {
           subtitle={concept.subtitle}
           body={concept.body}
           bodyTracking={concept.bodyTracking}
+          variant={concept.visual.kind === 'phases' ? 'phases' : 'default'}
         >
           {concept.visual.kind === 'image' && (
             <GlowImage
@@ -84,11 +113,23 @@ export default async function ServiceDetailPage({ params }: PageParams) {
           {concept.visual.kind === 'steps' && (
             <ServiceFlowSteps items={concept.visual.items} />
           )}
+          {concept.visual.kind === 'phases' && (
+            <ServicePhaseSteps items={concept.visual.items} />
+          )}
+          {concept.visual.kind === 'callouts' && (
+            <ServiceCallouts
+              items={concept.visual.items}
+              image={concept.visual.image}
+            />
+          )}
+          {concept.visual.kind === 'orgBubbles' && (
+            <ServiceOrgBubbles bubbles={concept.visual.bubbles} />
+          )}
         </ServiceConceptBlock>
       ))}
 
-      {data.caseStudies.length > 0 && (
-        <ServiceCaseStudies caseStudies={data.caseStudies} />
+      {caseStudies.length > 0 && (
+        <ServiceCaseStudies caseStudies={caseStudies} />
       )}
 
       <ServiceCrossLinks items={crossLinks} />

@@ -1,0 +1,81 @@
+@use '@/styles/fluid' as * with (
+  $fluid-max-viewport: 1920
+);
+@use '@/styles/breakpoints' as *;
+
+// Figma Rectangle 4704 (1520x800) → aspect 1.9:1
+.root {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1520 / 800;
+  overflow: hidden;
+  background: var(--color-placeholder);
+}
+
+.viewport {
+  position: absolute;
+  inset: 0;
+}
+
+// 全スライドを重ねて opacity でクロスフェード
+.slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.6s ease-in-out;
+  pointer-events: none;
+}
+
+.slideActive {
+  opacity: 1;
+  pointer-events: auto;
+  z-index: 1;
+}
+
+.image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+// ── 左右矢印ボタン（円背景なし、白い「>」のみ） ──
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-white);
+  cursor: pointer;
+  transition: color var(--transition-base), opacity var(--transition-base);
+  // タップヒット領域を確保（透明のまま）
+  @include fluid(width, 48, 72);
+  height: auto;
+  aspect-ratio: 1;
+
+  &:hover {
+    color: var(--color-primary);
+  }
+
+  svg {
+    display: block;
+    @include fluid(width, 22, 32);
+    height: auto;
+    // 画像の上に白いラインを置くので、軽くドロップシャドウで視認性確保
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.45));
+  }
+}
+
+.arrowPrev {
+  @include fluid(left, 8, 24);
+}
+
+.arrowNext {
+  @include fluid(right, 8, 24);
+}

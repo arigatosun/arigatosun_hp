@@ -1,0 +1,193 @@
+@use '@/styles/fluid' as * with (
+  $fluid-max-viewport: 1920
+);
+@use '@/styles/breakpoints' as *;
+
+// Figma 2817:35484 Group 1119 (x=190 y=1733 w=1787 h=833)
+// 上端 y=1733 は Hero 画像下端 y=1757 から 24px 重なる位置だが、実装は
+// Hero 画像下端から 38px (avatar top=1795 と 1757 の差) で開始する。
+.section {
+  position: relative;
+  // Hero 主画像下端から avatar 上端 までの実距離 = 1795 − 1757 = 38px
+  @include fluid(margin-top, 16, 38);
+  @include fluid(padding-left, 20, 200);
+  @include fluid(padding-right, 20, 200);
+  // Figma: section content 下端 y=2089 → Promise title 上端 y=2362 = 273px。
+  // Promise 側 padding-top が 160 取れているので、ここでは 113px を足す。
+  @include fluid(padding-bottom, 56, 113);
+  // モザイクが右側からはみ出した時に水平スクロールしないよう、セクションでクリップ
+  overflow-x: clip;
+}
+
+// ── 装飾モザイク ── Figma Group 1024 (x=819 y=1733 w=1158 h=833)
+// セクション内位置 (629, -62)。avatar 上端 y=1795 を section top とすると、
+// モザイク top は 1733-1795=-62 つまりセクション上端より 62px 上にはみ出す。
+// 親 Group 1119 width=1787 を基準に left=629/1787=35.2%、width=1158/1787=64.8%。
+// 実装では right 基準で配置し、コンテンツ右端から少しはみ出して見せる。
+.mosaic {
+  position: absolute;
+  // PNG エクスポートに余白があるため Figma top -62px より大きく上にずらす。
+  @include fluid(top, -60, -160);
+  // 横: モザイクの左端 (Figma x=819) から右端 (x=1977) まで。
+  // ページ右端 1920 を基準に right=1920-1977=-57px だけはみ出す。
+  @include fluid(right, -25, -57);
+  // Figma 実寸 1158px を max とした幅
+  @include fluid(width, 480, 1158);
+  height: auto;
+  // Figma は opacity 20%
+  opacity: 0.2;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+
+  @include sp {
+    // SP では装飾性が薄れるためさらに小さく表示
+    @include fluid(right, -40, -25);
+    @include fluid(top, -80, -60);
+  }
+}
+
+.row {
+  // 前面コンテンツがモザイクより上に来るように
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: flex-start;
+  // Figma: avatar 右端 484 → content 左端 518 = 34px
+  @include fluid(gap, 16, 34);
+
+  @include sp {
+    flex-direction: column;
+    align-items: stretch;
+    @include fluid(gap, 16, 24);
+  }
+}
+
+// ── アバター ── Figma 294x294 (x=190 y=1795)
+.avatar {
+  flex-shrink: 0;
+  @include fluid(width, 140, 294);
+  aspect-ratio: 1 / 1;
+}
+
+.avatarImage {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatarPlaceholder {
+  width: 100%;
+  height: 100%;
+  background: var(--color-placeholder);
+}
+
+// ── 右コンテンツ ──
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  // Figma: title 上端 1856 − avatar 上端 1795 = 61px のオフセット
+  @include fluid(padding-top, 0, 61);
+
+  @include sp {
+    padding-top: 0;
+  }
+}
+
+// ── タイトル ── Figma 2702:43682 SVG ロゴ (409x40)
+.title {
+  margin: 0;
+  // alt テキスト（KUSOMEGANE©）は SR にのみ届ける
+  line-height: 0;
+}
+
+.titleLogo {
+  display: block;
+  height: auto;
+  // Figma 実寸 409px を max として fluid。高さは width に追従。
+  @include fluid(width, 200, 409);
+}
+
+// ── 説明本文 ── Figma 2702:43700 (16px / 3.84px tracking / 34px line-height / 3 段落)
+.description {
+  // Figma: title 下端 1896 → description 上端 1924 = 28px
+  @include fluid(margin-top, 14, 28);
+  color: var(--color-black);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  font-weight: var(--font-weight-regular);
+  @include fluid(font-size, 14, 16);
+  @include fluid(line-height, 26, 34);
+  @include fluid(letter-spacing, 2, 3.84);
+
+  p {
+    margin: 0;
+  }
+}
+
+// ── SNS アイコン ── Figma 2704:43762 (146x32 at x=520 y=2050)
+// Figma の Frame 627182 (146x32) を sns-icons.svg として取り込み、
+// background-position で 3 アイコンを切り出して個別リンクにする。
+// 縦 32px を基準に各アイコン幅:
+//   Instagram = 32 / TikTok = 26 / YouTube = 40
+// それぞれ Figma 内の左端 x: 0 / 56 / 106
+.sns {
+  // Figma: description 下端 2026 → SNS 上端 2050 = 24px
+  @include fluid(margin-top, 16, 24);
+  list-style: none;
+  padding: 0;
+  margin-bottom: 0;
+  display: flex;
+  align-items: center;
+
+  > li {
+    display: flex;
+    align-items: center;
+  }
+
+  // Figma: Instagram→TikTok 中心間 ≒ 67px、TikTok→YouTube 中心間 ≒ 47px
+  // 単純化して左端→左端で 24px ギャップを取る（PC max=24, SP min=12）
+  > li + li {
+    @include fluid(margin-left, 12, 24);
+  }
+}
+
+.snsLink {
+  display: block;
+  // SVG キャンバスのスケール係数（Figma 1920 → PC max=1）
+  --sns-scale: 1;
+  background-image: url('/images/sections/service/detail/sns-icons.svg');
+  background-repeat: no-repeat;
+  // sns-icons.svg は 146x32。Background-size で全体を描き、position で切り出し。
+  background-size: calc(146px * var(--sns-scale)) calc(32px * var(--sns-scale));
+  height: calc(32px * var(--sns-scale));
+  transition: opacity var(--transition-base);
+
+  // PC 等倍 / SP は 0.75 (24px) 相当
+  @media (max-width: 767px) {
+    --sns-scale: 0.75;
+  }
+
+  &:hover {
+    opacity: 0.6;
+  }
+}
+
+// Instagram (左 0, 幅 32)
+.snsInstagram {
+  width: calc(32px * var(--sns-scale));
+  background-position: calc(0px * var(--sns-scale)) 0;
+}
+
+// TikTok (左 56, 幅 26)
+.snsTiktok {
+  width: calc(26px * var(--sns-scale));
+  background-position: calc(-56px * var(--sns-scale)) 0;
+}
+
+// YouTube (左 106, 幅 40)
+.snsYoutube {
+  width: calc(40px * var(--sns-scale));
+  background-position: calc(-106px * var(--sns-scale)) 0;
+}

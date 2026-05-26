@@ -44,7 +44,8 @@
     var(--color-primary)
   );
   background-repeat: no-repeat;
-  background-position: right center;
+  // 赤帯に対してテキストを 1px 上に見せる（帯を 1px 下にずらす）。hover/active 共通。
+  background-position: right calc(50% + 1px);
   background-size: 0 0.85em;
   transition: color var(--transition-base),
     background-size var(--transition-base);
@@ -127,6 +128,19 @@
   white-space: pre-line;
 }
 
+// ── 小引用文（IP/CREATIVE 専用、quote の下に置く 22px の小キャッチ） ──
+// Figma 2697:43669 (y=659 — quote 下端 y=599 から 60px 下)
+.subQuote {
+  @include fluid(margin-top, 28, 60);
+  margin-bottom: 0;
+  color: var(--color-black);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  font-weight: var(--font-weight-regular);
+  @include fluid(font-size, 16, 22);
+  @include fluid(line-height, 28, 38);
+  @include fluid(letter-spacing, 2.4, 5.28);
+}
+
 // ── 説明文 ──
 .description {
   @include fluid(margin-top, 24, 40);
@@ -143,8 +157,9 @@
 }
 
 // ── 主画像 ──
+// Figma IP/CREATIVE: 説明文下端 y=877 → 画像上端 y=957（gap 80px）
 .heroImage {
-  @include fluid(margin-top, 64, 160);
+  @include fluid(margin-top, 32, 80);
 }
 
 .heroImageInner {
