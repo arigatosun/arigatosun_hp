@@ -8,12 +8,21 @@
 .section {
   position: relative;
   z-index: 5;
-  // Figma: 左右 200px（pagination の全幅中央のため対称）
+  // Figma PC: 左右 200px（pagination の全幅中央のため対称） / SP(390): 左右 28px（カード 334 を中央配置）
   @include fluid(padding-left, 20, 200);
   @include fluid(padding-right, 20, 200);
-  // Figma 実測: サイドバー上端 y=200 (page top 込み) − header 80 = 120
+  // Figma 実測: サイドバー上端 y=200 (page top 込み) − header 80 = 120 / SP: 80 (y=160 - header 80)
   @include fluid(padding-top, 45, 120);
   @include fluid(padding-bottom, 60, 200);
+
+  // SP(390): カード横幅 334 を中央に置くため 28px 左右に固定 / 上部余白も Figma SP 80 に合わせる
+  // padding-bottom は fluid 既定値から -30px 縮めて pagination → アリガトくん 余白を詰める
+  @include sp {
+    padding-left: 28px;
+    padding-right: 28px;
+    padding-top: 80px;
+    padding-bottom: calc(66px - 30px);
+  }
 }
 
 // ── 2カラムレイアウト（sidebar + content） ──
@@ -35,7 +44,8 @@
 
   @include max(1023px) {
     width: 100%;
-    @include fluid(margin-top, 32, 60);
+    // Figma SP(390): CREATIVE PROJECT 下端 y=449 → カード上端 y=509 = 60
+    margin-top: 60px;
   }
 }
 
@@ -43,19 +53,22 @@
 .grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  // Figma: 列ギャップ 80px / 行ピッチ 711 - カード高 ~531 = 180px
+  // Figma PC: 列ギャップ 80px / 行ピッチ 711 - カード高 ~531 = 180px
   @include fluid(column-gap, 16, 80);
   @include fluid(row-gap, 56, 180);
 
   @include sp {
     grid-template-columns: 1fr;
-    @include fluid(row-gap, 40, 80);
+    // Figma SP(390): カード下端→次カード上端 = 80
+    row-gap: 80px;
   }
 }
 
-// ── ページネーション位置（Figma: グリッド最下 + 240px） ──
+// ── ページネーション位置（Figma PC: グリッド最下 + 240px / SP: + 100px） ──
 .paginationWrap {
-  @include fluid(margin-top, 56, 240);
+  @include fluid(margin-top, 80, 240);
   display: flex;
   justify-content: center;
+
+  @include sp { margin-top: 100px; }
 }

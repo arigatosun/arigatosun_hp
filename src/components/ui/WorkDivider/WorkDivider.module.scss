@@ -4,9 +4,11 @@
 );
 @use '@/styles/breakpoints' as *;
 
-// セクション区切りの短い横線（左端 x=200 基準）
+// セクション区切りの短い横線（左端 PC=200 / SP=40）
 .divider {
   @include fluid(padding-left, 20, 200);
+
+  @include sp { padding-left: 40px; }
 }
 
 .line {

@@ -4,11 +4,17 @@
 );
 @use '@/styles/breakpoints' as *;
 
-// 見出し・本文・CREDIT は左右 x=200 基準
+// 見出し・本文・CREDIT は左右 PC=200 / SP=40 基準
 .text {
   @include fluid(padding-left, 20, 200);
   @include fluid(padding-right, 20, 200);
   @include fluid(margin-top, 22, 44); // スライダー → ■見出し
+
+  @include sp {
+    padding-left: 40px;
+    padding-right: 40px;
+    margin-top: 24px;
+  }
 }
 
 // ■見出し（日本語 Noto / 英字 Mozaic を自動切替）
@@ -20,6 +26,12 @@
   @include fluid(font-size, 15, 20);
   @include fluid(line-height, 38, 56);
   @include fluid(letter-spacing, 2.5, 4);
+
+  @include sp {
+    font-size: 16px;
+    line-height: 32px;
+    letter-spacing: 2.4px;
+  }
 }
 
 .body {
@@ -32,6 +44,13 @@
   @include fluid(font-size, 13, 16);
   @include fluid(line-height, 26, 32);
   @include fluid(letter-spacing, 1, 1.92);
+
+  @include sp {
+    margin-top: -4px;
+    font-size: 13px;
+    line-height: 28px;
+    letter-spacing: 1.2px;
+  }
 }
 
 // ＜CREDIT＞行（Mozaic GEO Light・グレー）
@@ -44,4 +63,11 @@
   @include fluid(font-size, 12, 14);
   @include fluid(line-height, 24, 32);
   @include fluid(letter-spacing, 1.6, 2.8);
+
+  @include sp {
+    margin-top: 12px;
+    font-size: 12px;
+    line-height: 24px;
+    letter-spacing: 1.8px;
+  }
 }

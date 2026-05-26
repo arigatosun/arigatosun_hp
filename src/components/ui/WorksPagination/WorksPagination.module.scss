@@ -7,14 +7,15 @@
 .pagination {
   display: inline-flex;
   align-items: center;
-  // Figma: BACK 右端→1/2 = 63px / 1/2 右端→NEXT 左端 = 65px
-  @include fluid(gap, 24, 64);
+  // Figma PC: BACK 右端→1/2 = 63 / 1/2 右端→NEXT 左端 = 65
+  // Figma SP(390): いずれも 23
+  @include fluid(gap, 23, 64);
 }
 
-// ── BACK / NEXT ボタン（Figma: 200×64 / rounded 43.2 / 白背景） ──
+// ── BACK / NEXT ボタン（Figma PC: 200×64 / SP: 116×56 / rounded 43.2 / 白背景） ──
 .button {
-  @include fluid(width, 120, 200);
-  @include fluid(height, 44, 64);
+  @include fluid(width, 116, 200);
+  @include fluid(height, 56, 64);
   border-radius: 43.2px;
   background: var(--color-white);
   border: 1px solid var(--color-black);
@@ -28,7 +29,17 @@
   transition:
     color var(--transition-base),
     border-color var(--transition-base),
-    background-color var(--transition-base);
+    background-color var(--transition-base),
+    opacity var(--transition-base);
+
+  // Figma SP(node 2558:117863 / 117869): font 16 / letter-spacing 2.08 / border 0.862 / radius 37.26
+  @include sp {
+    font-size: 16px;
+    line-height: 16.56px;
+    letter-spacing: 2.08px;
+    border-width: 0.862px;
+    border-radius: 37.26px;
+  }
 
   &:hover:not(:disabled) {
     color: var(--color-primary);
@@ -39,10 +50,17 @@
     border-color: var(--color-black-rgba-30);
     color: var(--color-black-rgba-30);
     cursor: not-allowed;
+
+    // SP は Figma 仕様の opacity 0.3 を要素全体に適用
+    @include sp {
+      border-color: var(--color-black);
+      color: var(--color-black);
+      opacity: 0.3;
+    }
   }
 }
 
-// ── 1/2 表示（Figma: 20px / #140700 / center / w=43） ──
+// ── 1/2 表示（Figma PC: 20px / SP: 16px / #140700 / center / w=32〜43） ──
 .indicator {
   @include fluid(min-width, 32, 43);
   color: var(--color-black);
@@ -52,4 +70,10 @@
   line-height: 19.2px;
   @include fluid(letter-spacing, 1.4, 2.6);
   text-align: center;
+
+  @include sp {
+    font-size: 16px;
+    line-height: 16.56px;
+    letter-spacing: 2.08px;
+  }
 }

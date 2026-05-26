@@ -14,11 +14,16 @@ export default function WorkDetailHero({ hero }: WorkDetailHeroProps) {
   const HERO_W = hero.width ?? DEFAULT_HERO_W;
   const HERO_H = hero.height ?? DEFAULT_HERO_H;
   const band = hero.band ?? 'pink';
+  // PC は --data-aspect、SP は --sp-aspect が指定されたページのみ縦長レイアウトに差し替え。
+  const heroStyle = {
+    '--data-aspect': `${HERO_W} / ${HERO_H}`,
+    ...(hero.spAspect ? { '--sp-aspect': hero.spAspect } : {}),
+  } as React.CSSProperties;
 
   return (
     <div
       className={styles.hero}
-      style={{ aspectRatio: `${HERO_W} / ${HERO_H}` }}
+      style={heroStyle}
     >
       {band !== 'none' && <div className={styles.band} aria-hidden="true" />}
 

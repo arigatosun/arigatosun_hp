@@ -5,10 +5,15 @@
 @use '@/styles/breakpoints' as *;
 
 // 画像下の注釈テキスト（Figma node 2497:86959「＜資料名の説明＞」実測準拠）。
-// 本文と同じ左端 x=200 基準。
+// 本文と同じ左端 PC=200 / SP=40。
 .caption {
   @include fluid(padding-left, 20, 200);
   @include fluid(padding-right, 20, 200);
+
+  @include sp {
+    padding-left: 40px;
+    padding-right: 40px;
+  }
 }
 
 // font-size 16 / line-height 56 / letter-spacing 2.56（Figma 実測）
