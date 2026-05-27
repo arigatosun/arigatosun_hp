@@ -1,0 +1,15 @@
+@use '@/styles/fluid' as *;
+@use '@/styles/breakpoints' as *;
+
+.canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+  // サブブロブの境界を溶かして 1 つの塊として見せる。
+  // 加算ブレンドされた重なり領域が「濃」、薄い領域が「淡」となり、
+  // 自然な濃淡グラデーションが 1 塊の内部に残る。
+  filter: blur(18px);
+}
