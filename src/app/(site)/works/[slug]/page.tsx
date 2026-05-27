@@ -35,12 +35,12 @@ export async function generateMetadata({
   return { title: work ? `${work.client} | WORKS` : 'WORKS' };
 }
 
-// ブロック間の上余白（Figma 実測 px・1920基準）を fluid な margin-top に変換
-function gapStyle(gap: number) {
+// ブロック間の上余白（Figma 実測 px・1920基準）を fluid な margin-top に変換。
+// spGap が指定されればその値を clamp min に使い、SP の見た目を Figma 実測に合わせる。
+function gapStyle(gap: number, spGap?: number) {
+  const min = spGap ?? gap * 0.42;
   return {
-    marginTop: `clamp(${(gap * 0.42).toFixed(1)}px, ${(gap / 19.2).toFixed(
-      3,
-    )}vw, ${gap}px)`,
+    marginTop: `clamp(${min.toFixed(1)}px, ${(gap / 19.2).toFixed(3)}vw, ${gap}px)`,
   };
 }
 
@@ -90,7 +90,7 @@ export default async function WorkDetailPage({ params }: PageParams) {
             />
           );
         } else if (block.type === 'namingCard') {
-          node = <WorkNamingCard rows={block.rows} />;
+          node = <WorkNamingCard rows={block.rows} spImage={block.spImage} />;
         } else if (block.type === 'paragraph') {
           node = <WorkParagraph body={block.body} />;
         } else if (block.type === 'showcaseCard') {
@@ -112,7 +112,14 @@ export default async function WorkDetailPage({ params }: PageParams) {
             />
           );
         } else if (block.type === 'mockupCard') {
-          node = <WorkMockupCard src={block.src} w={block.w} h={block.h} />;
+          node = (
+            <WorkMockupCard
+              src={block.src}
+              w={block.w}
+              h={block.h}
+              sp={block.sp}
+            />
+          );
         } else if (block.type === 'caption') {
           node = <WorkCaption text={block.text} />;
         } else if (block.type === 'divider') {
@@ -124,7 +131,7 @@ export default async function WorkDetailPage({ params }: PageParams) {
         }
 
         return (
-          <div key={index} style={gapStyle(block.gap)}>
+          <div key={index} style={gapStyle(block.gap, block.spGap)}>
             {node}
           </div>
         );

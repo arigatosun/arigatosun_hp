@@ -6,7 +6,7 @@
 
 // セクション区切りの短い横線（左端 x=200 基準）
 .divider {
-  @include fluid(padding-left, 20, 200);
+  @include fluid(padding-left, 40, 200);
 }
 
 .line {

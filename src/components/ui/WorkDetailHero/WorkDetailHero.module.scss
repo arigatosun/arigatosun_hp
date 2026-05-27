@@ -4,16 +4,44 @@
 );
 @use '@/styles/breakpoints' as *;
 
-// ヒーロー全体。Figma 基準サイズの比率を保ったまま viewport 幅に追従。
-// aspect-ratio はインライン style（コンポーネント側で hero.width / hero.height から算出）で上書きする。
 .hero {
   position: relative;
   width: 100%;
-  aspect-ratio: 1920 / 760;
   overflow: hidden;
 }
 
-// 背景ピンク帯（Figma: #F9E7EA / opacity 75%）
+// PC 向け 1920×760 ベースのヒーロー
+.heroPc {
+  aspect-ratio: 1920 / 760;
+
+  @include sp {
+    display: none;
+  }
+}
+
+// SP 向け 390×540 ベースのヒーロー（縦長コラージュ）。
+// aspect-ratio はインライン style で 390 / spH に上書きされる。
+// margin-top は hero.spOffsetTop でインライン指定 (Figma SP の上余白)。
+.heroSp {
+  display: none;
+  aspect-ratio: 390 / 540;
+
+  @include sp {
+    display: block;
+  }
+}
+
+// SP ヒーロー内側のコラージュラッパー。
+// spWidth > 390（例: NEST 1020）の時は幅 261.5% で中央寄せして両端を超えてオーバーフローさせる。
+// hero 側 overflow: hidden で見切れ部分はクリップ。
+.heroSpInner {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  height: 100%;
+  transform: translateX(-50%);
+}
+
 .band {
   position: absolute;
   inset: 0;
@@ -21,7 +49,6 @@
   opacity: 0.75;
 }
 
-// 写真コラージュ。各写真は 1920×760 基準の % で絶対配置（hero に追従して拡縮）。
 .collage {
   position: absolute;
   inset: 0;
@@ -33,36 +60,43 @@
   @include fluid(border-radius, 8, 16);
 }
 
+// SP で full-bleed 1 枚画像を貼る時用。角丸を打ち消す
+.heroSpFlat .photo {
+  border-radius: 0;
+}
+
 .photoImg {
   object-fit: cover;
 }
 
-// 中央のクライアントロゴ（ワードマーク＋マークを縦に重ねる）
+// 画像が未提供の枠用プレースホルダー
+.placeholder {
+  position: absolute;
+  inset: 0;
+  background: var(--color-placeholder);
+}
+
 .logo {
   position: absolute;
   left: 50%;
-  // Figma: ロゴ中心は ヒーロー高 760 の 48.5%
   top: 48.5%;
   transform: translate(-50%, -50%);
   display: flex;
   flex-direction: column;
   align-items: center;
-  // ロゴ全体幅 = マーク幅 310.5 / ヒーロー 1920
   width: 16.17%;
   @include fluid(gap, 4, 8);
 }
 
-// ワードマーク（logo-2.svg / viewBox 367.41×106.086）。背景画像はインライン style で指定。
 .logoWordmark {
   display: block;
-  width: 91.4%; // 283.9 / 310.5
+  width: 91.4%;
   aspect-ratio: 367.41 / 106.086;
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
 }
 
-// 赤マウンテンマーク（logo-1.svg / viewBox 401.827×90.1492）
 .logoMark {
   display: block;
   width: 100%;
@@ -70,4 +104,9 @@
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
+}
+
+// SP 時はロゴをコラージュの中央に小さめで載せる（画像確定後に Figma 値で再調整）
+.heroSp .logo {
+  width: 36%;
 }

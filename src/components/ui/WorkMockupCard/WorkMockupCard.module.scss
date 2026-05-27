@@ -10,13 +10,115 @@
   @include fluid(padding-right, 20, 200);
 }
 
-// カード本体。高さは aspect-ratio（インライン style）で Figma 比率を維持。
-.card {
+// SP の pair / variations は full-bleed 想定。SP は padding を解除
+.wrap:has(.cardSp) {
+  @include sp {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+// ── PC カード（既存）────────────────────────────────────
+.cardPc {
   position: relative;
   width: 100%;
   overflow: hidden;
+
+  @include sp {
+    display: none;
+  }
+}
+
+// ── SP 既定カード（sp プロパティ未指定時）──────────────────
+.cardSpDefault {
+  display: none;
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+
+  @include sp {
+    display: block;
+  }
 }
 
 .image {
   object-fit: cover;
+}
+
+// ── SP variant 用カード（プレースホルダー描画）──────────────
+.cardSp {
+  display: none;
+
+  @include sp {
+    display: block;
+    width: 100%;
+  }
+}
+
+// 共通: pair (2枚プレースホルダー)
+.spPair {
+  position: relative;
+  width: 100%;
+  display: grid;
+}
+
+// pairStacked: 上 白 / 下 黒
+.spPairStacked {
+  grid-template-rows: 1fr 1fr;
+}
+
+// pairSplit2: 左 白 / 右 黒
+.spPairSplit2 {
+  grid-template-columns: 1fr 1fr;
+}
+
+.spPairCell {
+  width: 100%;
+  height: 100%;
+}
+
+.spPairCellWhite {
+  background: var(--color-white);
+}
+
+.spPairCellDark {
+  background: var(--color-nest-dark);
+}
+
+// variations11: 3 + 4 + 4 のタイルグリッド（Figma Group 916 準拠）。
+// padding は カード幅 391 を 100% とした %（カード比に追従）。
+// Figma 実測: 上 44 / 左右 28 / 下 51 → 11.25% / 7.16% / 13.04%
+.spVariations11 {
+  position: relative;
+  width: 100%;
+  background: var(--color-card-gray);
+  display: flex;
+  flex-direction: column;
+  padding: 11.25% 7.16% 13.04%;
+  box-sizing: border-box;
+  // 行間 (Figma: 3px 程度)。SP 390 で約 0.77vw
+  gap: 0.77vw;
+}
+
+.spVariations11Row3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.77vw;
+}
+
+.spVariations11Row4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.77vw;
+}
+
+.spVariations11Tile {
+  background: var(--color-placeholder);
+  aspect-ratio: 81.39 / 57.58; // Figma Rectangle 実測
+}
+
+// 単一カードプレースホルダー
+.spSinglePlaceholder {
+  width: 100%;
+  background: var(--color-placeholder);
 }

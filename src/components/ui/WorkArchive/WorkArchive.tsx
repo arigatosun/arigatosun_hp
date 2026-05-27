@@ -38,6 +38,8 @@ export default function WorkArchive({
             body={entry.body}
             credit={entry.credit}
             images={entry.images}
+            extended={entry.extended}
+            cardAspect={entry.cardAspect}
           />
         ))}
       </div>

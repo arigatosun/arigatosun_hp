@@ -19,25 +19,55 @@ export type WorkItem = {
 
 // ── 詳細ページ（/works/[slug]）用 ──
 
-/** ヒーロー写真コラージュの1枚。位置・サイズは 1920×760 ヒーロー基準の px（Figma実測値）。 */
+/**
+ * ヒーロー写真コラージュの 1 枚。
+ * - x/y/width/height は PC ヒーロー基準（既定 1920×760）の Figma 実測 px
+ * - sp が指定された場合は SP ヒーロー基準（既定 390×540）で別配置
+ * - src 未指定時はプレースホルダー（グレー枠）でレンダリング
+ */
 export type WorkHeroPhoto = {
-  src: string;
+  src?: string;
   x: number;
   y: number;
   width: number;
   height: number;
+  sp?: { x: number; y: number; width: number; height: number };
 };
 
 /** 詳細ページヒーロー（写真コラージュ＋クライアントロゴ）。 */
 export type WorkHero = {
-  /** ヒーロー全体サイズ（Figma 基準）。省略時は 1920×760。 */
+  /** PC ヒーロー全体サイズ（Figma 基準）。省略時は 1920×760。 */
   width?: number;
   height?: number;
+  /** SP ヒーロー全体サイズ（Figma 基準）。省略時は 390×540。 */
+  spWidth?: number;
+  spHeight?: number;
   /** 背景帯のスタイル。省略時は pink。 */
   band?: 'pink' | 'none';
   photos: WorkHeroPhoto[];
+  /**
+   * SP 専用フォトコラージュ。指定時は SP がこちらを描画（photos.sp は無視）。
+   * PC と SP で枚数や構成が大きく異なるケース用（例: NEST）。
+   */
+  spPhotos?: WorkHeroPhoto[];
   /** クライアントロゴ（ワードマーク／マークの2 SVG）。任意。 */
   logo?: { wordmark: string; mark: string };
+  /**
+   * SP のクライアントロゴ表示制御。
+   * 既定は true (logo が設定されていれば SP でも表示)。
+   * false にすると SP でロゴを描画しない（例: SP 画像にロゴが焼き込まれている時）。
+   */
+  spLogo?: boolean;
+  /**
+   * SP のフォトコーナー border-radius を無効化する。
+   * full-bleed の 1 枚画像 (例: CHORITZ SP コラージュ) で角丸を出したくない時に true。
+   */
+  spFlatPhoto?: boolean;
+  /**
+   * SP のヘッダーとヒーロー上端の追加ギャップ (px)。
+   * Figma SP の白余白に合わせて調整。既定 0。
+   */
+  spOffsetTop?: number;
 };
 
 /** 表示名カードの1行（ラベル＋注記＋右側ロゴ画像）。 */
@@ -53,7 +83,9 @@ export type WorkNamingRow = {
  * 今後 process / credit 等のブロック型を追加してユニオンを拡張する。
  */
 // gap = 直前の要素からの上余白（Figma 実測 px・1920 基準）。ページ側で margin-top に適用。
-export type WorkContentBlock = { gap: number } & (
+// spGap が指定されると SP 時の最小値 (clamp の min) として使われる。
+// 既定は gap * 0.42（PC 値の 42%）。Figma SP で別値を実測したブロックで上書きする。
+export type WorkContentBlock = { gap: number; spGap?: number } & (
   | {
       type: 'lead';
       heading: string;
@@ -69,6 +101,8 @@ export type WorkContentBlock = { gap: number } & (
   | {
       type: 'namingCard';
       rows: WorkNamingRow[];
+      /** SP 用 1 枚画像（指定時 SP では rows ではなくこの画像を full-bleed 表示） */
+      spImage?: { src: string; w: number; h: number };
     }
   | {
       type: 'paragraph'; // 見出しなしの本文ブロック
@@ -94,6 +128,19 @@ export type WorkContentBlock = { gap: number } & (
       src: string;
       w: number; // カードの Figma 寸法（アスペクト比に使用）
       h: number;
+      /**
+       * SP 専用のレイアウト切替。指定時、SP のみ src を使わずプレースホルダー描画。
+       * - pairStacked:  上下 2 段 (白カード / 黒カード) のプレースホルダー。NEST メインロゴ用
+       * - pairSplit2:   左右 2 列 (白カード / 黒カード) のプレースホルダー。NEST 施設用
+       * - variations11: 3 列 + 4 列 + 4 列 の 11 タイルプレースホルダー。VI 展開用
+       * - placeholder:  カード形のプレースホルダー 1 枚
+       *
+       * spAspectRatio は SP のカード全体アスペクト比（例: '390 / 400'）。省略時は w/h を流用。
+       */
+      sp?: {
+        variant: 'pairStacked' | 'pairSplit2' | 'variations11' | 'placeholder';
+        spAspectRatio?: string;
+      };
     }
   | {
       type: 'caption'; // 画像下の小さな注釈テキスト（＜資料名の説明＞ 等）
@@ -111,12 +158,25 @@ export type WorkContentBlock = { gap: number } & (
     }
 );
 
-/** アーカイブ型ページ（パターンB）の1エントリ（スライダー＋見出し＋本文＋CREDIT）。 */
+/** アーカイブ型ページ（パターンB）の1エントリ（カード＋見出し＋本文＋CREDIT）。 */
 export type WorkArchiveEntry = {
   heading: string;
   body: string[]; // 本文段落
-  credit: string[]; // ＜CREDIT＞行
-  images: string[]; // スライダー画像
+  /**
+   * &lt;CREDIT&gt; / CLIENT 行 / &lt;SCOPE&gt; / &lt;TERM&gt; の 4 行構成（SP Figma 準拠）。
+   * 1 要素 = 1 行として &lt;br&gt; で連結表示。
+   */
+  credit: string[];
+  /** PC スライダー画像 / SP は先頭 1 枚のみカードに使用 */
+  images: string[];
+  /** SP で 720 幅の full-bleed カードにする（既定 false = 390 幅 viewport 内） */
+  extended?: boolean;
+  /**
+   * SP の inner card のアスペクト比を上書きする。
+   * 既定: 非 extended = '390 / 226', extended = '720 / 227'。
+   * IGC のみ Figma 実測で 390 / 242 のため指定。
+   */
+  cardAspect?: string;
 };
 
 /** 1作品の詳細ページ全体のデータ。pattern で2種のレイアウトを判別。 */

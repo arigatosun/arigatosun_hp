@@ -4,10 +4,10 @@
 );
 @use '@/styles/breakpoints' as *;
 
-// 詳細ページの「見出し＋本文」ブロック。テキスト左端は Figma 実測 x=200。
+// 詳細ページの「見出し＋本文」ブロック。テキスト左端は Figma SP x=40 / PC x=200。
 .section {
-  @include fluid(padding-left, 20, 200);
-  @include fluid(padding-right, 20, 200);
+  @include fluid(padding-left, 40, 200);
+  @include fluid(padding-right, 40, 200);
 }
 
 .heading {
