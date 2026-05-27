@@ -4,18 +4,13 @@
 );
 @use '@/styles/breakpoints' as *;
 
-// 白カードを本文と同じ左右 x=200 基準に収める枠 (Figma SP は 40 + 16 ≒ 56 で内寄せ)
+// 白カードを本文と同じ左右 x=40 (SP) / x=200 (PC) で揃える
 .wrap {
-  @include fluid(padding-left, 20, 200);
-  @include fluid(padding-right, 20, 200);
-
-  @include sp {
-    padding-left: 40px;
-    padding-right: 40px;
-  }
+  @include fluid(padding-left, 40, 200);
+  @include fluid(padding-right, 40, 200);
 }
 
-// 白カード本体（Figma: 1520×480 / 背景白）
+// PC カード本体（Figma: 1520×480 / 背景白）
 .card {
   background: var(--color-white);
   display: flex;
@@ -26,6 +21,29 @@
   @include fluid(padding-bottom, 48, 128);
   @include fluid(padding-left, 24, 120);
   @include fluid(padding-right, 24, 120);
+}
+
+// PC 専用カード（SP では非表示にして spImage 側を出す）
+.cardPc {
+  @include sp {
+    display: none;
+  }
+}
+
+// SP 用 1 枚画像カード（Figma 390×346 を full-bleed）
+.cardSpImage {
+  display: none;
+
+  @include sp {
+    display: block;
+    position: relative;
+    width: 100%;
+    background: var(--color-white);
+  }
+}
+
+.cardSpImageInner {
+  object-fit: cover;
 }
 
 // 1行 = ラベル群（左）＋ ロゴ（右）

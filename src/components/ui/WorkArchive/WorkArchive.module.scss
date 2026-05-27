@@ -7,81 +7,56 @@
 // ヘッダー（fixed 80px）下端 → リード見出し
 .archive {
   @include fluid(padding-top, 80, 200);
-
-  @include sp { padding-top: 80px; }
 }
 
-// リード（見出し＋区切り線＋本文）は左右 PC=200 / SP=40
+// リード（見出し＋区切り線＋本文）は SP 左右 40 / PC 左右 200
 .header {
-  @include fluid(padding-left, 20, 200);
-  @include fluid(padding-right, 20, 200);
-
-  @include sp {
-    padding-left: 40px;
-    padding-right: 40px;
-  }
+  @include fluid(padding-left, 40, 200);
+  @include fluid(padding-right, 40, 200);
 }
 
+// リード見出し（SP 18px / PC 26px）
 .leadHeading {
   margin: 0;
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
   font-weight: var(--font-weight-regular);
   @include fluid(font-size, 18, 26);
-  @include fluid(line-height, 38, 56);
-  @include fluid(letter-spacing, 4, 7.54);
-
-  @include sp {
-    font-size: 18px;
-    line-height: 36px;
-    letter-spacing: 2.6px;
-  }
+  @include fluid(line-height, 36, 56);
+  @include fluid(letter-spacing, 4.32, 7.54);
 }
 
+// 短い横線（SP 32px gap / PC 60px gap, 48×1）
 .divider {
   display: block;
-  @include fluid(margin-top, 24, 60);
+  @include fluid(margin-top, 32, 60);
   width: 48px;
   height: 1px;
   background: var(--color-black);
-
-  @include sp { margin-top: 32px; }
 }
 
+// リード本文（SP 14px / PC 16px）
 .leadBody {
   margin: 0;
-  @include fluid(margin-top, 18, 40);
+  @include fluid(margin-top, 32, 40);
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
   font-weight: var(--font-weight-regular);
-  @include fluid(font-size, 13, 16);
-  @include fluid(line-height, 28, 36);
-  @include fluid(letter-spacing, 2, 3.84);
-
-  @include sp {
-    margin-top: 32px;
-    font-size: 13px;
-    line-height: 30px;
-    letter-spacing: 1.8px;
-  }
+  @include fluid(font-size, 14, 16);
+  @include fluid(line-height, 30, 36);
+  @include fluid(letter-spacing, 2.52, 3.84);
 }
 
-// リード → 1エントリ目、およびエントリ間の間隔
+// リード → 1エントリ目（Figma SP: body 末端 y=507 → 1エントリ目カード y=567 = 60px）
+// エントリ間 gap は Figma で 68〜168px と幅があり、平均的な 70 を SP min に
 .entries {
-  @include fluid(margin-top, 96, 240);
+  @include fluid(margin-top, 60, 240);
   display: flex;
   flex-direction: column;
-  @include fluid(gap, 96, 240);
-
-  @include sp {
-    margin-top: 80px;
-    gap: 80px;
-  }
+  @include fluid(gap, 70, 240);
 }
 
-// 最終エントリ → 実績・事例セクション（Figma 実測ギャップ）
+// 最終エントリ → 実績・事例セクション
 .related {
-  @include fluid(margin-top, 168, 420);
-
-  @include sp { margin-top: 140px; }
+  @include fluid(margin-top, 120, 420);
 }

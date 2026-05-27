@@ -4,15 +4,10 @@
 );
 @use '@/styles/breakpoints' as *;
 
-// 詳細ページの「見出し＋本文」ブロック。テキスト左端は Figma PC=200 / SP(390)=40。
+// 詳細ページの「見出し＋本文」ブロック。テキスト左端は Figma SP x=40 / PC x=200。
 .section {
-  @include fluid(padding-left, 20, 200);
-  @include fluid(padding-right, 20, 200);
-
-  @include sp {
-    padding-left: 40px;
-    padding-right: 40px;
-  }
+  @include fluid(padding-left, 40, 200);
+  @include fluid(padding-right, 40, 200);
 }
 
 .heading {
@@ -21,33 +16,18 @@
   font-family: 'Noto Sans JP', var(--font-jp);
   font-weight: var(--font-weight-regular);
   @include fluid(line-height, 36, 56);
-
-  @include sp { line-height: 36px; }
 }
 
-// Figma SP(390): ■見出し h=36 / font ~18 / letter-spacing ~3
 .main .heading {
   @include fluid(font-size, 18, 24);
   @include fluid(letter-spacing, 4, 6.96);
-
-  @include sp {
-    font-size: 16px;
-    letter-spacing: 2.4px;
-  }
 }
 
-// Figma SP(390): ＜＞見出し h=36 / font ~15 / letter-spacing ~3
 .sub .heading {
   @include fluid(font-size, 15, 20);
   @include fluid(letter-spacing, 3.5, 5.8);
-
-  @include sp {
-    font-size: 14px;
-    letter-spacing: 2.4px;
-  }
 }
 
-// Figma SP(390): 本文 font ~13 / line-height 30 / letter-spacing ~2
 .body {
   margin: 0;
   @include fluid(margin-top, 6, 11);
@@ -57,12 +37,6 @@
   @include fluid(font-size, 13, 16);
   @include fluid(line-height, 28, 36);
   @include fluid(letter-spacing, 2, 3.84);
-
-  @include sp {
-    font-size: 13px;
-    line-height: 30px;
-    letter-spacing: 1.8px;
-  }
 }
 
 // ＜＞見出し（sub）は本文との間隔が ■見出しより詰まる（Figma 実測）
