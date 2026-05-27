@@ -20,12 +20,14 @@
     top: auto;
     width: 100%;
   }
+
+  // Figma SP は要素 x=40。.section が左 28px の padding を持つので、サイドバー側で +12 を補填
+  @include sp { padding-left: 12px; }
 }
 
-// Figma 実測（node 2498:46772）:
-//   タイトル画像 184×41 (y=200, h=41)
-//   "WORKS" ラベル y=269 → 画像下端(241) → ラベル上端 = 28px
-//   ラベル下端 (269+18=287) → ・ALL 上端 (407) = 120px
+// Figma 実測:
+//   PC (node 2498:46772): タイトル画像 184×41 / WORKS ラベル margin-top 28 / ラベル下→ALL 120
+//   SP (node 2840:49808 / 390): タイトル画像 140×31 / WORKS ラベル margin-top 16
 .sectionTitle {
   // SectionTitle 既定の margin-top(fluid 12〜20) を打ち消し、
   // .section padding-top だけで上の余白を制御（NEWS と同方針）
@@ -35,11 +37,16 @@
   img {
     @include fluid(width, 110, 184);
     height: auto;
+
+    // Figma SP は 390px viewport で 140px。vw ベースで SP 全域に追従させつつ PC 最大でクランプ。
+    @include sp { width: min(35.9vw, 184px); }
   }
 
   // SectionTitle 既定の label margin-top(fluid 10〜20) を Figma 実測 28 に上書き
   p {
     @include fluid(margin-top, 14, 28);
+
+    @include sp { margin-top: 16px; }
   }
 }
 
@@ -54,8 +61,10 @@
   padding: 0;
   display: flex;
   flex-direction: column;
-  // Figma: 行ピッチ 56px - 文字高 24px = 32px
+  // Figma PC: 行ピッチ 56 - 文字高 24 = 32 / SP: 行ピッチ 38 - 文字高 18 = 20
   @include fluid(gap, 18, 32);
+
+  @include sp { gap: 20px; }
 }
 
 .item {
@@ -69,12 +78,19 @@
   color: var(--color-text-secondary);
   font-family: var(--font-en);
   font-weight: var(--font-weight-light);
-  // Figma: font-size 20 / letter-spacing 2.6
-  @include fluid(font-size, 14, 20);
+  // Figma PC: font-size 20 / line-height 24 / letter-spacing 2.6
+  // Figma SP: font-size 16 / line-height 18 / letter-spacing 2.08
+  @include fluid(font-size, 16, 20);
   line-height: 24px;
-  @include fluid(letter-spacing, 1.4, 2.6);
+  @include fluid(letter-spacing, 2.08, 2.6);
   // Figma: 各項目は折り返さない（whitespace-nowrap）
   white-space: nowrap;
+
+  @include sp {
+    font-size: 16px;
+    line-height: 18px;
+    letter-spacing: 2.08px;
+  }
   // 赤マーカー帯（SERVICE 詳細ページ side nav と同方式・文字より背の低い帯）
   background-image: linear-gradient(
     var(--color-primary),
@@ -87,6 +103,11 @@
   background-size: 0 0.85em;
   transition: color var(--transition-base),
     background-size var(--transition-base);
+
+  // SP では帯を 0.5px 下げ、テキストが帯内で 0.5px 上に見えるよう微調整
+  @include sp {
+    background-position: right calc(50% + 0.044em + 0.5px);
+  }
 
   &:hover {
     color: var(--color-white);
@@ -105,6 +126,7 @@
 }
 
 // ── CREATIVE PROJECT と NEWS の間の下矢印（SERVICE 詳細ページ side nav と同方式） ──
+// Figma SP (390) では NEWS 項目自体がサイドバーから外れているので、矢印 + NEWS リストを SP では非表示
 .divider {
   display: block;
   @include fluid(margin-left, 7, 15);
@@ -118,4 +140,11 @@
     width: auto;
     @include fluid(height, 36, 56);
   }
+
+  @include sp { display: none; }
+}
+
+// NEWS リスト (filter の下の単独 NEWS リンク) も SP では非表示
+.newsList {
+  @include sp { display: none; }
 }

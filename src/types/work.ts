@@ -15,6 +15,11 @@ export type WorkItem = {
   image: string;
   imageWidth: number;
   imageHeight: number;
+  /**
+   * SP (<=1023px) で title 内の "|" を改行に置き換えるか。
+   * true: Figma SP の 2 段落表示 (pipe 非表示) / false (既定): pipe を " | " として可視表示。
+   */
+  spBreakAtPipe?: boolean;
 };
 
 // ── 詳細ページ（/works/[slug]）用 ──

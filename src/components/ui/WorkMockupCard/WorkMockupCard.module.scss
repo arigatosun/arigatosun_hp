@@ -4,10 +4,15 @@
 );
 @use '@/styles/breakpoints' as *;
 
-// Web モックアップ画像カードを本文と同じ左右 x=200 基準に収める枠
+// Web モックアップ画像カードを本文と同じ左右 x=200 基準に収める枠 (Figma SP は画面端まで広げる)
 .wrap {
   @include fluid(padding-left, 20, 200);
   @include fluid(padding-right, 20, 200);
+
+  @include sp {
+    padding-left: 0;
+    padding-right: 0;
+  }
 }
 
 // SP の pair / variations は full-bleed 想定。SP は padding を解除

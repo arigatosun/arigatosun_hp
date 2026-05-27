@@ -9,6 +9,11 @@ type WorksCardProps = {
   imageWidth: number;
   imageHeight: number;
   href?: string;
+  /**
+   * SP で title 内の "|" を改行に置換する。Figma SP の 2 段落構成カード (work-2) で使う。
+   * 既定: false (PC/SP とも " | " を可視表示)
+   */
+  spBreakAtPipe?: boolean;
 };
 
 export default function WorksCard({
@@ -18,10 +23,12 @@ export default function WorksCard({
   imageWidth,
   imageHeight,
   href = '/works',
+  spBreakAtPipe = false,
 }: WorksCardProps) {
   // works.ts の title は LP 用の \n と | 区切りを含む。/works カードは自然折り返しで表示するため
-  // \n を除去し、区切りの | は残したまま右側に半角スペースを足して読みやすくする。
-  const bodyText = title.replace(/\n/g, '').replace(/\|/g, '| ');
+  // \n を除去。spBreakAtPipe=true のカード (work-2) は SP で | を改行に変換、それ以外は " | " を可視表示。
+  const cleaned = title.replace(/\n/g, '');
+  const clauses = cleaned.split('|');
 
   return (
     <Link href={href} className={styles.card}>
@@ -40,7 +47,22 @@ export default function WorksCard({
         <span className={styles.clientName}>{client}</span>
       </p>
 
-      <p className={styles.body}>{bodyText}</p>
+      <p className={styles.body}>
+        {clauses.map((clause, i) => (
+          <span key={i}>
+            {i > 0 &&
+              (spBreakAtPipe ? (
+                <>
+                  <span className={styles.bodyPipe}> | </span>
+                  <br className={styles.bodyBreak} />
+                </>
+              ) : (
+                ' | '
+              ))}
+            {clause.trim()}
+          </span>
+        ))}
+      </p>
 
       <span className={styles.viewMore}>
         <span className={styles.viewMoreText}>VIEW MORE &gt;</span>

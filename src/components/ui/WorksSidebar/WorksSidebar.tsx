@@ -63,7 +63,7 @@ export default function WorksSidebar({ active = 'ALL' }: WorksSidebarProps) {
           </svg>
         </span>
 
-        <ul className={styles.list}>
+        <ul className={`${styles.list} ${styles.newsList}`}>
           <li className={styles.item}>
             <Link href="/news" className={styles.link}>
               <span>・</span>

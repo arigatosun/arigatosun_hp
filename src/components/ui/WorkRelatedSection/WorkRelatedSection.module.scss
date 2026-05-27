@@ -4,10 +4,15 @@
 );
 @use '@/styles/breakpoints' as *;
 
-// 他実績への誘導セクション。左端 x=200 基準。
+// 他実績への誘導セクション。左端 PC=200 / SP=28 (一覧のカード幅 334 と一致)。
 .section {
   @include fluid(padding-left, 20, 200);
   @include fluid(padding-right, 20, 200);
+
+  @include sp {
+    padding-left: 28px;
+    padding-right: 28px;
+  }
 }
 
 // 見出し（サンアイコン ＋ 実績・事例 / DESIGN & BRANDING SCOPE）

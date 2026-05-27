@@ -31,15 +31,24 @@
   transition: opacity var(--transition-base);
 }
 
-// ── CLIENT ライン（Figma: 画像→35px / 英字 17px + 日本語 15px / line-height 44 / letter-spacing 3.4） ──
+// ── CLIENT ライン（Figma PC: 英字 17 + 日本語 15 / line-height 44 / letter-spacing 3.4） ──
+// Figma SP(390): 画像→28 / font 16 / line-height 18 / letter-spacing 2.08 / 左 12 インデント
 .client {
-  @include fluid(margin-top, 16, 35);
+  @include fluid(margin-top, 28, 35);
   color: var(--color-text-secondary);
   font-family: var(--font-en);
   font-weight: var(--font-weight-light);
   @include fluid(font-size, 13, 17);
   @include fluid(line-height, 24, 44);
   @include fluid(letter-spacing, 1.8, 3.4);
+
+  @include sp {
+    margin-top: 28px;
+    font-size: 16px;
+    line-height: 18px;
+    letter-spacing: 2.08px;
+    padding-inline: 12px;
+  }
 }
 
 .clientLabel {
@@ -51,24 +60,56 @@
   font-weight: var(--font-weight-regular);
   @include fluid(font-size, 12, 15);
   @include fluid(letter-spacing, 1.5, 2.6);
+
+  // Figma SP は ・CLIENT ラベル含め一律 16px / letter-spacing 2.08
+  @include sp {
+    font-size: 16px;
+    letter-spacing: 2.08px;
+  }
 }
 
 // ── 本文（Figma: CLIENT→16px / 18px / line-height 36 / letter-spacing 2.34 / Noto Sans JP） ──
+// Figma SP(node 2558:111646): font-size 16 / line-height 28 / letter-spacing 2.56 / 左 12 インデント / | は改行
 .body {
-  @include fluid(margin-top, 8, 16);
+  @include fluid(margin-top, 16, 16);
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
   font-weight: var(--font-weight-regular);
-  @include fluid(font-size, 13, 18);
-  @include fluid(line-height, 22, 36);
+  @include fluid(font-size, 14, 18);
+  @include fluid(line-height, 28, 36);
   @include fluid(letter-spacing, 1.2, 2.34);
+
+  @include sp {
+    margin-top: 16px;
+    font-size: 16px;
+    line-height: 28px;
+    letter-spacing: 2.56px;
+    padding-inline: 12px;
+  }
+}
+
+// PC は "| " を表示、SP は表示せず代わりに <br> で改行
+.bodyPipe {
+  @include sp { display: none; }
+}
+
+.bodyBreak {
+  display: none;
+  @include sp { display: inline; }
 }
 
 // ── VIEW MORE（Figma: 本文→32px / 24px 白文字 / 赤帯 #DA2719 / letter-spacing 3.12） ──
+// Figma SP(390): 本文→24 / 13px 赤帯 / 左 12 インデント
 .viewMore {
-  @include fluid(margin-top, 16, 32);
+  @include fluid(margin-top, 24, 32);
   display: inline-block;
   align-self: flex-start;
+
+  @include sp {
+    // 本文(line-height 28)の半行送り分が下に乗るため、SP では margin を詰めて見た目を整える
+    margin-top: 12px;
+    margin-inline-start: 12px;
+  }
 }
 
 .viewMoreText {
@@ -86,4 +127,12 @@
   // 末尾 ">" の後ろに付く letter-spacing 1 文字分（0.13em）の空き赤を帯から除去
   clip-path: inset(0 0.13em 0 0);
   background-color: var(--color-primary);
+
+  // Figma SP(node 2812:44760): font-size 16 / letter-spacing 2.08 / 帯 126×13
+  @include sp {
+    font-size: 16px;
+    // テキストだけ帯内で 0.5px 下に。padding-top:0.5 / padding-bottom を -0.5 して帯高を維持
+    padding-top: 0.5px;
+    padding-bottom: calc(0.16em - 0.5px);
+  }
 }

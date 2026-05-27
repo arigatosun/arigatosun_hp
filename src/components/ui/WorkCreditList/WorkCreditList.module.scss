@@ -4,13 +4,18 @@
 );
 @use '@/styles/breakpoints' as *;
 
-// CREDIT / SCOPE / TERM のラベル＋内容ブロック。左端 x=200 基準。
+// CREDIT / SCOPE / TERM のラベル＋内容ブロック。左端 PC=200 / SP=40。
 .creditList {
   @include fluid(padding-left, 40, 200);
   @include fluid(padding-right, 40, 200);
   display: flex;
   flex-direction: column;
   @include fluid(gap, 16, 28);
+
+  @include sp {
+    padding-left: 40px;
+    padding-right: 40px;
+  }
 }
 
 // ラベル（CREDIT / SCOPE / TERM）— Mozaic GEO / Regular（Figma 実測）
