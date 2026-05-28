@@ -6,6 +6,14 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: path.resolve(__dirname),
   },
+  // ニュース管理画面の画像アップロード (uploadNewsImage) で 1MB 超のファイルを
+  // 受け付けるため、Server Actions のデフォルト 1MB 制限を 10MB に緩和。
+  // (uploadNewsImage 側は別途 5MB の上限チェックあり)
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '10mb',
+    },
+  },
   images: {
     remotePatterns: [
       {
