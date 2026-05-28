@@ -83,7 +83,9 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
                   key={tab.slug}
                   className={isActive ? styles.categoryActive : styles.category}
                 >
-                  <Link href={buildCategoryHref(tab.slug)}>・{tab.label} &gt;</Link>
+                  <Link href={buildCategoryHref(tab.slug)}>
+                    <span>・{tab.label} &gt;</span>
+                  </Link>
                 </li>
               );
             })}
