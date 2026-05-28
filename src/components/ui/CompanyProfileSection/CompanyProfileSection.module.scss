@@ -49,28 +49,43 @@
 
 // ── セクションヘッダ（28px / ls 11.2 — Figma 会社概要 専用サイズ） ──
 // Figma 実測: icon at card x=0 / 会社概要 title at card x=84 (icon幅60.77 + gap 23)
-// header top = card top (margin/padding 上なし)、header bottom → inner top に 34px gap
+// PC: header bottom → inner top に 34px gap
+// SP Figma: header (icon bottom y=4890 / sub bottom y=4897) → map top y=4925 = 28
 .header {
   display: flex;
   align-items: center;
   @include fluid(gap, 12, 23);
   @include fluid(margin-bottom, 17, 34);
+
+  @include sp {
+    // SP: icon top → title top の 6px オフセット (SectionHeader と同様)
+    align-items: flex-start;
+    margin-bottom: 28px;
+  }
 }
 
+// Figma SP: icon 42×40 / Figma PC: 61×58
 .headerLogo {
   width: auto;
   height: auto;
   flex-shrink: 0;
-  @include fluid(width, 32, 61);
+  @include fluid(width, 42, 61);
 }
 
 .headerText {
   display: flex;
   flex-direction: column;
   gap: 8px;
+
+  @include sp {
+    // SP: icon top → title top の 6px オフセット
+    margin-top: 6px;
+    // SP: title bottom → sub top の 6px ギャップ
+    gap: 6px;
+  }
 }
 
-// Figma SP: 18px / ls 2.34 (=0.13em) / Noto Sans JP Medium
+// Figma SP: 18px / lh 14.4 / ls 2.34 (=0.13em) / Noto Sans JP Medium
 // Figma PC: 28px / ls 11.2
 .headerTitle {
   color: var(--color-black);
@@ -79,10 +94,14 @@
   font-weight: 500;
   line-height: 1.2;
   @include fluid(letter-spacing, 2.34, 11.2);
+
+  @include sp {
+    line-height: 14.4px;
+  }
 }
 
 // Figma SP: 12px / lh 19.2 / ls 1.56 (=0.13em) / Mozaic GEO Light
-// Figma PC: 16px / ls 2.08
+// Figma PC: 16px / lh 24 / ls 2.08
 .headerSub {
   color: var(--color-text-secondary);
   font-family: var(--font-en);
@@ -90,6 +109,10 @@
   font-weight: var(--font-weight-light);
   line-height: 24px;
   @include fluid(letter-spacing, 1.56, 2.08);
+
+  @include sp {
+    line-height: 19.2px;
+  }
 }
 
 // ── 中身: 画像 + テーブル ──
@@ -105,12 +128,13 @@
 
   @include sp {
     flex-direction: column;
-    // Figma SP: 画像 y=4956 → テーブル先頭 y=5298 = 342（画像 310 + gap 32）
+    // Figma SP: 画像 bottom y=5235 → テーブル先頭 (会社名) y=5267 = 32
     gap: 32px;
     // Figma SP: 画像 x=40 → 画像幅 310 → card 左端 28 から 12px inset
     padding-left: 12px;
     padding-right: 12px;
-    @include fluid(padding-bottom, 32, 48);
+    // Figma SP: 事業内容 row bottom y=6000 → card bottom y=6040 = 40
+    padding-bottom: 40px;
   }
 }
 
@@ -131,6 +155,17 @@
   width: 100%;
   height: 100%;
   background-color: var(--color-placeholder);
+}
+
+// Google Maps embed iframe — imageWrap (1:1 aspect) を埋め尽くす
+// 上の ZERO ビル写真 (モノクロ) と統一感を出すため grayscale + contrast を掛ける
+.map {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background-color: var(--color-placeholder);
+  filter: grayscale(100%) contrast(1.1);
 }
 
 // ── 情報テーブル ──
@@ -184,20 +219,33 @@
   }
 }
 
-// Row 3 (設立 / 代表者 / 従業員数): Figma accent x=862→1079→1266→1620 → 217 / 187 / 354
-// 従業員数 は 354 確保で 1 行表示 (Figma 値 303 だけだと足りない)
+// Row 3 (設立 / 代表者 / 従業員数):
+// PC Figma accent x=870→1042→1403→1620 → 172 / 361 / 217
+//   - 代表者 は 3 名表記「吉川 遼／廣森 氷河／中村 修人」を 1 行で収めるため 361 確保
+//   - 従業員数 は「９名（正社員）」「＋外部パートナー」の 2 行構成 (data の \n を改行展開)
+// SP Figma: 従業員数 は 1 行で「９名（正社員）＋外部パートナー」(縦積みなので 1 行幅 OK)
+//   → SP では \n を改行展開せず通常スペースとして折りたたむ (white-space: normal)
 .row3 {
   .cell:nth-child(1) {
-    flex: 217 1 0;
+    flex: 172 1 0;
   }
   .cell:nth-child(2) {
-    flex: 187 1 0;
+    flex: 361 1 0;
+
+    @include pc {
+      .cellValue {
+        white-space: nowrap;
+      }
+    }
   }
   .cell:nth-child(3) {
-    flex: 354 1 0;
+    flex: 217 1 0;
 
-    .cellValue {
-      white-space: nowrap;
+    @include pc {
+      .cellValue {
+        // data の \n を改行として表示
+        white-space: pre-line;
+      }
     }
   }
 }
@@ -247,6 +295,8 @@
 }
 
 // Figma SP: 16px regular / ls 4.48 / lh 30
+// SP: value text は accent (1px) + accent→label gap (12px) = 13px 分インデントして
+//    ラベルテキストと左端を揃える (Figma SP: value x=61, accent x=48, label x=61)。
 .cellValue {
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
@@ -255,6 +305,10 @@
   @include fluid(line-height, 26, 30);
   @include fluid(letter-spacing, 4.48, 4.48);
   margin: 0;
+
+  @include sp {
+    padding-left: 13px;
+  }
 }
 
 // 設立値「2024/05」だけ Mozaic GEO Light 18px / ls 5.04

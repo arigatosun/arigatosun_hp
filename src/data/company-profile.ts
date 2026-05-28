@@ -15,15 +15,16 @@ export type CompanyInfoRow = {
 export const COMPANY_INFO_ROWS: CompanyInfoRow[] = [
   {
     cells: [
-      { label: '会社名', value: '株式会社アリガトサン' },
+      { label: '会社名', value: '合同会社アリガトサン' },
       { label: '所在地', value: '兵庫県尼崎市東難波町４丁目６−２６ ZEROビル ８０２号' },
     ],
   },
   {
     cells: [
       { label: '設立', value: '2024/05', valueFont: 'en' },
-      { label: '代表者', value: '吉川 遼' },
-      { label: '従業員数', value: '９名（正社員）＋外部パートナー' },
+      { label: '代表者', value: '吉川 遼／廣森 氷河／中村 修人' },
+      // Figma: 2 行で表示 (\n は cellValue の white-space: pre-line で改行に展開)
+      { label: '従業員数', value: '９名（正社員）\n＋外部パートナー' },
     ],
   },
 ];

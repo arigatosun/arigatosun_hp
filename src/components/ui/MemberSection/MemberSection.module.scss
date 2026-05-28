@@ -6,6 +6,11 @@
   @include fluid(padding-right, 40, 200);
   // BusinessStructure 末尾 → メンバータイトル間ギャップ 260（ユーザー指示）
   @include fluid(padding-top, 80, 260, 320, 1920);
+
+  @include sp {
+    // SP: BS.padding-bottom 69 + 本セクション padding-top 80 = 149
+    padding-top: 80px;
+  }
 }
 
 // ── セクションタイトル（SectionHeader 共通コンポーネントを使用） ──
@@ -28,6 +33,7 @@
 // ── メンバーグリッド ──
 // SP/TAB 統合（〜1023）で 2 列、PC（1024〜）で 6 列の 2 パターン。
 // Figma SP: グリッド x=28 w=334 (本文 x=40 より -12 外側に張り出してカード 161 を確保)
+//          row1 bottom y=3548 → row2 top y=3576 = row-gap 28
 .grid {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
@@ -37,7 +43,7 @@
   @include sp {
     grid-template-columns: repeat(2, 1fr);
     column-gap: 12px;
-    row-gap: 56px; // Figma SP: row1 bottom y=217 → row2 top y=245 = 28px (but with name height we use 56)
+    row-gap: 28px;
     margin-left: -12px;
     margin-right: -12px;
   }
@@ -134,9 +140,9 @@
 }
 
 // ホバー状態（JSからclassを付与）
+// 仕様: モノクロ → カラー切替のみ。カードの上方向持ち上げ・文字色変更はしない。
 .cardHovered {
   .cardPhotoWrap {
-    transform: rotateX(var(--rotate-x)) rotateY(var(--rotate-y)) translateY(-8px);
     box-shadow:
       0 12px 40px rgba(218, 39, 25, 0.08),
       0 4px 16px rgba(0, 0, 0, 0.06);
@@ -151,25 +157,19 @@
     opacity: 1;
   }
 
-  .cardRole {
-    transform: translateY(-4px);
-    color: #606060;
-  }
-
-  .cardName {
-    transform: translateY(-4px);
-    color: var(--color-primary);
-  }
-
   @include sp {
     .cardPhotoWrap {
-      transform: none;
       box-shadow: none;
     }
+  }
+}
 
-    .cardRole,
-    .cardName {
-      transform: none;
+// SP: タッチ中 / 長押し中はカラー写真を表示
+// (PC は hover ベースの cardHovered が動くので :active は不要)
+@include sp {
+  .card:active {
+    .cardPhotoColor {
+      opacity: 1;
     }
   }
 }
