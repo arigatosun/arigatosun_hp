@@ -11,8 +11,8 @@ interface ContactFormData {
 }
 
 const ADMIN_TO = 'info@arigatosun.com';
-const FROM_ADDRESS = '合同会社アリガトサン <noreply@arigatosun.com>';
-const COMPANY_NAME = '合同会社アリガトサン';
+const FROM_ADDRESS = '株式会社アリガトサン <noreply@arigatosun.com>';
+const COMPANY_NAME = '株式会社アリガトサン';
 const COMPANY_URL = 'https://arigatosun.com';
 
 /**

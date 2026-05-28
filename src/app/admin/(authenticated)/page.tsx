@@ -34,7 +34,7 @@ export default async function AdminDashboardPage() {
   return (
     <div className={styles.root}>
       <h1 className={styles.title}>ダッシュボード</h1>
-      <p className={styles.lead}>合同会社アリガトサン コーポレートサイト 管理画面</p>
+      <p className={styles.lead}>株式会社アリガトサン コーポレートサイト 管理画面</p>
 
       <div className={styles.grid}>
         <Link href="/admin/news?status=draft" className={styles.card}>

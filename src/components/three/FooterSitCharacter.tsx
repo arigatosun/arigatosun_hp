@@ -221,14 +221,18 @@ export default function FooterSitCharacter({
     <Canvas
       camera={{ position: cameraPosition, fov: cameraFov }}
       gl={{ antialias: true, alpha: true }}
+      // React Three Fiber は Canvas を <div style="pointer-events: auto"> でラップする。
+      // そのままだと .sitCharacter の CSS pointer-events: none を上書きしてしまい
+      // CONTACT 送信ボタン等を覆ってクリックを奪うため、明示的に none を指定する。
       style={
         debug
           ? {
               background: 'rgba(255, 200, 200, 0.25)',
               border: '2px dashed red',
               boxSizing: 'border-box',
+              pointerEvents: 'none',
             }
-          : { background: 'transparent' }
+          : { background: 'transparent', pointerEvents: 'none' }
       }
     >
       <ambientLight intensity={1.0} />

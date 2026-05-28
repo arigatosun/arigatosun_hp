@@ -79,6 +79,16 @@
   z-index: 2;
   pointer-events: none;
 
+  // CSS 仕様上 pointer-events: none は子孫に cascade しない。
+  // 中の Canvas / DIV が CONTACT 送信ボタン等を覆ってクリックを横取りしないよう
+  // 子孫すべてにも明示的に伝播させる。
+  // ※ R3F の Canvas ラッパー <div> はインラインスタイルで pointer-events: auto を
+  //   セットしてくるため、コンポーネント側でも style={{ pointerEvents: 'none' }} を渡している
+  //   (src/components/three/FooterSitCharacter.tsx 参照)。
+  * {
+    pointer-events: none;
+  }
+
   @include sp {
     // SP はアーチ頂点中央に乗せ、サイズを拡大
     // 微調整: 左に 50 / top -205
