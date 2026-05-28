@@ -47,55 +47,6 @@
   pointer-events: none;
 }
 
-// カーソル追従の赤グロー
-.glow {
-  position: absolute;
-  width: 47%;
-  height: 47%;
-  border-radius: 50%;
-  background: radial-gradient(circle, var(--color-primary) 0%, transparent 70%);
-  opacity: 0.55;
-  filter: blur(8px);
-  pointer-events: none;
-  transform: translate(-50%, -50%);
-  // デフォルト位置（中央やや右下）
-  left: 58%;
-  top: 56%;
-
-  @include sp {
-    width: 58%;
-    height: 58%;
-  }
-}
-
-// 浮遊アニメーション（ホバー前）
-.floating {
-  animation: glowFloat 6s ease-in-out infinite;
-  transition: left 0.6s ease-out, top 0.6s ease-out;
-}
-
-// ホバー中（カーソル追従）
-.hovering {
-  animation: none;
-  transition: left 0.12s ease-out, top 0.12s ease-out;
-}
-
-@keyframes glowFloat {
-  0%,
-  100% {
-    transform: translate(-50%, -50%) translate(0, 0);
-  }
-  25% {
-    transform: translate(-50%, -50%) translate(4%, -3%);
-  }
-  50% {
-    transform: translate(-50%, -50%) translate(-2%, -5%);
-  }
-  75% {
-    transform: translate(-50%, -50%) translate(-4%, 2%);
-  }
-}
-
 // ── テキストオーバーレイ層（AI/DEV アリガトサン・スタンダードの3標準等） ──
 // 画像枠基準で絶対配置。各 overlay の top/left/width は呼び出し側で % 指定。
 .overlays {
