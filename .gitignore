@@ -52,3 +52,11 @@ next-env.d.ts
 # session-temporary（試運転用一時ファイル）
 /.tmp-review/
 /scripts/_*.ts
+
+# 3D model backups (履歴用にローカル保持、リポジトリには含めない)
+public/models/*.backup-*.glb
+public/models/*.legacy.glb
+public/models/*_legacy.glb
+
+# Footer responsive check screenshots (確認用 PNG、不要)
+/scripts/footer-*.png

@@ -118,17 +118,21 @@ export default function WorksSection({ works }: WorksSectionProps) {
 
       {/* 下部: キャラクター + テキスト + ボタン */}
       <div className={styles.footer}>
-        {/* 3Dキャラクター（ありがとくん・手振り）
-            WorksSection 底部用。
-              - charScale 3.0: Canvas（156×161）が Hero（240×246）より小さいので縮小
-              - charPosition: Armature 内部 x=4.49 を scale×4.49=13.47 で打ち消し
-              - charRotationY: 負の値で body に角度をつけて躍動感を出す
+        {/* 3Dキャラクター（ありがとくん・座り・Clay rough マテリアル）
+            WorksSection 底部 (News セクション直前)。
+              - glbPath: arigatokunn_sit_clay.glb (Armature.002 + Sit.001 アニメを Bake 済)
+              - IK constraint を Visual Keying で各 deform bone に焼き込み済 → Web で座り姿勢が出る
+              - charScale 5.0: 旧 3.0 から大きく（手振りと比べて少し大きめのサイズ感）
+              - charPosition X = -scale * armature_x = -5.0 * (-2.70) = +13.50 で中央寄せ
+              - loopMode='repeat': Sit はループ前提
             位置確認したい時は `debug` prop を付ければ視覚化される。 */}
         <div className={styles.footerCharacter}>
           <FooterCharacterLoader
-            charPosition={[-13.16, -0.75, 0]}
-            charScale={3.0}
+            glbPath="/models/arigatokunn_sit_clay.glb?v=7"
+            charPosition={[13.50, -0.75, 0]}
+            charScale={5.0}
             charRotationY={-0.3}
+            loopMode="repeat"
           />
         </div>
 

@@ -90,6 +90,16 @@ type WalkingCharacterProps = {
         spins?: number;
         /** 当たり判定円を画面上に可視化（デバッグ用） */
         debug?: boolean;
+        /**
+         * クリップ再生モード: glb 内に Walk と Click の 2 つの NLA track が
+         * 含まれている時に、それぞれの名前を指定する。
+         * クリック検知時: Walk → Click crossfade + キャラ移動停止。
+         * Click 完了時: Click → Walk crossfade + キャラ移動再開。
+         * jumpHeight/spins/durationMs はクリップ再生モードでは無視される。
+         */
+        clipNames?: { walk: string; click: string };
+        /** クリップモード時の Walk↔Click の crossfade 時間 (ms)。default 150 */
+        fadeMs?: number;
       };
 };
 
@@ -167,6 +177,13 @@ export default function WalkingCharacter({
   const clickJumpHeight = clickCfg?.jumpHeight ?? 1.0;
   const clickSpins = clickCfg?.spins ?? 1;
   const clickDebug = clickCfg?.debug ?? false;
+  const clickClipNames = clickCfg?.clipNames;
+  const clickFadeMs = clickCfg?.fadeMs ?? 150;
+  // クリップ再生モード: clipNames 指定時に Walk / Click action を切り替えて再生する。
+  const walkActionRef = useRef<THREE.AnimationAction | null>(null);
+  const clickActionRef = useRef<THREE.AnimationAction | null>(null);
+  // クリック反応中フラグ: true の間は x 軸移動を停止する。
+  const clickPausedRef = useRef(false);
   // デバッグ円の位置・半径をフレームごとに更新するため、useRef + DOM 直書き
   const debugCircleRef = useRef<HTMLDivElement | null>(null);
   // キャラ本体の visual 中心 Y オフセット（model 単位）— 足元基準で計算
@@ -249,7 +266,74 @@ export default function WalkingCharacter({
     const mixer = new THREE.AnimationMixer(clonedScene);
     mixerRef.current = mixer;
 
-    const cleanClip = createCleanWalkClip(animations[0]);
+    const sourceClip = animations[0];
+
+    if (clickClipNames) {
+      // クリップ再生モード: glb 内の Walk / Click 名前付きクリップを直接使う
+      const walkClip = animations.find((c) => c.name === clickClipNames.walk);
+      const clickClip = animations.find((c) => c.name === clickClipNames.click);
+
+      if (walkClip && clickClip) {
+        // Walk は root track 除去（歩行 drift 防止）
+        const walkClean = createCleanWalkClip(walkClip);
+        // Click は root rotation を残す（振り向きアニメのため）
+        // position/scale だけ除去
+        const clickFiltered = new THREE.AnimationClip(
+          clickClip.name + '_clickkeep',
+          clickClip.duration,
+          clickClip.tracks.filter((track) => {
+            const name = track.name.toLowerCase();
+            if (name.startsWith('root.') || name.startsWith('root_')) {
+              const afterRoot =
+                name.startsWith('root.00') || name.startsWith('root_00')
+                  ? name.slice(7)
+                  : name.slice(5);
+              // root.position / root.scale だけ除去、quaternion(=回転) は残す
+              if (/^[._](position|scale)$/.test(afterRoot)) return false;
+            }
+            return true;
+          }),
+        );
+
+        const walkAction = mixer.clipAction(walkClean);
+        walkAction.setLoop(THREE.LoopRepeat, Infinity);
+        walkAction.play();
+        walkActionRef.current = walkAction;
+
+        const clickAction = mixer.clipAction(clickFiltered);
+        clickAction.setLoop(THREE.LoopOnce, 1);
+        clickAction.clampWhenFinished = false;
+        clickActionRef.current = clickAction;
+
+        const onFinished = (e: { action: THREE.AnimationAction }) => {
+          if (e.action === clickAction) {
+            // Click 完了 → Walk へ短い crossfade で復帰、移動再開
+            const fade = clickFadeMs / 1000;
+            clickAction.fadeOut(fade);
+            walkAction.reset().fadeIn(fade).play();
+            clickPausedRef.current = false;
+          }
+        };
+        mixer.addEventListener('finished', onFinished as unknown as (e: THREE.Event) => void);
+
+        return () => {
+          mixer.removeEventListener('finished', onFinished as unknown as (e: THREE.Event) => void);
+          mixer.stopAllAction();
+          mixer.uncacheRoot(clonedScene);
+          mixerRef.current = null;
+          walkActionRef.current = null;
+          clickActionRef.current = null;
+        };
+      }
+      // clipNames 指定だが対応クリップが見つからない時は警告だけ出して従来モードへ
+      // eslint-disable-next-line no-console
+      console.warn(
+        `[WalkingCharacter] clipNames specified but not found in glb: walk='${clickClipNames.walk}' click='${clickClipNames.click}'`,
+      );
+    }
+
+    // 従来モード: フルクリップを Walk として常時ループ
+    const cleanClip = createCleanWalkClip(sourceClip);
     const action = mixer.clipAction(cleanClip);
     action.setLoop(THREE.LoopRepeat, Infinity);
     action.play();
@@ -259,7 +343,7 @@ export default function WalkingCharacter({
       mixer.uncacheRoot(clonedScene);
       mixerRef.current = null;
     };
-  }, [clonedScene, animations]);
+  }, [clonedScene, animations, clickClipNames, clickFadeMs]);
 
   // セクション参照とスタート位置の初期化
   useEffect(() => {
@@ -289,7 +373,9 @@ export default function WalkingCharacter({
 
     const tryHit = (clientX: number, clientY: number, e: Event) => {
       if (!reactOnClick || !group.current) return;
+      // 既に反応中なら無視（pointerdown + click の二重発火対策）
       if (reactionStartRef.current !== null) return;
+      if (clickPausedRef.current) return;
       const screenPos = getVisualScreenPos();
       if (!screenPos) return;
       const dx = clientX - screenPos.x;
@@ -299,7 +385,21 @@ export default function WalkingCharacter({
       const fallbackRadius = Math.max(120, 240 * groupScale);
       const radius = clickHitRadius ?? fallbackRadius;
       if (dist <= radius) {
-        reactionStartRef.current = performance.now();
+        if (clickActionRef.current && walkActionRef.current) {
+          // クリップ再生モード: 超短 fade で Walk → Click 即時切替。
+          // Click 元アクション (29-56F) の最初 2F (= 80ms) は root.quaternion がほぼ
+          // 静止しており「固まる時間」に見えるので、time=0.08s 目から再生して
+          // すぐに振り向き動作が見える状態にする。
+          const fastFade = 0.03;
+          walkActionRef.current.fadeOut(fastFade);
+          clickActionRef.current.reset();
+          clickActionRef.current.time = 2 / 24; // 2F 目から開始 = 静止フレーム skip
+          clickActionRef.current.fadeIn(fastFade).play();
+          clickPausedRef.current = true;
+        } else {
+          // 従来モード: group transform で jump + spin
+          reactionStartRef.current = performance.now();
+        }
         // Link 等への navigate を止める
         e.preventDefault();
         e.stopPropagation();
@@ -348,11 +448,13 @@ export default function WalkingCharacter({
     mixerRef.current?.update(delta);
 
     // rootボーンをrest poseに固定（微小なドリフト防止）
-    if (rootBoneRef.current) {
+    // ただしクリップ再生モードで Click 反応中は Click action の root.rotation を活かすため
+    // 強制リセットをスキップする。
+    if (rootBoneRef.current && !clickPausedRef.current) {
       rootBoneRef.current.position.copy(rootRestPos.current);
       rootBoneRef.current.quaternion.copy(rootRestQuat.current);
     }
-    if (rootBone00Ref.current) {
+    if (rootBone00Ref.current && !clickPausedRef.current) {
       rootBone00Ref.current.position.copy(root00RestPos.current);
       rootBone00Ref.current.quaternion.copy(root00RestQuat.current);
     }
@@ -395,7 +497,8 @@ export default function WalkingCharacter({
     }
 
     // ─── 歩行/サイズアップの位置・スケール更新（running 時のみ） ───
-    if (isRunning.current) {
+    // クリップ再生モードで Click 反応中は x 移動を停止する。
+    if (isRunning.current && !clickPausedRef.current) {
       if (depthWalk) {
         // depth-walk モード（奥→手前にサイズアップ）
         depthElapsedRef.current += delta * 1000;
