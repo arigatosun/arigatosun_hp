@@ -97,6 +97,12 @@ function SitModel({ position, scale, rotationY, rotationX, freezeCursor }: SitMo
   const smoothedSpineDeltaQ = useRef(new THREE.Quaternion());
   const smoothedHeadDeltaQ = useRef(new THREE.Quaternion());
 
+  // ウィンドウベースのマウス座標 (-1..+1 正規化)。
+  // Canvas に pointer-events: none を設定しているため R3F の state.mouse が
+  // 更新されない（CONTACT US ボタンクリックを通すために必要な指定）。
+  // 代わりに window の pointermove を直接拾って正規化する。
+  const mouseRef = useRef({ x: 0, y: 0 });
+
   // useFrame 用の使い回しバッファ（GC 抑制）
   const tmpEuler = useRef(new THREE.Euler(0, 0, 0, 'YXZ'));
   const tmpQ = useRef(new THREE.Quaternion());
@@ -188,6 +194,18 @@ function SitModel({ position, scale, rotationY, rotationX, freezeCursor }: SitMo
     };
   }, [actions]);
 
+  // ウィンドウ全体の pointermove を拾ってマウス座標を -1..+1 に正規化。
+  // Canvas が pointer-events: none のため R3F の state.mouse は使えない。
+  useEffect(() => {
+    const onMove = (e: PointerEvent) => {
+      mouseRef.current.x = (e.clientX / window.innerWidth) * 2 - 1;
+      // y は画面上が +1、下が -1 になるよう反転（R3F state.mouse の慣例に合わせる）
+      mouseRef.current.y = -((e.clientY / window.innerHeight) * 2 - 1);
+    };
+    window.addEventListener('pointermove', onMove, { passive: true });
+    return () => window.removeEventListener('pointermove', onMove);
+  }, []);
+
   useFrame((state, delta) => {
     // 1) Sit アニメ適用（毎フレーム静止ポーズに戻す）
     mixer?.update(delta);
@@ -241,8 +259,10 @@ function SitModel({ position, scale, rotationY, rotationX, freezeCursor }: SitMo
     }
 
     // 3) マウス → 基準 yaw/pitch（rad）
-    const mx = state.mouse.x;
-    const my = state.mouse.y;
+    //    Canvas が pointer-events: none のため state.mouse は更新されない。
+    //    window pointermove で更新される mouseRef を使う。
+    const mx = mouseRef.current.x;
+    const my = mouseRef.current.y;
     const mag = Math.hypot(mx, my);
     const within = mag < CURSOR_FOLLOW_CONFIG.deadzone;
     const baseRad = CURSOR_FOLLOW_CONFIG.baseAngleDeg * DEG2RAD;
