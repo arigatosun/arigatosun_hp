@@ -439,3 +439,13 @@ a.pageButton:hover {
     letter-spacing: 0.13em;
   }
 }
+
+
+.emptyMessage {
+  @include fluid(font-size, 14, 18);
+  @include fluid(padding-top, 40, 80);
+  @include fluid(padding-bottom, 40, 80);
+  color: var(--color-text-secondary);
+  text-align: center;
+  margin: 0;
+}

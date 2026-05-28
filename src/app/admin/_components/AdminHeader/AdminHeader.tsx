@@ -17,7 +17,12 @@ export default function AdminHeader({ email }: AdminHeaderProps) {
           <Link href="/admin" className={styles.navLink}>
             ダッシュボード
           </Link>
-          {/* 後続 Phase でニュース・カテゴリーへのリンクを追加 */}
+          <Link href="/admin/news" className={styles.navLink}>
+            ニュース
+          </Link>
+          <Link href="/admin/categories" className={styles.navLink}>
+            カテゴリー
+          </Link>
         </nav>
         <div className={styles.right}>
           <span className={styles.email} title={email}>

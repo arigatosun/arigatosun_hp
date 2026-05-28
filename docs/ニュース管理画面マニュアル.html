@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ニュース管理画面マニュアル — 合同会社アリガトサン コーポレートサイト</title>
+<style>
+  :root {
+    --red: #DA2719;
+    --red-dark: #B82010;
+    --ink: #1c1411;
+    --muted: #6b6259;
+    --bg: #f7f5f3;
+    --card: #ffffff;
+    --line: #e3ddd6;
+    --code-bg: #2b2622;
+    --code-ink: #f4ede4;
+    --note: #fff8e6;
+    --note-line: #e8b730;
+    --warn: #fdeceb;
+    --warn-line: var(--red);
+    --term: #eef4f1;
+    --term-line: #3a9d72;
+    --info: #e9f0fb;
+    --info-line: #3a72b8;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans JP", "Yu Gothic", sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+    line-height: 1.85;
+    font-size: 16px;
+  }
+  .layout { display: flex; gap: 0; align-items: flex-start; }
+  /* ── サイドTOC ── */
+  nav.toc {
+    position: sticky; top: 0; height: 100vh; overflow-y: auto;
+    width: 290px; flex-shrink: 0;
+    background: #fffdfb; border-right: 1px solid var(--line);
+    padding: 26px 20px;
+  }
+  nav.toc h2 { font-size: 13px; letter-spacing: .08em; color: var(--muted); margin: 0 0 14px; }
+  nav.toc ol { list-style: none; margin: 0; padding: 0; counter-reset: step; }
+  nav.toc li { margin: 2px 0; }
+  nav.toc a {
+    display: block; padding: 7px 10px; border-radius: 7px;
+    text-decoration: none; color: var(--ink); font-size: 13.5px;
+  }
+  nav.toc a:hover { background: var(--term); }
+  nav.toc a.active { background: var(--red); color: #fff; }
+  nav.toc a .num { color: var(--red); font-weight: 700; margin-right: 7px; min-width: 1.5em; display: inline-block; }
+  nav.toc a.active .num { color: #fff; }
+  /* ── 本文 ── */
+  main { flex: 1; min-width: 0; padding: 0 6vw 120px; max-width: 980px; margin: 0 auto; }
+  header.hero {
+    padding: 64px 0 40px; border-bottom: 3px solid var(--red); margin-bottom: 14px;
+  }
+  header.hero .kicker { color: var(--red); font-weight: 700; letter-spacing: .12em; font-size: 13px; }
+  header.hero h1 { font-size: 30px; margin: 10px 0 6px; line-height: 1.4; }
+  header.hero p { color: var(--muted); margin: 4px 0; font-size: 14.5px; }
+  header.hero .meta {
+    margin-top: 18px; padding: 12px 16px; background: var(--card);
+    border-radius: 8px; border: 1px solid var(--line); font-size: 13.5px;
+    display: flex; flex-wrap: wrap; gap: 16px; color: var(--muted);
+  }
+  header.hero .meta strong { color: var(--ink); }
+  section { padding: 40px 0; border-bottom: 1px solid var(--line); }
+  section.step > h2 {
+    font-size: 23px; margin: 0 0 4px; line-height: 1.4;
+  }
+  .steptag {
+    display: inline-block; background: var(--red); color: #fff;
+    font-size: 12px; font-weight: 700; padding: 3px 11px; border-radius: 20px;
+    letter-spacing: .05em; margin-bottom: 12px;
+  }
+  .lead { color: var(--muted); font-size: 14.5px; margin: 0 0 20px; }
+  h3 { font-size: 17.5px; margin: 30px 0 8px; padding-left: 11px; border-left: 4px solid var(--red); }
+  h4 { font-size: 15px; margin: 20px 0 6px; }
+  p { margin: 9px 0; }
+  ul, ol { padding-left: 1.4em; }
+  li { margin: 5px 0; }
+  a { color: var(--red); }
+  code.inline, code {
+    background: #efe9e2; color: #5b3a16; padding: 1px 6px;
+    border-radius: 4px; font-size: 13.5px;
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+  }
+  pre {
+    background: var(--code-bg); color: var(--code-ink);
+    padding: 15px 17px; border-radius: 10px; overflow-x: auto;
+    font-size: 13px; line-height: 1.7; margin: 12px 0;
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+  }
+  pre code { background: transparent; color: inherit; padding: 0; }
+  pre .cm { color: #9b9388; }
+  pre .ng { color: #ff8e83; }
+  pre .ok { color: #8fd9a8; }
+  pre .label {
+    display:block; font-size: 11px; letter-spacing:.08em; color:#9b9388;
+    margin-bottom: 7px; text-transform: uppercase;
+  }
+  /* ── 解説ボックス ── */
+  .box { border-radius: 10px; padding: 13px 17px; margin: 14px 0; font-size: 14px; }
+  .box .bt { font-weight: 700; font-size: 13px; display: block; margin-bottom: 3px; }
+  .box.term { background: var(--term); border-left: 4px solid var(--term-line); }
+  .box.term .bt { color: var(--term-line); }
+  .box.note { background: var(--note); border-left: 4px solid var(--note-line); }
+  .box.note .bt { color: #b78d10; }
+  .box.warn { background: var(--warn); border-left: 4px solid var(--warn-line); }
+  .box.warn .bt { color: var(--red); }
+  .box.info { background: var(--info); border-left: 4px solid var(--info-line); }
+  .box.info .bt { color: var(--info-line); }
+  /* ── 表 ── */
+  table.spec { border-collapse: collapse; width: 100%; margin: 14px 0; font-size: 14px; }
+  table.spec th, table.spec td { border: 1px solid var(--line); padding: 8px 12px; text-align: left; vertical-align: top; }
+  table.spec th { background: var(--term); font-weight: 700; font-size: 13px; }
+  table.spec td code { font-size: 12.5px; }
+  /* ── ステップリスト ── */
+  ol.steps { counter-reset: stepnum; list-style: none; padding-left: 0; margin: 14px 0; }
+  ol.steps > li {
+    counter-increment: stepnum;
+    position: relative; padding: 10px 14px 10px 50px;
+    margin: 8px 0; background: var(--card); border: 1px solid var(--line);
+    border-radius: 8px;
+  }
+  ol.steps > li::before {
+    content: counter(stepnum);
+    position: absolute; left: 12px; top: 11px;
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--red); color: #fff;
+    font-weight: 700; font-size: 13px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  /* ── ボタン例示 ── */
+  .btn-demo {
+    display: inline-block; padding: 6px 14px; border-radius: 6px;
+    font-size: 12.5px; font-weight: 600; margin: 0 2px;
+    border: 1px solid var(--line);
+  }
+  .btn-demo.primary { background: var(--red); color: #fff; border-color: var(--red); }
+  .btn-demo.secondary { background: #fff; color: var(--ink); }
+  .btn-demo.danger { background: #fff; color: var(--red); border-color: var(--red); }
+  .badge-demo {
+    display: inline-flex; padding: 2px 10px; border-radius: 999px;
+    font-size: 11px; font-weight: 600; letter-spacing: .04em;
+  }
+  .badge-demo.draft { background: #e5e5e5; color: #404040; }
+  .badge-demo.published { background: rgba(34,197,94,.15); color: #15803d; }
+  .badge-demo.scheduled { background: rgba(218,39,25,.25); color: var(--red-dark); }
+  kbd {
+    background: #f0ebe5; border: 1px solid var(--line); border-bottom-width: 2px;
+    border-radius: 4px; padding: 1px 6px; font-size: 12px;
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+  }
+  /* ── アイコン替わりの絵文字 ── */
+  .emo { display: inline-block; width: 1.4em; text-align: center; }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 24px 0; }
+  /* ── レスポンシブ ── */
+  @media (max-width: 900px) {
+    .layout { flex-direction: column; }
+    nav.toc { position: static; height: auto; width: 100%; border-right: 0; border-bottom: 1px solid var(--line); }
+    main { padding: 0 22px 80px; }
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+
+<!-- ────────── サイド TOC ────────── -->
+<nav class="toc" aria-label="目次">
+  <h2>目次</h2>
+  <ol>
+    <li><a href="#intro"><span class="num">1.</span>このシステムでできること</a></li>
+    <li><a href="#access"><span class="num">2.</span>アクセス方法</a></li>
+    <li><a href="#first-login"><span class="num">3.</span>はじめてのログイン</a></li>
+    <li><a href="#dashboard"><span class="num">4.</span>ダッシュボードの見方</a></li>
+    <li><a href="#post-flow"><span class="num">5.</span>記事を投稿する基本フロー</a></li>
+    <li><a href="#status"><span class="num">6.</span>公開状態（下書き / 公開 / 予約公開）</a></li>
+    <li><a href="#editor"><span class="num">7.</span>リッチエディタの使い方</a></li>
+    <li><a href="#images"><span class="num">8.</span>画像のアップロード</a></li>
+    <li><a href="#categories"><span class="num">9.</span>カテゴリー管理</a></li>
+    <li><a href="#public-site"><span class="num">10.</span>公開ページの動作</a></li>
+    <li><a href="#admin-users"><span class="num">11.</span>管理者アカウントの追加・削除</a></li>
+    <li><a href="#security"><span class="num">12.</span>セキュリティと制限事項</a></li>
+    <li><a href="#troubleshoot"><span class="num">13.</span>トラブルシューティング</a></li>
+    <li><a href="#spec"><span class="num">14.</span>技術仕様まとめ</a></li>
+    <li><a href="#glossary"><span class="num">15.</span>用語集</a></li>
+  </ol>
+</nav>
+
+<!-- ────────── 本文 ────────── -->
+<main>
+
+<header class="hero">
+  <div class="kicker">NEWS ADMIN MANUAL</div>
+  <h1>ニュース管理画面マニュアル</h1>
+  <p>合同会社アリガトサン コーポレートサイト</p>
+  <div class="meta">
+    <span><strong>対象:</strong> サイト管理者・編集担当</span>
+    <span><strong>管理画面 URL:</strong> <code class="inline">/admin</code></span>
+    <span><strong>公開ニュース URL:</strong> <code class="inline">/news</code></span>
+  </div>
+</header>
+
+<!-- ===== 1. 概要 ===== -->
+<section id="intro" class="step">
+  <span class="steptag">SECTION 1</span>
+  <h2>このシステムでできること</h2>
+  <p class="lead">サイトの「NEWS」コーナーに表示される記事を、Web ブラウザだけで作成・編集・公開できる管理画面です。</p>
+
+  <h3>主な機能</h3>
+  <ul>
+    <li><strong>記事の作成・編集・削除</strong>（タイトル / 本文 / カテゴリー / サムネ画像）</li>
+    <li><strong>下書き保存と公開の切り替え</strong>（公開日時を未来に指定すれば予約公開も可能）</li>
+    <li><strong>リッチエディタ</strong>での本文編集（見出し・太字・リスト・画像・テーブル・リンクなど）</li>
+    <li><strong>画像のアップロード</strong>（サムネと本文中の挿入画像）</li>
+    <li><strong>カテゴリーの追加・編集・削除</strong>（初期値: INFORMATION / EVENTS / PRESS）</li>
+  </ul>
+
+  <h3>このマニュアルの対象範囲</h3>
+  <p>サイト管理者として「記事の投稿〜公開」「画像のアップロード」「カテゴリーの管理」を行う方を対象に、操作手順と仕様を解説します。</p>
+
+  <div class="box info">
+    <span class="bt">📘 関連ドキュメント</span>
+    技術的な開発ガイドは <code class="inline">docs/DEVELOPER_ONBOARDING.md</code> / <code class="inline">CLAUDE.md</code> を参照してください。
+  </div>
+</section>
+
+<!-- ===== 2. アクセス方法 ===== -->
+<section id="access" class="step">
+  <span class="steptag">SECTION 2</span>
+  <h2>アクセス方法</h2>
+  <p class="lead">管理画面はブラウザでアクセスします。</p>
+
+  <h3>ローカル開発環境</h3>
+  <ol class="steps">
+    <li>ターミナルでプロジェクトディレクトリに移動し <code class="inline">npm run dev</code> で開発サーバーを起動</li>
+    <li>ブラウザで <code class="inline">http://localhost:3000/admin</code> を開く</li>
+    <li>未ログインなら自動でログイン画面にリダイレクトされる</li>
+  </ol>
+
+  <h3>本番環境</h3>
+  <p>本番ドメイン（例: <code class="inline">https://arigatosun.com</code>）に <code class="inline">/admin</code> を付けてアクセスします。</p>
+
+  <div class="box note">
+    <span class="bt">⚠ 注意</span>
+    管理画面は <code class="inline">noindex, nofollow</code> が指定されており検索エンジンにはインデックスされません。直接 URL を知っている人だけがアクセスできます。
+  </div>
+</section>
+
+<!-- ===== 3. はじめてのログイン ===== -->
+<section id="first-login" class="step">
+  <span class="steptag">SECTION 3</span>
+  <h2>はじめてのログイン</h2>
+  <p class="lead">最初の管理者ユーザーは Supabase ダッシュボードで作成する必要があります（自己登録は不可）。</p>
+
+  <h3>管理者ユーザーが未作成の場合</h3>
+  <ol class="steps">
+    <li>Supabase ダッシュボードを開く（プロジェクト URL は開発者から共有されます）</li>
+    <li>左メニュー <strong>Authentication</strong> → <strong>Users</strong> へ移動</li>
+    <li><strong>Add user</strong> → <strong>Create new user</strong> をクリック</li>
+    <li>メールアドレスとパスワード（8文字以上）を入力</li>
+    <li><strong>Auto Confirm User</strong> にチェックを入れて作成</li>
+  </ol>
+
+  <h3>ログインする</h3>
+  <ol class="steps">
+    <li><code class="inline">/admin</code> または <code class="inline">/admin/login</code> にアクセス</li>
+    <li>メールアドレスとパスワードを入力し、<span class="btn-demo primary">ログイン</span> をクリック</li>
+    <li>成功すればダッシュボード（<code class="inline">/admin</code>）にリダイレクト</li>
+  </ol>
+
+  <div class="box warn">
+    <span class="bt">⛔ 失敗するパターン</span>
+    <ul>
+      <li>「Invalid login credentials」: メアド or パスワードが間違っています</li>
+      <li>「Email not confirmed」: 作成時に Auto Confirm を入れ忘れた → Supabase 側で再度確認</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===== 4. ダッシュボード ===== -->
+<section id="dashboard" class="step">
+  <span class="steptag">SECTION 4</span>
+  <h2>ダッシュボードの見方</h2>
+  <p class="lead">ログイン後の <code class="inline">/admin</code> がダッシュボードです。</p>
+
+  <h3>画面構成</h3>
+  <ul>
+    <li><strong>ヘッダー左:</strong> <code class="inline">ARIGATOSUN Admin</code> ロゴ（ダッシュボードへのリンク）</li>
+    <li><strong>ヘッダー中央:</strong> ナビゲーション（ダッシュボード / ニュース / カテゴリー）</li>
+    <li><strong>ヘッダー右:</strong> ログイン中のメールアドレス + <span class="btn-demo secondary">サインアウト</span> ボタン</li>
+    <li><strong>本文:</strong> 件数カード4枚と「新規作成」「記事一覧」へのショートカット</li>
+  </ul>
+
+  <h3>カードの意味</h3>
+  <table class="spec">
+    <thead><tr><th>カード</th><th>表示される件数</th></tr></thead>
+    <tbody>
+      <tr><td>下書き</td><td><code>status = 'draft'</code> の記事</td></tr>
+      <tr><td>公開中</td><td><code>status = 'published'</code> かつ公開日時が現在以前</td></tr>
+      <tr><td>予約公開</td><td><code>status = 'published'</code> かつ公開日時が未来</td></tr>
+      <tr><td>カテゴリー</td><td>カテゴリー全体の件数</td></tr>
+    </tbody>
+  </table>
+  <p>カードをクリックすると、それぞれフィルター済みの一覧ページに遷移します。</p>
+</section>
+
+<!-- ===== 5. 投稿フロー ===== -->
+<section id="post-flow" class="step">
+  <span class="steptag">SECTION 5</span>
+  <h2>記事を投稿する基本フロー</h2>
+  <p class="lead">新規作成から公開までの最短手順です。</p>
+
+  <ol class="steps">
+    <li>ヘッダーの <strong>ニュース</strong> をクリック → <span class="btn-demo primary">+ 新規作成</span> をクリック</li>
+    <li>必須項目を入力:
+      <ul>
+        <li><strong>タイトル</strong>（200文字以内）</li>
+        <li><strong>スラッグ</strong>（URL 用、半角英小文字・数字・ハイフン）</li>
+        <li><strong>カテゴリー</strong>（ドロップダウンから選択）</li>
+      </ul>
+    </li>
+    <li>任意項目を入力:
+      <ul>
+        <li><strong>サムネイル画像</strong>（一覧と詳細ページに使用）</li>
+        <li><strong>本文</strong>（リッチエディタ）</li>
+        <li><strong>公開日時</strong>（空欄なら「公開する」押下時の現在時刻が使われる）</li>
+      </ul>
+    </li>
+    <li>フッターのボタンで保存:
+      <ul>
+        <li><span class="btn-demo secondary">下書きとして保存</span> — まだ公開しない</li>
+        <li><span class="btn-demo primary">公開する</span> — 公開状態にする</li>
+      </ul>
+    </li>
+    <li>成功すると編集画面（<code class="inline">/admin/news/[id]/edit</code>）に遷移し「記事を作成しました」バナー表示</li>
+  </ol>
+
+  <div class="box term">
+    <span class="bt">💡 スラッグについて</span>
+    <p>公開 URL は <code class="inline">/news/[公開年]/[スラッグ]</code> になります。例えば <code class="inline">spring-event</code> を 2026 年に公開すれば <code class="inline">/news/2026/spring-event</code> です。</p>
+    <p>スラッグは <strong>同じ年内で重複不可</strong>。違う年なら同じ文字列を使い回せます。</p>
+  </div>
+
+  <h3>編集する</h3>
+  <ol class="steps">
+    <li>ニュース一覧の記事タイトル or <span class="btn-demo secondary">編集</span> をクリック</li>
+    <li>内容を書き換え</li>
+    <li>下部のボタンで保存（ボタン文言は現在のステータスに応じて変化、後述）</li>
+  </ol>
+
+  <h3>削除する</h3>
+  <p>削除はニュース一覧の行内 <span class="btn-demo danger">削除</span> ボタン、または編集画面下部の「危険な操作」セクションから行います。確認ダイアログが出ます。</p>
+
+  <div class="box warn">
+    <span class="bt">⛔ 削除は取り消し不可</span>
+    削除すると DB から完全に消えます。Storage 上の画像ファイルは <strong>連動して削除されない</strong> ので、必要なら Supabase ダッシュボードから手動削除してください。
+  </div>
+</section>
+
+<!-- ===== 6. 公開状態 ===== -->
+<section id="status" class="step">
+  <span class="steptag">SECTION 6</span>
+  <h2>公開状態（下書き / 公開中 / 予約公開）</h2>
+  <p class="lead">記事は2つの状態（<code class="inline">draft</code> / <code class="inline">published</code>）と公開日時の組み合わせで管理されます。</p>
+
+  <h3>3つの表示状態</h3>
+  <table class="spec">
+    <thead><tr><th>表示</th><th>条件</th><th>公開ページでの可視性</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><span class="badge-demo draft">下書き</span></td>
+        <td><code>status = 'draft'</code></td>
+        <td>非表示</td>
+      </tr>
+      <tr>
+        <td><span class="badge-demo published">公開中</span></td>
+        <td><code>status = 'published'</code> かつ公開日時 ≤ 現在</td>
+        <td>表示される</td>
+      </tr>
+      <tr>
+        <td><span class="badge-demo scheduled">予約公開</span></td>
+        <td><code>status = 'published'</code> かつ公開日時 &gt; 現在（未来）</td>
+        <td>公開日時まで非表示</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>ボタンの挙動（編集画面）</h3>
+  <p>現在の状態に応じてボタン文言が切り替わります。</p>
+
+  <h4>下書きを編集中</h4>
+  <ul>
+    <li><span class="btn-demo secondary">下書きとして保存</span>: 下書きのまま更新</li>
+    <li><span class="btn-demo primary">公開する</span>: <code>status</code> を <code>published</code> に変更</li>
+  </ul>
+
+  <h4>公開中の記事を編集中</h4>
+  <ul>
+    <li><span class="btn-demo secondary">下書きに戻す</span>: 非公開化（確認ダイアログあり）</li>
+    <li><span class="btn-demo primary">公開情報を更新</span>: 公開状態のまま内容を保存</li>
+  </ul>
+
+  <h3>予約公開の使い方</h3>
+  <ol class="steps">
+    <li>編集画面の <strong>公開日時</strong> に未来の日時を入力</li>
+    <li><span class="btn-demo primary">公開する</span> または <span class="btn-demo primary">公開情報を更新</span> をクリック</li>
+    <li>ステータスバッジが <span class="badge-demo scheduled">予約公開</span> に変わる</li>
+    <li>指定日時が到来すると、公開ページに自動で出現（cron 不要）</li>
+  </ol>
+
+  <div class="box term">
+    <span class="bt">💡 仕組み</span>
+    公開ページは「<code>status='published'</code> かつ <code>published_at ≤ 現在</code>」という条件で記事を取得します。未来日時の記事はクエリ結果に含まれないので、時刻が来た瞬間に表示されるようになります。
+  </div>
+</section>
+
+<!-- ===== 7. リッチエディタ ===== -->
+<section id="editor" class="step">
+  <span class="steptag">SECTION 7</span>
+  <h2>リッチエディタの使い方</h2>
+  <p class="lead">本文は TipTap ベースのリッチエディタで編集します。書いた内容は TipTap JSON 形式で DB に保存され、公開時に HTML へ変換されます。</p>
+
+  <h3>ツールバーの各ボタン</h3>
+  <table class="spec">
+    <thead><tr><th>ボタン</th><th>機能</th><th>キーボードショートカット (一般的)</th></tr></thead>
+    <tbody>
+      <tr><td><strong>段落</strong></td><td>選択範囲を通常の段落に</td><td>—</td></tr>
+      <tr><td><strong>H2 / H3</strong></td><td>見出しレベル2/3に</td><td>—</td></tr>
+      <tr><td><strong>B</strong></td><td>太字</td><td><kbd>⌘B</kbd> / <kbd>Ctrl+B</kbd></td></tr>
+      <tr><td><strong>I</strong></td><td>イタリック</td><td><kbd>⌘I</kbd> / <kbd>Ctrl+I</kbd></td></tr>
+      <tr><td><strong>コード</strong></td><td>インラインコード（<code>code</code>）</td><td>—</td></tr>
+      <tr><td><strong>・リスト</strong></td><td>箇条書きリスト</td><td>—</td></tr>
+      <tr><td><strong>1. リスト</strong></td><td>番号付きリスト</td><td>—</td></tr>
+      <tr><td><strong>引用</strong></td><td>引用ブロック</td><td>—</td></tr>
+      <tr><td><strong>コードブロック</strong></td><td>整形済みコード（複数行）</td><td>—</td></tr>
+      <tr><td><strong>リンク</strong></td><td>URL を聞かれて選択範囲にリンク設定</td><td>—</td></tr>
+      <tr><td><strong>画像</strong></td><td>画像をアップロードして挿入</td><td>—</td></tr>
+      <tr><td><strong>表</strong></td><td>3行×3列の表を挿入</td><td>—</td></tr>
+      <tr><td><strong>↶</strong></td><td>元に戻す（Undo）</td><td><kbd>⌘Z</kbd> / <kbd>Ctrl+Z</kbd></td></tr>
+      <tr><td><strong>↷</strong></td><td>やり直し（Redo）</td><td><kbd>⌘⇧Z</kbd> / <kbd>Ctrl+Y</kbd></td></tr>
+    </tbody>
+  </table>
+
+  <h3>リンクの挿入</h3>
+  <ol class="steps">
+    <li>リンクにしたいテキストを選択</li>
+    <li>ツールバーの <strong>リンク</strong> ボタンをクリック</li>
+    <li>URL 入力プロンプトが出るので、<code class="inline">https://...</code> を入力</li>
+    <li>OK で確定。リンクを解除したい時は同じボタンを押して空欄で OK</li>
+  </ol>
+
+  <div class="box note">
+    <span class="bt">⚠ 安全なリンクのみ許可</span>
+    <code class="inline">javascript:</code> など危険なプロトコルは TipTap 側で自動的に弾かれます。許可されるのは <code class="inline">http</code> / <code class="inline">https</code> / <code class="inline">mailto</code> / <code class="inline">tel</code> など標準的なものです。
+  </div>
+
+  <h3>画像の挿入</h3>
+  <p>ツールバーの <strong>画像</strong> ボタンをクリック → ファイル選択ダイアログから画像を選ぶと、自動でアップロードされカーソル位置に挿入されます。サムネイルとは別の場所（本文中）に表示されます。</p>
+
+  <h3>テーブルの編集</h3>
+  <p>テーブルを挿入すると 3×3 のテーブルが入ります。セル内をクリックして入力可能です。行・列の追加/削除はキーボード操作またはマウスの右クリックメニュー（ブラウザ依存）で行います。</p>
+
+  <h3>下書きの仕組み</h3>
+  <p>エディタの内容は入力するたびに <strong>非表示のフィールドに JSON として記録</strong> されています。保存ボタンを押すと、その JSON が DB の <code class="inline">news.content</code>（jsonb）に保存されます。</p>
+
+  <div class="box warn">
+    <span class="bt">⛔ 自動保存はありません</span>
+    ページを離れる前に必ず「下書きとして保存」or「公開する」を押してください。書きかけのまま閉じると内容は失われます。
+  </div>
+</section>
+
+<!-- ===== 8. 画像アップロード ===== -->
+<section id="images" class="step">
+  <span class="steptag">SECTION 8</span>
+  <h2>画像のアップロード</h2>
+  <p class="lead">サムネ画像と本文内挿入画像の2種類。どちらも仕様は共通です。</p>
+
+  <h3>サムネイル画像</h3>
+  <ol class="steps">
+    <li>編集画面の「サムネイル画像」セクションで <span class="btn-demo secondary">画像をアップロード</span> をクリック</li>
+    <li>ファイルを選択 → アップロード後にプレビューが表示</li>
+    <li>差し替える時は <span class="btn-demo secondary">別の画像をアップロード</span>、削除する時は <span class="btn-demo danger">削除</span> ボタン</li>
+  </ol>
+
+  <h3>本文内の画像</h3>
+  <p>リッチエディタの <strong>画像</strong> ツールバーボタンから挿入。</p>
+
+  <h3>アップロード制限</h3>
+  <table class="spec">
+    <thead><tr><th>項目</th><th>制限</th></tr></thead>
+    <tbody>
+      <tr><td>ファイルサイズ</td><td>5MB 以下</td></tr>
+      <tr><td>形式</td><td>JPEG / PNG / WebP / GIF</td></tr>
+      <tr><td>保存先</td><td>Supabase Storage <code>news-images</code> バケット</td></tr>
+      <tr><td>保存パス</td><td><code>news/[公開年]/[UUID].[拡張子]</code>（衝突しない）</td></tr>
+      <tr><td>公開 URL</td><td><code>https://[supabase-host]/storage/v1/object/public/news-images/...</code></td></tr>
+    </tbody>
+  </table>
+
+  <div class="box note">
+    <span class="bt">💡 多重防御</span>
+    制限はアプリ側（管理画面）と DB バケット側（Supabase Storage の設定）の両方で同じ値が設定されています。仮にアプリ側のチェックを迂回しても、DB レベルで弾かれます。
+  </div>
+
+  <div class="box warn">
+    <span class="bt">⛔ 不要画像のクリーンアップ</span>
+    記事を削除しても、その記事で使われていた画像ファイルは Storage に残り続けます。気になる場合は Supabase ダッシュボードの <strong>Storage → news-images</strong> から手動で削除してください。
+  </div>
+</section>
+
+<!-- ===== 9. カテゴリー管理 ===== -->
+<section id="categories" class="step">
+  <span class="steptag">SECTION 9</span>
+  <h2>カテゴリー管理</h2>
+  <p class="lead">ニュース記事に紐付けるカテゴリーを管理します。初期値は INFORMATION / EVENTS / PRESS の3つ。</p>
+
+  <h3>画面構成</h3>
+  <p>ヘッダーの <strong>カテゴリー</strong> リンクから <code class="inline">/admin/categories</code> へ。各カテゴリーは独立したフォームの行として表示されます。</p>
+
+  <h3>新規追加</h3>
+  <ol class="steps">
+    <li>ページ下部の「新規追加」フォームに入力:
+      <ul>
+        <li><strong>スラッグ</strong>: 半角英小文字・数字・ハイフン（最大50文字）</li>
+        <li><strong>ラベル</strong>: 一覧などに表示される名前（最大100文字）</li>
+        <li><strong>表示順</strong>: 数値（自動で次の番号がセットされる）</li>
+      </ul>
+    </li>
+    <li><span class="btn-demo primary">+ 追加</span> をクリック</li>
+  </ol>
+
+  <h3>編集</h3>
+  <p>既存カテゴリーの行で値を書き換えて <span class="btn-demo primary">保存</span> ボタン。</p>
+
+  <h3>削除</h3>
+  <ol class="steps">
+    <li>該当行の <span class="btn-demo danger">削除</span> ボタン</li>
+    <li>確認ダイアログで OK</li>
+  </ol>
+
+  <div class="box warn">
+    <span class="bt">⛔ 記事に使われているカテゴリーは削除不可</span>
+    そのカテゴリーを参照している記事が1件でもあれば「このカテゴリーは記事で使用中のため削除できません」とエラーが出ます。先に記事側のカテゴリーを変更してから削除してください。
+  </div>
+
+  <div class="box info">
+    <span class="bt">📘 表示順について</span>
+    数値が小さい順に並びます。公開ページのカテゴリータブもこの順番です。間に挿入したい時は中間の数値（例: 1.5 → 整数のみなので不可なら 1, 2, 3, 4 を 1, 3, 5, 7 等にリナンバ）を使ってください。
+  </div>
+</section>
+
+<!-- ===== 10. 公開ページ ===== -->
+<section id="public-site" class="step">
+  <span class="steptag">SECTION 10</span>
+  <h2>公開ページの動作</h2>
+  <p class="lead">投稿した記事は <code class="inline">/news</code> 配下に表示されます。</p>
+
+  <h3>URL 構造</h3>
+  <table class="spec">
+    <thead><tr><th>URL</th><th>内容</th></tr></thead>
+    <tbody>
+      <tr><td><code>/news</code></td><td>記事一覧（最新順、ページネーション、カテゴリーフィルター）</td></tr>
+      <tr><td><code>/news?category=information</code></td><td>カテゴリー絞り込み（slug で指定）</td></tr>
+      <tr><td><code>/news?page=2</code></td><td>2ページ目（1ページ6件）</td></tr>
+      <tr><td><code>/news/[公開年]/[スラッグ]</code></td><td>記事の詳細ページ</td></tr>
+    </tbody>
+  </table>
+
+  <h3>表示される条件</h3>
+  <ul>
+    <li><strong>status が <code>published</code></strong> である</li>
+    <li>かつ <strong>公開日時 ≤ 現在時刻</strong></li>
+  </ul>
+  <p>下書きや予約公開（未来日時）は <strong>公開ページからは絶対に見えません</strong>。直接 URL を叩いても 404 になります。</p>
+
+  <h3>キャッシュ</h3>
+  <p>公開側は ISR（Incremental Static Regeneration）で <strong>60 秒キャッシュ</strong>。記事を保存しても最大 60 秒は古い表示が出ることがあります。</p>
+
+  <h3>TOP ページのニュースセクション</h3>
+  <p>サイト TOP には最新4件の記事が出ます。こちらはブラウザ側で Supabase から直接取得し、カテゴリータブで動的にフィルタできます。</p>
+</section>
+
+<!-- ===== 11. 管理者アカウントの追加・削除 ===== -->
+<section id="admin-users" class="step">
+  <span class="steptag">SECTION 11</span>
+  <h2>管理者アカウントの追加・削除</h2>
+  <p class="lead">管理画面にログインできるユーザーの管理は Supabase ダッシュボードで行います（管理画面内にはユーザー管理 UI を用意していません）。</p>
+
+  <h3>追加する</h3>
+  <ol class="steps">
+    <li>Supabase ダッシュボード → <strong>Authentication</strong> → <strong>Users</strong></li>
+    <li><strong>Add user → Create new user</strong></li>
+    <li>Email・Password を入力し <strong>Auto Confirm User</strong> にチェック</li>
+    <li><strong>Create user</strong></li>
+  </ol>
+
+  <h3>削除する</h3>
+  <ol class="steps">
+    <li>同じ Users 画面でユーザー行の右端 ⋯ メニュー</li>
+    <li><strong>Delete user</strong></li>
+  </ol>
+
+  <h3>パスワードを変更する</h3>
+  <p>本人が変更する仕組みは現在の管理画面には実装していません。Supabase ダッシュボードのユーザー詳細画面から管理者がリセット用 URL を発行するか、新パスワードで直接更新してください。</p>
+
+  <div class="box note">
+    <span class="bt">⚠ 設計方針</span>
+    本サイトは「2〜3名の信頼できる管理者のみ」が想定運用。自己登録機能や複雑な権限管理は意図的に省いています。管理者を増やす場合は必ず Supabase ダッシュボード経由で手動追加してください。
+  </div>
+</section>
+
+<!-- ===== 12. セキュリティ ===== -->
+<section id="security" class="step">
+  <span class="steptag">SECTION 12</span>
+  <h2>セキュリティと制限事項</h2>
+  <p class="lead">運用前に把握しておくべき仕様。</p>
+
+  <h3>認証の三層防御</h3>
+  <ol>
+    <li><strong>Middleware（<code class="inline">/admin/*</code>）</strong>: 未ログインなら <code>/admin/login</code> に強制リダイレクト</li>
+    <li><strong>Layout 側</strong>: Server Component で再度 <code>auth.getUser()</code> 確認</li>
+    <li><strong>Server Action 側</strong>: 各保存・削除アクションの先頭でも <code>auth.getUser()</code> 確認</li>
+  </ol>
+  <p>このうちどれか1つを突破されても、他で必ず弾かれます。</p>
+
+  <h3>RLS（Row Level Security）</h3>
+  <table class="spec">
+    <thead><tr><th>テーブル</th><th>匿名ユーザー（anon）</th><th>ログイン中ユーザー（authenticated）</th></tr></thead>
+    <tbody>
+      <tr><td>news</td><td>公開済み記事のみ SELECT 可能（status=published かつ published_at &lt;= 現在）</td><td>全件 SELECT / INSERT / UPDATE / DELETE</td></tr>
+      <tr><td>categories</td><td>全件 SELECT 可能</td><td>全件 SELECT / INSERT / UPDATE / DELETE</td></tr>
+      <tr><td>storage.objects（news-images）</td><td>公開 URL 経由でファイル取得のみ</td><td><code>news/</code> 配下のみ INSERT / UPDATE / DELETE</td></tr>
+    </tbody>
+  </table>
+
+  <h3>画像アップロードの安全策</h3>
+  <ul>
+    <li>MIME タイプは <strong>アプリ側 + DB バケット側</strong> の両方で許可リストに制限</li>
+    <li>ファイルサイズも両層で 5MB 制限</li>
+    <li>ファイル名はサーバー生成の UUID（パストラバーサル不可）</li>
+    <li>保存先は <code>news/</code> プレフィックスに限定</li>
+  </ul>
+
+  <h3>本文 HTML の安全性</h3>
+  <ul>
+    <li>本文は TipTap JSON で保存 → 公開時に HTML 変換</li>
+    <li>TipTap は許可されたノード・属性のみ出力するため、<code class="inline">&lt;script&gt;</code> 等は混入不可</li>
+    <li>リンクのプロトコルも標準的なもののみ（<code class="inline">javascript:</code> は不可）</li>
+  </ul>
+
+  <div class="box info">
+    <span class="bt">💡 信頼モデル</span>
+    本システムは「ログインできた人 ＝ 信頼できる管理者」前提です。コンテンツの厳密なサニタイズは行っていないので、悪意のある管理者を想定する場合は別途対策が必要です（管理者を増やす時は信頼できる相手のみに限定）。
+  </div>
+</section>
+
+<!-- ===== 13. トラブルシューティング ===== -->
+<section id="troubleshoot" class="step">
+  <span class="steptag">SECTION 13</span>
+  <h2>トラブルシューティング</h2>
+  <p class="lead">よくある詰まりポイントと対応。</p>
+
+  <h3>ログインできない</h3>
+  <ul>
+    <li><strong>「Invalid login credentials」</strong>: メアドかパスワードが違います。Supabase ダッシュボードで該当ユーザーを確認</li>
+    <li><strong>「Email not confirmed」</strong>: ユーザー作成時に Auto Confirm User にチェックを入れ忘れた。Supabase ダッシュボードでユーザー詳細を開き「Confirm email」を実行</li>
+    <li><strong>ページが真っ白</strong>: 開発サーバーが起動していない、または環境変数（<code class="inline">.env.local</code>）が未設定の可能性</li>
+  </ul>
+
+  <h3>記事を保存できない</h3>
+  <ul>
+    <li><strong>「同じ年に同じスラッグの記事が既に存在します」</strong>: そのスラッグは既に使われています。違うスラッグに変更してください</li>
+    <li><strong>「タイトルを入力してください」「スラッグを入力してください」</strong>: 必須項目が空</li>
+    <li><strong>「半角英小文字・数字・ハイフンのみ使用できます」</strong>: スラッグに使えない文字（大文字や日本語など）が含まれている</li>
+    <li><strong>「サムネイル画像は管理画面のアップローダーから設定してください」</strong>: thumbnail_url を直接編集した場合（通常は ImageUploader 経由なので発生しない）</li>
+  </ul>
+
+  <h3>画像アップロードに失敗する</h3>
+  <ul>
+    <li><strong>「ファイルサイズは 5MB 以下にしてください」</strong>: 制限超過。画像を圧縮してから再アップロード</li>
+    <li><strong>「対応形式は jpg / png / webp / gif のみです」</strong>: HEIC や TIFF などは不可。PNG/JPEG に変換</li>
+    <li><strong>「認証が必要です」</strong>: セッションが切れた。再ログインしてください</li>
+    <li><strong>サムネプレビューが出ない</strong>: <code class="inline">next.config.ts</code> の <code class="inline">images.remotePatterns</code> に Supabase URL が登録されているか確認（通常設定済み）</li>
+  </ul>
+
+  <h3>カテゴリーを削除できない</h3>
+  <ul>
+    <li><strong>「このカテゴリーは記事で使用中のため削除できません」</strong>: そのカテゴリーを使っている記事を先に別カテゴリーに変更するか削除する</li>
+  </ul>
+
+  <h3>公開したのに /news に出ない</h3>
+  <ul>
+    <li><strong>公開日時が未来</strong>になっていないか確認（予約公開状態）</li>
+    <li><strong>キャッシュ</strong>の可能性。最大60秒待ってからページを再読み込み</li>
+    <li><strong>ブラウザのハードリロード</strong>（<kbd>⌘⇧R</kbd> / <kbd>Ctrl+F5</kbd>）も試す</li>
+  </ul>
+
+  <h3>下書きが公開側に見えてしまう</h3>
+  <p>これは本来起こらない実装。もし発生した場合は重大なバグなので開発者に報告してください。<strong>ヒント:</strong> 同じブラウザで admin にログイン中だと、シークレットウィンドウで確認すると分かりやすいです。</p>
+</section>
+
+<!-- ===== 14. 技術仕様 ===== -->
+<section id="spec" class="step">
+  <span class="steptag">SECTION 14</span>
+  <h2>技術仕様まとめ</h2>
+  <p class="lead">参考用のリファレンス。日常運用では読まなくて OK。</p>
+
+  <h3>使用技術</h3>
+  <table class="spec">
+    <thead><tr><th>レイヤー</th><th>技術</th></tr></thead>
+    <tbody>
+      <tr><td>フレームワーク</td><td>Next.js 16（App Router）</td></tr>
+      <tr><td>UI</td><td>React 19 + TypeScript + SCSS Modules</td></tr>
+      <tr><td>DB</td><td>Supabase（PostgreSQL + RLS）</td></tr>
+      <tr><td>認証</td><td>Supabase Auth（メール+パスワード）</td></tr>
+      <tr><td>ストレージ</td><td>Supabase Storage</td></tr>
+      <tr><td>リッチエディタ</td><td>TipTap v3</td></tr>
+      <tr><td>サーバー処理</td><td>Server Actions（Next.js）</td></tr>
+    </tbody>
+  </table>
+
+  <h3>news テーブル</h3>
+  <table class="spec">
+    <thead><tr><th>カラム</th><th>型</th><th>備考</th></tr></thead>
+    <tbody>
+      <tr><td>id</td><td>uuid</td><td>主キー、自動生成</td></tr>
+      <tr><td>title</td><td>text</td><td>必須、200文字以内（アプリ側制限）</td></tr>
+      <tr><td>slug</td><td>text</td><td>必須、URL用、年内ユニーク</td></tr>
+      <tr><td>slug_year</td><td>integer</td><td>公開年（または作成年）、トリガーで自動設定（Asia/Tokyo基準）</td></tr>
+      <tr><td>category_id</td><td>uuid</td><td>必須、categories.id への外部キー</td></tr>
+      <tr><td>thumbnail_url</td><td>text</td><td>任意、Supabase Storage の public URL のみ許可</td></tr>
+      <tr><td>content</td><td>jsonb</td><td>TipTap JSON（NOT NULL、空時は <code>{}</code>）</td></tr>
+      <tr><td>status</td><td>text</td><td><code>'draft'</code> or <code>'published'</code>（CHECK制約）</td></tr>
+      <tr><td>published_at</td><td>timestamptz</td><td>公開状態なら必須（CHECK制約）</td></tr>
+      <tr><td>created_at</td><td>timestamptz</td><td>自動セット</td></tr>
+      <tr><td>updated_at</td><td>timestamptz</td><td>更新時に自動更新（トリガー）</td></tr>
+    </tbody>
+  </table>
+
+  <h3>categories テーブル</h3>
+  <table class="spec">
+    <thead><tr><th>カラム</th><th>型</th><th>備考</th></tr></thead>
+    <tbody>
+      <tr><td>id</td><td>uuid</td><td>主キー</td></tr>
+      <tr><td>slug</td><td>text</td><td>必須、ユニーク、半角英小文字+数字+ハイフン</td></tr>
+      <tr><td>label</td><td>text</td><td>必須、表示用</td></tr>
+      <tr><td>display_order</td><td>integer</td><td>表示順（昇順）</td></tr>
+      <tr><td>created_at / updated_at</td><td>timestamptz</td><td>自動管理</td></tr>
+    </tbody>
+  </table>
+
+  <h3>環境変数</h3>
+  <table class="spec">
+    <thead><tr><th>変数名</th><th>用途</th></tr></thead>
+    <tbody>
+      <tr><td><code>NEXT_PUBLIC_SUPABASE_URL</code></td><td>Supabase プロジェクト URL（クライアント露出 OK）</td></tr>
+      <tr><td><code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code></td><td>匿名キー（クライアント露出 OK、RLS で守られる）</td></tr>
+      <tr><td><code>SUPABASE_SERVICE_ROLE_KEY</code></td><td>サービスロールキー（サーバー側のみ、絶対に公開しない）</td></tr>
+    </tbody>
+  </table>
+
+  <h3>主要なディレクトリ</h3>
+  <pre>src/
+├── app/
+│   ├── (site)/         <span class="cm"># 公開マーケサイト（Header/Footer 付き）</span>
+│   │   └── news/       <span class="cm"># /news 一覧 + /news/[year]/[slug] 詳細</span>
+│   └── admin/          <span class="cm"># 管理画面（noindex、Header/Footer なし）</span>
+│       ├── login/
+│       ├── (authenticated)/
+│       │   ├── page.tsx        <span class="cm"># /admin ダッシュボード</span>
+│       │   ├── news/           <span class="cm"># /admin/news 一覧 + 編集</span>
+│       │   └── categories/
+│       ├── _actions/   <span class="cm"># Server Actions (auth, news, categories, upload)</span>
+│       └── _components/<span class="cm"># 管理画面用 UI 部品</span>
+├── lib/
+│   ├── supabase/       <span class="cm"># Supabase クライアント (server/client/admin/anon/middleware)</span>
+│   └── news/           <span class="cm"># 公開ページ用クエリ・HTML 変換・日付フォーマット</span>
+└── types/
+    ├── supabase.ts     <span class="cm"># DB 型 (自動生成、編集禁止)</span>
+    └── news.ts         <span class="cm"># 公開ページ用の派生型</span></pre>
+</section>
+
+<!-- ===== 15. 用語集 ===== -->
+<section id="glossary" class="step">
+  <span class="steptag">SECTION 15</span>
+  <h2>用語集</h2>
+
+  <table class="spec">
+    <thead><tr><th>用語</th><th>意味</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>スラッグ (slug)</strong></td>
+        <td>URL の一部に使う識別子。半角英小文字・数字・ハイフンで構成。例: <code>spring-event-2026</code></td>
+      </tr>
+      <tr>
+        <td><strong>下書き (draft)</strong></td>
+        <td>未公開の状態。管理画面からのみ閲覧可能</td>
+      </tr>
+      <tr>
+        <td><strong>公開中 (published)</strong></td>
+        <td>誰でも閲覧できる状態</td>
+      </tr>
+      <tr>
+        <td><strong>予約公開</strong></td>
+        <td>「公開」状態だが公開日時が未来。時刻が来ると自動で公開される</td>
+      </tr>
+      <tr>
+        <td><strong>カテゴリー</strong></td>
+        <td>記事を分類するためのタグ的なもの。1記事につき1つ</td>
+      </tr>
+      <tr>
+        <td><strong>サムネイル</strong></td>
+        <td>一覧と詳細で表示される代表画像。本文中の挿入画像とは別管理</td>
+      </tr>
+      <tr>
+        <td><strong>TipTap</strong></td>
+        <td>本文編集に使っているリッチエディタライブラリ</td>
+      </tr>
+      <tr>
+        <td><strong>Supabase</strong></td>
+        <td>DB・認証・ストレージを提供するサービス。データの実体はここに保存される</td>
+      </tr>
+      <tr>
+        <td><strong>RLS（Row Level Security）</strong></td>
+        <td>DB レベルで「誰がどのデータを見れるか」を制御する仕組み。下書きが公開側に漏れないよう保護</td>
+      </tr>
+      <tr>
+        <td><strong>Server Action</strong></td>
+        <td>ブラウザからのフォーム送信時にサーバー側で実行される関数。保存・削除などの実処理を担う</td>
+      </tr>
+      <tr>
+        <td><strong>ISR（Incremental Static Regeneration）</strong></td>
+        <td>ページを一定時間キャッシュし、期限切れに合わせて再生成する仕組み。本サイトの公開ページは60秒</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <hr>
+  <p style="color: var(--muted); font-size: 13px; text-align: center; margin-top: 40px;">
+    マニュアル作成日: 2026-05-27 / 対応バージョン: Phase A〜E + セキュリティ強化版<br>
+    記事内容・仕様についての質問は開発担当へ
+  </p>
+</section>
+
+</main>
+</div>
+
+<!-- ─── TOC アクティブ化 ─── -->
+<script>
+(function () {
+  const links = Array.from(document.querySelectorAll('nav.toc a[href^="#"]'));
+  const sections = links.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+  function update() {
+    let active = sections[0];
+    const y = window.scrollY + 120;
+    for (const s of sections) {
+      if (s.offsetTop <= y) active = s;
+    }
+    links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + active.id));
+  }
+  window.addEventListener('scroll', update, { passive: true });
+  update();
+})();
+</script>
+
+</body>
+</html>

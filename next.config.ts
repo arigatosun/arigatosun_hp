@@ -12,6 +12,11 @@ const nextConfig: NextConfig = {
         protocol: 'http',
         hostname: 'arigatosun-web.local',
       },
+      {
+        protocol: 'https',
+        hostname: 'xgvjgvhqmkuulupvvbnr.supabase.co',
+        pathname: '/storage/v1/object/public/**',
+      },
     ],
   },
 };

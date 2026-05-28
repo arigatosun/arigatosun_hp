@@ -2,21 +2,12 @@ import type { Metadata } from 'next';
 import '@/styles/fonts.css';
 import '@/styles/globals.scss';
 
+// ルートには title.template を置かない。
+// マーケ用 (公開) 側のテンプレートは app/(site)/layout.tsx、
+// 管理画面側のテンプレートは app/admin/(authenticated)/layout.tsx で個別に定義する。
+// これにより /admin と公開側で異なるサフィックスが付き、相互に汚染しない。
 export const metadata: Metadata = {
-  title: {
-    default: '株式会社アリガトサン | ARIGATOSUN',
-    template: '%s | 株式会社アリガトサン',
-  },
-  description:
-    'AI(LLM)システムの開発からデザイン・ブランディング、IPコンテンツ制作を行うクリエイティブスタジオです。',
-  keywords: ['アリガトサン', 'AI開発', 'LLM', 'デザイン', 'ブランディング', 'IPコンテンツ'],
-  openGraph: {
-    title: '株式会社アリガトサン | ARIGATOSUN',
-    description:
-      'AI(LLM)システムの開発からデザイン・ブランディング、IPコンテンツ制作を行うクリエイティブスタジオです。',
-    locale: 'ja_JP',
-    type: 'website',
-  },
+  title: '株式会社アリガトサン | ARIGATOSUN',
 };
 
 // マーケ用ページの Header / Footer / <main> は app/(site)/layout.tsx で適用。

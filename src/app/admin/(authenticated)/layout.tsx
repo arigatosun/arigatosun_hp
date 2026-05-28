@@ -1,16 +1,9 @@
-import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import AdminHeader from '../_components/AdminHeader';
 import styles from './layout.module.scss';
 
-export const metadata: Metadata = {
-  title: {
-    default: '管理画面',
-    template: '%s | 管理画面',
-  },
-  robots: 'noindex, nofollow',
-};
+// メタデータ (title.template + robots) は親の app/admin/layout.tsx で定義済み。
 
 export default async function AdminAuthenticatedLayout({
   children,

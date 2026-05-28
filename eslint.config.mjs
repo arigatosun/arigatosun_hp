@@ -12,6 +12,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // worktree 配下の .next/ 等まで lint しないように再帰指定
+    "**/.next/**",
+    ".claude/worktrees/**",
   ]),
 ]);
 

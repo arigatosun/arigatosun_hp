@@ -1,0 +1,33 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.breadcrumbLink {
+  color: var(--color-text-secondary);
+  text-decoration: none;
+
+  &:hover {
+    color: var(--color-primary);
+  }
+}
+
+.breadcrumbSep {
+  opacity: 0.5;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-black);
+  margin: 0;
+}
