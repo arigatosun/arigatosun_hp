@@ -13,6 +13,8 @@
 // PC 向け 1920×760 ベースのヒーロー
 .heroPc {
   aspect-ratio: 1920 / 760;
+  // Header (80) + 上余白 64 = 144px (Figma PC 実測)
+  @include fluid(margin-top, 32, 64);
 
   @include sp {
     display: none;

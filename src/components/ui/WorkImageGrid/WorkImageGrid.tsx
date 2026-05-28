@@ -27,7 +27,9 @@ export default function WorkImageGrid({
           ).toFixed(3)}vw, ${cardHeight}px)`,
         }}
       >
-        <div className={blur ? `${styles.grid} ${styles.blurred}` : styles.grid}>
+        <div
+          className={`${styles.grid} ${images.length === 1 ? styles.gridSingle : ''} ${blur ? styles.blurred : ''}`}
+        >
           {images.map((src, index) => (
             <div
               key={index}
@@ -38,7 +40,11 @@ export default function WorkImageGrid({
                 src={src}
                 alt=""
                 fill
-                sizes="(max-width: 1023px) 45vw, 22vw"
+                sizes={
+                  images.length === 1
+                    ? '(max-width: 1023px) 100vw, 80vw'
+                    : '(max-width: 1023px) 45vw, 22vw'
+                }
                 className={styles.image}
               />
             </div>
