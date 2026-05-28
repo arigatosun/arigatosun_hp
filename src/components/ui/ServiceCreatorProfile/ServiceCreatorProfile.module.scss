@@ -9,12 +9,15 @@
 .section {
   position: relative;
   // Hero 主画像下端から avatar 上端 までの実距離 = 1795 − 1757 = 38px
-  @include fluid(margin-top, 16, 38);
-  @include fluid(padding-left, 20, 200);
-  @include fluid(padding-right, 20, 200);
+  // Figma SP: Hero 画像下端 y=1113 → avatar 上端 y=1133 = 20px
+  @include fluid(margin-top, 20, 38);
+  @include fluid(padding-left, 40, 200);
+  @include fluid(padding-right, 40, 200);
   // Figma: section content 下端 y=2089 → Promise title 上端 y=2362 = 273px。
   // Promise 側 padding-top が 160 取れているので、ここでは 113px を足す。
-  @include fluid(padding-bottom, 56, 113);
+  // SP: SNS 下端 → Promise header 上端を 200px にしたいので、
+  //     CreatorProfile padding-bottom 120 + ServicePromiseGrid padding-top 80 = 200。
+  @include fluid(padding-bottom, 120, 113);
   // モザイクが右側からはみ出した時に水平スクロールしないよう、セクションでクリップ
   overflow-x: clip;
 }
@@ -34,16 +37,24 @@
   // Figma 実寸 1158px を max とした幅
   @include fluid(width, 480, 1158);
   height: auto;
-  // Figma は opacity 20%
-  opacity: 0.2;
+  // PNG エクスポート時に Figma の opacity 20% が α チャンネルに既に焼き込まれている
+  // (最大 α≒86/255 ≒ 33%) ため、CSS 側で重ねがけしないよう opacity:1 のまま使う
+  opacity: 1;
   pointer-events: none;
   user-select: none;
   z-index: 0;
 
+  // SP: Figma SP「Group 1024」(2837:55927 / x=-50 y=1522 w=512 h=368) と
+  // 同じサイズ感で配置する。幅 512 は viewport (390) より広いので両端は
+  // section の overflow-x: clip で切り取られる。
   @include sp {
-    // SP では装飾性が薄れるためさらに小さく表示
-    @include fluid(right, -40, -25);
-    @include fluid(top, -80, -60);
+    top: auto;
+    bottom: -100px; // -20 から 80px 下げる
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    width: 512px; // Figma SP Group 1024 実寸
+    max-width: none;
   }
 }
 
@@ -54,20 +65,26 @@
   display: flex;
   align-items: flex-start;
   // Figma: avatar 右端 484 → content 左端 518 = 34px
-  @include fluid(gap, 16, 34);
+  @include fluid(gap, 24, 34);
 
   @include sp {
     flex-direction: column;
     align-items: stretch;
-    @include fluid(gap, 16, 24);
+    // Figma SP: avatar 下端 y=1323 → title 上端 y=1347 = 24px
+    gap: 24px;
   }
 }
 
-// ── アバター ── Figma 294x294 (x=190 y=1795)
+// ── アバター ── Figma 294x294 (x=190 y=1795) / SP 190x190 (x=28)
 .avatar {
   flex-shrink: 0;
-  @include fluid(width, 140, 294);
+  @include fluid(width, 190, 294);
   aspect-ratio: 1 / 1;
+
+  @include sp {
+    // Figma SP: avatar x=28 (本文 x=40 より 12px 外側)
+    margin-left: -12px;
+  }
 }
 
 .avatarImage {
@@ -96,7 +113,7 @@
   }
 }
 
-// ── タイトル ── Figma 2702:43682 SVG ロゴ (409x40)
+// ── タイトル ── Figma 2702:43682 SVG ロゴ (409x40) / SP 240x24
 .title {
   margin: 0;
   // alt テキスト（KUSOMEGANE©）は SR にのみ届ける
@@ -106,35 +123,38 @@
 .titleLogo {
   display: block;
   height: auto;
-  // Figma 実寸 409px を max として fluid。高さは width に追従。
-  @include fluid(width, 200, 409);
+  // Figma SP 240 / PC 409
+  @include fluid(width, 240, 409);
 }
 
-// ── 説明本文 ── Figma 2702:43700 (16px / 3.84px tracking / 34px line-height / 3 段落)
+// ── 説明本文 ── Figma 2702:43700
+// Figma SP: Noto Sans JP Regular / 14px / lh 30 / ls 2.52 (=0.18em) / 3 段落 / w=310
+// Figma PC: 16px / lh 34 / ls 3.84
 .description {
-  // Figma: title 下端 1896 → description 上端 1924 = 28px
-  @include fluid(margin-top, 14, 28);
+  // Figma SP: title 下端 y=1371 → description 上端 y=1387 = 16px
+  @include fluid(margin-top, 16, 28);
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
   font-weight: var(--font-weight-regular);
   @include fluid(font-size, 14, 16);
-  @include fluid(line-height, 26, 34);
-  @include fluid(letter-spacing, 2, 3.84);
+  @include fluid(line-height, 30, 34);
+  @include fluid(letter-spacing, 2.52, 3.84);
 
   p {
     margin: 0;
   }
 }
 
-// ── SNS アイコン ── Figma 2704:43762 (146x32 at x=520 y=2050)
+// ── SNS アイコン ── Figma 2704:43762 (146x32 at x=520 y=2050) / SP 159x33 at y=1651
 // Figma の Frame 627182 (146x32) を sns-icons.svg として取り込み、
 // background-position で 3 アイコンを切り出して個別リンクにする。
 // 縦 32px を基準に各アイコン幅:
 //   Instagram = 32 / TikTok = 26 / YouTube = 40
 // それぞれ Figma 内の左端 x: 0 / 56 / 106
 .sns {
-  // Figma: description 下端 2026 → SNS 上端 2050 = 24px
-  @include fluid(margin-top, 16, 24);
+  // Figma SP: description 下端 y=1627 → SNS 上端 y=1651 = 24px
+  // Figma PC: description 下端 2026 → SNS 上端 2050 = 24px
+  @include fluid(margin-top, 24, 24);
   list-style: none;
   padding: 0;
   margin-bottom: 0;
@@ -149,7 +169,7 @@
   // Figma: Instagram→TikTok 中心間 ≒ 67px、TikTok→YouTube 中心間 ≒ 47px
   // 単純化して左端→左端で 24px ギャップを取る（PC max=24, SP min=12）
   > li + li {
-    @include fluid(margin-left, 12, 24);
+    @include fluid(margin-left, 28, 24);
   }
 }
 
@@ -164,9 +184,9 @@
   height: calc(32px * var(--sns-scale));
   transition: opacity var(--transition-base);
 
-  // PC 等倍 / SP は 0.75 (24px) 相当
-  @media (max-width: 767px) {
-    --sns-scale: 0.75;
+  // SP: Figma 33px とほぼ同じになるよう等倍維持
+  @include sp {
+    --sns-scale: 1;
   }
 
   &:hover {

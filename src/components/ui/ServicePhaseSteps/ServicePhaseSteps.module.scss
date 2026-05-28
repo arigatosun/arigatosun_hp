@@ -3,23 +3,15 @@
 );
 @use '@/styles/breakpoints' as *;
 
-// Figma Group 1141 (64x1488) と整列。
-// - 4 円が縦線で繋がれており、インジケーター全体が 4 PHASE の総高さに対応
-// - 各 PHASE ブロックは PHASE(lh38) + title(lh36) + 8 + desc(lh32 ×2) = ~146px、
-//   隣接 PHASE top 間 = 186px。最後の item は内容高のみ。
-// - インジケーター幅 / item 高さを同じ比率で fluid させて、SVG 縦横比が
-//   常に list 全体と一致するようにする。
+// Figma Group 1141 (64x1488) と整列 — PC 専用。
+// SP は ServiceFlowSteps と同じく Figma SP「Group 1213」(20×568) の SVG を
+// インジケーターとして直接表示し、円位置に合わせて item の高さを固定する。
 //
-// 4 点 discrete のホバー演出:
-// - .item は root 全幅を覆い、左の円をホバーしても onMouseEnter が発火する
-// - active 行に限り、.dot（赤丸）と .glow（process-glow.svg）が opacity:1
+// SP active 演出:
+//   - スクロールに合わせて画面中央通過時に該当 PHASE のみ active 化
+//   - .dot (赤丸) で SVG の灰色塗り円を覆って赤に切替
+//   - .glow (process-glow.svg) で text 周辺に赤い halo を出す
 
-// Figma Group 1015 (visual frame): x=1095, w=585, h=744
-// 0-32: indicator (circles 32x32)
-// 32-72: gap 40px
-// 72-585: PHASE 本文領域 513px
-// .root の width 制約は親 (ServiceConceptBlock の .visual を variant="phases" で max-width 585 に
-// 絞る) に委ねるため、ここでは width: 100% のみ。
 .root {
   position: relative;
   display: flex;
@@ -31,12 +23,41 @@
   left: 0;
   top: 0;
   z-index: 1;
-  // Group 1141 ネイティブ 64x1488。アスペクト比 1:23.25 で、
-  // 4 items × 186 = 744 ≈ 残コンテンツ込みで list 全高に近づく width を狙う
   @include fluid(width, 16, 32);
   height: auto;
   user-select: none;
   pointer-events: none;
+
+  @include sp {
+    display: none;
+  }
+}
+
+// SP 専用インジケーター: Figma SP「Group 1213」(20×568) を表示。
+// 円位置 y=40.6 / 170.6 / 324.6 / 478.6 と item の高さ (130 / 154 / 154 / auto)
+// を合わせることで、各 PHASE の title 中央付近に円が来る。
+.indicatorSpWrap {
+  display: none;
+
+  @include sp {
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 1;
+    width: 20px;
+    height: 568px;
+    user-select: none;
+    pointer-events: none;
+  }
+}
+
+.indicatorSp {
+  @include sp {
+    display: block;
+    width: 20px;
+    height: auto;
+  }
 }
 
 .list {
@@ -62,19 +83,35 @@
   &:last-child {
     height: auto;
   }
+
+  // ── SP: SVG 円位置に合わせた固定高さ ──
+  // SVG 円間距離: PHASE.1(40.6) → PHASE.2(170.6) = 130
+  //              PHASE.2 → PHASE.3 (324.6) = 154
+  //              PHASE.3 → PHASE.4 (478.6) = 154
+  //              PHASE.4 → 末尾 (568) = 89.4 → 最後は auto
+  @include sp {
+    padding-left: 43px; // 円 + gap
+    height: 130px;
+
+    &:nth-child(2) {
+      height: 154px;
+    }
+    &:nth-child(3) {
+      height: 154px;
+    }
+    &:last-child {
+      height: auto;
+    }
+  }
 }
 
-// ── 赤丸（.dot）: phase-indicator-mask.png でマスクし、該当行の円形だけ赤で塗りつぶす
-// 各 .dot は item top から item 全高をカバーする赤背景の矩形。
-// mask は Group 1145 (64x1488) を mask-size: 100% 400% で element の 4 倍高さに引き伸ばし、
-// item ごとに mask-position-y を 1 行分ずつシフトして、対応する 1 円だけを露出させる。
+// ── 赤丸（.dot）: PC は phase-indicator-mask.png でマスク、SP は単純な丸塗り
 .dot {
   position: absolute;
   z-index: 3;
   left: 0;
   top: 0;
-  @include fluid(width, 16, 32); // インジケーター幅と一致
-  // 高さは item と同じ値で固定（最後の item は auto で短いが mask-size 計算が変わらないように）
+  @include fluid(width, 16, 32);
   @include fluid(height, 93, 186);
   background: var(--color-primary);
   -webkit-mask-image: url('/images/sections/service/detail/phase-indicator-mask.png');
@@ -86,29 +123,41 @@
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.2s ease-out;
+
+  @include sp {
+    // SP は SVG 内側の塗り円 (r=5.7) を覆う赤丸
+    -webkit-mask-image: none;
+    mask-image: none;
+    left: 10px; // SVG cx と一致
+    top: 40.6px; // SVG circle Y from item top
+    width: 11.4px;
+    height: 11.4px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+  }
 }
 
-// 各 item でマスクの可視範囲をシフトし、対応する 1 円のみを露出
-// fluid mixin は負の値範囲だと clamp(min, ..., max) の min>max になり常に min を返してしまう。
-// → fluid-value() で正の値を生成し calc(-1 * ...) で反転する。
-.item:nth-child(1) > .dot {
-  -webkit-mask-position-y: 0;
-  mask-position-y: 0;
-}
-.item:nth-child(2) > .dot {
-  --phase-shift: #{fluid-value(93, 186)};
-  -webkit-mask-position-y: calc(-1 * var(--phase-shift));
-  mask-position-y: calc(-1 * var(--phase-shift));
-}
-.item:nth-child(3) > .dot {
-  --phase-shift: #{fluid-value(186, 372)};
-  -webkit-mask-position-y: calc(-1 * var(--phase-shift));
-  mask-position-y: calc(-1 * var(--phase-shift));
-}
-.item:nth-child(4) > .dot {
-  --phase-shift: #{fluid-value(279, 558)};
-  -webkit-mask-position-y: calc(-1 * var(--phase-shift));
-  mask-position-y: calc(-1 * var(--phase-shift));
+// PC のみマスクシフト
+@include pc {
+  .item:nth-child(1) > .dot {
+    -webkit-mask-position-y: 0;
+    mask-position-y: 0;
+  }
+  .item:nth-child(2) > .dot {
+    --phase-shift: #{fluid-value(93, 186)};
+    -webkit-mask-position-y: calc(-1 * var(--phase-shift));
+    mask-position-y: calc(-1 * var(--phase-shift));
+  }
+  .item:nth-child(3) > .dot {
+    --phase-shift: #{fluid-value(186, 372)};
+    -webkit-mask-position-y: calc(-1 * var(--phase-shift));
+    mask-position-y: calc(-1 * var(--phase-shift));
+  }
+  .item:nth-child(4) > .dot {
+    --phase-shift: #{fluid-value(279, 558)};
+    -webkit-mask-position-y: calc(-1 * var(--phase-shift));
+    mask-position-y: calc(-1 * var(--phase-shift));
+  }
 }
 
 // ── ソフトグロー（process-glow.svg）: テキスト周辺に赤いボヤッとした halo
@@ -124,16 +173,24 @@
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.35s ease-out;
+
+  @include sp {
+    // SVG 円 (Y=40.6) と title の周辺に halo を出す
+    left: 140px;
+    top: 50px;
+    width: 380px;
+  }
 }
 
-// .glow は item top からのオフセットで配置（halo の中心位置）
-// .dot はマスクで位置決めしているので top:0 のまま
-.item:nth-child(1),
-.item:nth-child(2),
-.item:nth-child(3),
-.item:nth-child(4) {
-  > .glow {
-    @include fluid(top, 28.5, 57);
+// PC の glow 位置
+@include pc {
+  .item:nth-child(1),
+  .item:nth-child(2),
+  .item:nth-child(3),
+  .item:nth-child(4) {
+    > .glow {
+      @include fluid(top, 28.5, 57);
+    }
   }
 }
 
@@ -152,38 +209,44 @@
   z-index: 1;
 }
 
-// PHASE.1〜4 (Mozaic GEO Light 16 / ls 4px = 0.25em / #808080)
+// PHASE.1〜4
+// Figma SP: Mozaic GEO Light / 14px / lh 22.8 / ls 3.5 (=0.25em) / #808080
+// Figma PC: 16px / lh 38 / ls 4
 .step {
   color: var(--color-text-secondary);
   font-family: var(--font-en);
   font-weight: var(--font-weight-light);
   @include fluid(font-size, 14, 16);
-  @include fluid(line-height, 28, 38);
+  @include fluid(line-height, 22.8, 38);
   letter-spacing: 0.25em;
 }
 
-// PHASE 見出し (Noto Sans JP Regular 20 / lh 36 / ls 4.8px = 0.24em / #140700)
+// PHASE 見出し
+// Figma SP: Noto Sans JP Regular / 18px / lh 21.6 / ls 4.32 (=0.24em) / #140700
+// Figma PC: 20px / lh 36 / ls 4.8
 .title {
   margin: 0;
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
   font-weight: var(--font-weight-regular);
-  @include fluid(font-size, 14, 20);
-  @include fluid(line-height, 26, 36);
-  letter-spacing: 0.24em;
+  @include fluid(font-size, 18, 20);
+  @include fluid(line-height, 21.6, 36);
+  @include fluid(letter-spacing, 4.0, 4.8);
 }
 
-// 説明文 (Noto Sans JP Regular 16 / lh 32 / ls 3.84px = 0.24em / #140700)
+// 説明文
+// Figma SP: Noto Sans JP Regular / 12px / lh 22.8 / ls 1.44 (=0.12em) / #140700 / w=267
+// Figma PC: 16px / lh 32 / ls 3.84
 // Figma: title 下端 y=5174 → description 上端 y=5182 = 8px
 .description {
   margin: 0;
-  @include fluid(margin-top, 4, 8);
+  @include fluid(margin-top, 6, 8);
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
   font-weight: var(--font-weight-regular);
-  @include fluid(font-size, 13, 16);
-  @include fluid(line-height, 22, 32);
-  @include fluid(letter-spacing, 1.2, 3.84);
+  @include fluid(font-size, 12, 16);
+  @include fluid(line-height, 22.8, 32);
+  @include fluid(letter-spacing, 1.44, 3.84);
   // data 側 \n を改行として保持
   white-space: pre-line;
 }

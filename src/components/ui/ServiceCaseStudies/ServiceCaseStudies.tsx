@@ -23,6 +23,7 @@ export default function ServiceCaseStudies({
         }}
         title="実績・事例"
         subtitle="DESIGN & BRANDING SCOPE"
+        size="service-detail"
       />
       <ul className={styles.list}>
         {caseStudies.map((c) => (

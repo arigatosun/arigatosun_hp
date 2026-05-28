@@ -4,8 +4,10 @@
 @use '@/styles/breakpoints' as *;
 
 .crossLinks {
-  @include fluid(padding-left, 20, 200);
-  @include fluid(padding-right, 20, 200);
+  // SP は本文と同じ x=40 ベース (Figma SP: カード x=40 w=310)
+  // PC は x=200 ベース。
+  @include fluid(padding-left, 40, 200);
+  @include fluid(padding-right, 40, 200);
   @include fluid(margin-top, 64, 121);
   // 上余白 margin-top と対称にして、フッターまでが間延びしないようにする
   @include fluid(padding-bottom, 64, 121);
@@ -70,27 +72,31 @@
   @include fluid(gap, 6, 18);
 }
 
-// 上段 日本語サブ (Figma 2837:49368: Noto Sans JP Regular / 16px / 2.08px tracking / lh24 / opacity .5 / white)
+// 上段 日本語サブ
+// Figma SP: 12px / lh 24 / ls 1.56 / opacity 0.5 / white / Noto Sans JP Regular
+// Figma PC: 16px / lh 24 / ls 2.08
 .cardLabelJa {
   color: var(--color-white);
   font-family: 'Noto Sans JP', var(--font-jp);
   font-weight: var(--font-weight-regular);
   @include fluid(font-size, 12, 16);
   line-height: 1.5;
-  @include fluid(letter-spacing, 1, 2.08);
+  @include fluid(letter-spacing, 1.56, 2.08);
   opacity: 0.5;
   text-align: center;
   white-space: nowrap;
 }
 
-// 下段 英語タイトル (Figma 2837:49367: Mozaic GEO Light / 32px / 4.16px tracking / white)
+// 下段 英語タイトル
+// Figma SP: 16px / lh 19.2 / ls 2.08 / Mozaic GEO Light
+// Figma PC: 32px / ls 4.16
 .cardLabelEn {
   color: var(--color-white);
   font-family: var(--font-en);
   font-weight: var(--font-weight-light);
-  @include fluid(font-size, 22, 32);
-  line-height: 1;
-  @include fluid(letter-spacing, 2.8, 4.16);
+  @include fluid(font-size, 16, 32);
+  line-height: 1.2;
+  @include fluid(letter-spacing, 2.08, 4.16);
   text-align: center;
   white-space: nowrap;
   transition: color var(--transition-base);

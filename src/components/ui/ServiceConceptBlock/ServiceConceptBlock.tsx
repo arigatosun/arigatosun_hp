@@ -65,7 +65,13 @@ export default function ServiceConceptBlock({
           {body.map((segment, i) => (
             <Fragment key={i}>
               {i > 0 && <br />}
-              {segment}
+              {/* セグメント内の `\n` は SP 専用改行として扱う (PC は非表示) */}
+              {segment.split('\n').map((sub, j, arr) => (
+                <Fragment key={j}>
+                  {sub}
+                  {j < arr.length - 1 && <br className={styles.spOnlyBr} />}
+                </Fragment>
+              ))}
             </Fragment>
           ))}
         </p>

@@ -5,8 +5,8 @@
   display: flex;
   // Figma 1920 frame 実測: left 660 + gap 163 + right 637 = 1460 (section 内容幅)
   @include fluid(gap, 24, 163, 320, 1920);
-  @include fluid(padding-left, 20, 200);
-  @include fluid(padding-right, 20, 200);
+  @include fluid(padding-left, 40, 200);
+  @include fluid(padding-right, 40, 200);
   // Figma 実測: PrinciplesSection 下端 1586 → 本セクション上端 1846 = ギャップ 260
   @include fluid(padding-top, 80, 260, 320, 1920);
 
@@ -38,15 +38,17 @@
   @include fluid(margin-top, 24, 60);
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
-  // Figma 1578:66070 実測: 16 / lh 34 / ls 3.68 (em 換算 0.23em)
+  // Figma SP: 14 / lh 30 / ls 2.52 (=0.18em)
+  // Figma PC: 16 / lh 34 / ls 3.68 (=0.23em)
   @include fluid(font-size, 14, 16);
   font-weight: var(--font-weight-regular);
-  @include fluid(line-height, 28, 34);
-  letter-spacing: 0.23em;
+  @include fluid(line-height, 30, 34);
+  @include fluid(letter-spacing, 2.52, 3.68);
 }
 
 // ── 右側: 連携体制図 ──
 // Figma 1578:66075 実測: 637×647（外側小円含む）。fluid で画像も比率追従させる
+// Figma SP: x=20 w=350 (本文 x=40 より -20 外側に張り出して大きく見せる)
 .right {
   position: relative;
   flex-shrink: 0;
@@ -54,9 +56,9 @@
   aspect-ratio: 637 / 647;
 
   @include sp {
-    width: 100%;
-    max-width: 480px;
-    margin-inline: auto;
+    width: auto;
+    max-width: none;
+    margin-inline: -20px;
     aspect-ratio: 637 / 647;
   }
 }

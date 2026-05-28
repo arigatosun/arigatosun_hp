@@ -164,6 +164,11 @@ export type ServicePromiseItem = {
   catchphrase: string;
   /** 本文（1段落） */
   body: string;
+  /**
+   * SP のみ本文 letter-spacing を上書きする (px)。
+   * デフォルト (2.52) では Figma SP の wrap 位置に収まらない本文で指定する。
+   */
+  bodyTrackingSp?: number;
 };
 
 /** 3カラム promise セクション（私たちが実現すること 等） */

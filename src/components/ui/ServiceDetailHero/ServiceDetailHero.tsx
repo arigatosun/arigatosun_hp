@@ -1,3 +1,4 @@
+import { Fragment } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { SERVICE_NAV } from '@/data/service-detail';
@@ -77,9 +78,35 @@ export default function ServiceDetailHero({
         </div>
       </div>
 
-      {quote && <p className={styles.quote}>{quote}</p>}
+      {quote && (
+        <p className={styles.quote}>
+          {/* `\n` = PC 専用改行 / `||` = SP 専用改行 */}
+          {quote.split('\n').map((pcSeg, pi, pcArr) => (
+            <Fragment key={pi}>
+              {pcSeg.split('||').map((spSeg, si, spArr) => (
+                <Fragment key={si}>
+                  {spSeg}
+                  {si < spArr.length - 1 && (
+                    <br className={styles.spOnlyBr} />
+                  )}
+                </Fragment>
+              ))}
+              {pi < pcArr.length - 1 && <br className={styles.pcOnlyBr} />}
+            </Fragment>
+          ))}
+        </p>
+      )}
 
-      {subQuote && <p className={styles.subQuote}>{subQuote}</p>}
+      {subQuote && (
+        <p className={styles.subQuote}>
+          {subQuote.split('\n').map((seg, i, arr) => (
+            <Fragment key={i}>
+              {seg}
+              {i < arr.length - 1 && <br className={styles.spOnlyBr} />}
+            </Fragment>
+          ))}
+        </p>
+      )}
 
       {description.length > 0 && (
         <div className={styles.description}>

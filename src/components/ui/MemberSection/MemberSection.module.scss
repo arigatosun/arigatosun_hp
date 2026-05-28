@@ -2,8 +2,8 @@
 @use '@/styles/breakpoints' as *;
 
 .section {
-  @include fluid(padding-left, 20, 200);
-  @include fluid(padding-right, 20, 200);
+  @include fluid(padding-left, 40, 200);
+  @include fluid(padding-right, 40, 200);
   // BusinessStructure 末尾 → メンバータイトル間ギャップ 260（ユーザー指示）
   @include fluid(padding-top, 80, 260, 320, 1920);
 }
@@ -27,6 +27,7 @@
 
 // ── メンバーグリッド ──
 // SP/TAB 統合（〜1023）で 2 列、PC（1024〜）で 6 列の 2 パターン。
+// Figma SP: グリッド x=28 w=334 (本文 x=40 より -12 外側に張り出してカード 161 を確保)
 .grid {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
@@ -35,6 +36,10 @@
 
   @include sp {
     grid-template-columns: repeat(2, 1fr);
+    column-gap: 12px;
+    row-gap: 56px; // Figma SP: row1 bottom y=217 → row2 top y=245 = 28px (but with name height we use 56)
+    margin-left: -12px;
+    margin-right: -12px;
   }
 }
 
@@ -200,28 +205,32 @@
   background: var(--color-placeholder);
 }
 
+// Figma SP: 12px / lh 14.4 / ls 1.2 (=0.1em) / Mozaic GEO Light / #808080
+// Figma PC: 14px / ls 1.82
 .cardRole {
   margin-top: 8px;
   color: var(--color-text-secondary);
   font-family: var(--font-en);
   @include fluid(font-size, 12, 14);
   font-weight: var(--font-weight-light);
-  line-height: 24px;
-  letter-spacing: 1.82px;
+  line-height: 18px;
+  @include fluid(letter-spacing, 1.2, 1.82);
   text-transform: uppercase;
   transition:
     transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
     color 0.4s ease;
 }
 
+// Figma SP: 14px / lh 18 / ls 1.4 (=0.1em) / Mozaic GEO Light / #000
+// Figma PC: 18px / ls 2.34
 .cardName {
   margin-top: 4px;
   color: var(--color-black);
   font-family: var(--font-en);
   @include fluid(font-size, 14, 18);
   font-weight: var(--font-weight-light);
-  line-height: 24px;
-  letter-spacing: 2.34px;
+  line-height: 18px;
+  @include fluid(letter-spacing, 1.4, 2.34);
   text-transform: uppercase;
   transition:
     transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),

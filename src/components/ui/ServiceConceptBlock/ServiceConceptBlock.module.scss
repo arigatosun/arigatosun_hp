@@ -7,15 +7,16 @@
   display: flex;
   align-items: flex-start;
   // Figma: text 右端 x=900 → visual 左端 x=1042 → gap 142px
-  @include fluid(gap, 40, 142);
-  @include fluid(padding-left, 20, 200);
-  @include fluid(padding-right, 20, 200);
+  @include fluid(gap, 32, 142);
+  @include fluid(padding-left, 40, 200);
+  @include fluid(padding-right, 40, 200);
   @include fluid(margin-top, 96, 280);
 
   // 1024px 未満は縦積み
   @include max(1023px) {
     flex-direction: column;
-    @include fluid(gap, 32, 48);
+    // 本文下端 → ビジュアル上端の余白を 48px に固定
+    gap: 48px;
   }
 }
 
@@ -44,18 +45,20 @@
 
 .body {
   // Figma: サブ見出し下端 → 本文上端 ≒ 140px
-  @include fluid(margin-top, 48, 140);
+  @include fluid(margin-top, 32, 140);
   margin-bottom: 0;
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
   font-weight: var(--font-weight-regular);
   @include fluid(font-size, 14, 16);
-  @include fluid(line-height, 28, 38);
+  @include fluid(line-height, 30, 38);
   // 字間は本文ごとに異なる（Figma 実測）。em でフォントサイズに追従させる。
   letter-spacing: var(--body-tracking, 0.28em);
 
   @include max(1023px) {
-    @include fluid(margin-top, 24, 40);
+    // Figma SP: STANDARD body・PROCESS body 共に ls 2.52px (=0.18em at 14px)
+    // セクション固有の bodyTracking は PC 専用、SP は統一値で上書き
+    letter-spacing: 0.18em;
   }
 }
 
@@ -70,6 +73,13 @@
   @include max(1023px) {
     width: 100%;
     max-width: none;
+  }
+}
+
+// SP のみ改行する用の <br> クラス (PC では非表示)
+.spOnlyBr {
+  @include pc {
+    display: none;
   }
 }
 

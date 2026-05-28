@@ -6,6 +6,18 @@
 .wrap {
   position: relative;
   width: 100%;
+
+  // Figma SP: 線画ビジュアル（STANDARD/FLOW 等）は x=16〜20 と本文(x=40)より
+  // 22〜24px 外側に張り出して大きく見せる。.page が overflow-x:clip するため
+  // 横スクロールは出ない。
+  //
+  // margin-inline だけだと box の left がずれて右側は本文幅のまま (左 18 / 右 328)
+  // と非対称になる。width を 44px 拡張することで両側 22px ずつ均等にはみ出し、
+  // 中央揃えのままビジュアルだけ大きく見せる。
+  @include sp {
+    width: calc(100% + 44px);
+    margin-inline: -22px;
+  }
 }
 
 .image {

@@ -15,14 +15,22 @@
   padding: 0;
   display: flex;
   flex-direction: column;
-  // Figma: 行ピッチ 66px / ピル高 38px → 行間 28px
-  @include fluid(gap, 14, 28);
+  // Figma PC: 行ピッチ 66px / ピル高 38px → 行間 28px
+  // Figma SP: 行ピッチ 79px / ピル32 + items23 = 55 → 行間 24px
+  @include fluid(gap, 24, 28);
 }
 
 .row {
   display: flex;
   align-items: center;
   @include fluid(gap, 16, 40);
+
+  // Figma SP: 各行は pill を上、items を下に縦積み（横一列ではなく 2 段組）
+  @include sp {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px; // pill bottom (y=2390) → items top (y=2402) = 12px
+  }
 }
 
 // ピル外枠 (背景透過で、後ろにある SlimeGlow が透けて見える)
@@ -32,14 +40,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  // Figma: ピル 188×38
-  @include fluid(width, 124, 188);
-  @include fluid(height, 30, 38);
+  // Figma PC: ピル 188×38
+  @include fluid(width, 200, 188);
+  @include fluid(height, 32, 38);
   border: 1px solid var(--color-text-secondary);
   border-radius: var(--border-radius-full);
   color: var(--color-text-secondary);
   font-family: var(--font-en);
-  @include fluid(font-size, 13, 18);
+  // Figma SP: ラベル 15px / ls 2.25 / Mozaic GEO Light
+  // Figma PC: 18px / ls 2.7
+  @include fluid(font-size, 15, 18);
   font-weight: var(--font-weight-light);
   @include fluid(letter-spacing, 1.6, 2.7);
   background: transparent;
@@ -81,11 +91,18 @@
 }
 
 // カテゴリ列挙テキスト
+// Figma SP: 13px / ls 1.95 / lh 24 / w=310 / Mozaic GEO Light / #808080
+// Figma PC: 16px / ls 2.4
 .items {
   color: var(--color-text-secondary);
   font-family: var(--font-en);
-  @include fluid(font-size, 12, 16);
+  @include fluid(font-size, 13, 16);
   font-weight: var(--font-weight-light);
-  @include fluid(letter-spacing, 1.5, 2.4);
+  @include fluid(letter-spacing, 1.95, 2.4);
   line-height: 1.5;
+
+  @include sp {
+    width: 100%;
+    line-height: 24px; // Figma SP lh 24 (1.5 では 19.5 となり詰まりすぎる)
+  }
 }

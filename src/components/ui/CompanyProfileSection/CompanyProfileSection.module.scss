@@ -12,15 +12,20 @@
   position: relative;
   z-index: 1;
   background-color: transparent;
-  // 帯下端 → 白カード top の overlap: SP=160 / PC1920=350
+  // 帯下端 → 白カード top の overlap:
+  //   Figma SP: 帯 bottom y=4941 → カード top y=4881 = overlap 60
+  //   Figma PC: overlap 350
   // fluid() mixin は負値の min>max を扱えないため clamp() 直書き
-  // 公式: clamp(-350px, -122px - 11.875vw, -160px)
-  //   vw=320: -122 - 38  = -160 (overlap 160)
-  //   vw=1920: -122 - 228 = -350 (overlap 350)
-  margin-top: clamp(-350px, calc(-122px - 11.875vw), -160px);
+  // 公式: clamp(-350px, calc(-Apx - Bvw), -60px)
+  //   vw=320: -A - B*320/100 = -60   → -60 - 0
+  //   vw=1920: -A - B*1920/100 = -350
+  // 連立: B*(1920-320)/100 = -350+60 = -290 → B = -290*100/1600 = -18.125
+  //       A = -60 - (-18.125)*3.2 = -60 + 58 = -2
+  // 結果: clamp(-350px, calc(-2px - 18.125vw), -60px)
+  margin-top: clamp(-350px, calc(-2px - 18.125vw), -60px);
   @include fluid(padding-bottom, 100, 250);
-  @include fluid(padding-left, 20, 200);
-  @include fluid(padding-right, 20, 200);
+  @include fluid(padding-left, 40, 200);
+  @include fluid(padding-right, 40, 200);
 
   @include sp {
     @include fluid(padding-bottom, 40, 80);
@@ -37,6 +42,8 @@
 
   @include sp {
     min-height: auto;
+    // Figma SP: card x=28 w=334 (本文 x=40 より -12 外側に張り出し)
+    margin-inline: -12px;
   }
 }
 
@@ -63,23 +70,26 @@
   gap: 8px;
 }
 
+// Figma SP: 18px / ls 2.34 (=0.13em) / Noto Sans JP Medium
+// Figma PC: 28px / ls 11.2
 .headerTitle {
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
-  // Figma: 28px / ls 11.2 / line-height 1.2 — 会社概要のみ専用サイズ
-  @include fluid(font-size, 16, 28);
+  @include fluid(font-size, 18, 28);
   font-weight: 500;
   line-height: 1.2;
-  @include fluid(letter-spacing, 5, 11.2);
+  @include fluid(letter-spacing, 2.34, 11.2);
 }
 
+// Figma SP: 12px / lh 19.2 / ls 1.56 (=0.13em) / Mozaic GEO Light
+// Figma PC: 16px / ls 2.08
 .headerSub {
   color: var(--color-text-secondary);
   font-family: var(--font-en);
   @include fluid(font-size, 12, 16);
   font-weight: var(--font-weight-light);
   line-height: 24px;
-  @include fluid(letter-spacing, 1, 2.08);
+  @include fluid(letter-spacing, 1.56, 2.08);
 }
 
 // ── 中身: 画像 + テーブル ──
@@ -95,9 +105,11 @@
 
   @include sp {
     flex-direction: column;
-    @include fluid(gap, 20, 32);
-    @include fluid(padding-left, 20, 40);
-    @include fluid(padding-right, 20, 40);
+    // Figma SP: 画像 y=4956 → テーブル先頭 y=5298 = 342（画像 310 + gap 32）
+    gap: 32px;
+    // Figma SP: 画像 x=40 → 画像幅 310 → card 左端 28 から 12px inset
+    padding-left: 12px;
+    padding-right: 12px;
     @include fluid(padding-bottom, 32, 48);
   }
 }
@@ -131,12 +143,16 @@
   flex-direction: column;
   // Figma 実測: row 1 bottom(4697) → row 2 label top(4749) = 52
   //             row 2 bottom(4825) → row 3 label top(4873) = 48 → 平均 50
-  @include fluid(gap, 16, 50, 320, 1920);
+  @include fluid(gap, 24, 50, 320, 1920);
   margin: 0;
 
   @include sp {
     width: 100%;
     flex: 1;
+    // Figma SP: テーブル x=48 (画像 x=40 より +8 内側)
+    padding-left: 8px;
+    padding-right: 8px;
+    gap: 24px;
   }
 }
 
@@ -204,6 +220,11 @@
   display: flex;
   align-items: center;
   gap: 17px;
+
+  @include sp {
+    // Figma SP: アクセント(x=48 w=1) → ラベル(x=61) = gap 12
+    gap: 12px;
+  }
 }
 
 .cellAccent {
@@ -214,33 +235,34 @@
   flex-shrink: 0;
 }
 
+// Figma SP: 16px medium / ls 4.48 (=0.28em) / lh 30
+// Figma PC: 同値
 .cellLabel {
   color: var(--color-text-secondary);
   font-family: 'Noto Sans JP', var(--font-jp);
-  // Figma: 16px medium / ls 4.48 / line-height 30
-  @include fluid(font-size, 13, 16);
+  @include fluid(font-size, 16, 16);
   font-weight: var(--font-weight-medium);
-  @include fluid(line-height, 22, 30);
-  @include fluid(letter-spacing, 1.6, 4.48);
+  @include fluid(line-height, 26, 30);
+  @include fluid(letter-spacing, 4.48, 4.48);
 }
 
+// Figma SP: 16px regular / ls 4.48 / lh 30
 .cellValue {
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
-  // Figma: 16px regular / ls 4.48 / line-height 30
-  @include fluid(font-size, 13, 16);
+  @include fluid(font-size, 16, 16);
   font-weight: var(--font-weight-regular);
-  @include fluid(line-height, 22, 30);
-  @include fluid(letter-spacing, 1.6, 4.48);
+  @include fluid(line-height, 26, 30);
+  @include fluid(letter-spacing, 4.48, 4.48);
   margin: 0;
 }
 
 // 設立値「2024/05」だけ Mozaic GEO Light 18px / ls 5.04
 .cellValueEn {
   font-family: var(--font-en);
-  @include fluid(font-size, 14, 18);
+  @include fluid(font-size, 18, 18);
   font-weight: var(--font-weight-light);
-  @include fluid(letter-spacing, 1.8, 5.04);
+  @include fluid(letter-spacing, 5.04, 5.04);
 }
 
 // 事業内容リスト
@@ -250,12 +272,12 @@
   padding: 0;
 }
 
+// Figma SP: 14px regular / ls 3.92 / lh 32
 .serviceItem {
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
-  // Figma: 14px regular / ls 3.92 / line-height 32
-  @include fluid(font-size, 12, 14);
+  @include fluid(font-size, 14, 14);
   font-weight: var(--font-weight-regular);
-  @include fluid(line-height, 24, 32);
-  @include fluid(letter-spacing, 1.4, 3.92);
+  @include fluid(line-height, 28, 32);
+  @include fluid(letter-spacing, 3.92, 3.92);
 }

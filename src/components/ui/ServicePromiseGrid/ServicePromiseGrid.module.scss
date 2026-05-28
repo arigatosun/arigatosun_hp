@@ -8,12 +8,23 @@
 // - 3 col 各 w=400 / x=200, 760, 1320 → col gap = 160
 // - catchphrase (h=72, ~3行) → body (y=2466, 96 後ろ)
 .section {
-  @include fluid(padding-left, 20, 200);
-  @include fluid(padding-right, 20, 200);
+  @include fluid(padding-left, 40, 200);
+  @include fluid(padding-right, 40, 200);
   @include fluid(padding-top, 80, 160);
   // Figma IP/CREATIVE: 本文下端 y=2848 → STANDARD title y=3168 = 320px。
   // ConceptBlock 側 margin-top が 280 取れているのでここでは 40 のみ持つ。
   @include fluid(padding-bottom, 24, 40);
+}
+
+// 連続する PromiseGrid (AI/DEV の WHAT WE REALIZE → WHAT WE'VE MADE REAL) の
+// 間は Figma SP で section content の隙間が 120px (= 前 padding-bottom 24 + 後 96)。
+// .section + .section の隣接セレクタで、2 個目以降の padding-top のみ強化。
+// Figma SP: PG1 items 下端 y=2180 → PG2 header y=2300 = 120px
+// Figma PC: 同様の隙間 = 概ね 200px 維持なのでこちらは触らない。
+.section + .section {
+  @include sp {
+    padding-top: 96px;
+  }
 }
 
 .grid {
@@ -27,7 +38,9 @@
 
   @include sp {
     grid-template-columns: 1fr;
-    @include fluid(row-gap, 40, 80);
+    // Figma SP: 各 item top→top = 340px（item 252h + 44 + 1 + 44 = 341）。
+    // divider 自体は .divider が高さを持つので、ここの row-gap は divider 上下の合計。
+    @include fluid(row-gap, 44, 80);
   }
 }
 
@@ -37,57 +50,74 @@
 }
 
 // 縦区切り線 (Figma Vector 139/140: x=680/1240, y=2292〜2652, w=0 h=360)
-// 1px 幅、グリッド全高に伸ばす。SP では非表示。
+// PC: 1px 幅で列間に縦線、SP: 1px 高さで行間に横線 (Figma SP Vector 140/141)。
 .divider {
   width: 1px;
   background-color: var(--color-text-secondary);
   height: 100%;
 
   @include sp {
-    display: none;
+    width: 100%;
+    height: 1px;
   }
 }
 
 // ステップ番号 01. / 02. / 03.
-// Figma 2704:43767 等: Mozaic GEO Light / 36px / 5.04px tracking / 38px line-height / #808080
+// Figma SP: Mozaic GEO Light / 28px / ls 6.72 (=0.24em) / lh 36 / #808080
+// Figma PC: 36px / lh 38 / ls 5.04
 .step {
   display: block;
   color: var(--color-text-secondary);
   font-family: var(--font-en);
   font-weight: var(--font-weight-light);
-  @include fluid(font-size, 22, 36);
-  @include fluid(line-height, 26, 38);
-  letter-spacing: 0.14em; // 5.04/36
-  // step number bottom (y=2588) → catchphrase top (y=2616) = 28px
-  @include fluid(margin-bottom, 16, 28);
+  @include fluid(font-size, 28, 36);
+  @include fluid(line-height, 36, 38);
+  letter-spacing: 0.24em; // SP: 28*0.24=6.72 / PC: 36*0.14=5.04 ≒ 0.14em だが SP の見た目を優先
+  // Figma SP: 01. (h=36) bottom → catchphrase top = 48-36 = 12px
+  @include fluid(margin-bottom, 12, 28);
+
+  @include pc {
+    letter-spacing: 0.14em; // PC のみ 5.04/36 で詰める
+  }
 }
 
 // キャッチコピー
-// Figma 2704:43765 等: Noto Sans JP Regular / 22px / 5.28px tracking / 36px line-height / #140700
-// 明示的改行を持つため pre-line で受ける（data 側 \n をそのまま反映）
+// Figma SP: Noto Sans JP Regular / 18px / ls 4.32 (=0.24em) / lh 36 / #140700
+// Figma PC: 22px / ls 5.28 / lh 36
+// 補正: SP の自動折り返しを Figma の 14 文字 / 行に揃えるため ls を 4.0 まで微調整。
 .catchphrase {
   margin: 0;
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
   font-weight: var(--font-weight-regular);
-  @include fluid(font-size, 16, 22);
-  @include fluid(line-height, 30, 36);
-  letter-spacing: 0.24em; // 5.28/22
+  @include fluid(font-size, 18, 22);
+  line-height: 36px;
+  @include fluid(letter-spacing, 4.0, 5.28);
   white-space: pre-line;
 }
 
 // 本文
-// Figma 2704:43796 等: Noto Sans JP Regular / 16px / 3.84px tracking / 34px line-height / #140700
+// Figma SP: Noto Sans JP Regular / 14px / ls 2.52 (=0.18em) / lh 30 / #140700
+// Figma PC: 16px / ls 3.84 (=0.24em) / lh 34
+//
+// per-item で SP の letter-spacing を上書きしたい場合は、
+// data 側で bodyTrackingSp を渡し、JSX で `--body-ls-sp` CSS 変数として注入する。
+// (例: Figma 通り 1 行 19 文字に収めたいが ls 2.52 だと 18 文字で折り返してしまう本文)
 .body {
   margin: 0;
-  // catchphrase 下 (y=2616+72=2688) → body top (y=2712) = 24
-  @include fluid(margin-top, 16, 24);
+  // Figma SP: catchphrase bottom y=120 → body top y=132 = 12px
+  @include fluid(margin-top, 12, 24);
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
   font-weight: var(--font-weight-regular);
   @include fluid(font-size, 14, 16);
-  @include fluid(line-height, 28, 34);
-  letter-spacing: 0.24em; // 3.84/16
+  @include fluid(line-height, 30, 34);
+  @include fluid(letter-spacing, 2.52, 3.84);
   // data 側 \n を改行として保持
   white-space: pre-line;
+
+  // SP のみ per-item の上書きを許可 (PC は fluid 値のまま)
+  @include sp {
+    letter-spacing: var(--body-ls-sp, 2.52px);
+  }
 }

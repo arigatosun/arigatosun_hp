@@ -16,6 +16,12 @@
     display: flex;
     flex-direction: column;
     @include fluid(gap, 24, 48);
+
+    // Figma SP (IP/CREATIVE STANDARD): items が空 (背景線画のみ) の場合、
+    // SP では背景線画も非表示 (.bg の display:none) のため、領域ごと消す。
+    &:not(:has(.item)) {
+      display: none;
+    }
   }
 }
 

@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import { Fragment, type CSSProperties } from 'react';
 import SectionHeader from '@/components/ui/SectionHeader';
 import type { ServicePromiseSection } from '@/types/service';
 import styles from './ServicePromiseGrid.module.scss';
@@ -41,7 +41,16 @@ export default function ServicePromiseGrid({
                 {String(i + 1).padStart(2, '0')}.
               </span>
               <h3 className={styles.catchphrase}>{item.catchphrase}</h3>
-              <p className={styles.body}>{item.body}</p>
+              <p
+                className={styles.body}
+                style={
+                  item.bodyTrackingSp !== undefined
+                    ? ({ '--body-ls-sp': `${item.bodyTrackingSp}px` } as CSSProperties)
+                    : undefined
+                }
+              >
+                {item.body}
+              </p>
             </div>
           </Fragment>
         ))}

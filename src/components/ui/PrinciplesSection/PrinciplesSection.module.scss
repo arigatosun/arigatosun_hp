@@ -5,8 +5,8 @@
 
 // ── セクション枠 ──
 .section {
-  @include fluid(padding-left, 20, 200);
-  @include fluid(padding-right, 20, 200);
+  @include fluid(padding-left, 40, 200);
+  @include fluid(padding-right, 40, 200);
 }
 
 // ── メイン2カラム ──
@@ -24,6 +24,7 @@
 }
 
 // ── 左側: 楕円ダイアグラム ──
+// Figma SP: ダイアグラム x=20 w=350 (本文 x=40 より -20 外側)
 .diagramArea {
   position: relative;
   flex-shrink: 0;
@@ -32,10 +33,12 @@
   @include fluid(margin-top, 0, 58);
 
   @include sp {
-    width: 100%;
-    max-width: 480px;
+    width: auto;
+    max-width: none;
     margin-top: 0;
-    margin-inline: auto;
+    // SP: 本文 padding-left=40 から 20px 外に張り出して幅 350 を確保
+    margin-left: -20px;
+    margin-right: -20px;
   }
 }
 
@@ -161,7 +164,7 @@
 .mapLabelJa {
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
-  @include fluid(font-size, 12, 16);
+  @include fluid(font-size, 14, 16);
   font-weight: var(--font-weight-regular);
   line-height: 1.4;
   letter-spacing: 0.28em;
@@ -170,12 +173,12 @@
 .mapLabelEn {
   color: var(--color-text-secondary);
   font-family: var(--font-en);
-  @include fluid(font-size, 10, 12);
+  @include fluid(font-size, 11, 12);
   font-weight: var(--font-weight-light);
   line-height: 1.4;
   letter-spacing: 0.13em;
   mix-blend-mode: multiply;
-  @include fluid(margin-top, 2, 4);
+  @include fluid(margin-top, 4, 4);
 }
 
 // ── 右側: 原則リスト ──
@@ -190,11 +193,23 @@
   }
 }
 
+// SP: link を description の下右に絶対配置するため item を relative にする
+.principleItem {
+  @include sp {
+    position: relative;
+  }
+}
+
 .principleHead {
   display: flex;
   align-items: center;
   justify-content: space-between;
   @include fluid(gap, 12, 24);
+
+  @include sp {
+    // SP: link は head から外し、principleDesc の下端右に絶対配置する
+    justify-content: flex-start;
+  }
 }
 
 .principleHeadLeft {
@@ -203,30 +218,41 @@
   @include fluid(gap, 6, 10);
 }
 
+// 「仲間に」「お客様に」「社会に」
+// Figma SP: 18px / lh 36 / ls 4.32 (=0.24em) / Noto Sans JP Regular
+// Figma PC: 20px / ls 5.6
 .principleLabel {
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
-  @include fluid(font-size, 14, 20);
+  @include fluid(font-size, 18, 20);
   font-weight: var(--font-weight-regular);
   line-height: 1.5;
   letter-spacing: 0.28em;
+
+  @include sp {
+    line-height: 36px;
+    letter-spacing: 0.24em;
+  }
 }
 
+// アリガトサンロゴ
+// Figma SP: 180×26 / Figma PC: 200×30
 .principleLogo {
   height: auto;
-  @include fluid(width, 120, 200);
+  @include fluid(width, 180, 200);
 }
 
+// SERVICE > / WORKS > / NEWS > リンク
+// Figma SP: 20px / lh 24 / ls 2.6 (=0.13em) / Mozaic GEO Light / 右寄せ / 説明文下に配置
+// Figma PC: 20px / lh 17 / ls 2.6
 .principleLink {
   // Figma 実測 (2481:51627): 白背景 121×17, テキスト 120×17 right-align
-  // → 背景帯はテキストとほぼ同寸（左右の余白ほぼ無し / 高さは cap height 相当）
   flex-shrink: 0;
   display: inline-block;
   color: var(--color-black);
   font-family: var(--font-en);
-  @include fluid(font-size, 14, 20);
+  @include fluid(font-size, 20, 20);
   font-weight: var(--font-weight-light);
-  // 帯の縦寸を Figma の 17/20 ≒ 0.85 に揃える
   line-height: calc(17 / 20);
   letter-spacing: 0.13em;
   text-decoration: none;
@@ -237,14 +263,30 @@
   &:hover {
     color: var(--color-primary);
   }
+
+  // SP: principleItem の右下に絶対配置（Figma SP: 説明文 bottom 付近・右寄せ）
+  @include sp {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    line-height: 24px;
+  }
 }
 
+// 本文 — Figma SP: 14 / lh 30 / ls 2.52 (=0.18em) / Noto Sans JP Regular
+// SP: principleLink を bottom 右に絶対配置するため、最終行が link と重なる
+//    のを防ぐ目的で padding-bottom を 1 行分確保。
 .principleDesc {
   @include fluid(margin-top, 10, 21);
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
-  @include fluid(font-size, 12, 14);
+  @include fluid(font-size, 14, 14);
   font-weight: var(--font-weight-regular);
   line-height: calc(30 / 14);
   letter-spacing: 0.18em;
+
+  @include sp {
+    // link (24px) + 余白を確保
+    padding-bottom: 36px;
+  }
 }
