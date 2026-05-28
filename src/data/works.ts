@@ -41,18 +41,18 @@ const WORKS_DATA: readonly WorkItem[] = [
     imageWidth: 920,
     imageHeight: 520,
   },
-  {
-    id: 'work-4',
-    client: '全日本漬物協同組合連合会',
-    title: '何百年も続く日本の漬物文化を、この先も愛してもらえるカタチへ。| 最優秀賞から生まれたキャラクターデザインと、ポータルサイトのリブランディング',
-    details: [
-      { label: 'D / B：', value: 'キャラクターデザイン、ポータルサイト設計・デザイン' },
-    ],
-    term: '2026.3 - 2026.4（ポータルサイトのみでの算出）',
-    image: '/images/sections/works/choritz.png',
-    imageWidth: 920,
-    imageHeight: 518,
-  },
+  // work-4 以降は今後の実装枠（プレースホルダ）。実データができ次第コメントを外す。
+  // {
+  //   id: 'work-4',
+  //   client: '全日本漬物協同組合連合会',
+  //   title: '...',
+  //   details: [{ label: 'D / B：', value: 'キャラクターデザイン、ポータルサイト設計・デザイン' }],
+  //   term: '2026.3 - 2026.4（ポータルサイトのみでの算出）',
+  //   image: '/images/sections/works/choritz.png',
+  //   imageWidth: 920,
+  //   imageHeight: 518,
+  // },
+  /*
   {
     id: 'work-5',
     client: '全日本漬物協同組合連合会',
@@ -125,6 +125,7 @@ const WORKS_DATA: readonly WorkItem[] = [
     imageWidth: 920,
     imageHeight: 518,
   },
+  */
 ] as const;
 
 /**
