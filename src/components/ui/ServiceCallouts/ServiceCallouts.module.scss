@@ -3,8 +3,8 @@
 );
 @use '@/styles/breakpoints' as *;
 
-// PC では aspect-ratio で正方/線画比領域を確保しその中に absolute 配置、
-// SP では領域を解除して縦積みする。
+// PC: aspect-ratio で線画比領域を確保し、その中に items を absolute 配置
+// SP: items 有りなら縦積み (bg 非表示) / items 無しなら線画 SVG を中央寄せで表示
 .root {
   position: relative;
   width: 100%;
@@ -12,33 +12,53 @@
   aspect-ratio: 1 / 1;
 
   @include sp {
-    aspect-ratio: auto !important;
-    display: flex;
-    flex-direction: column;
-    @include fluid(gap, 24, 48);
+    // items がある場合のみ縦積みに切替えて背景を消す
+    &:has(.item) {
+      aspect-ratio: auto !important;
+      display: flex;
+      flex-direction: column;
+      @include fluid(gap, 24, 48);
 
-    // Figma SP (IP/CREATIVE STANDARD): items が空 (背景線画のみ) の場合、
-    // SP では背景線画も非表示 (.bg の display:none) のため、領域ごと消す。
+      .bg {
+        display: none;
+      }
+    }
+
+    // items 無し (背景線画のみ) は aspect-ratio を解除して SVG 自然サイズに任せる
     &:not(:has(.item)) {
-      display: none;
+      aspect-ratio: auto !important;
+      display: flex;
+      justify-content: center;
     }
   }
 }
 
 // 背景線画 + 赤グロー（任意）
-// GlowImage がカーソル追従するため pointer-events を有効にする
 .bg {
   position: absolute;
   inset: 0;
   z-index: 0;
 
-  @include sp {
-    display: none;
-  }
-
   > * {
     width: 100%;
     height: 100%;
+    // GlowImage の SP デフォルト margin-inline: -22px (はみ出し演出) を打ち消す
+    margin-inline: 0;
+  }
+
+  // SP の items 無しケース: 絶対配置をやめて、SVG 自然幅で水平中央
+  @include sp {
+    .root:not(:has(.item)) & {
+      position: relative;
+      inset: auto;
+      width: 100%;
+      max-width: 350px; // SVG 自然幅
+      margin-inline: auto;
+
+      > * {
+        height: auto;
+      }
+    }
   }
 }
 

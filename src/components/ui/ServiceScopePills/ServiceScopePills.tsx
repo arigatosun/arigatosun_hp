@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from 'react';
 import SlimeGlow from '@/components/ui/SlimeGlow';
-import { useMediaQuery } from '@/lib/useMediaQuery';
 import type { ServicePillRow } from '@/types/service';
 import styles from './ServiceScopePills.module.scss';
 
@@ -36,18 +35,15 @@ const PILLS_GLOW_PROPS = {
 
 /**
  * 能動的デザインの領域セクションのピルリスト。
- * ピル列全体を覆う 1 つの SlimeGlow を、5 つのピル形状でマスククリップして表示する。
- * - スライムはピル列全体 (約 188×300px) のキャンバスを自律ドリフト + 呼吸 + カーソル追従
- * - 各ピルは「窓」として機能し、スライムが通過した瞬間にそのピル内で見える
- * - 768px 未満 (SP) は SlimeGlow を mount せず、accent ピルに静的赤グラデのフォールバック
+ * - PC: HTML ピル 5 個を横並び (label + items 横並び), JS 生成マスクで SlimeGlow をクリップ
+ * - SP: HTML ピル 5 個を縦積み (label と items 縦並び — Figma 2837:53828),
+ *   同様に JS 生成マスクで SlimeGlow をクリップ
  */
 export default function ServiceScopePills({ rows }: ServiceScopePillsProps) {
-  const isPC = useMediaQuery('(min-width: 768px)');
   const containerRef = useRef<HTMLDivElement>(null);
   const [overlayRect, setOverlayRect] = useState<OverlayRect | null>(null);
 
   useEffect(() => {
-    if (!isPC) return;
     const container = containerRef.current;
     if (!container) return;
 
@@ -90,11 +86,11 @@ export default function ServiceScopePills({ rows }: ServiceScopePillsProps) {
       window.removeEventListener('scroll', update);
       window.removeEventListener('resize', update);
     };
-  }, [isPC]);
+  }, []);
 
   return (
     <div ref={containerRef} className={styles.container}>
-      {isPC && overlayRect && (
+      {overlayRect && (
         <div
           className={styles.slimeOverlay}
           style={{

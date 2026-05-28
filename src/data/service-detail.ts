@@ -59,16 +59,16 @@ const DESIGN_BRANDING: ServiceDetailData = {
       bodyTracking: 3.84,
       visual: {
         kind: 'image',
-        src: '/images/sections/service/detail/concept-standard.png',
+        // Figma Group 1030 (351×240) — 線画 SVG。Group 1226 (350×240) はマスク
+        src: '/images/sections/service/detail/concept-standard.svg',
         alt: 'アリガトサン・スタンダードを表すクラウド型の概念図。意匠・設計・課題解決・価値拡張・独自性の5要素で構成される',
-        // 線画PNGの実寸（wrap のアスペクトを画像と完全一致させる）
-        width: 2043,
-        height: 1398,
-        // 雲シルエットのマスク（線画より小さめ枠で書き出されているため size/position で補正）
+        width: 351,
+        height: 240,
+        // マスクは線画とほぼ同寸 (350×240 vs 351×240) — 1px 差は size 100% 100% で吸収
         mask: {
-          src: '/images/sections/service/detail/concept-standard-mask.png',
-          size: '93.98% 88.2%',
-          position: '48.8% 50.3%',
+          src: '/images/sections/service/detail/concept-standard-mask.svg',
+          size: '100% 100%',
+          position: '50% 50%',
         },
       },
     },
@@ -97,27 +97,24 @@ const DESIGN_BRANDING: ServiceDetailData = {
     {
       id: 'flow',
       title: '制作フロー',
-      // NOTE: Figma 上のサブ見出しは「DESIGN & BRANDING SCOPE」のまま（コピペ漏れの可能性）。
-      subtitle: 'DESIGN & BRANDING SCOPE',
-      // Figma 実測: 2 セグメント（明示的改行）
+      // Figma SP (2837:53731) はサブ見出し PROCESS / body は単一段落で自然 wrap
+      subtitle: 'PROCESS',
       body: [
-        'プロジェクトの数だけ、最適解へのルートは存在します。',
-        'ただ制作フローに当てはめるのではなく、課題の核心に応じて柔軟にプロセスを再定義。独自の価値を見出し、まだ見ぬ可能性を具現化するための最適な「カタチ」を共創します。',
+        'プロジェクトの数だけ、最適解へのルートは存在します。ただ制作フローに当てはめるのではなく、課題の核心に応じて柔軟にプロセスを再定義。独自の価値を見出し、まだ見ぬ可能性を具現化するための最適な「カタチ」を共創します。',
       ],
       bodyTracking: 4,
       visual: {
         kind: 'image',
-        src: '/images/sections/service/detail/concept-flow.png',
+        // Figma Group 1224 (355×351, 線画) + Group 1225 (350×350, マスク) の SVG ペア
+        src: '/images/sections/service/detail/concept-flow.svg',
         alt: '制作フローを表すネットワーク図。デザイン・ブランディングを中心に各スキルが連携する様子',
-        // 線画PNGの実寸
-        width: 1998,
-        height: 1953,
-        // 泡シルエットのマスク。マスク(1998×1951)を線画(1998×1953)枠いっぱいに伸ばし、
-        // 高さ2px差は 0.1% 拡大で吸収（4辺を一致させる）。
+        width: 355,
+        height: 351,
+        // マスク (350×350) は線画 (355×351) とほぼ同寸。5px 差は size 100% 100% で吸収
         mask: {
-          src: '/images/sections/service/detail/concept-flow-mask.png',
+          src: '/images/sections/service/detail/concept-flow-mask.svg',
           size: '100% 100%',
-          position: '0% 0%',
+          position: '50% 50%',
         },
       },
     },
@@ -240,19 +237,15 @@ const AI_DEV: ServiceDetailData = {
       bodyTracking: 4.48,
       visual: {
         kind: 'image',
-        // AI/DEV 用クラウドダイアグラム (3 main bubbles + 2 small circles)
-        // 3 つの「ただ◯◯ではなく…」キャッチコピーは画像内に焼き込み済みのため
-        // overlays は使用しない
-        src: '/images/sections/service/detail/concept-standard-ai.png',
+        // AI/DEV 用クラウドダイアグラム (Figma Group 1227 線画 + Group 1230 マスク)
+        // 3 つの「ただ◯◯ではなく…」キャッチコピーは SVG 内に焼き込み済みのため overlays 不要
+        src: '/images/sections/service/detail/concept-standard-ai.svg',
         alt: 'アリガトサン・スタンダード（AI/DEV）を表すクラウド型の概念図。3つの主バブル + 2つのサテライト円、各バブル内に「ただ◯◯ではなく…」のキャッチコピー',
-        // 線画 PNG 実寸
-        width: 1376,
-        height: 1343,
-        // バブルシルエットのマスク（赤グローを形の中にクリップ）
-        // 線画(1376×1343) と マスク(1376×1342) はほぼ同寸（高さ1px差のみ）
-        // → size 100% 100% で線画にフィットさせる（1px の差は誤差レベルで吸収）
+        width: 354,
+        height: 346,
+        // 線画 (354×346) とマスク (354×346) は同寸
         mask: {
-          src: '/images/sections/service/detail/concept-standard-ai-mask.png',
+          src: '/images/sections/service/detail/concept-standard-ai-mask.svg',
           size: '100% 100%',
           position: '50% 50%',
         },
@@ -443,16 +436,16 @@ const IP_CREATIVE: ServiceDetailData = {
       bodyTracking: 3.84,
       visual: {
         kind: 'callouts',
-        // 3 つの callout テキストは線画 PNG に焼き込み済みのため overlay は出さない
+        // 3 つの callout テキストは SVG に焼き込み済みのため overlay は出さない
         items: [],
-        // 線画 (Group 1136) + マスク (Group 1134) は 1376x1343 同寸
+        // Figma Group 1239 (350×341, 線画) + Group 1240 (350×341, マスク)
         image: {
-          src: '/images/sections/service/detail/concept-standard-ip.png',
+          src: '/images/sections/service/detail/concept-standard-ip.svg',
           alt: 'アリガトサン・スタンダード（IP/CREATIVE）を表す 3 つの大バブル + 衛星円の概念図',
-          width: 1376,
-          height: 1343,
+          width: 350,
+          height: 341,
           mask: {
-            src: '/images/sections/service/detail/concept-standard-ip-mask.png',
+            src: '/images/sections/service/detail/concept-standard-ip-mask.svg',
             size: '100% 100%',
             position: '50% 50%',
           },
@@ -477,12 +470,12 @@ const IP_CREATIVE: ServiceDetailData = {
       bodyTracking: 3.84,
       visual: {
         kind: 'image',
-        // 線画 + 9 ラベル一体型 SVG (Figma Group 1218) — テキストは path として焼き込み済み
+        // 線画 + 9 ラベル一体型 SVG (Figma Group 1233) — テキストは path として焼き込み済み
         src: '/images/sections/service/detail/concept-creator-first-ip.svg',
         alt: 'CREATOR FIRST のギルド型組織図。中央「作者」を内周「プロデュース／ディレクション」が囲み、外周にコラボレーション・コンテンツ企画制作・アプリゲーム開発・グッズ管理・EC・3D デザイン等が並ぶ',
-        width: 1337,
-        height: 1337,
-        // 赤グローはマスク (Figma Group 1137 = クローバー + 4 隅バブル) の内側だけに表示
+        width: 351,
+        height: 351,
+        // 赤グローはマスク (Figma Group 1234 = クローバー + 4 隅バブル) の内側だけに表示
         mask: {
           src: '/images/sections/service/detail/concept-creator-first-ip-mask.svg',
           size: '100% 100%',

@@ -3,7 +3,6 @@
 import { type CSSProperties, type ComponentProps } from 'react';
 import Image from 'next/image';
 import SlimeGlow, { SLIME_GLOW_STANDARD } from '@/components/ui/SlimeGlow';
-import { useMediaQuery } from '@/lib/useMediaQuery';
 import type { ServiceConceptMask, ServiceImageOverlay } from '@/types/service';
 import styles from './GlowImage.module.scss';
 
@@ -30,7 +29,7 @@ type GlowImageProps = {
 
 /**
  * 線画イラスト + 不定形の赤いスライム状グロー。
- * SP (<768px) では浮遊アニメのみ。PC ではカーソル追従 + 自律ドリフト + 呼吸モーフ。
+ * PC / SP 共通で SlimeGlow Canvas を使用 (自律ドリフト + 呼吸モーフ + ポインタ追従/touch)。
  *
  * 構造:
  *   wrap (aspect-ratio = width/height)
@@ -67,8 +66,6 @@ export default function GlowImage({
   overlays = [],
   glowOverrides,
 }: GlowImageProps) {
-  const isPC = useMediaQuery('(min-width: 768px)');
-
   // マスク画像（形のシルエット）でグロー層をクリップする
   const clipStyle: CSSProperties | undefined = mask
     ? {
@@ -102,11 +99,7 @@ export default function GlowImage({
         <div className={styles.placeholder} role="img" aria-label={alt} />
       )}
       <div className={styles.glowClip} style={clipStyle} aria-hidden="true">
-        {isPC ? (
-          <SlimeGlow {...slimeProps} />
-        ) : (
-          <div className={`${styles.glow} ${styles.floating}`} />
-        )}
+        <SlimeGlow {...slimeProps} />
       </div>
 
       {overlays.length > 0 && (
