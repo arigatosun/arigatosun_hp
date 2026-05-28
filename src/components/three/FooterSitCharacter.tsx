@@ -5,7 +5,7 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { useAnimations, useGLTF } from '@react-three/drei';
 import { clone as skeletonClone } from 'three/examples/jsm/utils/SkeletonUtils.js';
 import * as THREE from 'three';
-import { useControls, folder } from 'leva';
+import { Leva, useControls, folder } from 'leva';
 import { CURSOR_FOLLOW_CONFIG } from './cursorFollowConfig';
 
 const IS_DEV = process.env.NODE_ENV === 'development';
@@ -505,7 +505,12 @@ export default function FooterSitCharacter({
   freezeCursor = false,
 }: FooterSitCharacterProps = {}) {
   return (
-    <Canvas
+    <>
+      {/* 開発時の Leva パネルはデフォルト非表示にしておく。
+          値は useControls の初期値 (FOOTER_SIT_LIGHTS_DEFAULTS) が使われる。
+          ライティングを再調整したくなったら hidden={false} に切替で右上に表示。 */}
+      {IS_DEV && <Leva hidden />}
+      <Canvas
       orthographic
       camera={{ position: cameraPosition, zoom: cameraZoom, near: 0.1, far: 1000 }}
       gl={{ antialias: true, alpha: true }}
@@ -550,5 +555,6 @@ export default function FooterSitCharacter({
         {freezeCursor && false && <ForwardArrowDebug position={charPosition} />}
       </Suspense>
     </Canvas>
+    </>
   );
 }
