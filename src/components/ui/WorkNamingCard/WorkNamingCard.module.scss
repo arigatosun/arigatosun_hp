@@ -4,10 +4,16 @@
 );
 @use '@/styles/breakpoints' as *;
 
-// 白カードを本文と同じ左右 x=40 (SP) / x=200 (PC) で揃える
+// 白カードを本文と同じ左右 x=200 (PC) で揃える。
+// SP は Figma 通り 390px 全幅 (full-bleed) にするため左右パディングを 0 に。
 .wrap {
   @include fluid(padding-left, 40, 200);
   @include fluid(padding-right, 40, 200);
+
+  @include sp {
+    padding-left: 0;
+    padding-right: 0;
+  }
 }
 
 // PC カード本体（Figma: 1520×480 / 背景白）
