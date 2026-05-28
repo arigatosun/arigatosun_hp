@@ -6,7 +6,7 @@ import Link from 'next/link';
 import styles from './NewsSection.module.scss';
 import Button from '@/components/ui/Button';
 import SectionTitle from '@/components/ui/SectionTitle';
-import { createClient } from '@/lib/supabase/client';
+import { createPublicClient } from '@/lib/supabase/public';
 import { formatNewsDate, newsDetailHref } from '@/lib/news/format';
 import type { Category, NewsListItem } from '@/types/news';
 
@@ -22,10 +22,10 @@ export default function NewsSection() {
   const [tabs, setTabs] = useState<CategoryTab[]>([ALL_TAB]);
   const [loading, setLoading] = useState(true);
 
-  // 公開 URL: Supabase ブラウザクライアントを使用。
-  // RLS により anon は status='published' AND published_at <= now() のみ取得可能。
+  // 公開 URL: anon 専用クライアントを使用。createBrowserClient (cookie 連動) だと
+  // admin ログイン中の管理者 cookie で下書きも読めてしまうため createPublicClient で固定。
   useEffect(() => {
-    const supabase = createClient();
+    const supabase = createPublicClient();
     let cancelled = false;
 
     async function loadInitial() {
@@ -92,7 +92,7 @@ export default function NewsSection() {
       activeRef.current = index;
 
       const cat = tabs[index];
-      const supabase = createClient();
+      const supabase = createPublicClient();
       setLoading(true);
 
       let query = supabase
