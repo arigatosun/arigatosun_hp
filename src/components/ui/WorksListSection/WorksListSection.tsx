@@ -48,15 +48,17 @@ export default function WorksListSection({ works }: WorksListSectionProps) {
         </div>
       </div>
 
-      {/* Figma: ページ全幅で中央配置（sidebar の下まで広げる） */}
-      <div className={styles.paginationWrap}>
-        <WorksPagination
-          currentPage={page}
-          totalPages={totalPages}
-          onBack={() => goToPage(Math.max(1, page - 1))}
-          onNext={() => goToPage(Math.min(totalPages, page + 1))}
-        />
-      </div>
+      {/* Figma: ページ全幅で中央配置（sidebar の下まで広げる）。1 ページのみの時は非表示 */}
+      {totalPages > 1 && (
+        <div className={styles.paginationWrap}>
+          <WorksPagination
+            currentPage={page}
+            totalPages={totalPages}
+            onBack={() => goToPage(Math.max(1, page - 1))}
+            onNext={() => goToPage(Math.min(totalPages, page + 1))}
+          />
+        </div>
+      )}
     </section>
   );
 }
