@@ -112,6 +112,12 @@
   @include fluid(padding-top, 100, 179);
   @include fluid(padding-bottom, 80, 195);
 
+  // /contact および /contact/thanks では CONTACT US ボタンを非表示
+  // (フォーム入力中・完了画面で二重 CTA を避ける)
+  :global(body:has([data-contact-page])) & {
+    display: none;
+  }
+
   // Figma SP(390): footer.padding-top 側で 203 を消化済 → ここの padding-top は 0
   // button bottom (y=259) → logo top (y=419) = 160
   // 左右 padding 40 でボタンを 310 フル幅に

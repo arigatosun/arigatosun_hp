@@ -134,9 +134,7 @@
   background-repeat: no-repeat;
   background-position: right calc(50% + 0.044em);
   background-size: 0 0.85em;
-  transition:
-    color var(--transition-base),
-    background-size var(--transition-base);
+  // hover/active で赤帯を即座に表示（アニメーションなし） — SERVICE/About/Works と統一
 }
 
 .category span {
@@ -180,7 +178,7 @@
   @include fluid(letter-spacing, 1.4, 2.6);
   white-space: nowrap;
   color: var(--color-text-secondary);
-  // カテゴリと同じ赤マーカー帯（hover で右から展開）
+  // カテゴリと同じ赤マーカー帯（hover で即座に表示・アニメーションなし）
   background-image: linear-gradient(
     var(--color-primary),
     var(--color-primary)
@@ -188,9 +186,6 @@
   background-repeat: no-repeat;
   background-position: right calc(50% + 0.044em);
   background-size: 0 0.85em;
-  transition:
-    color var(--transition-base),
-    background-size var(--transition-base);
 
   &:hover {
     color: var(--color-white);

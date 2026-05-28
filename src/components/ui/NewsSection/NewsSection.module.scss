@@ -29,12 +29,20 @@
 }
 
 // ── 左側 ──
+// position: sticky で記事リストが流れ切るまで左カラムを追従させる（/news と同方式）。
+// 親 .inner は align-items: flex-start なので、align-self は不要だが念のため明示。
+// top は /news ページの sidebar と同じ fluid(136, 240) に揃え、固定位置を統一する。
 .left {
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
+  align-self: flex-start;
+  position: sticky;
+  @include fluid(top, 136, 240);
 
   @include sp {
+    position: static;
+    top: auto;
     width: 100%;
   }
 }
@@ -95,13 +103,13 @@
   @include fluid(letter-spacing, 1.2, 2.6);
 }
 
-// ── カテゴリメニュー ──
+// ── カテゴリメニュー ── （SERVICE セクションのサイドメニューと同方式）
 .categoryList {
   list-style: none;
   display: flex;
   flex-direction: column;
-  @include fluid(gap, 16, 28); // Figma: 項目ピッチ52px − 行ボックス24px
-  @include fluid(margin-bottom, 24, 56);
+  @include fluid(gap, 13, 28); // Figma: 項目ピッチ52px − 行ボックス24px
+  @include fluid(margin-bottom, 29, 64);
 
   @include sp {
     // Figma SP: 2 カラム × 2 行のグリッド配置
@@ -109,7 +117,7 @@
     grid-template-columns: repeat(2, 1fr);
     @include fluid(column-gap, 16, 24);
     @include fluid(row-gap, 20, 28);
-    @include fluid(margin-bottom, 32, 56);
+    @include fluid(margin-bottom, 32, 64);
   }
 }
 
@@ -120,8 +128,8 @@
   @include fluid(font-size, 14, 20);
   font-weight: var(--font-weight-light);
   font-style: normal;
-  line-height: 1.2;
-  @include fluid(letter-spacing, 1.2, 2.6);
+  line-height: 1.2; // 赤帯がはみ出さない行ボックス高
+  @include fluid(letter-spacing, 1.4, 2.6);
   white-space: nowrap;
   cursor: pointer;
 
@@ -132,7 +140,10 @@
   }
 }
 
-// 赤マーカー帯（SERVICE セクションの側面メニューと同方式）
+// 赤マーカー帯（SERVICE セクションのサイドメニューと完全同方式）
+// 非アクティブ＝非表示／アクティブ・hover＝赤帯を即座に表示（アニメーションなし）
+// Mozaic GEO は文字実体が行ボックス中心より約0.094em下に来るため、
+// 帯も同じだけ下げて文字の中央に重ねる。
 .categoryItem span,
 .categoryItemActive span {
   background-image: linear-gradient(
@@ -142,8 +153,6 @@
   background-repeat: no-repeat;
   background-position: right calc(50% + 0.094em);
   background-size: 0 0.85em;
-  transition: color var(--transition-base),
-    background-size var(--transition-base);
 }
 
 .categoryItem span {
@@ -188,6 +197,13 @@
   min-width: 0;
   @include fluid(padding-top, 22, 40);
 
+  // PC: カテゴリ切り替えで記事数が少ない場合でもセクション高を確保し、
+  // sticky 左カラムが viewport に綺麗に収まり続けるようにする。
+  // 値の目安: 左カラム（タイトル + カテゴリ4項目 + ボタン）の高さ ≈ 520px
+  @include pc {
+    @include fluid(min-height, 360, 540);
+  }
+
   @include sp {
     padding-top: 0;
     width: 100%;
@@ -200,15 +216,10 @@
   align-items: flex-start;
   @include fluid(gap, 16, 40); // Figma: タイトル↔サムネイル 40px
 
-  // ホバー: タイトルがサンアイコンと同じグレーに変わり、矢印が右からスッと現れる
+  // ホバー: タイトルがサンアイコンと同じグレーに変わる
   &:hover {
     .articleTitle {
       color: var(--color-text-secondary);
-    }
-
-    .articleArrow {
-      opacity: 1;
-      transform: translateX(0);
     }
   }
 
@@ -279,21 +290,6 @@
   background-size: 100% 0.65em;
 }
 
-// ── ホバー時に右から現れる矢印インジケーター ──
-.articleArrow {
-  margin-left: auto;
-  color: var(--color-primary);
-  font-family: var(--font-en);
-  @include fluid(font-size, 16, 22);
-  font-weight: var(--font-weight-light);
-  line-height: 1;
-  opacity: 0;
-  transform: translateX(12px);
-  transition:
-    opacity var(--transition-base),
-    transform var(--transition-base);
-}
-
 // ── サムネイル ──
 .articleThumbnail {
   position: relative;
@@ -301,7 +297,6 @@
   @include fluid(width, 120, 266); // Figma: 266px
   aspect-ratio: 266 / 150; // Figma: 266×150
   overflow: hidden;
-  border-radius: 4px;
 
   @include sp {
     width: 100%;

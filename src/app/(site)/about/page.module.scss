@@ -28,7 +28,7 @@
 }
 
 // TOP の ServiceSection / NewsSection / Service 詳細 ServiceDetailHero と同じ赤帯マーカー方式。
-// span に background-image: linear-gradient で帯を持ち、hover/active で帯幅を transition 拡張。
+// span に background-image: linear-gradient で帯を持ち、hover/active で赤帯を即座に表示（アニメーションなし）。
 // Mozaic GEO は文字実体が行ボックス中心より約0.094em下に来るため、帯も同じだけ下げて中央合わせ。
 .sideNavItem {
   display: block;
@@ -53,8 +53,6 @@
   background-repeat: no-repeat;
   background-position: right calc(50% + 0.094em);
   background-size: 0 0.85em;
-  transition: color var(--transition-base),
-    background-size var(--transition-base);
   color: var(--color-text-secondary);
 }
 

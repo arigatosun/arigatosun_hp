@@ -92,7 +92,7 @@ export default function Footer() {
               </li>
               <li>
                 <a
-                  href="https://instagram.com/"
+                  href="https://www.instagram.com/arigatosun_inc?igsh=MXh5Z3dmM29hazJhNw=="
                   className={styles.mainMenuItem}
                   target="_blank"
                   rel="noopener noreferrer"

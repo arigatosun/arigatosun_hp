@@ -50,9 +50,8 @@
   // 赤帯に対してテキストを 1px 上に見せる（帯を 1px 下にずらす）。hover/active 共通。
   background-position: right calc(50% + 1px);
   background-size: 0 0.85em;
-  transition: color var(--transition-base),
-    background-size var(--transition-base);
 
+  // hover/active で赤帯を即座に表示（アニメーションなし） — SERVICE/NEWS/About と統一
   &:hover {
     color: var(--color-white);
     background-size: calc(100% - 5px) 0.85em;

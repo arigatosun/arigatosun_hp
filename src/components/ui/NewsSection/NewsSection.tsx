@@ -16,6 +16,7 @@ type CategoryTab = { slug: string; label: string };
 const ALL_TAB: CategoryTab = { slug: 'all', label: '・ALL >' };
 
 export default function NewsSection() {
+  const sectionRef = useRef<HTMLElement>(null);
   const menuRef = useRef<HTMLUListElement>(null);
   const activeRef = useRef(0);
   const [news, setNews] = useState<NewsListItem[]>([]);
@@ -91,6 +92,23 @@ export default function NewsSection() {
 
       activeRef.current = index;
 
+      // 既にセクション上端がスクロールアウトしている（sticky 状態）の時のみ、
+      // セクション上端までスムーズスクロールで戻す。
+      // 理由: 記事数が変わると section の高さが縮み、ブラウザが scrollY を強制
+      // クランプして「画面が上に上がる」ように見える。意図的にセクション頭まで
+      // 戻すことで、新カテゴリの記事を必ず先頭から見せる。
+      const section = sectionRef.current;
+      if (section) {
+        const HEADER_OFFSET = 80; // 固定ヘッダー高さ
+        const rect = section.getBoundingClientRect();
+        if (rect.top < HEADER_OFFSET) {
+          window.scrollTo({
+            top: window.scrollY + rect.top - HEADER_OFFSET,
+            behavior: 'smooth',
+          });
+        }
+      }
+
       const cat = tabs[index];
       const supabase = createPublicClient();
       setLoading(true);
@@ -126,7 +144,7 @@ export default function NewsSection() {
   );
 
   return (
-    <section className={styles.news}>
+    <section ref={sectionRef} className={styles.news}>
       <div className={styles.inner}>
         {/* 左: タイトル + カテゴリ + ボタン */}
         <div className={styles.left}>
@@ -179,9 +197,6 @@ export default function NewsSection() {
                       </span>
                       <span className={styles.articleTag}>
                         #{item.category?.label ?? ''}
-                      </span>
-                      <span className={styles.articleArrow} aria-hidden="true">
-                        →
                       </span>
                     </div>
                   </div>

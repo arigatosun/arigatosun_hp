@@ -101,14 +101,13 @@
   // NEWS と統一してテキストが帯内で 1px 下に見えるよう 0.044em に詰める
   background-position: right calc(50% + 0.044em);
   background-size: 0 0.85em;
-  transition: color var(--transition-base),
-    background-size var(--transition-base);
 
   // SP では帯を 0.5px 下げ、テキストが帯内で 0.5px 上に見えるよう微調整
   @include sp {
     background-position: right calc(50% + 0.044em + 0.5px);
   }
 
+  // hover/active で赤帯を即座に表示（アニメーションなし） — SERVICE/NEWS/About と統一
   &:hover {
     color: var(--color-white);
     background-size: calc(100% - 5px) 0.85em;

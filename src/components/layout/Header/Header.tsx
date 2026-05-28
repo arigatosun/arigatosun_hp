@@ -25,7 +25,7 @@ const rightNav = [
 
 const snsNav = [
   {
-    href: 'https://instagram.com/',
+    href: 'https://www.instagram.com/arigatosun_inc?igsh=MXh5Z3dmM29hazJhNw==',
     label: 'IG',
     external: true,
   },
