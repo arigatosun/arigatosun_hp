@@ -28,18 +28,35 @@
   @include fluid(letter-spacing, 3.5, 5.8);
 }
 
+// 本文段落をまとめる div。最初の段落だけ heading からのギャップを持たせる。
+.bodyWrap {
+  @include fluid(margin-top, 6, 11);
+}
+
 .body {
   margin: 0;
-  @include fluid(margin-top, 6, 11);
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
   font-weight: var(--font-weight-regular);
-  @include fluid(font-size, 13, 16);
-  @include fluid(line-height, 28, 36);
-  @include fluid(letter-spacing, 2, 3.84);
+  // Figma SP (2812:49934): 14px / lh 30 / ls 2.52 / PC: 16 / 36 / 3.84
+  @include fluid(font-size, 14, 16);
+  @include fluid(line-height, 30, 36);
+  @include fluid(letter-spacing, 2.52, 3.84);
+
+  // 段落間の縦余白 (Figma SP: 約 1 行分)
+  & + & {
+    @include fluid(margin-top, 30, 36);
+  }
 }
 
 // ＜＞見出し（sub）は本文との間隔が ■見出しより詰まる（Figma 実測）
 .sub .body {
   @include fluid(margin-top, 2, 4);
+}
+
+// SP 専用改行 (PC では非表示)
+.spOnlyBr {
+  @include pc {
+    display: none;
+  }
 }
