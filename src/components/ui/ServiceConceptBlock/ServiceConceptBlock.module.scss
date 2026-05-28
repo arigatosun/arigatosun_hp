@@ -31,6 +31,17 @@
   }
 }
 
+// stickyText 指定時: PC で左カラムを sticky 化。右カラム (steps 等) のスクロールが
+// 終わるまで上部に追従し、親 .block の末尾で自然解放される。
+// top はヘッダー (80) + ある程度の余白を確保。SP では効かない (縦積み)。
+.textSticky {
+  @include pc {
+    position: sticky;
+    align-self: flex-start; // flex container 内で sticky を効かせるために必須
+    @include fluid(top, 100, 160);
+  }
+}
+
 .body {
   // Figma: サブ見出し下端 → 本文上端 ≒ 140px
   @include fluid(margin-top, 48, 140);

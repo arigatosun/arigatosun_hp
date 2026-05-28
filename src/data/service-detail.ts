@@ -466,14 +466,14 @@ const IP_CREATIVE: ServiceDetailData = {
       bodyTracking: 3.84,
       visual: {
         kind: 'image',
-        // 線画 (Group 1138, 1337x1337) — 9 つのバブルと全テキストが焼き込み済み
-        src: '/images/sections/service/detail/concept-creator-first-ip.png',
+        // 線画 + 9 ラベル一体型 SVG (Figma Group 1218) — テキストは path として焼き込み済み
+        src: '/images/sections/service/detail/concept-creator-first-ip.svg',
         alt: 'CREATOR FIRST のギルド型組織図。中央「作者」を内周「プロデュース／ディレクション」が囲み、外周にコラボレーション・コンテンツ企画制作・アプリゲーム開発・グッズ管理・EC・3D デザイン等が並ぶ',
         width: 1337,
         height: 1337,
-        // マスク (Group 1137, 1335x1335) — 線画と 2px 差は size 100% 100% で吸収
+        // 赤グローはマスク (Figma Group 1137 = クローバー + 4 隅バブル) の内側だけに表示
         mask: {
-          src: '/images/sections/service/detail/concept-creator-first-ip-mask.png',
+          src: '/images/sections/service/detail/concept-creator-first-ip-mask.svg',
           size: '100% 100%',
           position: '50% 50%',
         },

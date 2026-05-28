@@ -200,10 +200,10 @@
   align-items: flex-start;
   @include fluid(gap, 16, 40); // Figma: タイトル↔サムネイル 40px
 
-  // ホバー: タイトルが赤に変わり、赤い矢印が右からスッと現れる
+  // ホバー: タイトルがサンアイコンと同じグレーに変わり、矢印が右からスッと現れる
   &:hover {
     .articleTitle {
-      color: var(--color-primary);
+      color: var(--color-text-secondary);
     }
 
     .articleArrow {
