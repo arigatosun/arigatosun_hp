@@ -45,6 +45,18 @@ const allMembers: Member[] = [
     ],
   },
   {
+    slug: 'koushi-tsuchiga',
+    name: 'KOUSHI TSUCHIGA',
+    role: 'EXECUTIVE OFFICER',
+    photo: '/images/team/koushi-tsuchiga.webp',
+    photoColor: '/images/team/koushi-tsuchiga-color.webp',
+    catchphrase: '組織の力を最大化する。',
+    description:
+      'ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。',
+    career:
+      'ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。',
+  },
+  {
     slug: 'ryo-yoshikawa',
     name: 'RYO YOSHIKAWA',
     role: 'CTO',
@@ -82,7 +94,7 @@ const allMembers: Member[] = [
   {
     slug: 'daichi-nakata',
     name: 'DAICHI NAKATA',
-    role: 'ENGINEER',
+    role: 'CPO / ENGINEER',
     photo: '/images/team/daichi-nakata.webp',
     photoColor: '/images/team/daichi-nakata-color.webp',
     catchphrase: '最高の体験を、最高の技術で。',
@@ -110,7 +122,7 @@ const allMembers: Member[] = [
   {
     slug: 'yugo-nishimoto',
     name: 'YUGO NISHIMOTO',
-    role: 'CDO / DESIGN DIRECTOR',
+    role: 'CDO',
     photo: '/images/team/yugo-nishimoto.webp',
     photoColor: '/images/team/yugo-nishimoto-color.webp',
     catchphrase: 'デザインで世界を変える。',
@@ -145,18 +157,6 @@ const allMembers: Member[] = [
     photo: '/images/team/airu-matsuo.webp',
     photoColor: '/images/team/airu-matsuo-color.webp',
     catchphrase: 'クリエイティブとテクノロジーの架け橋。',
-    description:
-      'ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。',
-    career:
-      'ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。',
-  },
-  {
-    slug: 'koushi-tsuchiga',
-    name: 'KOUSHI TSUCHIGA',
-    role: 'CORPORATE OPERATIONS',
-    photo: '/images/team/koushi-tsuchiga.webp',
-    photoColor: '/images/team/koushi-tsuchiga-color.webp',
-    catchphrase: '組織の力を最大化する。',
     description:
       'ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。',
     career:

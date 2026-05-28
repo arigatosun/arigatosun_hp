@@ -3,10 +3,18 @@
 
 // PrinciplesSection / BusinessStructureSection / MemberSection で使われていた
 // .header / .headerLogo / .headerText / .headerTitle / .headerSub を共通化したもの
+// Figma SP (390 frame): icon x=28 (本文 x=40 より 12px 外), title top は icon top より 6px 下。
 .header {
   display: flex;
   align-items: center;
   @include fluid(gap, 10, 20);
+
+  @include sp {
+    // Figma SP: アイコンを本文より 12px 外 (x=28) に張り出し
+    margin-left: -12px;
+    // Figma SP: title top が icon top より 6px 下 → 上揃え + headerText.margin-top で再現
+    align-items: flex-start;
+  }
 }
 
 .headerCenter {
@@ -14,39 +22,56 @@
   text-align: center;
 }
 
+// Figma 実測: SP 42×40 / PC 61×58
 .headerLogo {
   width: auto;
   height: auto;
+  flex-shrink: 0;
+  @include fluid(width, 42, 61);
 }
-
-// service-detail バリアント用のアイコン共通スケール
-// Figma SP: 42×40 / Figma PC: 61×58。デフォルトは PC max=61 に張り付くので、
-// service-detail だけ fluid でスケールさせる（.sizeServiceDetail 内で上書き）。
 
 .headerText {
   display: flex;
   flex-direction: column;
   gap: 8px;
+
+  @include sp {
+    // Figma SP: icon top → title top の 6px オフセット
+    margin-top: 6px;
+    // Figma SP: title bottom y=760 → sub top y=766 = gap 6
+    gap: 6px;
+  }
 }
 
+// Figma SP: 18px / lh 14.4 / ls 2.34 / Noto Sans JP Medium
+// Figma PC: 24px / ls 9.6
 .headerTitle {
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
-  // Figma 実測（アリガト3原則 / 事業領域と連携体制 / メンバー 共通）: 24px / ls 9.6
-  // 会社概要のみ 28px / ls 11.2 だが、CompanyProfileSection 側でローカル上書きする
-  @include fluid(font-size, 14, 24);
+  @include fluid(font-size, 18, 24);
   font-weight: 500;
   line-height: 1.2;
-  @include fluid(letter-spacing, 4, 9.6);
+  @include fluid(letter-spacing, 2.34, 9.6);
+
+  @include sp {
+    // Figma SP: lh 14.4 (タイトな行ボックス)
+    line-height: 14.4px;
+  }
 }
 
+// Figma SP: 12px / lh 19.2 / ls 1.56 / Mozaic GEO Light
+// Figma PC: 16px / lh 24 / ls 2.08
 .headerSub {
   color: var(--color-text-secondary);
   font-family: var(--font-en);
   @include fluid(font-size, 12, 16);
   font-weight: var(--font-weight-light);
   line-height: 24px;
-  @include fluid(letter-spacing, 1, 2.08);
+  @include fluid(letter-spacing, 1.56, 2.08);
+
+  @include sp {
+    line-height: 19.2px;
+  }
 }
 
 // SERVICE 詳細ページ向けバリアント: PC 28px / ls 11.2 / Medium (Figma 2704:43769 等)
