@@ -23,13 +23,14 @@ const CHORITZ_DETAIL: WorkDetailContent = {
     // 保つため margin 58 (見た目ギャップ ≈ 37) に設定。
     spOffsetTop: 58,
     photos: [
-      // PC 用 6 枚プレースホルダー（画像未提供）
-      { x: 561, y: -37, width: 302, height: 197 },
-      { x: 1319, y: -27, width: 564, height: 377 },
-      { x: -28.8, y: 112.46, width: 518.17, height: 399.36 },
-      { x: 220.65, y: 571.74, width: 446.285, height: 299.52 },
-      { x: 1478.61, y: 527.81, width: 507.187, height: 333.466 },
-      { x: 956.28, y: 603.08, width: 315.494, height: 190.694 },
+      // PC 用 1 枚焼き込み画像 (Figma Group 1253 を 1920×760 で JPG 化)
+      {
+        src: `${CHORITZ}/hero-pc.jpg`,
+        x: 0,
+        y: 0,
+        width: 1920,
+        height: 760,
+      },
     ],
     // SP 用 1 枚焼き込み画像（390×540 を full-bleed カバー）
     spPhotos: [
@@ -41,10 +42,7 @@ const CHORITZ_DETAIL: WorkDetailContent = {
         height: 540,
       },
     ],
-    logo: {
-      wordmark: `${CHORITZ}/logo-2.svg`,
-      mark: `${CHORITZ}/logo-1.svg`,
-    },
+    // ロゴは PC / SP どちらの hero 画像にも焼き込み済みのため overlay は出さない
   },
   // gap = 直前要素からの上余白（Figma 実測 px・1920 基準）
   blocks: [
@@ -170,13 +168,11 @@ const CHORITZ_DETAIL: WorkDetailContent = {
       type: 'imageGrid',
       gap: 80,
       cardHeight: 840,
-      images: Array.from(
-        { length: 15 },
-        (_, i) => `${CHORITZ}/prop-${i + 1}.jpg`,
-      ),
-      imageRatio: { w: 297, h: 167 },
+      // 4×4 グリッドを 1 枚に焼き込んだ画像 (Group 1254)。元の prop-1〜15 + 強ブラー
+      // から差し替え。画像内に弱ブラー済みなのでコード側 blur は不要。
+      images: [`${CHORITZ}/prop-grid.png`],
+      imageRatio: { w: 1990, h: 860 },
       caption: '＜ロゴデザイン初回提案書(一部抜粋)＞',
-      blur: true,
     },
     {
       type: 'imageGrid',

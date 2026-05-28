@@ -24,9 +24,10 @@ export default function WorkTextSection({
         <h2 className={styles.heading}>{heading}</h2>
       )}
       {body && body.length > 0 && (
-        <div className={styles.bodyWrap}>
+        <p className={styles.body}>
           {body.map((segment, i) => (
-            <p key={i} className={styles.body}>
+            <Fragment key={i}>
+              {i > 0 && <br />}
               {/* セグメント内の `\n` は SP 専用改行 (PC では非表示) */}
               {segment.split('\n').map((sub, j, arr) => (
                 <Fragment key={j}>
@@ -36,9 +37,9 @@ export default function WorkTextSection({
                   )}
                 </Fragment>
               ))}
-            </p>
+            </Fragment>
           ))}
-        </div>
+        </p>
       )}
     </section>
   );
