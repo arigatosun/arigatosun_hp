@@ -9,8 +9,9 @@ export const SERVICE_CARDS: readonly ServiceCardData[] = [
     category: 'AI / DEVELOPMENT',
     categoryLabel: 'AI・開発',
     title: 'AI / DEVELOPMENT',
+    // Figma 2872:56144: 3 行構成（明示的改行）
     description:
-      'ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。',
+      'LLMを活用したWeb・アプリ開発。\n業務を動かすAIエージェントの構築など。\n最先端の技術で、思い描いた理想を確かな形へと実現します。',
     viewLabel: 'VIEW AI / DEVELOPMENT >',
     bgImage: null,
     bgVideo: {
@@ -23,8 +24,9 @@ export const SERVICE_CARDS: readonly ServiceCardData[] = [
     category: 'DESIGN / BRANDING',
     categoryLabel: 'デザイン・ブランディング',
     title: 'DESIGN / BRANDING',
+    // Figma 2872:56148: 単一段落（自然折返し）
     description:
-      'ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。',
+      '心を動かし、役割を全うするデザインで、一貫したブランド像を設計する。ロゴやVI、Webサイトをはじめ、届けたい価値が宿る、あらゆる接点をカタチにします。',
     viewLabel: 'VIEW DESIGN / BRANDING >',
     bgImage: null,
     bgVideo: {
@@ -37,8 +39,9 @@ export const SERVICE_CARDS: readonly ServiceCardData[] = [
     category: 'IP / CREATIVE',
     categoryLabel: 'IP・クリエイティブ',
     title: 'IP / CREATIVE',
+    // Figma 2872:56152: 2 段落構成（明示的改行）
     description:
-      'ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。',
+      '世界観そのものに命を吹き込み、人の心に残るIPを生み出す。\n創って終わりではなく、届けて、愛されるところまでを設計します。世代を超えて親しまれ、やがて文化として根づくIPを育てます。',
     viewLabel: 'VIEW IP / CREATIVE >',
     bgImage: null,
     bgVideo: {

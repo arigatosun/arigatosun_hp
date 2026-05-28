@@ -3,15 +3,11 @@
 import { Suspense, useEffect, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import WalkingCharacter from './WalkingCharacter';
-import ScrollWalkCharacter from './ScrollWalkCharacter';
 import { useGLTF } from '@react-three/drei';
 
 // Phase 18: 粘土風シェーディング + リグ刷新（root.00 廃止）の Web 用最適化版に差し替え。
 // 旧 walk.v3.glb（23MB）は履歴/万一のロールバック用に残置。
 const GLB_PATH = '/models/arigatokunn_web.glb';
-// Phase 18 追補: スクロール連動用 unified glb（Idle / TurnToSide / Walk / StopWalk /
-// WaitingPose / ResumeWalk の 6 クリップ内包）。Service セクションで使用。
-const UNIFIED_GLB_PATH = '/models/arigatokunn_unified.glb';
 
 // ページ全体で1つだけのグローバルCanvas
 // OrthographicCameraで描画（遠近法による見かけの回転を防止）
@@ -27,9 +23,8 @@ export default function GlobalCanvas() {
   }, []);
   // PC 0.6 → SP 0.35（約 58% に縮小）
   const walkScale = isSp ? 0.35 : 0.6;
-  // SP は両キャラを 70px (camera zoom 150 → +0.467 world unit) 上にオフセット
+  // SP は LogoSlider キャラを 70px (camera zoom 150 → +0.467 world unit) 上にオフセット
   const SP_OFFSET_Y = 0.467;
-  const serviceBaseY = isSp ? -2.0 + SP_OFFSET_Y : -2.0;
   const logoBaseY = isSp ? -1.5 + SP_OFFSET_Y : -1.5;
 
   return (
@@ -56,20 +51,6 @@ export default function GlobalCanvas() {
       <directionalLight position={[-4, 2, 5]} intensity={0.6} />
 
       <Suspense fallback={null}>
-        {/* Service: スクロール連動の双方向横歩き。
-            タイミング: --service-progress の変化（pin 中のみ）で歩き始め/止まる
-            動き方: window scroll delta ベース（自由な進行・画面外にも抜ける）
-            初期位置: 中央より -2 left（AI/DEVELOPMENT カードの隣あたり） */}
-        <ScrollWalkCharacter
-          glbPath={UNIFIED_GLB_PATH}
-          sectionSelector='[data-section="service"]'
-          approachMarginPx={700}
-          baseY={serviceBaseY}
-          scale={walkScale}
-          progressVar="--service-progress"
-          initialX={-2}
-        />
-
         {/* LogoSlider: 左→右に逆方向で歩く 2 体目。
             approachMarginPx を 1500 にしてロゴ表示時には既に画面内に入っている状態に。 */}
         <WalkingCharacter
@@ -94,4 +75,3 @@ export default function GlobalCanvas() {
 }
 
 useGLTF.preload(GLB_PATH);
-useGLTF.preload(UNIFIED_GLB_PATH);

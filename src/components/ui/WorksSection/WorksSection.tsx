@@ -137,7 +137,7 @@ export default function WorksSection({ works }: WorksSectionProps) {
             AI / DEVELOPMENT / APPLICATION / DESIGN / UI / UX / BRANDING / WEB DESIGN / VI / IP / MARKETING / 3D / PHOTOGRAPHY / MOVIE etc...
           </p>
           <p className={styles.footerCopyright}>
-            &copy; 2026 ARIGATOSUN. ALL RIGHTS RESEAVED.
+            &copy; 2026 ARIGATOSUN. ALL RIGHTS RESERVED.
           </p>
         </div>
 

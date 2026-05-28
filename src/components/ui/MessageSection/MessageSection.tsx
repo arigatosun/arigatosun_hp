@@ -34,8 +34,8 @@ export default function MessageSection() {
     const colorRed = rootStyles.getPropertyValue('--color-primary').trim();
 
     // ── 各文字のリベール基準値 thresholds[i] ∈ (0,1) ──
-    // 読み順に増加するが、視覚的な「行」ごとに次行を少し先行させる（改行フライング）。
-    const FLY = 0.4; // 改行フライング率（次行は前行の 60% 進行地点で開始）
+    // 読み順に増加し、各行は前行が完全に終わってから開始（フライングなし）。
+    const FLY = 0; // 0=フライングなし(順次切替) / >0=次行を先行させる重なり量
     let thresholds = new Array<number>(chars.length).fill(0);
 
     const measure = () => {
@@ -80,10 +80,24 @@ export default function MessageSection() {
 
     const paint = () => {
       rafId = 0;
+      const rect = section.getBoundingClientRect();
       const vh = window.innerHeight;
-      const topRatio = section.getBoundingClientRect().top / vh;
-      // section上端が画面下から85%で progress=0、上に0.55画面分 抜けた時点で1
-      let prog = (0.85 - topRatio) / 1.4;
+      // 進行度を「セクションの実位置」基準で求める（端末・セクション高さ非依存）:
+      //   開始 (progress=0): section.top が viewport 下端から 15% 入った時点
+      //                       (section.top = vh * START_TOP)
+      //   終了 (progress=1): section.bottom が viewport 下端より少し下に
+      //                       残っている段階で完了 (section.bottom = vh * END_BOTTOM)
+      //   → 最後の行が画面に入ってくる前にリベール完了 → どの端末・どの
+      //     セクション高さでも「フッター手前で赤になり切る」状態を保証する。
+      //   セクションが極端に短い場合に分母が小さくなり過ぎないよう最低値を設ける。
+      const START_TOP = 0.85;
+      const END_BOTTOM = 0.9;
+      const distance = Math.max(
+        rect.height - (END_BOTTOM - START_TOP) * vh,
+        vh * 0.6,
+      );
+      const scrolled = START_TOP * vh - rect.top;
+      let prog = scrolled / distance;
       prog = prog < 0 ? 0 : prog > 1 ? 1 : prog;
 
       // スクロールに双方向連動: 基準値を超えた文字は赤、未満は白。

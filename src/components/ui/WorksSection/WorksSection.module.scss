@@ -154,9 +154,9 @@
   @include fluid(letter-spacing, 1.4, 3.2);
 }
 
+// Figma の `|` 後 2 行目を圧縮する独自補正は廃止し、line-height 40px の均等送りに揃える。
 .lastLine {
   display: block;
-  margin-top: -6px;
 }
 
 // ── 横ライン装飾 ──
