@@ -58,8 +58,10 @@ export default async function Home() {
               <div className={styles.heroCharacterCanvas}>
                 <FooterCharacterLoader
                   charPosition={[-20.93, -0.75, 0]}
-                  charRotationY={0.2}
+                  charRotationY={0}
                   cameraPosition={[2, -5, 28]}
+                  orthographic
+                  cameraZoom={15}
                 />
               </div>
             </div>

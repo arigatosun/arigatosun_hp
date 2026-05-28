@@ -24,14 +24,32 @@ import { clone as skeletonClone } from 'three/examples/jsm/utils/SkeletonUtils.j
  *   左右どちらに歩くかを制御する。default は rotation.y=0（モデルの正面歩行）。
  */
 
-type AnimState = 'walking' | 'stopping' | 'waiting' | 'resuming';
+type AnimState =
+  | 'walking'
+  | 'stopping'
+  // 右歩きからの停止専用の中間遷移。TurnRight → TurnRightBridge を経て waiting (RightIdle) へ。
+  | 'finishing'
+  | 'waiting'
+  | 'resuming';
 
-const STATE_TO_CLIP: Record<AnimState, string> = {
+// 方向によって再生クリップを切替える。
+// 右 (facingSign=+1) の停止フロー: TurnRight → TurnRightBridge → RightIdle
+// 左 (facingSign=-1) の停止フロー: StopWalk → Idle
+function clipForState(state: AnimState, facingSign: -1 | 1): string {
+  if (state === 'walking') return 'Walk';
+  if (state === 'resuming') return 'ResumeWalk';
+  if (state === 'stopping') return facingSign === +1 ? 'TurnRight' : 'StopWalk';
+  if (state === 'finishing') return 'TurnRightBridge';
+  // waiting: 右は RightIdle (右向きで揺れる)、左は Idle (正面で揺れる)
+  return facingSign === +1 ? 'RightIdle' : 'Idle';
+}
+// 後方互換用のデフォルト (visibility-reset などで「左向きでの初期 waiting clip」を取るのに使う)
+const STATE_TO_CLIP = {
   walking: 'Walk',
   stopping: 'StopWalk',
-  waiting: 'WaitingPose',
+  waiting: 'Idle',
   resuming: 'ResumeWalk',
-};
+} as const;
 
 type ScrollWalkCharacterProps = {
   glbPath: string;
@@ -46,20 +64,18 @@ type ScrollWalkCharacterProps = {
    */
   walkRate?: number;
   /**
-   * スクロール velocity (px/ms) → Walk action.timeScale 換算係数。default 0.5。
+   * Walk クリップ 1 サイクル分で進む world units（足滑り防止のキャリブレーション値）。
+   * default 4.0。値を上げると同じ歩幅で大きく進む = 足の回転が遅く見える。
+   * 値を下げると同じ歩幅で少ししか進まない = 足の回転が速く見える。
+   * ブラウザで実機調整してフィットさせる。
    */
-  velocityToTimeScale?: number;
-  /** Walk timeScale の最小値（背景的に少し動かす）。default 0.4 */
-  minWalkTimeScale?: number;
-  /** Walk timeScale の最大値。default 2.0 */
-  maxWalkTimeScale?: number;
+  stridePerCycle?: number;
   /** スクロール停止判定のデバウンス（ms）。default 200 */
   scrollStopMs?: number;
   /** クロスフェード秒数。default 0.2 */
   crossFadeDuration?: number;
   /**
    * 右を向く時の Y 回転（ラジアン）。default +Math.PI / 2（横向き、左側面がカメラ側）。
-   * モデルの rotation.y=0 がカメラ正面向きという前提。
    */
   rotationFacingRight?: number;
   /** 左を向く時の Y 回転。default -Math.PI / 2（横向き、右側面がカメラ側） */
@@ -93,9 +109,7 @@ export default function ScrollWalkCharacter({
   sectionSelector,
   approachMarginPx = 100,
   walkRate = 0.003,
-  velocityToTimeScale = 0.5,
-  minWalkTimeScale = 0.4,
-  maxWalkTimeScale = 2.0,
+  stridePerCycle = 4.0,
   scrollStopMs = 200,
   crossFadeDuration = 0.2,
   rotationFacingRight = Math.PI / 2,
@@ -106,7 +120,16 @@ export default function ScrollWalkCharacter({
   transitionSpeed = 2.0,
 }: ScrollWalkCharacterProps) {
   const group = useRef<THREE.Group>(null);
-  const { scene, animations } = useGLTF(glbPath);
+  const { scene, animations: unifiedAnimations } = useGLTF(glbPath);
+  // 「右歩きからの停止」専用の振り向きクリップ（Blender 側で 394-430F を抽出した glb）。
+  // 同じスケルトン構造なので unified glb の clonedScene 上で問題なく再生できる。
+  const { animations: turnRightAnimations } = useGLTF(
+    '/models/arigatokunn_turn_right.glb',
+  );
+  const animations = useMemo(
+    () => [...unifiedAnimations, ...turnRightAnimations],
+    [unifiedAnimations, turnRightAnimations],
+  );
   const clonedScene = useMemo(
     () => skeletonClone(scene) as THREE.Group,
     [scene],
@@ -117,14 +140,18 @@ export default function ScrollWalkCharacter({
   const stateRef = useRef<AnimState>('waiting');
   const sectionElRef = useRef<HTMLElement | null>(null);
   const lastScrollY = useRef(0);
-  const lastScrollTime = useRef(0);
-  const scrollVelocityRef = useRef(0); // px / ms
   const scrollDeltaSinceFrame = useRef(0); // px since last frame
   const scrollStopTimerRef = useRef<number | null>(null);
+  // Walk クリップの位相（cycles, fractional）。X 累積移動距離から算出して
+  // walk.time に直接打ち込むことで「移動量と脚の回転」を phase-lock する。
+  const walkPhaseRef = useRef(0);
 
-  // 向き: -1 = 左向き（scroll 下時）、+1 = 右向き（scroll 上時）
+  // 走行向き: -1 = 左歩き（scroll 下）、+1 = 右歩き（scroll 上）
   const facingSignRef = useRef<-1 | 1>(-1);
-  // target rotation Y（向きに応じて切替）
+  // 走行向きに応じた target rotation Y。全 state で facingSign ベースに統一:
+  //   facingSign === +1 → rotationFacingRight (+π/2)
+  //   facingSign === -1 → rotationFacingLeft  (-π/2)
+  // → 停止/待機中もその時の向きを維持し、右歩き Idle は左歩き Idle の鏡像になる。
   const targetRotYRef = useRef(rotationFacingLeft);
   // progress 連動モード用: 前フレームの progress 値
   const prevProgressRef = useRef(0);
@@ -147,21 +174,23 @@ export default function ScrollWalkCharacter({
 
   // ループ設定 + 一方向クリップの LoopOnce 設定 + 初期 WaitingPose 再生
   useEffect(() => {
-    (['StopWalk', 'ResumeWalk', 'TurnToSide'] as const).forEach((name) => {
+    (
+      ['StopWalk', 'ResumeWalk', 'TurnToSide', 'TurnRight', 'TurnRightBridge'] as const
+    ).forEach((name) => {
       const a = actions[name];
       if (a) {
         a.setLoop(THREE.LoopOnce, 1);
         a.clampWhenFinished = true;
       }
     });
-    (['Idle', 'Walk', 'WaitingPose'] as const).forEach((name) => {
+    (['Idle', 'Walk', 'WaitingPose', 'RightIdle'] as const).forEach((name) => {
       const a = actions[name];
       if (a) {
         a.setLoop(THREE.LoopRepeat, Infinity);
       }
     });
-    // 初期は WaitingPose（横向き立ち）
-    const waiting = actions['WaitingPose'];
+    // 初期は Idle（揺れスタンバイ）
+    const waiting = actions[STATE_TO_CLIP.waiting];
     if (waiting) {
       waiting.reset().play();
     }
@@ -177,27 +206,66 @@ export default function ScrollWalkCharacter({
 
   // 状態遷移ヘルパー
   const transitionRef = useRef<(next: AnimState) => void>(() => {});
+  // 現在再生中のクリップ名（state とは別に持つ。stopping 時に方向で
+  // StopWalk / TurnRight を出し分けるため、STATE_TO_CLIP 一律マップでは不足）。
+  const currentClipNameRef = useRef<string>(STATE_TO_CLIP.waiting);
   useEffect(() => {
     const transition = (next: AnimState) => {
       const old = stateRef.current;
       if (old === next) return;
-      const oldAction = actions[STATE_TO_CLIP[old]];
-      const newAction = actions[STATE_TO_CLIP[next]];
+
+      const nextClipName = clipForState(next, facingSignRef.current);
+
+      const oldAction = actions[currentClipNameRef.current];
+      const newAction = actions[nextClipName];
       if (!newAction) return;
 
       newAction.reset();
-      // 一方向クリップ（遷移アニメ）は transitionSpeed 倍速で再生
+      // 一方向クリップ（遷移アニメ）は transitionSpeed 倍速で再生する。
+      // 右側の振り向きセット (TurnRight / TurnRightBridge) も左 (StopWalk / ResumeWalk) と
+      // 同じく transitionSpeed を掛けて速度を揃える。
       const isTransitionClip =
-        next === 'stopping' || next === 'resuming';
-      newAction.setEffectiveTimeScale(isTransitionClip ? transitionSpeed : 1);
+        next === 'stopping' || next === 'resuming' || next === 'finishing';
+      let timeScale = isTransitionClip ? transitionSpeed : 1;
+      // RightIdle はクリップ尺 (15F=0.625s) が Idle (40F=1.667s) より短いため
+      // そのまま再生すると揺れが速く見える。Idle の尺に揃える比率で減速する。
+      if (
+        next === 'waiting' &&
+        nextClipName === 'RightIdle' &&
+        actions['Idle']
+      ) {
+        const idleDur = actions['Idle'].getClip().duration;
+        const rightIdleDur = newAction.getClip().duration;
+        if (idleDur > 0 && rightIdleDur > 0) {
+          timeScale = rightIdleDur / idleDur;
+        }
+      }
+      newAction.setEffectiveTimeScale(timeScale);
       newAction.play();
       if (oldAction && oldAction !== newAction) {
         oldAction.crossFadeTo(newAction, crossFadeDuration, false);
       }
+      // Walk は walking 中だけ mixer 自動進行を止めて time を手動制御する。
+      // walking から抜ける時は paused を解除して、停止クリップへのクロスフェードで
+      // 自然に脚が止まるようにする。
+      const walkAction = actions['Walk'];
+      if (walkAction) {
+        if (next === 'walking') {
+          walkAction.paused = true;
+        } else if (old === 'walking') {
+          walkAction.paused = false;
+        }
+      }
+
       stateRef.current = next;
+      currentClipNameRef.current = nextClipName;
 
       // 一方向クリップは finish 後に次状態へ自動遷移
-      if (next === 'stopping' || next === 'resuming') {
+      if (
+        next === 'stopping' ||
+        next === 'resuming' ||
+        next === 'finishing'
+      ) {
         const mixer = newAction.getMixer();
         const handler = (e: { action: THREE.AnimationAction }) => {
           if (e.action !== newAction) return;
@@ -205,8 +273,19 @@ export default function ScrollWalkCharacter({
             'finished',
             handler as unknown as THREE.EventListener<unknown, 'finished', THREE.AnimationMixer>,
           );
-          if (stateRef.current === 'stopping') transition('waiting');
-          else if (stateRef.current === 'resuming') transition('walking');
+          if (stateRef.current === 'stopping') {
+            // 右停止 (TurnRight 完了) → finishing (TurnRightBridge) → waiting
+            // 左停止 (StopWalk 完了) → 直接 waiting
+            if (facingSignRef.current === +1 && actions['TurnRightBridge']) {
+              transition('finishing');
+            } else {
+              transition('waiting');
+            }
+          } else if (stateRef.current === 'finishing') {
+            transition('waiting');
+          } else if (stateRef.current === 'resuming') {
+            transition('walking');
+          }
         };
         mixer.addEventListener(
           'finished',
@@ -220,24 +299,17 @@ export default function ScrollWalkCharacter({
   // スクロールリスナー
   useEffect(() => {
     lastScrollY.current = window.scrollY;
-    lastScrollTime.current = performance.now();
 
     const onScroll = () => {
-      const now = performance.now();
-      const dt = Math.max(now - lastScrollTime.current, 1);
       const dy = window.scrollY - lastScrollY.current;
-      scrollVelocityRef.current = dy / dt;
       scrollDeltaSinceFrame.current += dy;
       lastScrollY.current = window.scrollY;
-      lastScrollTime.current = now;
 
       // 向き判定: 下スクロール（dy > 0）→ 左向き / 上スクロール（dy < 0）→ 右向き
       if (dy > 0) {
         facingSignRef.current = -1;
-        targetRotYRef.current = rotationFacingLeft;
       } else if (dy < 0) {
         facingSignRef.current = +1;
-        targetRotYRef.current = rotationFacingRight;
       }
 
       // スクロール検知 → state 遷移
@@ -255,7 +327,6 @@ export default function ScrollWalkCharacter({
         window.clearTimeout(scrollStopTimerRef.current);
       }
       scrollStopTimerRef.current = window.setTimeout(() => {
-        scrollVelocityRef.current = 0;
         if (stateRef.current === 'walking') {
           transitionRef.current('stopping');
         }
@@ -269,7 +340,9 @@ export default function ScrollWalkCharacter({
         window.clearTimeout(scrollStopTimerRef.current);
       }
     };
-  }, [scrollStopMs, rotationFacingLeft, rotationFacingRight, progressVar]);
+  }, [scrollStopMs, progressVar]);
+  // Note: rotation の lerp 制御は useFrame 内で stateRef + facingSignRef を参照して
+  // 決定するため、ここの deps に rotation 系プロップを入れる必要はない。
 
   // フレーム更新
   useFrame(() => {
@@ -289,18 +362,21 @@ export default function ScrollWalkCharacter({
         // 位置・回転・残留 scroll delta をリセット
         group.current.position.x = initialX;
         group.current.rotation.y = rotationFacingLeft;
+        facingSignRef.current = -1;
         targetRotYRef.current = rotationFacingLeft;
         scrollDeltaSinceFrame.current = 0;
         prevProgressRef.current = 0;
-        // state を waiting にスナップ（WaitingPose 再生）
+        walkPhaseRef.current = 0;
+        // state を waiting にスナップ（Idle 再生）
         Object.values(actions).forEach((a) => a?.stop());
-        const w = actions['WaitingPose'];
+        const w = actions[STATE_TO_CLIP.waiting];
         if (w) {
           w.reset();
           w.setEffectiveTimeScale(1);
           w.play();
         }
         stateRef.current = 'waiting';
+        currentClipNameRef.current = STATE_TO_CLIP.waiting;
         // stop timer もクリア
         if (scrollStopTimerRef.current !== null) {
           window.clearTimeout(scrollStopTimerRef.current);
@@ -323,7 +399,15 @@ export default function ScrollWalkCharacter({
       group.current.position.y = baseY + yOffset;
     }
 
-    // 回転を target に向けて smooth lerp（向きが変わると徐々に切り替わる）
+    // ─── 回転制御 ───
+    // 全 state で rotation は facingSign に従う。
+    //   右 (facingSign=+1): +π/2 で固定（walking 中も停止 → Bridge → RightIdle 中もずっと右）
+    //   左 (facingSign=-1): -π/2 で固定
+    // 右側 Idle (RightIdle) はクリップ内の hips Y+90° / root Z-90° で「正面で揺れる」見え方が
+    // 焼き込まれているので、group rotation を変えなくても正しく表示される。
+    // 向きが変わるのは scroll 方向が反転した時の walking/resuming 中の lerp だけ。
+    targetRotYRef.current =
+      facingSignRef.current === +1 ? rotationFacingRight : rotationFacingLeft;
     group.current.rotation.y = THREE.MathUtils.lerp(
       group.current.rotation.y,
       targetRotYRef.current,
@@ -338,11 +422,11 @@ export default function ScrollWalkCharacter({
       const delta = progress - prev;
       prevProgressRef.current = progress;
       if (Math.abs(delta) > 0.0001) {
-        // progress の方向で向きを決める
+        // progress の方向で向きを決める（target rotation は上の switch で反映）
         if (delta > 0) {
-          targetRotYRef.current = rotationFacingLeft;
+          facingSignRef.current = -1;
         } else {
-          targetRotYRef.current = rotationFacingRight;
+          facingSignRef.current = +1;
         }
         // state: walking へ
         if (stateRef.current === 'waiting') {
@@ -351,22 +435,25 @@ export default function ScrollWalkCharacter({
       }
     }
 
-    // ─── X 位置 & walk timeScale: walking 状態の間は常に scroll delta ベース ───
+    // ─── X 位置 & Walk クリップ phase-lock: walking 状態の間は scroll delta ベース ───
     // pin 終了後も window scroll が続いていれば character は移動を続けて画面外へ抜ける。
+    // Walk クリップは paused=true で mixer 自動進行を止めてあり、X 累積移動距離から
+    // 算出した位相 (walkPhaseRef) を walk.time に毎フレーム打ち込むことで、足滑りを防ぐ。
     if (stateRef.current === 'walking') {
-      const walk = actions['Walk'];
-      if (walk) {
-        const velAbs = Math.abs(scrollVelocityRef.current);
-        const ts = THREE.MathUtils.clamp(
-          velAbs * velocityToTimeScale + minWalkTimeScale,
-          minWalkTimeScale,
-          maxWalkTimeScale,
-        );
-        walk.timeScale = ts;
-      }
       const dy = scrollDeltaSinceFrame.current;
       const dx = -dy * walkRate;
       group.current.position.x += dx;
+
+      const walk = actions['Walk'];
+      if (walk) {
+        // 移動方向に関わらず脚は常に前進サイクル（abs）。
+        // 進む向きはキャラの facing rotation が担当する。
+        walkPhaseRef.current += Math.abs(dx) / stridePerCycle;
+        const dur = walk.getClip().duration;
+        if (dur > 0) {
+          walk.time = (walkPhaseRef.current % 1) * dur;
+        }
+      }
     }
 
     scrollDeltaSinceFrame.current = 0;

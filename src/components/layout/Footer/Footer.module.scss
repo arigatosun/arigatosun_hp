@@ -100,21 +100,30 @@
 }
 
 // ── CONTACT US ボタンエリア ──
-// PC max は 130 (ユーザー指定 = ユーザーのオーバーレイ計測で Figma と一致する値)。
-// padding-bottom は Figma PC 1920 値 195 を維持。
+// PC max padding-top は 179 (= 旧 130 + 49)。
+// オーバーレイ計測でボタン以下が 49px 上にずれていたため、ここで吸収して
+// ボタンと続くロゴ/ナビ/CREATIVE PROJECTS まで連動シフトさせる。
+// padding-bottom は Figma PC 1920 値 195 を維持（ボタン↔ロゴ間距離は変えない）。
 .contactArea {
   position: relative;
   z-index: 1;
   display: flex;
   justify-content: center;
-  @include fluid(padding-top, 100, 130);
+  @include fluid(padding-top, 100, 179);
   @include fluid(padding-bottom, 80, 195);
 
   // Figma SP(390): footer.padding-top 側で 203 を消化済 → ここの padding-top は 0
   // button bottom (y=259) → logo top (y=419) = 160
   // 左右 padding 40 でボタンを 310 フル幅に
+  //
+  // SP レイアウトは 1023px までかかるため、contactArea 自体を 390px (Figma SP 想定幅) でキャップ + 中央寄せ。
+  // これがないと 390〜1023px の範囲でボタン (width:100%) が viewport - 80 まで膨張する。
+  // キャップした上で従来通り左右 fluid padding を当てると button 内寸 = 310px が維持される。
   @include sp {
     padding-top: 0;
+    max-width: 390px;
+    margin-left: auto;
+    margin-right: auto;
     @include fluid(padding-bottom, 120, 160, 320, 390);
     @include fluid(padding-left, 32, 40, 320, 390);
     @include fluid(padding-right, 32, 40, 320, 390);
@@ -140,6 +149,9 @@
   @include fluid(letter-spacing, 1.43, 2.86);
   text-align: center;
   white-space: nowrap;
+  // 中央位置の微補正: PC オーバーレイ計測で水平中心から右に 17px ずれていたため左へ戻す
+  // (Y シフトは .contactArea 側の padding-top で吸収済み)
+  transform: translateX(-17px);
   transition:
     background-color var(--transition-base),
     color var(--transition-base);
@@ -150,9 +162,11 @@
   }
 
   // Figma SP(390): 親 .contactArea の 40 padding 内でフル幅 = 310×56
+  // 390px 超の膨張は親 .contactArea 側を max-width: 390px でキャップして抑制している。
   @include sp {
     width: 100%;
     max-width: none;
+    transform: none;
     @include fluid(height, 48, 56, 320, 390);
     @include fluid(font-size, 14, 16, 320, 390);
   }
