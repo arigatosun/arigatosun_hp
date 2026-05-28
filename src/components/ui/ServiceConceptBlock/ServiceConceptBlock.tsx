@@ -12,6 +12,12 @@ type ServiceConceptBlockProps = {
   bodyTracking: number;
   /** レイアウトバリアント — 'phases' は ECOSYSTEM PROCESS 用 (gap 195 / visual 585) */
   variant?: 'default' | 'phases';
+  /**
+   * PC で左カラム (見出し + 本文) を position: sticky で上部に固定する。
+   * 右カラム (steps 等) のスクロールが終わるまで左を留め、ブロック末尾で自然解放。
+   * SP では sticky 無効 (縦積みのため意味なし)。
+   */
+  stickyText?: boolean;
   /** 右側のビジュアル（GlowImage or ServiceScopePills） */
   children: ReactNode;
 };
@@ -24,6 +30,7 @@ export default function ServiceConceptBlock({
   body,
   bodyTracking,
   variant = 'default',
+  stickyText = false,
   children,
 }: ServiceConceptBlockProps) {
   const blockClass = [
@@ -32,9 +39,12 @@ export default function ServiceConceptBlock({
   ]
     .filter(Boolean)
     .join(' ');
+  const textClass = [styles.text, stickyText ? styles.textSticky : '']
+    .filter(Boolean)
+    .join(' ');
   return (
     <section className={blockClass} id={id}>
-      <div className={styles.text}>
+      <div className={textClass}>
         <SectionHeader
           logo={{
             src: '/images/sections/service/detail/section-sun.svg',

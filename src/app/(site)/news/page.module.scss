@@ -232,7 +232,7 @@
   @include fluid(padding-bottom, 26, 52);
 
   &:hover .articleTitle {
-    color: var(--color-primary);
+    color: var(--color-text-secondary);
   }
 
   @include sp {

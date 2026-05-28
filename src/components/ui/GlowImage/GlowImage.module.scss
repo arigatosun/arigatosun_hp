@@ -6,8 +6,6 @@
 .wrap {
   position: relative;
   width: 100%;
-  // 赤グローを端でも切り取らない（ABOUT のヒートマップと同方式）。
-  // はみ出した分は overflow: clip した親（.page）で受ける。
 }
 
 .image {
@@ -98,7 +96,8 @@
 .overlay {
   position: absolute;
   margin: 0;
-  color: var(--color-black);
+  // Figma 実測: #808080 (= --color-text-secondary)
+  color: var(--color-text-secondary);
   font-family: 'Noto Sans JP', var(--font-jp);
   font-weight: var(--font-weight-regular);
   // Figma 実測: 16〜18px / lh 26〜32 / ls ≒ 0.2em
@@ -107,4 +106,6 @@
   letter-spacing: 0.2em;
   text-align: center;
   white-space: pre-line;
+  // 背後のスライムや線画と馴染ませる（Figma: mix-blend-multiply）
+  mix-blend-mode: multiply;
 }
