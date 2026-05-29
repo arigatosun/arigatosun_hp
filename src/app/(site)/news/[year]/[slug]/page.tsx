@@ -126,6 +126,7 @@ export default async function NewsDetailPage({ params }: Props) {
                 fill
                 className={styles.eyecatchImg}
                 sizes="(max-width: 1023px) 100vw, 640px"
+                priority
               />
             ) : (
               <span className={styles.eyecatchPlaceholder} aria-hidden="true" />
