@@ -92,7 +92,7 @@ export default function Footer() {
               </li>
               <li>
                 <a
-                  href="https://www.instagram.com/arigatosun_inc?igsh=MXh5Z3dmM29hazJhNw=="
+                  href="https://www.instagram.com/arigatosun_inc"
                   className={styles.mainMenuItem}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -124,7 +124,12 @@ export default function Footer() {
         <div className={styles.right}>
           <h3 className={styles.projectsTitle}>CREATIVE PROJECTS</h3>
           <div className={styles.projectImages}>
-            <div className={styles.projectImageWrap}>
+            <a
+              className={styles.projectImageWrap}
+              href="https://online.kusomegane.shop/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <Image
                 src="/images/partners/kusomegane-logo.png"
                 alt="KUSOMEGANE"
@@ -133,8 +138,13 @@ export default function Footer() {
                 className={styles.projectImage}
                 loading="eager"
               />
-            </div>
-            <div className={styles.projectImageWrap}>
+            </a>
+            <a
+              className={styles.projectImageWrap}
+              href="https://aseave.co.jp/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <Image
                 src="/images/partners/aseave-logo.png"
                 alt="ASEAVE"
@@ -143,7 +153,7 @@ export default function Footer() {
                 className={styles.projectImage}
                 loading="eager"
               />
-            </div>
+            </a>
           </div>
         </div>
       </div>

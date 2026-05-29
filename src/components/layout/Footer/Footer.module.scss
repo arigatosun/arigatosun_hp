@@ -370,6 +370,7 @@
 }
 
 .projectImageWrap {
+  display: block; // <a> リンク化に伴い block 化（画像 width:100% を効かせる）
   position: relative;
   overflow: hidden;
 

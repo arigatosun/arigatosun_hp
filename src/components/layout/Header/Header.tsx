@@ -25,24 +25,23 @@ const rightNav = [
 
 const snsNav = [
   {
-    href: 'https://www.instagram.com/arigatosun_inc?igsh=MXh5Z3dmM29hazJhNw==',
+    href: 'https://www.instagram.com/arigatosun_inc',
     label: 'IG',
     external: true,
   },
 ];
 
 // CREATIVE PROJECTS バナー（Footer と同じ構成 / SP メニュー用）
-// href はリンク先 URL が確定したら差し替える（後日支給予定）
 const creativeProjects = [
   {
     src: '/images/partners/kusomegane-banner.png',
     alt: 'KUSOMEGANE OFFICIAL STORE',
-    href: '#',
+    href: 'https://online.kusomegane.shop/',
   },
   {
     src: '/images/partners/aseave-banner.png',
     alt: '飲む、深呼吸 ASEAVE',
-    href: '#',
+    href: 'https://aseave.co.jp/',
   },
 ];
 
