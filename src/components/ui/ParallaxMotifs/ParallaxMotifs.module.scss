@@ -77,7 +77,11 @@
 .spMotif {
   transform-box: fill-box;
   transform-origin: center;
-  animation: spMotifFloatSm 6s ease-in-out infinite;
+  // モバイル軽量化: SP では常時フロートを停止し、ブラーのドロップシャドウも無効化する。
+  // フィルタ付き 17 要素を毎フレーム再ラスタライズするのが実機で重い主因のため、
+  // フロート(animation)・視差(JS側で停止)・ブラー(filter)をまとめて止めて集合演出だけ残す。
+  animation: none;
+  filter: none;
 }
 
 // 2階層化により .spMotif は各 .spMotifEntry の唯一の <g> 子になるため、
