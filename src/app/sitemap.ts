@@ -3,8 +3,7 @@ import { getAllWorks } from '@/data/works';
 import { SERVICE_DETAIL_SLUGS } from '@/data/service-detail';
 import { getAllMemberSlugs } from '@/data/members';
 import { getPublishedNewsParams } from '@/lib/news/queries';
-
-const BASE_URL = 'https://arigatosun.com';
+import { SITE_URL as BASE_URL } from '@/lib/site';
 
 /**
  * サイトマップ。静的ページ + 動的詳細（service / works / member / news）を列挙する。

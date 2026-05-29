@@ -1,6 +1,5 @@
 import type { MetadataRoute } from 'next';
-
-const BASE_URL = 'https://arigatosun.com';
+import { SITE_URL as BASE_URL } from '@/lib/site';
 
 /**
  * robots.txt。管理画面・API はクロール不可、それ以外は許可。サイトマップを通知する。
