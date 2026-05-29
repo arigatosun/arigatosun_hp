@@ -15,6 +15,8 @@ const eslintConfig = defineConfig([
     // worktree 配下の .next/ 等まで lint しないように再帰指定
     "**/.next/**",
     ".claude/worktrees/**",
+    // 開発用スクリプト（出荷対象外。Node/CommonJS 混在のため本体規約とは別管理）
+    "scripts/**",
   ]),
 ]);
 

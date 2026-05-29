@@ -32,10 +32,9 @@ export default function ServiceFlowSteps({ items }: ServiceFlowStepsProps) {
   const [spActiveIdx, setSpActiveIdx] = useState(-1);
 
   useEffect(() => {
-    if (isPC) {
-      setSpActiveIdx(-1);
-      return;
-    }
+    // PC では spActiveIdx を参照しない（描画は activeIdx を使用）ため、
+    // ここでのリセットは不要。スクロール監視のセットアップだけ SP に限定する。
+    if (isPC) return;
 
     let raf = 0;
     const update = () => {

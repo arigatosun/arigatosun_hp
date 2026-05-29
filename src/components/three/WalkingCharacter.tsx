@@ -326,7 +326,6 @@ export default function WalkingCharacter({
         };
       }
       // clipNames 指定だが対応クリップが見つからない時は警告だけ出して従来モードへ
-      // eslint-disable-next-line no-console
       console.warn(
         `[WalkingCharacter] clipNames specified but not found in glb: walk='${clickClipNames.walk}' click='${clickClipNames.click}'`,
       );
