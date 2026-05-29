@@ -38,6 +38,8 @@ export default async function Home() {
                 width={1144}
                 height={264}
                 className={styles.heroLogoImage}
+                fetchPriority="high"
+                decoding="async"
               />
             </picture>
           </h1>
