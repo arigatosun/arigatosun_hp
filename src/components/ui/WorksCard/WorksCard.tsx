@@ -39,6 +39,7 @@ export default function WorksCard({
           width={imageWidth}
           height={imageHeight}
           className={styles.image}
+          sizes="(max-width: 1023px) 90vw, 30vw"
         />
       </div>
 
