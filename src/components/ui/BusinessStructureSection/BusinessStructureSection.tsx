@@ -35,6 +35,7 @@ export default function BusinessStructureSection() {
           width={640}
           height={640}
           className={styles.structureImage}
+          sizes="(max-width: 1023px) 90vw, 35vw"
         />
         {/* 赤スライムグロー層: mask-image で 4-clover + 外側2小円のシルエットに切り抜く
             → 連携体制図の輪郭外には絶対にはみ出さない */}

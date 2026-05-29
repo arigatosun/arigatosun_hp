@@ -27,6 +27,7 @@ export default function MemberProjectGrid({
                 width={357}
                 height={202}
                 className={styles.thumbnail}
+                sizes="(max-width: 1023px) 48vw, 24vw"
               />
             ) : (
               <div className={styles.placeholder} aria-label={project.title} />
