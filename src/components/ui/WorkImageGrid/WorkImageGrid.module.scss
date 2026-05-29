@@ -15,33 +15,58 @@
   }
 }
 
-// グレーカード本体（Figma: 背景 #EBEDEE）。高さは min-height（インライン）で Figma 実測に合わせ、
+// グレーカード本体（Figma: 背景 #EBEDEE）。高さは min-height（CSS変数）で Figma 実測に合わせ、
 // 内容が収まらない SP では自然に伸びる。
+// --card-mh: PC ベースの clamp / --card-mh-sp: SP 上書き（未指定なら PC 値を流用）
 .card {
   background: var(--color-card-gray);
   display: flex;
   flex-direction: column;
+  min-height: var(--card-mh);
   @include fluid(padding-top, 32, 73);
   // Figma カード高さ(840/690px)に収めるため下余白は小さめ
   @include fluid(padding-bottom, 8, 14);
   @include fluid(padding-left, 24, 150);
   @include fluid(padding-right, 24, 150);
+
+  @include sp {
+    min-height: var(--card-mh-sp, var(--card-mh));
+  }
 }
 
-// 画像グリッド（PC 4列 / SP 2列）
+// 画像グリッド（PC 4列 / SP 既定 2列・spGridCols で上書き可）
 .grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   @include fluid(gap, 8, 12);
 
   @include sp {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(var(--sp-grid-cols, 2), 1fr);
   }
 }
 
 // 1 枚の合成済み画像を full-bleed で出すモード
 .gridSingle {
   display: block;
+}
+
+// SP 専用差し替えがある時の出し分け
+.pcOnly {
+  @include sp {
+    display: none;
+  }
+}
+.spOnly {
+  display: none;
+
+  @include sp {
+    display: grid;
+  }
+}
+.spOnly.gridSingle {
+  @include sp {
+    display: block;
+  }
 }
 
 // 各サムネ。aspect-ratio はインライン style（データの画像比）。

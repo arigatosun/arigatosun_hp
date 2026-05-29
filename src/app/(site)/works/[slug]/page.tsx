@@ -98,6 +98,7 @@ export default async function WorkDetailPage({ params }: PageParams) {
             <WorkShowcaseCard
               background={block.background}
               card={block.card}
+              spCard={block.spCard}
               graphic={block.graphic}
             />
           );
@@ -109,6 +110,11 @@ export default async function WorkDetailPage({ params }: PageParams) {
               caption={block.caption}
               cardHeight={block.cardHeight}
               blur={block.blur}
+              spImages={block.spImages}
+              spImageRatio={block.spImageRatio}
+              spCardHeight={block.spCardHeight}
+              spGridCols={block.spGridCols}
+              spBlur={block.spBlur}
             />
           );
         } else if (block.type === 'mockupCard') {
@@ -118,6 +124,9 @@ export default async function WorkDetailPage({ params }: PageParams) {
               w={block.w}
               h={block.h}
               sp={block.sp}
+              spSrc={block.spSrc}
+              spW={block.spW}
+              spH={block.spH}
             />
           );
         } else if (block.type === 'caption') {

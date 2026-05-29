@@ -16,7 +16,7 @@
   margin: 0;
   padding: 0;
   // SectionHeader 下端 → 最初のカード上端
-  // SP: 60 / PC: 63
+  // PC: fluid 60→63 / SP: 39 (ユーザー指定で短縮)
   @include fluid(margin-top, 60, 63);
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -25,6 +25,8 @@
 
   @include max(1023px) {
     grid-template-columns: 1fr;
+    // SP: 見出し→1 枚目カードの余白を 39px に
+    margin-top: 39px;
     // Figma SP: カード間 60px
     gap: 60px;
   }

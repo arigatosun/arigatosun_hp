@@ -4,18 +4,15 @@
 );
 @use '@/styles/breakpoints' as *;
 
-// Web モックアップ画像カードを本文と同じ左右 x=200 基準に収める枠 (Figma SP は画面端まで広げる)
+// Web モックアップ画像カードを本文と同じ左右 x=200 基準に収める枠。
+// Figma SP は他のセクション (imageGrid 個別スライド) と統一で 左右 28px。
+// 旧来 SP full-bleed (0) だった挙動は cardSp プレースホルダーのみ維持。
 .wrap {
-  @include fluid(padding-left, 20, 200);
-  @include fluid(padding-right, 20, 200);
-
-  @include sp {
-    padding-left: 0;
-    padding-right: 0;
-  }
+  @include fluid(padding-left, 28, 200);
+  @include fluid(padding-right, 28, 200);
 }
 
-// SP の pair / variations は full-bleed 想定。SP は padding を解除
+// SP の pair / variations は full-bleed 想定。SP のみ padding を解除する
 .wrap:has(.cardSp) {
   @include sp {
     padding-left: 0;

@@ -11,6 +11,9 @@ type WorkMockupCardProps = {
     variant: SpVariant;
     spAspectRatio?: string;
   };
+  spSrc?: string;
+  spW?: number;
+  spH?: number;
 };
 
 /**
@@ -87,7 +90,13 @@ export default function WorkMockupCard({
   w,
   h,
   sp,
+  spSrc,
+  spW,
+  spH,
 }: WorkMockupCardProps) {
+  const spImageSrc = spSrc ?? src;
+  const spRatioW = spW ?? w;
+  const spRatioH = spH ?? h;
   return (
     <div className={styles.wrap}>
       {/* PC: 既存の画像カード */}
@@ -101,7 +110,7 @@ export default function WorkMockupCard({
         />
       </div>
 
-      {/* SP: sp が指定された場合は variant プレースホルダー、未指定は既存の画像カード */}
+      {/* SP: sp が指定された場合は variant プレースホルダー、未指定は SP 画像（spSrc or src）カード */}
       {sp ? (
         <div className={styles.cardSp}>
           <SpPlaceholder variant={sp.variant} aspectRatio={sp.spAspectRatio} />
@@ -109,10 +118,10 @@ export default function WorkMockupCard({
       ) : (
         <div
           className={styles.cardSpDefault}
-          style={{ aspectRatio: `${w} / ${h}` }}
+          style={{ aspectRatio: `${spRatioW} / ${spRatioH}` }}
         >
           <Image
-            src={src}
+            src={spImageSrc}
             alt=""
             fill
             sizes="100vw"
