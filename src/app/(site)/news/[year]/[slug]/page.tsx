@@ -8,6 +8,7 @@ import {
 } from '@/lib/news/queries';
 import { renderNewsContentToHtml } from '@/lib/news/render';
 import { formatNewsDate } from '@/lib/news/format';
+import CopyLinkButton from '@/components/ui/CopyLinkButton';
 import styles from './page.module.scss';
 
 type Props = {
@@ -40,37 +41,65 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-// SNS シェアアイコン（現状は見た目のみ）。リンクは将来の実装で差し替え。
-const SHARE_ICONS = [
-  { src: '/images/sections/news/share-1.svg', label: 'X でシェア', round: false, sizeKey: 'x' as const },
-  { src: '/images/sections/news/share-2.png', label: 'シェア', round: true, sizeKey: 'fb' as const },
-  { src: '/images/sections/news/share-3.svg', label: 'シェア', round: false, sizeKey: 'line' as const },
-  { src: '/images/sections/news/share-4.svg', label: 'リンクをコピー', round: false, sizeKey: 'link' as const },
-];
+// サイトの正規ドメイン（シェアURLの組み立て用）。
+const SITE_ORIGIN = 'https://arigatosun.com';
 
-function renderShareIcons() {
-  return SHARE_ICONS.map((icon) => {
-    const sizeClass =
-      icon.sizeKey === 'x'
-        ? styles.shareIconX
-        : icon.sizeKey === 'fb'
-          ? styles.shareIconFb
-          : icon.sizeKey === 'line'
-            ? styles.shareIconLine
-            : styles.shareIconLink;
-    return (
-      <span
-        key={icon.src}
-        className={`${styles.shareIcon} ${sizeClass} ${
-          icon.round ? styles.shareIconRound : ''
-        }`}
-        role="img"
-        aria-label={icon.label}
-      >
-        <Image src={icon.src} alt="" width={24} height={24} />
-      </span>
-    );
-  });
+// SNS シェアボタン。X / Facebook / LINE は通常リンク（サーバー描画）、
+// リンクコピーのみクライアント側処理（CopyLinkButton）。
+function renderShareButtons(shareUrl: string, title: string) {
+  const enc = encodeURIComponent;
+  const linkTargets = [
+    {
+      key: 'x',
+      src: '/images/sections/news/share-1.svg',
+      label: 'X でシェア',
+      sizeClass: styles.shareIconX,
+      round: false,
+      href: `https://twitter.com/intent/tweet?text=${enc(title)}&url=${enc(shareUrl)}`,
+    },
+    {
+      key: 'fb',
+      src: '/images/sections/news/share-2.png',
+      label: 'Facebook でシェア',
+      sizeClass: styles.shareIconFb,
+      round: true,
+      href: `https://www.facebook.com/sharer/sharer.php?u=${enc(shareUrl)}`,
+    },
+    {
+      key: 'line',
+      src: '/images/sections/news/share-3.svg',
+      label: 'LINE でシェア',
+      sizeClass: styles.shareIconLine,
+      round: false,
+      href: `https://social-plugins.line.me/lineit/share?url=${enc(shareUrl)}`,
+    },
+  ];
+
+  const iconClass = (sizeClass: string | undefined, round: boolean) =>
+    `${styles.shareIcon} ${sizeClass ?? ''}${round ? ` ${styles.shareIconRound}` : ''}`;
+
+  return (
+    <>
+      {linkTargets.map((t) => (
+        <a
+          key={t.key}
+          href={t.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={t.label}
+          className={iconClass(t.sizeClass, t.round)}
+        >
+          <Image src={t.src} alt="" width={24} height={24} />
+        </a>
+      ))}
+      <CopyLinkButton
+        url={shareUrl}
+        iconSrc="/images/sections/news/share-4.svg"
+        iconClassName={iconClass(styles.shareIconLink, false)}
+        label="リンクをコピー"
+      />
+    </>
+  );
 }
 
 export default async function NewsDetailPage({ params }: Props) {
@@ -82,6 +111,7 @@ export default async function NewsDetailPage({ params }: Props) {
   if (!entry) notFound();
 
   const contentHtml = renderNewsContentToHtml(entry.content);
+  const shareUrl = `${SITE_ORIGIN}/news/${year}/${slug}`;
 
   return (
     <div className={styles.page} data-news-detail>
@@ -109,7 +139,7 @@ export default async function NewsDetailPage({ params }: Props) {
               <span className={styles.date}>{formatNewsDate(entry.published_at)}</span>
               <span className={styles.category}>#{entry.category?.label ?? ''}</span>
             </p>
-            <div className={styles.share}>{renderShareIcons()}</div>
+            <div className={styles.share}>{renderShareButtons(shareUrl, entry.title)}</div>
             <span className={styles.headerDivider} aria-hidden="true" />
 
             {/* TipTap が生成した HTML を出力。コンテンツは認証済み管理者が作成した信頼コンテンツ。 */}
@@ -119,7 +149,7 @@ export default async function NewsDetailPage({ params }: Props) {
             />
 
             <span className={styles.bottomDividerSp} aria-hidden="true" />
-            <div className={styles.shareBottomSp}>{renderShareIcons()}</div>
+            <div className={styles.shareBottomSp}>{renderShareButtons(shareUrl, entry.title)}</div>
           </div>
         </div>
 
