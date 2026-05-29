@@ -51,6 +51,26 @@ export default function HeroAnimation() {
     // クリーンアップ時に同じ配列を参照するため effect 冒頭で控える
     const panels = panelRefs.current;
 
+    // モーション抑制設定: 登場アニメをスキップし、各パネルを「最終表示状態」に即セット。
+    // （スキップだけだと初期 opacity:0 / x:-75vw のまま見えなくなるため必ず最終状態を当てる）
+    const prefersReduced =
+      typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) {
+      panels.forEach((panel, index) => {
+        if (!panel) return;
+        gsap.set(panel, {
+          x: '10vw',
+          opacity: 1,
+          scale: 1,
+          y: 0,
+          rotation: PANEL_MOTIONS[index].settle.rotation,
+          force3D: true,
+        });
+      });
+      return;
+    }
+
     panels.forEach((panel) => {
       if (panel) {
         gsap.set(panel, {
