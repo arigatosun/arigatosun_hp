@@ -120,6 +120,7 @@ export default async function ServiceDetailPage({ params }: PageParams) {
               height={concept.visual.height}
               mask={concept.visual.mask}
               overlays={concept.visual.overlays}
+              compactSp={concept.visual.compactSp}
             />
           )}
           {concept.visual.kind === 'pills' && (

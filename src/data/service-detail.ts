@@ -475,6 +475,8 @@ const IP_CREATIVE: ServiceDetailData = {
         alt: 'CREATOR FIRST のギルド型組織図。中央「作者」を内周「プロデュース／ディレクション」が囲み、外周にコラボレーション・コンテンツ企画制作・アプリゲーム開発・グッズ管理・EC・3D デザイン等が並ぶ',
         width: 351,
         height: 351,
+        // SP で全幅拡大せず、上の「アリガトサン・スタンダード」図(≈350)とサイズ感を揃える
+        compactSp: true,
         // 赤グローはマスク (Figma Group 1234 = クローバー + 4 隅バブル) の内側だけに表示
         mask: {
           src: '/images/sections/service/detail/concept-creator-first-ip-mask.svg',

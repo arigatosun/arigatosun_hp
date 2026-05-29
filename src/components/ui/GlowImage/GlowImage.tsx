@@ -16,6 +16,8 @@ type GlowImageProps = {
   mask?: ServiceConceptMask | null;
   /** 画像の上に重ねるテキストオーバーレイ */
   overlays?: ServiceImageOverlay[];
+  /** SP で全幅(+44px)拡大をやめ、ネイティブ width で頭打ち＋中央寄せにする */
+  compactSp?: boolean;
   /**
    * SlimeGlow の追加上書きパラメータ。
    * 既定は SLIME_GLOW_STANDARD (サービスページ「アリガトサン・スタンダード」と同じ見た目)。
@@ -64,6 +66,7 @@ export default function GlowImage({
   height,
   mask = null,
   overlays = [],
+  compactSp = false,
   glowOverrides,
 }: GlowImageProps) {
   // マスク画像（形のシルエット）でグロー層をクリップする
@@ -84,8 +87,14 @@ export default function GlowImage({
 
   return (
     <div
-      className={styles.wrap}
-      style={{ aspectRatio: `${width} / ${height}` }}
+      className={`${styles.wrap} ${compactSp ? styles.compactSp : ''}`}
+      style={
+        {
+          aspectRatio: `${width} / ${height}`,
+          // SP の頭打ち幅。.compactSp の SP ルールでのみ参照する（PC は無視＝全幅のまま）
+          ...(compactSp ? { '--compact-max': `${width}px` } : {}),
+        } as CSSProperties
+      }
     >
       {src ? (
         <Image
