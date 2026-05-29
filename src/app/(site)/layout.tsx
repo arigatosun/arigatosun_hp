@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
+import Preloader from '@/components/ui/Preloader';
 
 // 公開マーケサイト共通のレイアウト。Header / Footer はここで適用。
 // /admin 配下はこのレイアウトを経由しないため、admin にこのメタデータも届かない。
@@ -28,6 +29,7 @@ export default function SiteLayout({
 }>) {
   return (
     <>
+      <Preloader />
       <Header />
       <main>{children}</main>
       <Footer />
