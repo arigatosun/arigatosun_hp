@@ -30,6 +30,7 @@ export default function ServiceCreatorProfile({
         height={1666}
         className={styles.mosaic}
         aria-hidden="true"
+        sizes="(max-width: 1023px) 512px, 60vw"
       />
       <div className={styles.row}>
         <div className={styles.avatar}>
@@ -40,6 +41,7 @@ export default function ServiceCreatorProfile({
               width={294}
               height={294}
               className={styles.avatarImage}
+              sizes="(max-width: 1023px) 190px, 294px"
             />
           ) : (
             <div className={styles.avatarPlaceholder} aria-hidden="true" />
@@ -54,7 +56,6 @@ export default function ServiceCreatorProfile({
               width={409}
               height={40}
               className={styles.titleLogo}
-              priority
             />
           </h2>
 

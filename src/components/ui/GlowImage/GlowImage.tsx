@@ -94,6 +94,7 @@ export default function GlowImage({
           width={width}
           height={height}
           className={styles.image}
+          sizes="(max-width: 1023px) 92vw, 44vw"
         />
       ) : (
         <div className={styles.placeholder} role="img" aria-label={alt} />
