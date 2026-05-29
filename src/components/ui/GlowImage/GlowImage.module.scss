@@ -20,6 +20,16 @@
   }
 }
 
+// compactSp: SP で全幅(+44px)拡大せず、ネイティブ width (inline max-width) で
+// 頭打ち＋中央寄せ。単体完結の図（CREATOR FIRST 等）を上の図とサイズ感を揃える用途。
+.compactSp {
+  @include sp {
+    width: 100%;
+    max-width: var(--compact-max, none); // = ネイティブ width。PC では未適用
+    margin-inline: auto;
+  }
+}
+
 .image {
   position: relative;
   // テキスト・線画 (PNG) はグローより上に表示

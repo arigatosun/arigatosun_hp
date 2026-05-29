@@ -104,6 +104,11 @@ export type ServiceConceptVisual =
       mask: ServiceConceptMask | null;
       /** 画像の上に重ねるテキストオーバーレイ（AI/DEV アリガトサン・スタンダードの3標準等） */
       overlays?: ServiceImageOverlay[];
+      /**
+       * SP で図を全幅(+44px)に拡大せず、ネイティブ幅で頭打ち＋中央寄せにする。
+       * 単体完結の図（CREATOR FIRST 等）を上の図とサイズ感を揃えたい時に true。
+       */
+      compactSp?: boolean;
     }
   | {
       kind: 'pills';
