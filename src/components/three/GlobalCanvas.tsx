@@ -3,20 +3,11 @@
 import { Suspense, useEffect, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import WalkingCharacter from './WalkingCharacter';
-import ScrollWalkCharacter from './ScrollWalkCharacter';
 import { useGLTF } from '@react-three/drei';
 
 // Phase 19: ニュース下のキャラを「クリック挙動」入りの新キャラに差し替え。
 // 0-28F = 歩行, 29-56F = クリック反応, 57-118F = 残りの歩行（Walk クリップは 0-28F のみ使用）。
 const GLB_PATH = '/models/arigatokunn_walk_click_meshopt.glb';
-// Phase 18 追補: スクロール連動用 unified glb（Idle / TurnToSide / Walk / StopWalk /
-// WaitingPose / ResumeWalk の 6 クリップ内包）。Service セクションで使用。
-const UNIFIED_GLB_PATH = '/models/arigatokunn_unified.glb';
-
-// Service セクションの歩行キャラ表示フラグ。false で非表示。
-// Phase 36 では Service の横スクロール演出（pin + 待機区間）を優先したいので OFF。
-// 将来的に「歩行キャラと共存」させたくなったら true に戻す。
-const SHOW_SERVICE_WALKER = false;
 
 // ページ全体で1つだけのグローバルCanvas
 // OrthographicCameraで描画（遠近法による見かけの回転を防止）
@@ -34,7 +25,6 @@ export default function GlobalCanvas() {
   const walkScale = isSp ? 0.35 : 0.6;
   // SP は両キャラを 70px (camera zoom 150 → +0.467 world unit) 上にオフセット
   const SP_OFFSET_Y = 0.467;
-  const serviceBaseY = isSp ? -2.0 + SP_OFFSET_Y : -2.0;
   const logoBaseY = isSp ? -1.5 + SP_OFFSET_Y : -1.5;
 
   return (
@@ -61,22 +51,6 @@ export default function GlobalCanvas() {
       <directionalLight position={[-4, 2, 5]} intensity={0.6} />
 
       <Suspense fallback={null}>
-        {/* Service: スクロール連動の双方向横歩き。
-            タイミング: --service-progress の変化（pin 中のみ）で歩き始め/止まる
-            動き方: window scroll delta ベース（自由な進行・画面外にも抜ける）
-            初期位置: 中央より -2 left（AI/DEVELOPMENT カードの隣あたり） */}
-        {SHOW_SERVICE_WALKER && (
-          <ScrollWalkCharacter
-            glbPath={UNIFIED_GLB_PATH}
-            sectionSelector='[data-section="service"]'
-            approachMarginPx={700}
-            baseY={serviceBaseY}
-            scale={walkScale}
-            progressVar="--service-progress"
-            initialX={-2}
-          />
-        )}
-
         {/* LogoSlider: 左→右に逆方向で歩く 2 体目。
             approachMarginPx を 1500 にしてロゴ表示時には既に画面内に入っている状態に。 */}
         <WalkingCharacter
@@ -104,6 +78,3 @@ export default function GlobalCanvas() {
 }
 
 useGLTF.preload(GLB_PATH, false, true); // walk_click は meshopt 圧縮版（MeshoptDecoder で復号）
-// 以下は現状 TOP で未使用のため preload しない（初回ロード削減）:
-// - arigatokunn_unified.glb / arigatokunn_turn_right.glb は ScrollWalkCharacter(SHOW_SERVICE_WALKER=false) 専用。
-//   有効化時に当該コンポーネントが on-demand ロードする。
