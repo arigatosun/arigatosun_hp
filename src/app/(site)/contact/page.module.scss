@@ -1,6 +1,12 @@
 @use '@/styles/fluid' as *;
 @use '@/styles/breakpoints' as *;
 
+// ── レスポンシブ方針（contact「その間」対応 / 2026-05） ──
+// PC レンジ(≥1024)を Hero/About と同じ 1920 基準 clamp に、SP(≤1023) は 1200 据え置き。
+//   - PC を 1920 に乗せたいベース宣言だけ `…, 390, 1920` を付ける。
+//   - ≤1023 にも効く無防備な値は `@include sp { @include fluid(…, 390, 1200) }` で SP を不変に固定。
+// ※ .page padding-bottom は @include pc / sp で全域上書き済みのため据え置き。
+
 .page {
   padding-top: 80px; // Header(position: fixed) 分のオフセット
   // SP（vw < 1024）は元の fluid を維持
@@ -39,10 +45,10 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  @include fluid(padding-left, 20, 200);
-  @include fluid(padding-right, 20, 200);
-  @include fluid(padding-top, 56, 160); // Figma: ヘッダー直後 240 − header 80
-  @include fluid(gap, 32, 179); // Figma: intro 右端 (200+560) → form 左端 (939) ＝ 179
+  @include fluid(padding-left, 20, 200, 390, 1920);
+  @include fluid(padding-right, 20, 200, 390, 1920);
+  @include fluid(padding-top, 56, 160, 390, 1920); // Figma: ヘッダー直後 240 − header 80
+  @include fluid(gap, 32, 179, 390, 1920); // Figma: intro 右端 (200+560) → form 左端 (939) ＝ 179
 
   // Figma SP(390): 左右 padding 40 / ヘッダー下 padding 80 / リード文↔フォーム gap 60
   // 320→390 範囲で fluid を完結させ、vw≥390 で Figma SP 値にクランプ
@@ -63,8 +69,8 @@
   flex-shrink: 0;
   align-self: flex-start;
   position: sticky;
-  @include fluid(top, 136, 240);
-  @include fluid(width, 280, 560);
+  @include fluid(top, 136, 240, 390, 1920);
+  @include fluid(width, 280, 560, 390, 1920);
 
   @include sp {
     position: static;
@@ -79,29 +85,41 @@
   margin-bottom: 0;
 
   img {
-    @include fluid(width, 160, 250);
+    @include fluid(width, 160, 250, 390, 1920);
     height: auto;
+
+    @include sp {
+      @include fluid(width, 160, 250, 390, 1200);
+    }
   }
 
   p {
-    @include fluid(margin-top, 16, 28);
+    @include fluid(margin-top, 16, 28, 390, 1920);
     line-height: 24px;
+
+    @include sp {
+      @include fluid(margin-top, 16, 28, 390, 1200);
+    }
   }
 }
 
 .introText {
-  @include fluid(margin-top, 32, 60); // Figma: タイトルブロック下端 → リード文 約60px
+  @include fluid(margin-top, 32, 60, 390, 1920); // Figma: タイトルブロック下端 → リード文 約60px
   font-family: var(--font-jp);
   font-weight: var(--font-weight-regular);
   color: var(--color-black);
-  @include fluid(font-size, 14, 16);
-  @include fluid(line-height, 28, 36);
-  @include fluid(letter-spacing, 1.6, 2.56);
+  @include fluid(font-size, 14, 16, 390, 1920);
+  @include fluid(line-height, 28, 36, 390, 1920);
+  @include fluid(letter-spacing, 1.6, 2.56, 390, 1920);
 
   // Figma SP(390): PC のみの <br>（2→3 行 / 4→5 行の間）を非表示にし、
   // 残り 4 つの <br> で Figma SP の改行位置（3 ブロック構造）を再現
   // letter-spacing は Figma SP の 3.08px に合わせる
   @include sp {
+    // base の margin-top / font-size / line-height は SP にも効くため現状(1200)カーブに固定
+    @include fluid(margin-top, 32, 60, 390, 1200);
+    @include fluid(font-size, 14, 16, 390, 1200);
+    @include fluid(line-height, 28, 36, 390, 1200);
     @include fluid(letter-spacing, 2.53, 3.08, 320, 390);
   }
 }
@@ -116,10 +134,10 @@
 .formFields {
   flex: 1;
   min-width: 0;
-  @include fluid(max-width, 280, 781);
+  @include fluid(max-width, 280, 781, 390, 1920);
   display: flex;
   flex-direction: column;
-  @include fluid(gap, 20, 28); // 入力 → 次ラベル 28（Figma: 533-457）
+  @include fluid(gap, 20, 28, 390, 1920); // 入力 → 次ラベル 28（Figma: 533-457）
 
   // Figma SP(390): フィールド間 gap 24（vw≥390 で Figma SP 値にクランプ）
   @include sp {
@@ -132,7 +150,7 @@
 .field {
   display: flex;
   flex-direction: column;
-  @include fluid(gap, 12, 16); // Figma: ラベル → 入力枠 16
+  @include fluid(gap, 12, 16, 390, 1920); // Figma: ラベル → 入力枠 16
 
   // Figma SP(390): ラベル → input gap 8
   @include sp {
@@ -144,9 +162,15 @@
   color: var(--color-black);
   font-family: var(--font-jp);
   font-weight: var(--font-weight-regular);
-  @include fluid(font-size, 15, 18);
-  @include fluid(line-height, 26, 32);
-  @include fluid(letter-spacing, 2.4, 4.32);
+  @include fluid(font-size, 15, 18, 390, 1920);
+  @include fluid(line-height, 26, 32, 390, 1920);
+  @include fluid(letter-spacing, 2.4, 4.32, 390, 1920);
+
+  @include sp {
+    @include fluid(font-size, 15, 18, 390, 1200);
+    @include fluid(line-height, 26, 32, 390, 1200);
+    @include fluid(letter-spacing, 2.4, 4.32, 390, 1200);
+  }
 }
 
 // ── 入力欄（input / textarea 共通の基底） ──
@@ -156,13 +180,13 @@
   background: var(--color-white);
   border: none;
   border-radius: 0;
-  @include fluid(padding-inline, 12, 16);
+  @include fluid(padding-inline, 12, 16, 390, 1920);
   font-family: var(--font-jp);
   font-weight: var(--font-weight-regular);
   color: var(--color-black);
-  // SP は iOS 自動ズーム回避のため 16px から開始
+  // SP は iOS 自動ズーム回避のため 16px から開始（min=max=16 で全域 16px 固定）
   @include fluid(font-size, 16, 16);
-  @include fluid(letter-spacing, 1.6, 2.56);
+  @include fluid(letter-spacing, 1.6, 2.56, 390, 1920);
   outline: none;
   transition: box-shadow var(--transition-base);
 
@@ -179,6 +203,8 @@
   // Figma SP(390): placeholder の x=20 ＝ input 左 padding 20
   @include sp {
     @include fluid(padding-inline, 16, 20, 320, 390);
+    // base letter-spacing は SP にも効くため現状(1200)カーブに固定
+    @include fluid(letter-spacing, 1.6, 2.56, 390, 1200);
 
     // Figma SP: placeholder は font 14px / letter-spacing 1.82px（textarea の
     // 「お問い合わせ内容を入力ください。」が content width 270 に 1 行で収まる前提）。
@@ -203,15 +229,19 @@ input.fieldInput {
 
 // textarea 個別
 .fieldTextarea {
-  @include fluid(height, 160, 200);
-  @include fluid(padding-top, 12, 16);
-  @include fluid(padding-bottom, 12, 16);
-  @include fluid(line-height, 24, 28);
+  @include fluid(height, 160, 200, 390, 1920);
+  @include fluid(padding-top, 12, 16, 390, 1920);
+  @include fluid(padding-bottom, 12, 16, 390, 1920);
+  @include fluid(line-height, 24, 28, 390, 1920);
   resize: vertical;
 
   // Figma SP(390): textarea 高さ 200（vw≥390 でクランプ）
   @include sp {
     @include fluid(height, 180, 200, 320, 390);
+    // base padding/line-height は SP にも効くため現状(1200)カーブに固定
+    @include fluid(padding-top, 12, 16, 390, 1200);
+    @include fluid(padding-bottom, 12, 16, 390, 1200);
+    @include fluid(line-height, 24, 28, 390, 1200);
   }
 }
 
@@ -228,22 +258,29 @@ input.fieldInput {
 // エラー説明文（label/input の下）
 .fieldErrorMessage {
   margin: 0;
-  @include fluid(margin-top, 4, 6);
+  @include fluid(margin-top, 4, 6, 390, 1920);
   color: var(--color-primary);
   font-family: var(--font-jp);
   font-weight: var(--font-weight-regular);
-  @include fluid(font-size, 12, 13);
-  @include fluid(line-height, 18, 20);
-  @include fluid(letter-spacing, 0.8, 1.2);
+  @include fluid(font-size, 12, 13, 390, 1920);
+  @include fluid(line-height, 18, 20, 390, 1920);
+  @include fluid(letter-spacing, 0.8, 1.2, 390, 1920);
+
+  @include sp {
+    @include fluid(margin-top, 4, 6, 390, 1200);
+    @include fluid(font-size, 12, 13, 390, 1200);
+    @include fluid(line-height, 18, 20, 390, 1200);
+    @include fluid(letter-spacing, 0.8, 1.2, 390, 1200);
+  }
 }
 
 // ── プライバシー同意（ページ全体の中央） ──
 .privacyWrap {
   display: flex;
   justify-content: center;
-  @include fluid(margin-top, 60, 120); // Figma: textarea 下端 1197 → privacy 1317 ＝ 120
-  @include fluid(padding-left, 20, 200);
-  @include fluid(padding-right, 20, 200);
+  @include fluid(margin-top, 60, 120, 390, 1920); // Figma: textarea 下端 1197 → privacy 1317 ＝ 120
+  @include fluid(padding-left, 20, 200, 390, 1920);
+  @include fluid(padding-right, 20, 200, 390, 1920);
 
   // Figma SP(390): 左右 padding 40 / textarea 下端 → privacy 60
   @include sp {
@@ -256,27 +293,41 @@ input.fieldInput {
 .privacy {
   display: inline-flex;
   align-items: center;
-  @include fluid(gap, 8, 12);
+  @include fluid(gap, 8, 12, 390, 1920);
   cursor: pointer;
+
+  @include sp {
+    @include fluid(gap, 8, 12, 390, 1200);
+  }
 }
 
 .privacyCheck {
   flex-shrink: 0;
-  @include fluid(width, 16, 20);
-  @include fluid(height, 16, 20);
+  @include fluid(width, 16, 20, 390, 1920);
+  @include fluid(height, 16, 20, 390, 1920);
   border: 1px solid var(--color-text-soft-black);
   border-radius: 0;
   cursor: pointer;
   accent-color: var(--color-black);
+
+  @include sp {
+    @include fluid(width, 16, 20, 390, 1200);
+    @include fluid(height, 16, 20, 390, 1200);
+  }
 }
 
 .privacyText {
   font-family: var(--font-jp);
   font-weight: var(--font-weight-regular);
   color: var(--color-text-soft-black);
-  @include fluid(font-size, 14, 16);
+  @include fluid(font-size, 14, 16, 390, 1920);
   line-height: 1.2;
-  @include fluid(letter-spacing, 1.2, 1.6);
+  @include fluid(letter-spacing, 1.2, 1.6, 390, 1920);
+
+  @include sp {
+    @include fluid(font-size, 14, 16, 390, 1200);
+    @include fluid(letter-spacing, 1.2, 1.6, 390, 1200);
+  }
 }
 
 .privacyLink {
@@ -296,17 +347,22 @@ input.fieldInput {
   text-align: center;
   color: var(--color-primary);
   font-family: var(--font-jp);
-  @include fluid(font-size, 13, 14);
-  @include fluid(margin-top, 8, 12);
+  @include fluid(font-size, 13, 14, 390, 1920);
+  @include fluid(margin-top, 8, 12, 390, 1920);
+
+  @include sp {
+    @include fluid(font-size, 13, 14, 390, 1200);
+    @include fluid(margin-top, 8, 12, 390, 1200);
+  }
 }
 
 // ── 送信ボタン（ページ全体の中央） ──
 .submitWrap {
   display: flex;
   justify-content: center;
-  @include fluid(margin-top, 32, 48); // Figma: privacy 下端 1337 → button 1385 ＝ 48
-  @include fluid(padding-left, 20, 200);
-  @include fluid(padding-right, 20, 200);
+  @include fluid(margin-top, 32, 48, 390, 1920); // Figma: privacy 下端 1337 → button 1385 ＝ 48
+  @include fluid(padding-left, 20, 200, 390, 1920);
+  @include fluid(padding-right, 20, 200, 390, 1920);
 
   // Figma SP(390): 左右 padding 40 / privacy 下端 → button 40
   @include sp {
@@ -322,16 +378,16 @@ input.fieldInput {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  @include fluid(width, 240, 380);
-  @include fluid(height, 48, 64);
+  @include fluid(width, 240, 380, 390, 1920);
+  @include fluid(height, 48, 64, 390, 1920);
   border-radius: 999px;
   border: 1px solid var(--color-black);
   background: var(--color-white);
   color: var(--color-black);
   font-family: var(--font-en);
   font-weight: var(--font-weight-light);
-  @include fluid(font-size, 14, 20);
-  @include fluid(letter-spacing, 1.4, 2.6);
+  @include fluid(font-size, 14, 20, 390, 1920);
+  @include fluid(letter-spacing, 1.4, 2.6, 390, 1920);
   cursor: pointer;
   transition:
     color var(--transition-base),
@@ -353,5 +409,7 @@ input.fieldInput {
     max-width: none;
     @include fluid(height, 48, 56);
     @include fluid(font-size, 14, 16);
+    // base letter-spacing は SP にも効くため現状(1200)カーブに固定
+    @include fluid(letter-spacing, 1.4, 2.6, 390, 1200);
   }
 }

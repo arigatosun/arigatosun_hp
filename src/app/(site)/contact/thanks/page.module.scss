@@ -31,9 +31,9 @@
 }
 
 .inner {
-  @include fluid(padding-left, 20, 200);
-  @include fluid(padding-right, 20, 200);
-  @include fluid(padding-top, 56, 202); // Figma: 282 − header 80 ＝ 202
+  @include fluid(padding-left, 20, 200, 390, 1920);
+  @include fluid(padding-right, 20, 200, 390, 1920);
+  @include fluid(padding-top, 56, 202, 390, 1920); // Figma: 282 − header 80 ＝ 202
 
   // Figma SP(390): 左右 padding 40 / ヘッダー下 padding 80（ロゴ y=160 - header 80）
   // 320→390 範囲で fluid を完結させ、vw≥390 で Figma SP 値にクランプ
@@ -50,26 +50,34 @@
   margin-bottom: 0;
 
   img {
-    @include fluid(width, 160, 250);
+    @include fluid(width, 160, 250, 390, 1920);
     height: auto;
+
+    @include sp {
+      @include fluid(width, 160, 250, 390, 1200);
+    }
   }
 
   p {
-    @include fluid(margin-top, 16, 28);
+    @include fluid(margin-top, 16, 28, 390, 1920);
     line-height: 24px;
+
+    @include sp {
+      @include fluid(margin-top, 16, 28, 390, 1200);
+    }
   }
 }
 
 .thanksText {
   margin: 0;
-  @include fluid(margin-top, 32, 72); // Figma: 443 − 371 ＝ 72
+  @include fluid(margin-top, 32, 72, 390, 1920); // Figma: 443 − 371 ＝ 72
   max-width: 768px;
   font-family: var(--font-jp);
   font-weight: var(--font-weight-regular);
   color: var(--color-black);
-  @include fluid(font-size, 14, 16);
-  @include fluid(line-height, 28, 36);
-  @include fluid(letter-spacing, 1.6, 2.56);
+  @include fluid(font-size, 14, 16, 390, 1920);
+  @include fluid(line-height, 28, 36, 390, 1920);
+  @include fluid(letter-spacing, 1.6, 2.56, 390, 1920);
 
   // 3 段落（<p>）を 1 ブロックで表示。PC では各段落が幅 768 内に 1 行ずつ収まり、
   // 段落間は <br> 改行と同じ見た目。SP では各段落が自然折り返しで複数行になる。
@@ -91,7 +99,7 @@
 .buttonWrap {
   display: flex;
   justify-content: center;
-  @include fluid(margin-top, 80, 180); // Figma: 545 → 725 ＝ 180
+  @include fluid(margin-top, 80, 180, 390, 1920); // Figma: 545 → 725 ＝ 180
 
   // Figma SP(390): 本文下端 494 → ボタン top 574 ＝ 80
   @include sp {
@@ -105,16 +113,16 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  @include fluid(width, 240, 380);
-  @include fluid(height, 48, 64);
+  @include fluid(width, 240, 380, 390, 1920);
+  @include fluid(height, 48, 64, 390, 1920);
   border-radius: 999px;
   border: 1px solid var(--color-black);
   background: var(--color-white);
   color: var(--color-black);
   font-family: var(--font-en);
   font-weight: var(--font-weight-light);
-  @include fluid(font-size, 14, 20);
-  @include fluid(letter-spacing, 1.4, 2.6);
+  @include fluid(font-size, 14, 20, 390, 1920);
+  @include fluid(letter-spacing, 1.4, 2.6, 390, 1920);
   transition:
     color var(--transition-base),
     border-color var(--transition-base);
@@ -130,5 +138,7 @@
     max-width: none;
     @include fluid(height, 48, 56);
     @include fluid(font-size, 14, 16);
+    // base letter-spacing は SP にも効くため現状(1200)カーブに固定
+    @include fluid(letter-spacing, 1.4, 2.6, 390, 1200);
   }
 }
