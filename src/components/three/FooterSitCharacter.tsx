@@ -27,7 +27,6 @@ const DEFAULT_CHAR_SCALE = 1.0;
 const DEFAULT_CHAR_ROTATION_Y = -0.1;
 const DEFAULT_CHAR_ROTATION_X = 0.1;
 const DEFAULT_CAMERA_POSITION: [number, number, number] = [0, 0, 5];
-const DEFAULT_CAMERA_FOV = 70;
 // OrthographicCamera 用ズーム。Canvas のピクセル空間で 1 world unit = zoom px。
 // 旧 perspective (fov 70, z=5) で見えていた縦範囲 ~7 world unit を Canvas 高さ 600 に収めるには
 // zoom ≒ 600/7 ≈ 86。実体感的に少し詰めて 90 をデフォルトに。
@@ -168,9 +167,7 @@ function SitModel({ position, scale, rotationY, rotationX, freezeCursor }: SitMo
     if (IS_DEV) {
       // 開発時のみ: 実際のボーン名一覧と、各 ref が拾えたかを 1 回だけ console に吐く。
       // 「肩補正が効かない」時に、ボーン命名規則がコードと一致しているかを確認する。
-      // eslint-disable-next-line no-console
       console.log('[FooterSitCharacter] bones:', boneNames);
-      // eslint-disable-next-line no-console
       console.log('[FooterSitCharacter] resolved refs:', {
         spine: spineBoneRef.current?.name ?? null,
         head: headBoneRef.current?.name ?? null,
@@ -207,6 +204,83 @@ function SitModel({ position, scale, rotationY, rotationX, freezeCursor }: SitMo
     window.addEventListener('pointermove', onMove, { passive: true });
     return () => window.removeEventListener('pointermove', onMove);
   }, []);
+
+  // ─── 2-bone IK ソルバ ───
+  // 解析解 (law of cosines)。pole hint は rest pose の elbow 方向を使い、
+  // 自然な肘の曲がり方向を維持する。
+  // （useFrame 内から呼ぶため、宣言を使用箇所より前に置く）
+  function solve2BoneIK(
+    upperArm: THREE.Bone,
+    lowarm: THREE.Bone,
+    hand: THREE.Bone,
+    rest: typeof restArmL.current,
+  ) {
+    if (rest.L1 <= 0 || rest.L2 <= 0) return;
+    if (!upperArm.parent) return;
+
+    // 親 (shoulder) の world は spine.updateMatrixWorld で更新済みのはず
+    const S = upperArm.getWorldPosition(ikTmpS.current);
+    const T = rest.handPos; // target = rest hand world pos
+
+    const toTarget = ikTmpToTarget.current.subVectors(T, S);
+    let d = toTarget.length();
+    const minD = Math.abs(rest.L1 - rest.L2) + 0.001;
+    const maxD = rest.L1 + rest.L2 - 0.001;
+    d = Math.max(minD, Math.min(maxD, d));
+    const toTargetN = ikTmpToTargetN.current.copy(toTarget).normalize();
+
+    // pole 方向 = rest の elbow オフセットを toTarget 平面に投影
+    const polePerp = ikTmpPolePerp.current.subVectors(rest.lowarmPos, rest.upperArmPos);
+    const proj = polePerp.dot(toTargetN);
+    polePerp.addScaledVector(toTargetN, -proj);
+    if (polePerp.lengthSq() < 0.0001) {
+      // fallback: 下方向に肘を曲げる
+      polePerp.set(0, -1, 0);
+    } else {
+      polePerp.normalize();
+    }
+
+    // 肩の angle (law of cosines)
+    const cosA = (rest.L1 * rest.L1 + d * d - rest.L2 * rest.L2) / (2 * rest.L1 * d);
+    const A = Math.acos(Math.max(-1, Math.min(1, cosA)));
+
+    // elbow 位置 (world)
+    const elbow = ikTmpElbow.current
+      .copy(S)
+      .addScaledVector(toTargetN, rest.L1 * Math.cos(A))
+      .addScaledVector(polePerp, rest.L1 * Math.sin(A));
+
+    // upper_arm の新 world rotation
+    const restUpperArmDirW = ikTmpRestDir.current
+      .subVectors(rest.lowarmPos, rest.upperArmPos).normalize();
+    const newUpperArmDirW = ikTmpNewDir.current
+      .subVectors(elbow, S).normalize();
+    const upperArmCorrQ = ikTmpCorrQ.current.setFromUnitVectors(restUpperArmDirW, newUpperArmDirW);
+    const newUpperArmWorldQ = ikTmpWorldQ.current.copy(upperArmCorrQ).multiply(rest.upperArmWorldQ);
+
+    // local 変換 (parent = shoulder の現在 world で割る)
+    upperArm.parent.getWorldQuaternion(tmpParentInvQ.current).invert();
+    upperArm.quaternion.copy(tmpParentInvQ.current).multiply(newUpperArmWorldQ);
+    upperArm.updateMatrixWorld(true);
+
+    // lowarm の新 world rotation
+    const restLowarmDirW = ikTmpRestDir.current
+      .subVectors(rest.handPos, rest.lowarmPos).normalize();
+    const newLowarmDirW = ikTmpNewDir.current
+      .subVectors(T, elbow).normalize();
+    const lowarmCorrQ = ikTmpCorrQ.current.setFromUnitVectors(restLowarmDirW, newLowarmDirW);
+    const newLowarmWorldQ = ikTmpWorldQ.current.copy(lowarmCorrQ).multiply(rest.lowarmWorldQ);
+
+    // local 変換 (parent = 新しい upper_arm の world)
+    upperArm.getWorldQuaternion(tmpParentInvQ.current).invert();
+    lowarm.quaternion.copy(tmpParentInvQ.current).multiply(newLowarmWorldQ);
+    lowarm.updateMatrixWorld(true);
+
+    // hand: world 回転を rest に固定（指は hand の子なので一緒に rest 向きを維持）
+    lowarm.getWorldQuaternion(tmpParentInvQ.current).invert();
+    hand.quaternion.copy(tmpParentInvQ.current).multiply(rest.handWorldQ);
+    hand.updateMatrixWorld(true);
+  }
 
   useFrame((state, delta) => {
     // 1) Sit アニメ適用（毎フレーム静止ポーズに戻す）
@@ -312,82 +386,6 @@ function SitModel({ position, scale, rotationY, rotationX, freezeCursor }: SitMo
       solve2BoneIK(upperArmR, lowarmR, handR, restArmR.current);
     }
   });
-
-  // ─── 2-bone IK ソルバ ───
-  // 解析解 (law of cosines)。pole hint は rest pose の elbow 方向を使い、
-  // 自然な肘の曲がり方向を維持する。
-  function solve2BoneIK(
-    upperArm: THREE.Bone,
-    lowarm: THREE.Bone,
-    hand: THREE.Bone,
-    rest: typeof restArmL.current,
-  ) {
-    if (rest.L1 <= 0 || rest.L2 <= 0) return;
-    if (!upperArm.parent) return;
-
-    // 親 (shoulder) の world は spine.updateMatrixWorld で更新済みのはず
-    const S = upperArm.getWorldPosition(ikTmpS.current);
-    const T = rest.handPos; // target = rest hand world pos
-
-    const toTarget = ikTmpToTarget.current.subVectors(T, S);
-    let d = toTarget.length();
-    const minD = Math.abs(rest.L1 - rest.L2) + 0.001;
-    const maxD = rest.L1 + rest.L2 - 0.001;
-    d = Math.max(minD, Math.min(maxD, d));
-    const toTargetN = ikTmpToTargetN.current.copy(toTarget).normalize();
-
-    // pole 方向 = rest の elbow オフセットを toTarget 平面に投影
-    const polePerp = ikTmpPolePerp.current.subVectors(rest.lowarmPos, rest.upperArmPos);
-    const proj = polePerp.dot(toTargetN);
-    polePerp.addScaledVector(toTargetN, -proj);
-    if (polePerp.lengthSq() < 0.0001) {
-      // fallback: 下方向に肘を曲げる
-      polePerp.set(0, -1, 0);
-    } else {
-      polePerp.normalize();
-    }
-
-    // 肩の angle (law of cosines)
-    const cosA = (rest.L1 * rest.L1 + d * d - rest.L2 * rest.L2) / (2 * rest.L1 * d);
-    const A = Math.acos(Math.max(-1, Math.min(1, cosA)));
-
-    // elbow 位置 (world)
-    const elbow = ikTmpElbow.current
-      .copy(S)
-      .addScaledVector(toTargetN, rest.L1 * Math.cos(A))
-      .addScaledVector(polePerp, rest.L1 * Math.sin(A));
-
-    // upper_arm の新 world rotation
-    const restUpperArmDirW = ikTmpRestDir.current
-      .subVectors(rest.lowarmPos, rest.upperArmPos).normalize();
-    const newUpperArmDirW = ikTmpNewDir.current
-      .subVectors(elbow, S).normalize();
-    const upperArmCorrQ = ikTmpCorrQ.current.setFromUnitVectors(restUpperArmDirW, newUpperArmDirW);
-    const newUpperArmWorldQ = ikTmpWorldQ.current.copy(upperArmCorrQ).multiply(rest.upperArmWorldQ);
-
-    // local 変換 (parent = shoulder の現在 world で割る)
-    upperArm.parent.getWorldQuaternion(tmpParentInvQ.current).invert();
-    upperArm.quaternion.copy(tmpParentInvQ.current).multiply(newUpperArmWorldQ);
-    upperArm.updateMatrixWorld(true);
-
-    // lowarm の新 world rotation
-    const restLowarmDirW = ikTmpRestDir.current
-      .subVectors(rest.handPos, rest.lowarmPos).normalize();
-    const newLowarmDirW = ikTmpNewDir.current
-      .subVectors(T, elbow).normalize();
-    const lowarmCorrQ = ikTmpCorrQ.current.setFromUnitVectors(restLowarmDirW, newLowarmDirW);
-    const newLowarmWorldQ = ikTmpWorldQ.current.copy(lowarmCorrQ).multiply(rest.lowarmWorldQ);
-
-    // local 変換 (parent = 新しい upper_arm の world)
-    upperArm.getWorldQuaternion(tmpParentInvQ.current).invert();
-    lowarm.quaternion.copy(tmpParentInvQ.current).multiply(newLowarmWorldQ);
-    lowarm.updateMatrixWorld(true);
-
-    // hand: world 回転を rest に固定（指は hand の子なので一緒に rest 向きを維持）
-    lowarm.getWorldQuaternion(tmpParentInvQ.current).invert();
-    hand.quaternion.copy(tmpParentInvQ.current).multiply(rest.handWorldQ);
-    hand.updateMatrixWorld(true);
-  }
 
   return (
     <group ref={group} position={position} rotation={[rotationX, rotationY, 0]} scale={scale}>
