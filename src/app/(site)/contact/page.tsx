@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import SectionTitle from '@/components/ui/SectionTitle';
@@ -68,6 +68,15 @@ export default function ContactPage() {
   // 確認モーダル表示中フラグ。SEND MESSAGE 押下 → モーダル表示 → 「送信する」で実送信
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
+  // ── スパム対策（formData とは分離。バリデーション対象に含めない） ──
+  // ハニーポット: 人間は触れない隠しフィールド。値が入っていればボット。
+  const [honeypot, setHoneypot] = useState('');
+  // フォーム表示時刻。極端に速い送信（ボット）をサーバー側で弾く材料にする。
+  const formStartRef = useRef(0);
+  useEffect(() => {
+    formStartRef.current = Date.now();
+  }, []);
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
@@ -128,7 +137,11 @@ export default function ContactPage() {
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          website: honeypot, // ハニーポット（人間は空）
+          _t: formStartRef.current, // フォーム表示時刻
+        }),
       });
 
       if (!res.ok) {
@@ -170,6 +183,19 @@ export default function ContactPage() {
   return (
     <div className={styles.page} data-contact-page>
       <form className={styles.formRoot} onSubmit={handleSubmit} noValidate>
+        {/* ハニーポット: 視覚・支援技術・タブ移動から隠す。ボットだけが埋める。 */}
+        <div aria-hidden="true" style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, overflow: 'hidden' }}>
+          <label htmlFor="website">Website</label>
+          <input
+            type="text"
+            id="website"
+            name="website"
+            tabIndex={-1}
+            autoComplete="off"
+            value={honeypot}
+            onChange={(e) => setHoneypot(e.target.value)}
+          />
+        </div>
         <div className={styles.inner}>
           {/* 左カラム: タイトル + リード文 */}
           <aside className={styles.intro}>
