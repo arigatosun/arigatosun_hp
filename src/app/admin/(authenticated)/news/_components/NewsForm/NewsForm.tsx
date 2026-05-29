@@ -2,7 +2,7 @@
 
 import { useActionState, useRef } from 'react';
 import { saveNews, type NewsFormState } from '../../../../_actions/news';
-import type { Database } from '@/types/supabase';
+import type { Database, Json } from '@/types/supabase';
 import RichEditor from '../RichEditor';
 import ImageUploader from '../ImageUploader';
 import styles from './NewsForm.module.scss';
@@ -10,9 +10,23 @@ import styles from './NewsForm.module.scss';
 type NewsRow = Database['public']['Tables']['news']['Row'];
 type CategoryRow = Database['public']['Tables']['categories']['Row'];
 
+// AI 下書き等からフォームを初期化するための値（新規作成時のみ適用）。
+export interface NewsFormInitialValues {
+  title?: string;
+  slug?: string;
+  category_id?: string;
+  description?: string;
+  thumbnail_url?: string | null;
+  thumbnail_alt?: string;
+  // サムネ AI 生成の初期プロンプト候補（ImageUploader の「AIで生成」に渡す）
+  thumbnailPrompt?: string;
+  content?: Json;
+}
+
 interface NewsFormProps {
   news?: NewsRow;
   categories: CategoryRow[];
+  initialValues?: NewsFormInitialValues;
 }
 
 const initialState: NewsFormState = { idle: true };
@@ -24,12 +38,23 @@ function toDatetimeLocal(iso: string | null): string {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
 
-export default function NewsForm({ news, categories }: NewsFormProps) {
+export default function NewsForm({ news, categories, initialValues }: NewsFormProps) {
   const [state, formAction, isPending] = useActionState(saveNews, initialState);
   const intentRef = useRef<HTMLInputElement>(null);
   const isPublished = news?.status === 'published';
   const fieldErrors = 'fieldErrors' in state ? (state.fieldErrors ?? {}) : {};
   const globalError = 'error' in state ? state.error : null;
+
+  // 既存記事の値を最優先、無ければ AI 下書き等の初期値、それも無ければ空。
+  const init = {
+    title: news?.title ?? initialValues?.title ?? '',
+    slug: news?.slug ?? initialValues?.slug ?? '',
+    category_id: news?.category_id ?? initialValues?.category_id ?? '',
+    description: news?.description ?? initialValues?.description ?? '',
+    thumbnail_alt: news?.thumbnail_alt ?? initialValues?.thumbnail_alt ?? '',
+    thumbnail_url: news?.thumbnail_url ?? initialValues?.thumbnail_url ?? null,
+    content: news?.content ?? initialValues?.content,
+  };
 
   // React 19 の formAction では submitter button の name/value が
   // FormData に乗らないケースがあるため、hidden input + onClick で明示的に intent を渡す
@@ -57,7 +82,7 @@ export default function NewsForm({ news, categories }: NewsFormProps) {
           name="title"
           type="text"
           required
-          defaultValue={news?.title ?? ''}
+          defaultValue={init.title}
           className={styles.input}
           maxLength={200}
         />
@@ -73,7 +98,7 @@ export default function NewsForm({ news, categories }: NewsFormProps) {
           name="slug"
           type="text"
           required
-          defaultValue={news?.slug ?? ''}
+          defaultValue={init.slug}
           className={styles.input}
           maxLength={100}
           pattern="[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"
@@ -92,7 +117,7 @@ export default function NewsForm({ news, categories }: NewsFormProps) {
           id="category_id"
           name="category_id"
           required
-          defaultValue={news?.category_id ?? ''}
+          defaultValue={init.category_id}
           className={styles.select}
         >
           <option value="">選択してください</option>
@@ -107,13 +132,55 @@ export default function NewsForm({ news, categories }: NewsFormProps) {
 
       <div className={styles.field}>
         <span className={styles.label}>サムネイル画像</span>
-        <ImageUploader name="thumbnail_url" defaultValue={news?.thumbnail_url ?? null} label="サムネイル" />
+        <ImageUploader
+          name="thumbnail_url"
+          defaultValue={init.thumbnail_url}
+          label="サムネイル"
+          aiPrompt={initialValues?.thumbnailPrompt}
+          aiAspectRatio="16:9"
+        />
         <p className={styles.hint}>news-images バケットにアップロードされ、公開 URL が保存されます</p>
       </div>
 
       <div className={styles.field}>
+        <label htmlFor="thumbnail_alt" className={styles.label}>
+          サムネイル代替テキスト（alt）
+        </label>
+        <input
+          id="thumbnail_alt"
+          name="thumbnail_alt"
+          type="text"
+          defaultValue={init.thumbnail_alt}
+          className={styles.input}
+          maxLength={150}
+        />
+        <p className={styles.hint}>
+          画像の内容を説明するテキスト。画像SEO・アクセシビリティ向上に使われます（空欄ならタイトルを代用）。
+        </p>
+        {fieldErrors.thumbnail_alt && <p className={styles.fieldError}>{fieldErrors.thumbnail_alt}</p>}
+      </div>
+
+      <div className={styles.field}>
+        <label htmlFor="description" className={styles.label}>
+          説明文（メタディスクリプション）
+        </label>
+        <textarea
+          id="description"
+          name="description"
+          defaultValue={init.description}
+          className={styles.input}
+          rows={3}
+          maxLength={200}
+        />
+        <p className={styles.hint}>
+          検索結果・SNSシェアに表示される要約（120字目安）。空欄なら本文から自動生成されます。
+        </p>
+        {fieldErrors.description && <p className={styles.fieldError}>{fieldErrors.description}</p>}
+      </div>
+
+      <div className={styles.field}>
         <span className={styles.label}>本文</span>
-        <RichEditor name="content" defaultValue={news?.content} />
+        <RichEditor name="content" defaultValue={init.content} />
       </div>
 
       <div className={styles.field}>

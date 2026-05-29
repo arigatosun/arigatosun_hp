@@ -11,12 +11,13 @@ export type Category = Pick<CategoryRow, 'id' | 'slug' | 'label' | 'display_orde
 /** ニュース一覧用の軽量データ。本文を含まない。 */
 export type NewsListItem = Pick<
   NewsRow,
-  'id' | 'slug' | 'slug_year' | 'title' | 'thumbnail_url' | 'published_at'
+  'id' | 'slug' | 'slug_year' | 'title' | 'thumbnail_url' | 'thumbnail_alt' | 'published_at'
 > & {
   category: Pick<CategoryRow, 'slug' | 'label'> | null;
 };
 
-/** ニュース詳細用。本文 (TipTap JSON) を含む。 */
+/** ニュース詳細用。本文 (TipTap JSON) と description を含む。 */
 export type NewsDetail = NewsListItem & {
+  description: string | null;
   content: Json;
 };

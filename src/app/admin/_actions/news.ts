@@ -10,17 +10,29 @@ export type NewsFormState =
   | { ok: true; id: string }
   | { idle: true };
 
-type NewsField = 'title' | 'slug' | 'category_id' | 'thumbnail_url' | 'content' | 'published_at';
+type NewsField =
+  | 'title'
+  | 'slug'
+  | 'category_id'
+  | 'thumbnail_url'
+  | 'thumbnail_alt'
+  | 'description'
+  | 'content'
+  | 'published_at';
 
 const SLUG_PATTERN = /^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
 const SLUG_MAX = 100;
 const TITLE_MAX = 200;
+const DESCRIPTION_MAX = 200;
+const THUMBNAIL_ALT_MAX = 150;
 
 interface ParsedForm {
   title: string;
   slug: string;
   category_id: string;
   thumbnail_url: string | null;
+  thumbnail_alt: string | null;
+  description: string | null;
   // jsonb に渡す値。TipTap の JSON object か、Phase B 互換のため空文字列も許容
   content: Json;
   publishedAt: string | null; // datetime-local 文字列 or null
@@ -63,6 +75,8 @@ function parseForm(formData: FormData): { value: ParsedForm } | { fieldErrors: P
   const slug = String(formData.get('slug') ?? '').trim();
   const category_id = String(formData.get('category_id') ?? '').trim();
   const thumbnail_url_raw = String(formData.get('thumbnail_url') ?? '').trim();
+  const thumbnail_alt_raw = String(formData.get('thumbnail_alt') ?? '').trim();
+  const description_raw = String(formData.get('description') ?? '').trim();
   const content = parseContent(String(formData.get('content') ?? ''));
   const published_at_raw = String(formData.get('published_at') ?? '').trim();
   const intent_raw = String(formData.get('intent') ?? 'draft');
@@ -90,6 +104,14 @@ function parseForm(formData: FormData): { value: ParsedForm } | { fieldErrors: P
     fieldErrors.published_at = '公開日時の形式が不正です';
   }
 
+  if (description_raw.length > DESCRIPTION_MAX) {
+    fieldErrors.description = `説明文（メタディスクリプション）は${DESCRIPTION_MAX}文字以内で入力してください`;
+  }
+
+  if (thumbnail_alt_raw.length > THUMBNAIL_ALT_MAX) {
+    fieldErrors.thumbnail_alt = `代替テキストは${THUMBNAIL_ALT_MAX}文字以内で入力してください`;
+  }
+
   // thumbnail_url は ImageUploader 経由で常に Supabase Storage の URL のみ。
   // 外部 URL を入れられないよう、自プロジェクトの news-images バケットに限定する。
   let thumbnail_url: string | null = null;
@@ -112,6 +134,8 @@ function parseForm(formData: FormData): { value: ParsedForm } | { fieldErrors: P
       slug,
       category_id,
       thumbnail_url,
+      thumbnail_alt: thumbnail_alt_raw || null,
+      description: description_raw || null,
       content,
       publishedAt: published_at_raw || null,
       intent,
@@ -160,6 +184,8 @@ export async function saveNews(
       slug: value.slug,
       category_id: value.category_id,
       thumbnail_url: value.thumbnail_url,
+      thumbnail_alt: value.thumbnail_alt,
+      description: value.description,
       content: value.content,
       status,
       published_at,
@@ -170,6 +196,7 @@ export async function saveNews(
     }
     revalidatePath('/admin/news');
     revalidatePath(`/admin/news/${id}/edit`);
+    revalidatePublicNews(status, published_at, value.slug);
     return { ok: true, id };
   } else {
     // 新規: slug_year は DB トリガーで自動設定だが、型上は INSERT に slug_year が必須。
@@ -180,6 +207,8 @@ export async function saveNews(
       slug: value.slug,
       category_id: value.category_id,
       thumbnail_url: value.thumbnail_url,
+      thumbnail_alt: value.thumbnail_alt,
+      description: value.description,
       content: value.content,
       status,
       published_at,
@@ -190,6 +219,7 @@ export async function saveNews(
       return { ok: false, error: error ? formatPostgresError(error) : '作成に失敗しました' };
     }
     revalidatePath('/admin/news');
+    revalidatePublicNews(status, published_at, value.slug);
     redirect(`/admin/news/${data.id}/edit?created=1`);
   }
 }
@@ -206,7 +236,27 @@ export async function deleteNews(formData: FormData): Promise<void> {
     redirect(`/admin/news?error=${encodeURIComponent(formatPostgresError(error))}`);
   }
   revalidatePath('/admin/news');
+  // 公開側（一覧 / TOP）からも即時に消す
+  revalidatePath('/news');
+  revalidatePath('/');
   redirect('/admin/news?deleted=1');
+}
+
+/**
+ * 公開側（ニュース一覧 / TOP NewsSection / 詳細）の ISR キャッシュを即時更新する。
+ * 既定の revalidate=60 を待たずに反映させるため、保存・公開のたびに呼ぶ。
+ */
+function revalidatePublicNews(
+  status: 'draft' | 'published',
+  publishedAt: string | null,
+  slug: string,
+): void {
+  revalidatePath('/news');
+  revalidatePath('/');
+  if (status === 'published' && publishedAt) {
+    const year = new Date(publishedAt).getFullYear();
+    revalidatePath(`/news/${year}/${slug}`);
+  }
 }
 
 function formatPostgresError(error: { code?: string; message: string }): string {

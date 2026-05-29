@@ -64,6 +64,28 @@
   }
 }
 
+.aiBtn {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 16px;
+  background: var(--color-black);
+  color: var(--color-white);
+  border: 1px solid var(--color-black);
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: opacity 0.15s;
+
+  &:hover:not(:disabled) {
+    opacity: 0.85;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
 .fileInput {
   position: absolute;
   width: 1px;

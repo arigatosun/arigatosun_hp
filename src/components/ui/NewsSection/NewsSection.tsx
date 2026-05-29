@@ -38,7 +38,7 @@ export default function NewsSection() {
         supabase
           .from('news')
           .select(
-            'id, slug, slug_year, title, thumbnail_url, published_at, category:categories!inner(slug, label)',
+            'id, slug, slug_year, title, thumbnail_url, thumbnail_alt, published_at, category:categories!inner(slug, label)',
           )
           .order('published_at', { ascending: false })
           .limit(POSTS_PER_LOAD),
@@ -62,6 +62,7 @@ export default function NewsSection() {
             slug_year: row.slug_year,
             title: row.title,
             thumbnail_url: row.thumbnail_url,
+            thumbnail_alt: row.thumbnail_alt,
             published_at: row.published_at,
             category: row.category ?? null,
           })),
@@ -116,7 +117,7 @@ export default function NewsSection() {
       let query = supabase
         .from('news')
         .select(
-          'id, slug, slug_year, title, thumbnail_url, published_at, category:categories!inner(slug, label)',
+          'id, slug, slug_year, title, thumbnail_url, thumbnail_alt, published_at, category:categories!inner(slug, label)',
         )
         .order('published_at', { ascending: false })
         .limit(POSTS_PER_LOAD);
@@ -133,6 +134,7 @@ export default function NewsSection() {
             slug_year: row.slug_year,
             title: row.title,
             thumbnail_url: row.thumbnail_url,
+            thumbnail_alt: row.thumbnail_alt,
             published_at: row.published_at,
             category: row.category ?? null,
           })),
@@ -204,7 +206,7 @@ export default function NewsSection() {
                     {item.thumbnail_url ? (
                       <Image
                         src={item.thumbnail_url}
-                        alt={item.title}
+                        alt={item.thumbnail_alt ?? item.title}
                         fill
                         className={styles.thumbnailImage}
                         sizes="(max-width: 768px) 100vw, 300px"
