@@ -37,6 +37,7 @@ export default function ServiceCaseStudies({
                     width={450}
                     height={253}
                     className={styles.thumbImage}
+                    sizes="(max-width: 1023px) 90vw, 30vw"
                   />
                 ) : (
                   <div

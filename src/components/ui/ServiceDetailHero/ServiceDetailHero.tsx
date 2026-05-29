@@ -127,6 +127,7 @@ export default function ServiceDetailHero({
             height={855}
             className={styles.heroImageInner}
             priority
+            sizes="(max-width: 1520px) 100vw, 1520px"
           />
         ) : (
           <div className={styles.heroImagePlaceholder} aria-hidden="true" />

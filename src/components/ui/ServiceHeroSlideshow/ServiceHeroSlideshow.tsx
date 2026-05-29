@@ -76,6 +76,7 @@ export default function ServiceHeroSlideshow({
               height={800}
               className={styles.image}
               priority={i === 0}
+              sizes="(max-width: 1520px) 100vw, 1520px"
             />
           </div>
         ))}
