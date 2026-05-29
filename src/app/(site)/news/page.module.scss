@@ -1,6 +1,13 @@
 @use '@/styles/fluid' as *;
 @use '@/styles/breakpoints' as *;
 
+// ── レスポンシブ方針（news「その間」対応 / 2026-05） ──
+// PC レンジ(≥1024)を Hero/About と同じ 1920 基準 clamp に、SP(≤1023) は 1200 据え置き。
+//   - PC を 1920 に乗せたいベース宣言だけ `…, 390, 1920` を付ける。
+//   - SP に効く無防備な値は `@include sp { @include fluid(…, 390, 1200) }` で SP を不変に保つ。
+// ※ .page padding-bottom と .pagination margin-top は @include pc で固定値（Footer アーチ
+//   合わせの意図的固定）のため触らない。base 側は <1024(SP) でのみ効くので 1200 据え置き。
+
 .page {
   padding-top: 80px; // Header(position: fixed) 分のオフセット
   // SP（vw < 1024）は元の挙動: fluid(96, 240) の min 96 にクランプ
@@ -29,10 +36,10 @@
 .inner {
   display: flex;
   align-items: flex-start;
-  @include fluid(padding-left, 20, 200);
-  @include fluid(padding-right, 20, 200);
-  @include fluid(padding-top, 56, 160);
-  @include fluid(gap, 40, 280);
+  @include fluid(padding-left, 20, 200, 390, 1920);
+  @include fluid(padding-right, 20, 200, 390, 1920);
+  @include fluid(padding-top, 56, 160, 390, 1920);
+  @include fluid(gap, 40, 280, 390, 1920);
 
   @include sp {
     flex-direction: column;
@@ -40,6 +47,8 @@
     @include fluid(padding-left, 30, 42, 320, 390);
     @include fluid(padding-right, 30, 42, 320, 390);
     @include fluid(gap, 40, 60, 320, 390);
+    // base padding-top は SP にも効くため現状(1200)カーブに固定
+    @include fluid(padding-top, 56, 160, 390, 1200);
   }
 }
 
@@ -52,8 +61,8 @@
   flex-shrink: 0;
   align-self: flex-start; // flex container 内で sticky を効かせるために必須
   position: sticky;
-  @include fluid(top, 136, 240);
-  @include fluid(width, 160, 240);
+  @include fluid(top, 136, 240, 390, 1920);
+  @include fluid(width, 160, 240, 390, 1920);
 
   @include sp {
     position: static; // SP は縦積みなので sticky 解除
@@ -68,7 +77,7 @@
   margin-bottom: 0;
 
   img {
-    @include fluid(width, 96, 160);
+    @include fluid(width, 96, 160, 390, 1920);
 
     // Figma SP(390): ニュース画像 118×29
     @include sp {
@@ -77,22 +86,24 @@
   }
 
   p {
-    @include fluid(margin-top, 16, 28);
+    @include fluid(margin-top, 16, 28, 390, 1920);
     line-height: 18px;
 
     // Figma SP(390): NEWS ラベル font 14 / ls 1.82 = 0.13em
     @include sp {
       letter-spacing: 0.13em;
+      // base margin-top は SP にも効くため現状(1200)カーブに固定
+      @include fluid(margin-top, 16, 28, 390, 1200);
     }
   }
 }
 
 .categoryList {
   list-style: none;
-  @include fluid(margin-top, 48, 128);
+  @include fluid(margin-top, 48, 128, 390, 1920);
   display: flex;
   flex-direction: column;
-  @include fluid(gap, 16, 32);
+  @include fluid(gap, 16, 32, 390, 1920);
 
   @include sp {
     // Figma SP: ALL/INFOMATION / EVENTS/PRESS の 2x2 グリッド
@@ -102,6 +113,8 @@
     grid-template-columns: 131fr 175fr;
     column-gap: 0;
     @include fluid(row-gap, 28, 38, 320, 390);
+    // base margin-top は SP にも効くため現状(1200)カーブに固定
+    @include fluid(margin-top, 48, 128, 390, 1200);
   }
 }
 
@@ -109,9 +122,9 @@
 .categoryActive {
   font-family: var(--font-en);
   font-weight: var(--font-weight-light);
-  @include fluid(font-size, 14, 20);
+  @include fluid(font-size, 14, 20, 390, 1920);
   line-height: 1.2; // 赤帯がはみ出さない行ボックス高
-  @include fluid(letter-spacing, 1.4, 2.6);
+  @include fluid(letter-spacing, 1.4, 2.6, 390, 1920);
   white-space: nowrap;
 
   @include sp {
@@ -155,10 +168,10 @@
 .sidebarDivider {
   display: block;
   width: 8px;
-  @include fluid(height, 28, 56);
+  @include fluid(height, 28, 56, 390, 1920);
   margin-left: 11px;
-  @include fluid(margin-top, 12, 23); // Figma: PRESS→矢印 23px
-  @include fluid(margin-bottom, 14, 24); // 上の余白に揃え視覚バランスを取る（Figma実測 40px から詰め）
+  @include fluid(margin-top, 12, 23, 390, 1920); // Figma: PRESS→矢印 23px
+  @include fluid(margin-bottom, 14, 24, 390, 1920); // 上の余白に揃え視覚バランスを取る（Figma実測 40px から詰め）
   background: url('/images/sections/news/sidebar-divider.svg') center / contain
     no-repeat;
   transform: rotate(180deg); // Figma 同様に矢印を下向きへ
@@ -173,9 +186,9 @@
   display: inline-block;
   font-family: var(--font-en);
   font-weight: var(--font-weight-light);
-  @include fluid(font-size, 14, 20);
+  @include fluid(font-size, 14, 20, 390, 1920);
   line-height: 1.2;
-  @include fluid(letter-spacing, 1.4, 2.6);
+  @include fluid(letter-spacing, 1.4, 2.6, 390, 1920);
   white-space: nowrap;
   color: var(--color-text-secondary);
   // カテゴリと同じ赤マーカー帯（hover で即座に表示・アニメーションなし）
@@ -202,7 +215,7 @@
 .main {
   flex: 1;
   min-width: 0;
-  @include fluid(padding-top, 32, 100);
+  @include fluid(padding-top, 32, 100, 390, 1920);
 
   @include sp {
     padding-top: 0; // sidebar との間は .inner の gap で確保
@@ -222,9 +235,9 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  @include fluid(gap, 24, 40);
-  @include fluid(padding-top, 26, 52);
-  @include fluid(padding-bottom, 26, 52);
+  @include fluid(gap, 24, 40, 390, 1920);
+  @include fluid(padding-top, 26, 52, 390, 1920);
+  @include fluid(padding-bottom, 26, 52, 390, 1920);
 
   &:hover .articleTitle {
     color: var(--color-text-secondary);
@@ -258,9 +271,9 @@
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
   font-weight: var(--font-weight-regular);
-  @include fluid(font-size, 14, 18);
-  @include fluid(line-height, 26, 34);
-  @include fluid(letter-spacing, 1.8, 2.88);
+  @include fluid(font-size, 14, 18, 390, 1920);
+  @include fluid(line-height, 26, 34, 390, 1920);
+  @include fluid(letter-spacing, 1.8, 2.88, 390, 1920);
   transition: color var(--transition-base);
 
   @include sp {
@@ -273,10 +286,10 @@
 
 .articleMeta {
   margin: 0;
-  @include fluid(margin-top, 16, 30);
+  @include fluid(margin-top, 16, 30, 390, 1920);
   display: flex;
   align-items: baseline;
-  @include fluid(gap, 12, 24);
+  @include fluid(gap, 12, 24, 390, 1920);
 
   @include sp {
     // Figma SP: title 下端→date 22px（lh 26 の余り含む）
@@ -291,8 +304,8 @@
   color: var(--color-text-secondary);
   font-family: var(--font-en);
   font-weight: var(--font-weight-light);
-  @include fluid(font-size, 14, 20);
-  @include fluid(letter-spacing, 1.4, 2.6);
+  @include fluid(font-size, 14, 20, 390, 1920);
+  @include fluid(letter-spacing, 1.4, 2.6, 390, 1920);
 
   @include sp {
     // Figma SP: font 14 / lh 10.8 / ls 1.82 → 0.13em
@@ -318,7 +331,7 @@
   position: relative;
   flex-shrink: 0;
   align-self: center; // 記事行の縦中央に配置（テキストは上揃えのまま）
-  @include fluid(width, 140, 266);
+  @include fluid(width, 140, 266, 390, 1920);
   aspect-ratio: 266 / 150;
   overflow: hidden;
   background: var(--color-white);
@@ -362,8 +375,8 @@
 .pagination {
   // SP（vw < 1024）は元の挙動: fluid(60, 170) の min 60 にクランプ
   @include fluid(margin-top, 60, 170);
-  @include fluid(padding-left, 20, 200);
-  @include fluid(padding-right, 20, 200);
+  @include fluid(padding-left, 20, 200, 390, 1920);
+  @include fluid(padding-right, 20, 200, 390, 1920);
 
   // PC（vw ≥ 1024）は 240 固定。Figma 想定の PC（vw ≥ 1200）で 240 ピッタリ、
   // 1024 ≤ vw < 1200 の狭い範囲も 240 で固定（下とは違い Footer の影響を受けない）。
@@ -373,7 +386,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  @include fluid(gap, 24, 46);
+  @include fluid(gap, 24, 46, 390, 1920);
 
   @include sp {
     // Figma SP: BACK 左端 / NEXT 右端 / 1/2 中央 → space-between
@@ -388,15 +401,15 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  @include fluid(width, 130, 200);
-  @include fluid(height, 48, 72);
+  @include fluid(width, 130, 200, 390, 1920);
+  @include fluid(height, 48, 72, 390, 1920);
   border: 1px solid var(--color-black);
   border-radius: 999px;
   color: var(--color-black);
   font-family: var(--font-en);
   font-weight: var(--font-weight-light);
-  @include fluid(font-size, 14, 20);
-  @include fluid(letter-spacing, 1.4, 2.6);
+  @include fluid(font-size, 14, 20, 390, 1920);
+  @include fluid(letter-spacing, 1.4, 2.6, 390, 1920);
   text-decoration: none; // <a> 化したときの下線除去
   transition:
     color var(--transition-base),
@@ -426,8 +439,8 @@ a.pageButton:hover {
   color: var(--color-black);
   font-family: var(--font-en);
   font-weight: var(--font-weight-light);
-  @include fluid(font-size, 14, 20);
-  @include fluid(letter-spacing, 1.4, 2.6);
+  @include fluid(font-size, 14, 20, 390, 1920);
+  @include fluid(letter-spacing, 1.4, 2.6, 390, 1920);
 
   @include sp {
     @include fluid(font-size, 14, 16, 320, 390);
@@ -437,10 +450,16 @@ a.pageButton:hover {
 
 
 .emptyMessage {
-  @include fluid(font-size, 14, 18);
-  @include fluid(padding-top, 40, 80);
-  @include fluid(padding-bottom, 40, 80);
+  @include fluid(font-size, 14, 18, 390, 1920);
+  @include fluid(padding-top, 40, 80, 390, 1920);
+  @include fluid(padding-bottom, 40, 80, 390, 1920);
   color: var(--color-text-secondary);
   text-align: center;
   margin: 0;
+
+  @include sp {
+    @include fluid(font-size, 14, 18, 390, 1200);
+    @include fluid(padding-top, 40, 80, 390, 1200);
+    @include fluid(padding-bottom, 40, 80, 390, 1200);
+  }
 }
