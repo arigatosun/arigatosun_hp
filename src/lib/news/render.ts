@@ -30,8 +30,18 @@ export function renderNewsContentToHtml(content: Json): string {
   if (doc.type !== 'doc') return '';
 
   try {
-    return generateHTML(doc as Parameters<typeof generateHTML>[0], EXTENSIONS);
+    const html = generateHTML(doc as Parameters<typeof generateHTML>[0], EXTENSIONS);
+    return addImageLoadingHints(html);
   } catch {
     return '';
   }
+}
+
+/**
+ * 本文中の <img>（TipTap 画像。Supabase Storage の生 URL で next/image を通らない）に
+ * loading="lazy" / decoding="async" を付与し、ファーストビュー外の記事画像を遅延ロードする。
+ * 既に loading 指定がある img はスキップ。見た目は不変。
+ */
+function addImageLoadingHints(html: string): string {
+  return html.replace(/<img(?![^>]*\sloading=)/gi, '<img loading="lazy" decoding="async"');
 }
