@@ -33,11 +33,27 @@ function parseYear(year: string): number | null {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { year, slug } = await params;
   const y = parseYear(year);
-  if (!y) return { title: '記事が見つかりません' };
+  if (!y) return { title: '記事が見つかりません', robots: 'noindex' };
   const entry = await getPublishedNewsByYearSlug(y, slug);
+  if (!entry) return { title: '記事が見つかりません', robots: 'noindex' };
+
+  // 本文 HTML からタグを除去して要約（meta description / OG 用）。
+  const description = renderNewsContentToHtml(entry.content)
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, 120);
+
   return {
-    title: entry ? entry.title : '記事が見つかりません',
-    robots: entry ? undefined : 'noindex',
+    title: entry.title,
+    description,
+    openGraph: {
+      type: 'article',
+      title: entry.title,
+      description,
+      publishedTime: entry.published_at ?? undefined,
+      images: entry.thumbnail_url ? [{ url: entry.thumbnail_url }] : undefined,
+    },
   };
 }
 

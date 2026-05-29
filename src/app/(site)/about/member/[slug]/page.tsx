@@ -48,8 +48,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const member = getMemberBySlug(slug);
   if (!member) return {};
 
+  const description = [`${member.name}（${member.role}）`, member.catchphrase]
+    .filter(Boolean)
+    .join(' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, 120);
   return {
     title: `${member.name} | ${member.role}`,
+    description,
+    openGraph: { title: `${member.name} | 株式会社アリガトサン`, description },
   };
 }
 

@@ -8,6 +8,8 @@ import styles from './page.module.scss';
 
 export const metadata: Metadata = {
   title: 'ニュース',
+  description:
+    '株式会社アリガトサンのニュース・お知らせ一覧。AI開発・デザイン・ブランディング・IPコンテンツに関する最新情報をお届けします。',
 };
 
 // 1ページあたりの記事数
