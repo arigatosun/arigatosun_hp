@@ -10,6 +10,7 @@ import { renderNewsContentToHtml } from '@/lib/news/render';
 import { formatNewsDate } from '@/lib/news/format';
 import CopyLinkButton from '@/components/ui/CopyLinkButton';
 import JsonLd from '@/components/seo/JsonLd';
+import { SITE_URL } from '@/lib/site';
 import styles from './page.module.scss';
 
 type Props = {
@@ -59,7 +60,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 // サイトの正規ドメイン（シェアURLの組み立て用）。
-const SITE_ORIGIN = 'https://arigatosun.com';
+const SITE_ORIGIN = SITE_URL;
 
 // SNS シェアボタン。X / Facebook / LINE は通常リンク（サーバー描画）、
 // リンクコピーのみクライアント側処理（CopyLinkButton）。

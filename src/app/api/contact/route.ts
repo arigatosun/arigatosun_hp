@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
+import { SITE_URL } from '@/lib/site';
 
 interface ContactFormData {
   company: string;
@@ -21,7 +22,7 @@ interface ContactPayload extends ContactFormData {
 const ADMIN_TO = 'info@arigatosun.com';
 const FROM_ADDRESS = '株式会社アリガトサン <noreply@arigatosun.com>';
 const COMPANY_NAME = '株式会社アリガトサン';
-const COMPANY_URL = 'https://arigatosun.com';
+const COMPANY_URL = SITE_URL;
 
 // ── スパム/濫用対策 ──
 // 入力長の上限（巨大ペイロード対策）。
