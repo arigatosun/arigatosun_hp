@@ -88,8 +88,9 @@
   @include sp {
     // Figma SP @390: section x=20 + 内側コンテンツ x=40 → page 端から 40px
     width: 100%;
-    @include fluid(padding-left, 40, 200);
-    @include fluid(padding-right, 40, 80);
+    // PC(1920 基準)の About と中間幅で左右余白が揃うよう、SP 補間も 390→1920 に統一
+    @include fluid(padding-left, 40, 200, 390, 1920);
+    @include fluid(padding-right, 40, 80, 390, 1920);
     @include fluid(padding-top, 40, 60);
     // メニュー→カード1 のギャップ(32px)は .menuList margin-bottom で取るためここは 0
     padding-bottom: 0;
@@ -273,8 +274,9 @@
     overflow: hidden;
     margin-left: 0;
     padding-top: 0;
-    @include fluid(padding-left, 20, 40);
-    @include fluid(padding-right, 20, 40);
+    // About と中間幅で左右余白を揃える: 補間範囲 390→1920 / 40→200(左)・40→80(右)
+    @include fluid(padding-left, 40, 200, 390, 1920);
+    @include fluid(padding-right, 40, 80, 390, 1920);
   }
 }
 
