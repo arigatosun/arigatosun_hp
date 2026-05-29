@@ -12,6 +12,8 @@
     "pp:compare": "tsx scripts/pixel-perfect/compare/run.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.100.1",
+    "@google/genai": "^2.7.0",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.5.0",
     "@supabase/ssr": "^0.10.3",

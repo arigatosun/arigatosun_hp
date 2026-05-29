@@ -472,24 +472,14 @@ const NEST_DETAIL: WorkDetailContent = {
     photos: [
       { src: `${NEST}/hero-collage-v3.png`, x: 0, y: 0, width: 1920, height: 820 },
     ],
-    // SP: Figma フレーム 2887:90709 内 Group 938 実測 1020×558。
-    // 10 枚のフォトコラージュ。座標は Group 1180 (x=-315 起点) を 0 にシフトした相対値。
-    // 画像は後追いのためプレースホルダー描画。
-    spWidth: 1020,
+    // SP: Figma「Frame 627257」(780×1116) の縦長合成画像を 1 枚で hero に。
+    // 旧プレースホルダー (10 枚コラージュ) はユーザー指示により撤回。
+    // work-1 (CHORITZ) 同様、ヘッダー直下から余白を開けてヒーローを配置（上から 42.5px）
+    spOffsetTop: 42.5,
+    spWidth: 390,
     spHeight: 558,
     spPhotos: [
-      // 1〜3: 上段 (大 361×279)
-      { x: 417.95, y: -45.83, width: 361.72, height: 279.02 },
-      { x: 75.21, y: -94, width: 361.72, height: 279.02 },
-      { x: 760.67, y: 2.33, width: 361.72, height: 279.02 },
-      // 4〜10: 下段 (中 271×209)
-      { x: 784.13, y: 440.95, width: 271.29, height: 209.26 },
-      { x: 15.22, y: 332.89, width: 271.29, height: 209.26 },
-      { x: 527.83, y: 404.93, width: 271.29, height: 209.26 },
-      { x: 271.52, y: 368.91, width: 271.29, height: 209.26 },
-      { x: 809.98, y: 257.03, width: 271.29, height: 209.26 },
-      { x: 41.07, y: 148.96, width: 271.29, height: 209.26 },
-      { x: 553.68, y: 221.01, width: 271.29, height: 209.26 },
+      { src: `${NEST}/hero-sp.png`, x: 0, y: 0, width: 390, height: 558 },
     ],
   },
   blocks: [
@@ -498,20 +488,23 @@ const NEST_DETAIL: WorkDetailContent = {
       gap: 160,
       heading: 'デジタルでは生まれない温もりと偶然性を、シンボルとして可視化する。',
       subheading: '拡張を見据えたロゴ・VI設計',
+      // Figma SP 2833:234321 準拠の 2 段落構成
       body: [
         'ヴィラブランド「NEST」のロゴ制作についてご相談をいただきました。',
-        'NESTという名前はすでに決まっており、その名前が持つ世界観をどのようにビジュアルへ落とし込むかが、',
-        'このプロジェクトの出発点でした。',
+        'NESTという名前はすでに決まっており、その名前が持つ世界観をどのようにビジュアルへ落とし込むかが、このプロジェクトの出発点でした。',
       ],
     },
-    // 母体 NEST ロゴ。PC は焼き込み 1520×560 画像、SP は白カード上 / 黒カード下のプレースホルダー
+    // 母体 NEST ロゴ。PC は焼き込み 1520×560 画像。
+    // SP は Figma「Group 1140」(780×800) の白/黒 2 セル合成ロゴ。
     {
       type: 'mockupCard',
       gap: 240,
       src: `${NEST}/nest-main-pair.png`,
       w: 1520,
       h: 560,
-      sp: { variant: 'pairStacked', spAspectRatio: '390 / 400' },
+      spSrc: `${NEST}/nest-main-pair-sp.png`,
+      spW: 780,
+      spH: 800,
     },
     {
       type: 'textSection',
@@ -525,23 +518,33 @@ const NEST_DETAIL: WorkDetailContent = {
         'NEST＝巣。家族や友人、恋人と過ごす特別な時間を提供する場所として、遊び心とこだわりが共存するサービスのシンボルを目指しました。',
       ],
     },
-    // NEST 琵琶湖。PC は 1520×1100、SP は 左右 2 列 (白/黒) プレースホルダー
+    // NEST 琵琶湖。PC は 1520×1100。
+    // SP は Figma「Group 1143」(780×760) 白/黒 2 列の BIWAKO ロゴ showcase。
+    // full-bleed: SP は左右 padding なしで 390×380 サイズ感に合わせる (旧 pairSplit2 プレースホルダー比率)
     {
       type: 'mockupCard',
       gap: 260,
       src: `${NEST}/nest-biwako-pair.png`,
       w: 1520,
       h: 1100,
-      sp: { variant: 'pairSplit2', spAspectRatio: '390 / 380' },
+      spSrc: `${NEST}/nest-biwako-pair-sp.png`,
+      spW: 390,
+      spH: 380,
+      spFullBleed: true,
     },
-    // NEST 天橋立。PC は 1520×1100、SP は 左右 2 列 (白/黒) プレースホルダー
+    // NEST 天橋立。PC は 1520×1100。
+    // SP は Figma「Group 1275」(780×760) 白/黒 2 列の AMANO HASHIDATE ロゴ showcase。
+    // full-bleed: SP は左右 padding なしで 390×380 (BIWAKO と統一)
     {
       type: 'mockupCard',
       gap: 120,
       src: `${NEST}/nest-amanohashidate-pair.png`,
       w: 1520,
       h: 1100,
-      sp: { variant: 'pairSplit2', spAspectRatio: '390 / 380' },
+      spSrc: `${NEST}/nest-amanohashidate-pair-sp.png`,
+      spW: 390,
+      spH: 380,
+      spFullBleed: true,
     },
     {
       type: 'textSection',
@@ -553,19 +556,21 @@ const NEST_DETAIL: WorkDetailContent = {
         'NEST琵琶湖には湖面を想起させるブルー、NEST天橋立には温かみのあるオレンジを採用。共通のマークを持ちながら、施設ごとの空気感や独自性が色で伝わる設計です。また部屋名にも同様のロゴ展開を行い、「NEST琵琶湖 夢」「NEST天橋立 燈」のように、ブランドの世界観が施設の隅々まで一貫して宿るようにしています。',
       ],
     },
-    // ロゴバリエーション。PC は 1520×942、SP は 3+4+4 タイル (Figma Group 916) プレースホルダー
+    // ロゴバリエーション。PC は 1520×942。
+    // SP は Figma「Group 1276」(2833:233518 上 794×586) のロゴガイドライン showcase。
+    // full-bleed: Figma SP カード仕様 391×293 に合わせる
     {
       type: 'mockupCard',
       gap: 260,
       src: `${NEST}/logo-variations.png`,
       w: 1520,
       h: 942,
-      sp: { variant: 'variations11', spAspectRatio: '391 / 293' },
-    },
-    {
-      type: 'caption',
-      gap: 8,
-      text: '＜ロゴデザイン簡易ガイドライン(一部抜粋)＞',
+      spSrc: `${NEST}/logo-variations-sp.png`,
+      spW: 391,
+      spH: 293,
+      spFullBleed: true,
+      // PC / SP とも画像内右下にオーバーレイ (Figma SP 3103:52707 / PC 3103:52709)
+      spCaption: '＜ロゴデザイン簡易ガイドライン(一部抜粋)＞',
     },
     {
       type: 'textSection',
@@ -573,9 +578,7 @@ const NEST_DETAIL: WorkDetailContent = {
       level: 'main',
       heading: '■2施設目「NEST天橋立」への展開',
       body: [
-        'NEST天橋立への展開は、すでに設計されたVI体系をもとに数日で完成しました。',
-        '最初の段階でルールを丁寧に設計しておくことで、新しい施設が加わった時も迷わず展開できる。',
-        'ブランドの拡張性を最初から意識した設計が、スムーズな展開につながりました。',
+        'NEST天橋立への展開は、すでに設計されたVI体系をもとに数日で完成しました。最初の段階でルールを丁寧に設計しておくことで、新しい施設が加わった時も迷わず展開できる。ブランドの拡張性を最初から意識した設計が、スムーズな展開につながりました。',
       ],
     },
     { type: 'divider', gap: 180 },

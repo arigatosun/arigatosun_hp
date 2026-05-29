@@ -9,6 +9,8 @@ import {
 import { renderNewsContentToHtml } from '@/lib/news/render';
 import { formatNewsDate } from '@/lib/news/format';
 import CopyLinkButton from '@/components/ui/CopyLinkButton';
+import JsonLd from '@/components/seo/JsonLd';
+import { SITE_URL } from '@/lib/site';
 import styles from './page.module.scss';
 
 type Props = {
@@ -33,16 +35,32 @@ function parseYear(year: string): number | null {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { year, slug } = await params;
   const y = parseYear(year);
-  if (!y) return { title: '記事が見つかりません' };
+  if (!y) return { title: '記事が見つかりません', robots: 'noindex' };
   const entry = await getPublishedNewsByYearSlug(y, slug);
+  if (!entry) return { title: '記事が見つかりません', robots: 'noindex' };
+
+  // 本文 HTML からタグを除去して要約（meta description / OG 用）。
+  const description = renderNewsContentToHtml(entry.content)
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, 120);
+
   return {
-    title: entry ? entry.title : '記事が見つかりません',
-    robots: entry ? undefined : 'noindex',
+    title: entry.title,
+    description,
+    openGraph: {
+      type: 'article',
+      title: entry.title,
+      description,
+      publishedTime: entry.published_at ?? undefined,
+      images: entry.thumbnail_url ? [{ url: entry.thumbnail_url }] : undefined,
+    },
   };
 }
 
 // サイトの正規ドメイン（シェアURLの組み立て用）。
-const SITE_ORIGIN = 'https://arigatosun.com';
+const SITE_ORIGIN = SITE_URL;
 
 // SNS シェアボタン。X / Facebook / LINE は通常リンク（サーバー描画）、
 // リンクコピーのみクライアント側処理（CopyLinkButton）。
@@ -113,8 +131,23 @@ export default async function NewsDetailPage({ params }: Props) {
   const contentHtml = renderNewsContentToHtml(entry.content);
   const shareUrl = `${SITE_ORIGIN}/news/${year}/${slug}`;
 
+  const articleJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'NewsArticle',
+    headline: entry.title,
+    datePublished: entry.published_at ?? undefined,
+    image: entry.thumbnail_url ? [entry.thumbnail_url] : undefined,
+    mainEntityOfPage: shareUrl,
+    publisher: {
+      '@type': 'Organization',
+      name: '株式会社アリガトサン',
+      logo: { '@type': 'ImageObject', url: `${SITE_ORIGIN}/icon.png` },
+    },
+  };
+
   return (
     <div className={styles.page} data-news-detail>
+      <JsonLd data={articleJsonLd} />
       <div className={styles.inner}>
         <div className={styles.article}>
           {/* 左: アイキャッチ画像 */}

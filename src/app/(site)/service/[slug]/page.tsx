@@ -34,7 +34,19 @@ export async function generateMetadata({
 }: PageParams): Promise<Metadata> {
   const { slug } = await params;
   const data = SERVICE_DETAIL[slug];
-  return { title: data ? data.titleEn : 'SERVICE' };
+  if (!data) return { title: 'SERVICE' };
+  const description = [data.titleJa, data.quote]
+    .filter(Boolean)
+    .join(' ')
+    .replace(/\n|\|\|?/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, 120);
+  return {
+    title: data.titleEn,
+    description,
+    openGraph: { title: `${data.titleEn} | 株式会社アリガトサン`, description },
+  };
 }
 
 export default async function ServiceDetailPage({ params }: PageParams) {

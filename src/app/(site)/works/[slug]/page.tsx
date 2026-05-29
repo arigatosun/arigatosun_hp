@@ -32,7 +32,18 @@ export async function generateMetadata({
 }: PageParams): Promise<Metadata> {
   const { slug } = await params;
   const work = await getWorkBySlug(slug);
-  return { title: work ? `${work.client} | WORKS` : 'WORKS' };
+  if (!work) return { title: 'WORKS' };
+  const description = `${work.client} — ${work.title
+    .replace(/\n/g, '')
+    .replace(/\s*\|\s*/g, ' / ')}`
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, 120);
+  return {
+    title: `${work.client} | WORKS`,
+    description,
+    openGraph: { title: `${work.client} | WORKS | 株式会社アリガトサン`, description },
+  };
 }
 
 // ブロック間の上余白（Figma 実測 px・1920基準）を fluid な margin-top に変換。
@@ -127,10 +138,12 @@ export default async function WorkDetailPage({ params }: PageParams) {
               spSrc={block.spSrc}
               spW={block.spW}
               spH={block.spH}
+              spFullBleed={block.spFullBleed}
+              spCaption={block.spCaption}
             />
           );
         } else if (block.type === 'caption') {
-          node = <WorkCaption text={block.text} />;
+          node = <WorkCaption text={block.text} spHidden={block.spHidden} />;
         } else if (block.type === 'divider') {
           node = <WorkDivider />;
         } else if (block.type === 'creditList') {

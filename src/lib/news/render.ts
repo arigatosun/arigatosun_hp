@@ -8,7 +8,8 @@ import type { Json } from '@/types/supabase';
 // 編集側 (RichEditor) と同じ extensions セットを渡す必要がある。
 // 差異があるとノードがレンダリングされない。
 const EXTENSIONS = [
-  StarterKit,
+  // StarterKit v3 は Link を内包するため、明示的に追加する Link と重複しないよう無効化。
+  StarterKit.configure({ link: false }),
   Link.configure({ openOnClick: false, autolink: true }),
   Image,
   Table.configure({ resizable: false }),

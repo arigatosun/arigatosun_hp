@@ -60,3 +60,6 @@ public/models/*_legacy.glb
 
 # Footer responsive check screenshots (確認用 PNG、不要)
 /scripts/footer-*.png
+
+# Supabase CLI 一時ファイル
+supabase/.temp/

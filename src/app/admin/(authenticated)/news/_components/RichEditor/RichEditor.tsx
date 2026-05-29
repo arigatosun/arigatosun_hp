@@ -49,7 +49,8 @@ export default function RichEditor({ name, defaultValue }: RichEditorProps) {
 
   const editor = useEditor({
     extensions: [
-      StarterKit,
+      // StarterKit v3 は Link を内包するため、明示的に追加する Link と重複しないよう無効化。
+      StarterKit.configure({ link: false }),
       Link.configure({ openOnClick: false, autolink: true }),
       Image,
       Table.configure({ resizable: true }),

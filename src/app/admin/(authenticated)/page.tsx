@@ -56,8 +56,11 @@ export default async function AdminDashboardPage() {
       </div>
 
       <div className={styles.actions}>
-        <Link href="/admin/news/new" className={styles.actionPrimary}>
-          + 新しい記事を作成
+        <Link href="/admin/news/ai" className={styles.actionPrimary}>
+          ✦ AIで記事を作成
+        </Link>
+        <Link href="/admin/news/new" className={styles.actionSecondary}>
+          手動で新規作成
         </Link>
         <Link href="/admin/news" className={styles.actionSecondary}>
           記事一覧を見る

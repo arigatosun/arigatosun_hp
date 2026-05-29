@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
+import { SITE_URL } from '@/lib/site';
 
 interface ContactFormData {
   company: string;
@@ -10,10 +11,54 @@ interface ContactFormData {
   message: string;
 }
 
+/** クライアントから届く実際のペイロード（ボット対策用フィールドを含む）。 */
+interface ContactPayload extends ContactFormData {
+  /** ハニーポット。人間は空のまま。値があればボットとみなす。 */
+  website?: string;
+  /** フォーム表示時刻(ms epoch)。極端に速い送信を弾く。 */
+  _t?: number;
+}
+
 const ADMIN_TO = 'info@arigatosun.com';
 const FROM_ADDRESS = '株式会社アリガトサン <noreply@arigatosun.com>';
 const COMPANY_NAME = '株式会社アリガトサン';
-const COMPANY_URL = 'https://arigatosun.com';
+const COMPANY_URL = SITE_URL;
+
+// ── スパム/濫用対策 ──
+// 入力長の上限（巨大ペイロード対策）。
+const FIELD_LIMITS: Record<keyof ContactFormData, number> = {
+  company: 200,
+  name: 100,
+  nameKana: 100,
+  email: 200,
+  phone: 50,
+  message: 5000,
+};
+// これより速い送信はボットとみなす（フォーム表示〜送信の最低ミリ秒）。
+const MIN_SUBMIT_MS = 2000;
+// 同一 IP のレート制限（ベストエフォート。インメモリのため厳密保証はないが、
+// サーバーレスでもインスタンス再利用中は有効に働く。厳格な制限が要る場合は
+// Upstash 等の外部ストアに置き換える）。
+const RATE_MAX = 5;
+const RATE_WINDOW_MS = 10 * 60 * 1000;
+const rateHits = new Map<string, number[]>();
+
+function getClientIp(request: Request): string {
+  const xff = request.headers.get('x-forwarded-for');
+  return xff ? xff.split(',')[0].trim() : 'unknown';
+}
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now();
+  const arr = (rateHits.get(ip) ?? []).filter((t) => now - t < RATE_WINDOW_MS);
+  if (arr.length >= RATE_MAX) {
+    rateHits.set(ip, arr);
+    return true;
+  }
+  arr.push(now);
+  rateHits.set(ip, arr);
+  return false;
+}
 
 /**
  * お問い合わせフォーム送信エンドポイント。
@@ -29,7 +74,35 @@ const COMPANY_URL = 'https://arigatosun.com';
  */
 export async function POST(request: Request) {
   try {
-    const body: ContactFormData = await request.json();
+    const body: ContactPayload = await request.json();
+
+    // ボット: ハニーポットが埋まっている / 送信が速すぎる →
+    // 受け付けたフリ（200）で静かに終了し、メールは送らない（攻撃者に気取らせない）。
+    if (
+      (typeof body.website === 'string' && body.website.trim() !== '') ||
+      (typeof body._t === 'number' && Date.now() - body._t < MIN_SUBMIT_MS)
+    ) {
+      return NextResponse.json({ success: true });
+    }
+
+    // 同一 IP のレート制限。
+    if (isRateLimited(getClientIp(request))) {
+      return NextResponse.json(
+        { error: '送信回数が多すぎます。時間をおいて再度お試しください。' },
+        { status: 429 },
+      );
+    }
+
+    // 入力長の上限チェック。
+    for (const [key, max] of Object.entries(FIELD_LIMITS)) {
+      const v = body[key as keyof ContactFormData];
+      if (typeof v === 'string' && v.length > max) {
+        return NextResponse.json(
+          { error: '入力内容が長すぎます。' },
+          { status: 400 },
+        );
+      }
+    }
 
     if (!body.name || !body.email || !body.message) {
       return NextResponse.json(
