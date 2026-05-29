@@ -57,6 +57,13 @@ button {
   color: inherit;
 }
 
+// ── キーボードフォーカスの可視化（アクセシビリティ） ──
+// マウス操作時は表示せず、キーボード操作時のみブランドレッドの輪郭を出す。
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
 // ── テーブル ──
 table {
   border-collapse: collapse;
