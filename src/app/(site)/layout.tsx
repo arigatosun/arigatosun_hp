@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import Preloader from '@/components/ui/Preloader';
+import ScrollAnchorOnResize from '@/components/ui/ScrollAnchorOnResize';
 import JsonLd from '@/components/seo/JsonLd';
 import { SITE_URL } from '@/lib/site';
 
@@ -50,6 +51,7 @@ export default function SiteLayout({
     <>
       <JsonLd data={ORGANIZATION_JSONLD} />
       <Preloader />
+      <ScrollAnchorOnResize />
       <Header />
       <main>{children}</main>
       <Footer />

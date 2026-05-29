@@ -29,6 +29,15 @@
   // Figma SP(390): フレーム上端 → CONTACT US ボタン top = 203
   @include sp {
     @include fluid(padding-top, 160, 203, 320, 390);
+
+    // 391px 以上では SP 背景アーチ(bg-mask-sp.png)が object-fit:cover の
+    // 幅基準スケールで沈む（アーチ頂点 displayedY = 幅 × 218/780 ≒ 幅 × 0.2795）。
+    // padding-top を 203 でクランプしたままだと CONTACT US ボタンだけ取り残されて
+    // 白い領域に浮く。ボタン位置をアーチ頂点と同じ傾きで追従させて常に赤側へ収める。
+    //   390px で 203（= 0.2795×390 + 94）と連続。以降は 0.2795×幅 + 94 でアーチに追従。
+    @include min(391px) {
+      padding-top: calc(27.95vw + 94px);
+    }
   }
 }
 
@@ -107,12 +116,26 @@
   }
 
   @include sp {
-    // SP はアーチ頂点中央に乗せ、サイズを拡大
-    // 微調整: 左に 50 / top -205
-    @include fluid(top, -205, -205);
-    @include fluid(margin-left, -50, -50);
+    // SP はアーチ頂点中央に乗せ、サイズを拡大。
+    // 微調整(2026-05):
+    //   - 水平: margin-left -50 → -73。キャンバス内でキャラが中心より約73px 右に
+    //     描画される（charPosition X オフセット）ぶんを相殺し、画面中央に揃える。
+    //     wrapper 中心 = footer 中心 + margin-left なので、+73px の描画オフセットと
+    //     打ち消し合って常に中央（幅に依存しない定数補正）。
+    //   - 垂直: 全体を 15px 持ち上げ（-205 → -220）。少し下寄りだったのを補正。
+    @include fluid(top, -220, -220);
+    @include fluid(margin-left, -73, -73);
     @include fluid(width, 350, 350);
     @include fluid(height, 420, 420);
+
+    // 391px 以上では SP 背景アーチ(bg-mask-sp.png)が object-fit:cover の
+    // 幅基準スケールで沈む（CONTACT US ボタンと同様）。top を固定のままだと
+    // キャラだけ取り残されて白い領域に浮くため、アーチ頂点と同じ傾き
+    // (幅 × 218/780 ≒ 幅 × 0.2795) で top を追従させ、常に赤いアーチの上に座らせる。
+    //   390px で -220（= 0.2795×390 - 329）と連続。以降は 0.2795×幅 - 329 で追従。
+    @include min(391px) {
+      top: calc(27.95vw - 329px);
+    }
   }
 }
 
