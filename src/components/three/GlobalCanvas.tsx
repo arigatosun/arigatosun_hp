@@ -78,14 +78,18 @@ export default function GlobalCanvas() {
         )}
 
         {/* LogoSlider: 左→右に逆方向で歩く 2 体目。
-            approachMarginPx を 1500 にしてロゴ表示時には既に画面内に入っている状態に。 */}
+            approachMarginPx を大きめにして、ロゴ帯が画面に入る前から歩き出させ、
+            ロゴ表示時には既に画面内で歩いている状態にする（入りが遅い対策）。 */}
         <WalkingCharacter
           glbPath={GLB_PATH}
           direction="left-to-right"
           speed={1.0}
           sectionSelector='[data-section="logo-slider"]'
           triggerOnVisible
-          approachMarginPx={1500}
+          approachMarginPx={2800}
+          // 右に抜けてから再度左から入るまでの待ち時間（default 6000ms）。
+          // 右に抜けたら待ちなしで即左から再登場させる。
+          waitMs={0}
           baseY={logoBaseY}
           scale={walkScale}
           reactOnClick={{
