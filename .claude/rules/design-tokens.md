@@ -18,6 +18,7 @@ paths:
 |---|---|---|
 | ブランドレッド | `--color-primary` | `#DA2719` |
 | ブランドレッド ダーク | `--color-primary-dark` | `#B82010` |
+| オープニング背景レッド | `--color-opening-red` | `#E81D1B` |
 | テキストブラック | `--color-black` | `#140700` |
 | 背景ホワイト | `--color-white` | `#FFFFFF` |
 | 背景グレージュ | `--color-bg` | `#F5F6F7` |

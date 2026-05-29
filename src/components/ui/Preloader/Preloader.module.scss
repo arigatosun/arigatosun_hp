@@ -1,0 +1,98 @@
+// Figma OPENING (3106:43726) は 1920px フレーム基準のため fluid 上限を 1920 に上書き。
+@use '@/styles/fluid' as * with (
+  $fluid-max-viewport: 1920
+);
+@use '@/styles/breakpoints' as *;
+
+.preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-opening-red);
+  // GSAP の autoAlpha 操作対象。初期は可視。
+  opacity: 1;
+  visibility: visible;
+  will-change: opacity, background-color;
+}
+
+// 横スキャンライン（Figma 背景テクスチャの再現）。極薄の暗線を等間隔で重ねる。
+.scanlines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.05) 0,
+    rgba(0, 0, 0, 0.05) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+}
+
+.inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sun {
+  display: block;
+  height: auto;
+  @include fluid(width, 64, 96.36);
+  // 太陽 ↓ ゲージ間 = Figma 約 28px。
+  @include fluid(margin-bottom, 18, 28);
+  will-change: transform;
+}
+
+.meter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.gaugeTrack {
+  box-sizing: border-box;
+  border: 1.7px solid var(--color-white);
+  border-radius: var(--border-radius-full);
+  padding: 2px;
+  @include fluid(width, 248, 425);
+  @include fluid(height, 9, 11.9);
+}
+
+.gaugeFill {
+  height: 100%;
+  background-color: var(--color-white);
+  border-radius: var(--border-radius-full);
+  // width は progress に応じて inline style で指定。
+}
+
+.percent {
+  margin: 0;
+  // ゲージ ↓ 数字間 = Figma 約 26px。
+  @include fluid(margin-top, 16, 26);
+  font-family: var(--font-en);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-white);
+  line-height: 1;
+  font-variant-numeric: tabular-nums; // 桁の増減で横揺れしない
+  @include fluid(font-size, 16, 26);
+  @include fluid(letter-spacing, 1, 2);
+}
+
+.percentSign {
+  @include fluid(font-size, 11, 18);
+  @include fluid(margin-left, 1, 2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .preloader {
+    will-change: auto;
+  }
+  .sun {
+    will-change: auto;
+  }
+}
