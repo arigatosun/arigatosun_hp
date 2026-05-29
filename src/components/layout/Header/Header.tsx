@@ -31,6 +31,21 @@ const snsNav = [
   },
 ];
 
+// CREATIVE PROJECTS バナー（Footer と同じ構成 / SP メニュー用）
+// href はリンク先 URL が確定したら差し替える（後日支給予定）
+const creativeProjects = [
+  {
+    src: '/images/partners/kusomegane-banner.png',
+    alt: 'KUSOMEGANE OFFICIAL STORE',
+    href: '#',
+  },
+  {
+    src: '/images/partners/aseave-banner.png',
+    alt: '飲む、深呼吸 ASEAVE',
+    href: '#',
+  },
+];
+
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
@@ -137,9 +152,9 @@ export default function Header() {
         </Link>
 
         <button
-          className={`${styles.menuButton} ${isMenuOpen ? styles.menuButtonHidden : ''}`}
-          onClick={() => setIsMenuOpen(true)}
-          aria-label="メニューを開く"
+          className={`${styles.menuButton} ${isMenuOpen ? styles.menuButtonOpen : ''}`}
+          onClick={() => setIsMenuOpen((prev) => !prev)}
+          aria-label={isMenuOpen ? 'メニューを閉じる' : 'メニューを開く'}
           aria-expanded={isMenuOpen}
         >
           <span className={styles.menuLine} />
@@ -150,57 +165,114 @@ export default function Header() {
 
       {/* モバイルメニュー */}
       <div className={`${styles.mobileMenu} ${isMenuOpen ? styles.mobileMenuOpen : ''}`}>
-        <button
-          className={styles.closeButton}
-          onClick={() => setIsMenuOpen(false)}
-          aria-label="メニューを閉じる"
-          type="button"
-        >
-          <span className={styles.closeLine} />
-          <span className={styles.closeLine} />
-        </button>
-        <ul className={styles.mobileNavList}>
-          {[...leftNav, ...rightNav].map((item) => (
-            <li key={item.href}>
+        <div className={styles.menuInner}>
+          {/* メインナビ */}
+          <nav className={styles.primaryNav}>
+            <Link
+              href="/about"
+              className={`${styles.mobileNavLink} ${isActive('/about') ? styles.active : ''}`}
+              onClick={() => setIsMenuOpen(false)}
+            >
+              ABOUT
+            </Link>
+
+            <div className={styles.serviceGroup}>
               <Link
-                href={item.href}
-                className={`${styles.mobileNavLink} ${isActive(item.href) ? styles.active : ''}`}
+                href="/service"
+                className={`${styles.mobileNavLink} ${isActive('/service') ? styles.active : ''}`}
                 onClick={() => setIsMenuOpen(false)}
               >
-                {item.label}
+                SERVICE
               </Link>
-            </li>
-          ))}
-          {snsNav.map((item) => (
-            <li key={item.label}>
-              <a
-                href={item.href}
-                className={styles.mobileNavLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => setIsMenuOpen(false)}
+              <ul className={styles.serviceSubList}>
+                {serviceDropdown.map((sub) => (
+                  <li key={sub.href}>
+                    <Link
+                      href={sub.href}
+                      className={styles.serviceSubLink}
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      ・{sub.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <Link
+              href="/works"
+              className={`${styles.mobileNavLink} ${isActive('/works') ? styles.active : ''}`}
+              onClick={() => setIsMenuOpen(false)}
+            >
+              WORKS
+            </Link>
+            <Link
+              href="/news"
+              className={`${styles.mobileNavLink} ${isActive('/news') ? styles.active : ''}`}
+              onClick={() => setIsMenuOpen(false)}
+            >
+              NEWS
+            </Link>
+            <Link
+              href="/contact"
+              className={`${styles.mobileNavLink} ${isActive('/contact') ? styles.active : ''}`}
+              onClick={() => setIsMenuOpen(false)}
+            >
+              CONTACT US
+            </Link>
+
+            <a
+              href={snsNav[0].href}
+              className={styles.mobileNavLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              INSTAGRAM
+              <svg
+                className={styles.externalIcon}
+                width="13"
+                height="13"
+                viewBox="0 0 10 10"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                {item.label}
-                <svg
-                  className={styles.externalIcon}
-                  width="12"
-                  height="12"
-                  viewBox="0 0 10 10"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
+                <path
+                  d="M8 5.5V8.5C8 8.76522 7.89464 9.01957 7.70711 9.20711C7.51957 9.39464 7.26522 9.5 7 9.5H1.5C1.23478 9.5 0.98043 9.39464 0.792893 9.20711C0.605357 9.01957 0.5 8.76522 0.5 8.5V3C0.5 2.73478 0.605357 2.48043 0.792893 2.29289C0.98043 2.10536 1.23478 2 1.5 2H4.5M6.5 0.5H9.5M9.5 0.5V3.5M9.5 0.5L4 6"
+                  stroke="currentColor"
+                  strokeWidth="1"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </a>
+          </nav>
+
+          {/* CREATIVE PROJECTS バナー */}
+          <div className={styles.creativeSection}>
+            <p className={styles.creativeLabel}>CREATIVE PROJECTS</p>
+            <div className={styles.creativeBanners}>
+              {creativeProjects.map((project) => (
+                <a
+                  key={project.src}
+                  href={project.href}
+                  className={styles.bannerLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setIsMenuOpen(false)}
                 >
-                  <path
-                    d="M8 5.5V8.5C8 8.76522 7.89464 9.01957 7.70711 9.20711C7.51957 9.39464 7.26522 9.5 7 9.5H1.5C1.23478 9.5 0.98043 9.39464 0.792893 9.20711C0.605357 9.01957 0.5 8.76522 0.5 8.5V3C0.5 2.73478 0.605357 2.48043 0.792893 2.29289C0.98043 2.10536 1.23478 2 1.5 2H4.5M6.5 0.5H9.5M9.5 0.5V3.5M9.5 0.5L4 6"
-                    stroke="currentColor"
-                    strokeWidth="1"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+                  <Image
+                    src={project.src}
+                    alt={project.alt}
+                    width={620}
+                    height={204}
+                    className={styles.bannerImage}
                   />
-                </svg>
-              </a>
-            </li>
-          ))}
-        </ul>
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
     </header>
   );
