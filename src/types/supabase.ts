@@ -1,7 +1,3 @@
-// このファイルは自動生成。手動で編集しない。
-// 再生成: Supabase MCP の generate_typescript_types を実行し、出力を貼り替える。
-// （CLI 派: `supabase gen types typescript --project-id xgvjgvhqmkuulupvvbnr --schema public > src/types/supabase.ts`）
-
 export type Json =
   | string
   | number
@@ -50,11 +46,13 @@ export type Database = {
           category_id: string
           content: Json
           created_at: string
+          description: string | null
           id: string
           published_at: string | null
           slug: string
           slug_year: number
           status: string
+          thumbnail_alt: string | null
           thumbnail_url: string | null
           title: string
           updated_at: string
@@ -63,11 +61,13 @@ export type Database = {
           category_id: string
           content?: Json
           created_at?: string
+          description?: string | null
           id?: string
           published_at?: string | null
           slug: string
           slug_year: number
           status?: string
+          thumbnail_alt?: string | null
           thumbnail_url?: string | null
           title: string
           updated_at?: string
@@ -76,11 +76,13 @@ export type Database = {
           category_id?: string
           content?: Json
           created_at?: string
+          description?: string | null
           id?: string
           published_at?: string | null
           slug?: string
           slug_year?: number
           status?: string
+          thumbnail_alt?: string | null
           thumbnail_url?: string | null
           title?: string
           updated_at?: string

@@ -3,6 +3,7 @@
 import type { Editor } from '@tiptap/react';
 import { useState, useTransition } from 'react';
 import { uploadNewsImage } from '../../../../_actions/upload';
+import { generateNewsImage } from '../../../../_actions/ai-image';
 import styles from './Toolbar.module.scss';
 
 interface ToolbarProps {
@@ -35,6 +36,20 @@ export default function Toolbar({ editor }: ToolbarProps) {
       });
     };
     input.click();
+  };
+
+  const handleAiImage = () => {
+    const prompt = window.prompt('生成したい画像の内容を入力してください（英語推奨）');
+    if (!prompt || !prompt.trim()) return;
+    setUploadError(null);
+    startUpload(async () => {
+      const result = await generateNewsImage(prompt.trim(), '4:3');
+      if (result.ok) {
+        editor.chain().focus().setImage({ src: result.url, alt: prompt.trim() }).run();
+      } else {
+        setUploadError(result.error);
+      }
+    });
   };
 
   const handleLink = () => {
@@ -131,9 +146,15 @@ export default function Toolbar({ editor }: ToolbarProps) {
       onClick: handleLink,
     },
     {
-      label: isUploading ? '画像 (アップ中…)' : '画像',
-      title: '画像を挿入',
+      label: isUploading ? '画像 (処理中…)' : '画像',
+      title: '画像をアップロードして挿入',
       onClick: handleImage,
+      disabled: isUploading,
+    },
+    {
+      label: isUploading ? '✦AI画像 (生成中…)' : '✦AI画像',
+      title: 'AIで画像を生成して挿入',
+      onClick: handleAiImage,
       disabled: isUploading,
     },
     {

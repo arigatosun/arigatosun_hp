@@ -54,9 +54,14 @@ export default async function NewsListPage({ searchParams }: NewsListPageProps) 
     <div className={styles.root}>
       <header className={styles.header}>
         <h1 className={styles.title}>ニュース管理</h1>
-        <Link href="/admin/news/new" className={styles.newButton}>
-          + 新規作成
-        </Link>
+        <div className={styles.headerActions}>
+          <Link href="/admin/news/ai" className={styles.aiButton}>
+            ✦ AIで作成
+          </Link>
+          <Link href="/admin/news/new" className={styles.newButton}>
+            + 新規作成
+          </Link>
+        </div>
       </header>
 
       {deleted && (

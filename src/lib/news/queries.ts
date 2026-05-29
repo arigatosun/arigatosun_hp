@@ -19,7 +19,7 @@ export async function getPublishedNewsList(options?: {
   let query = supabase
     .from('news')
     .select(
-      'id, slug, slug_year, title, thumbnail_url, published_at, category:categories!inner(slug, label)',
+      'id, slug, slug_year, title, thumbnail_url, thumbnail_alt, published_at, category:categories!inner(slug, label)',
     )
     .order('published_at', { ascending: false });
 
@@ -39,6 +39,7 @@ export async function getPublishedNewsList(options?: {
     slug_year: row.slug_year,
     title: row.title,
     thumbnail_url: row.thumbnail_url,
+    thumbnail_alt: row.thumbnail_alt,
     published_at: row.published_at,
     category: row.category ?? null,
   }));
@@ -56,7 +57,7 @@ export async function getPublishedNewsByYearSlug(
   const { data, error } = await supabase
     .from('news')
     .select(
-      'id, slug, slug_year, title, thumbnail_url, published_at, content, category:categories!inner(slug, label)',
+      'id, slug, slug_year, title, thumbnail_url, thumbnail_alt, description, published_at, content, category:categories!inner(slug, label)',
     )
     .eq('slug_year', year)
     .eq('slug', slug)
@@ -70,6 +71,8 @@ export async function getPublishedNewsByYearSlug(
     slug_year: data.slug_year,
     title: data.title,
     thumbnail_url: data.thumbnail_url,
+    thumbnail_alt: data.thumbnail_alt,
+    description: data.description,
     published_at: data.published_at,
     category: data.category ?? null,
     content: data.content,
