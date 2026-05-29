@@ -19,10 +19,10 @@
 
   @include sp {
     // Figma SP @390: LogoSlider 末尾 y=9069 → Message 見出し y=9229 = gap 160px
-    // SP は page 端から 40px padding（他セクション SP と統一）
     @include fluid(margin-top, 160, 360);
-    @include fluid(padding-left, 40, 40);
-    @include fluid(padding-right, 40, 40);
+    // About と中間幅で左右余白を揃える: 補間範囲 390→1920 / 40→200(左)・40→80(右)
+    @include fluid(padding-left, 40, 200, 390, 1920);
+    @include fluid(padding-right, 40, 80, 390, 1920);
     // base の padding-bottom は SP にも効くため現状(1200)カーブに固定
     @include fluid(padding-bottom, 54, 108);
   }
