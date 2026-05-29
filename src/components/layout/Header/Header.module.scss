@@ -14,6 +14,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  // メニュー展開時、ロゴとハンバーガー(×)をオーバーレイより前面に出す
+  // （.mobileMenu は header 内の兄弟なので、相対的に上へ重ねる）
+  position: relative;
+  z-index: 2;
   // 上下対称にしてナビを白背景の中心線に揃える
   @include fluid(padding-top, 14, 33);
   @include fluid(padding-bottom, 14, 33);
@@ -211,66 +215,48 @@
 .menuLine {
   display: block;
   width: 100%;
-  // 整数値 2px にしてサブピクセルレンダリングのバラつきを回避
-  // コンテナ 20px なら 2×3=6 + space-between で gap 7px ずつ全てピクセルグリッドに整列
-  height: 2px;
+  // Figma の × ストローク幅に合わせた 1px の細線
+  height: 1px;
   background-color: var(--color-black);
+  transform-origin: center;
   transition: transform var(--transition-base), opacity var(--transition-base);
 }
 
-// メニュー展開時はハンバーガーを非表示にし、専用の閉じるボタンに置き換える
-.menuButtonHidden {
-  opacity: 0;
-  pointer-events: none;
-}
+// ── メニュー展開時: 3本線 → × へモーフ ──
+// 同じ 48×20 枠の中で、上下の線を中央に寄せて回転させ × を作る（中央線はフェード）。
+// 角度 22.62° は 48×20 枠の対角線角度（Figma node 3098:24618 の × と一致）。
+.menuButtonOpen {
+  // 上下の線を縦中央へ寄せる距離（コンテナ高 20→18 / 線 1px なので (H-1)/2）
+  @include fluid(--menu-line-shift, 8.5, 9.5, 320, 390);
 
-// ── モバイルメニュー内 × 閉じるボタン ──
-// ハンバーガーと同じ位置（top-right）に配置して操作感を統一
-.closeButton {
-  position: absolute;
-  @include fluid(top, 20, 24, 320, 390);
-  @include fluid(right, 24, 28, 320, 390);
-  @include fluid(width, 28, 32, 320, 390);
-  @include fluid(height, 28, 32, 320, 390);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  @include pc {
-    display: none;
-  }
-}
-
-.closeLine {
-  position: absolute;
-  width: 100%;
-  // ハンバーガーの線と太さを揃える
-  height: 2px;
-  background-color: var(--color-black);
-
-  &:nth-child(1) {
-    transform: rotate(45deg);
-  }
-  &:nth-child(2) {
-    transform: rotate(-45deg);
+  .menuLine {
+    &:nth-child(1) {
+      transform: translateY(var(--menu-line-shift)) rotate(22.62deg);
+    }
+    &:nth-child(2) {
+      opacity: 0;
+    }
+    &:nth-child(3) {
+      transform: translateY(calc(var(--menu-line-shift) * -1)) rotate(-22.62deg);
+    }
   }
 }
 
 // ── モバイルメニュー ──
+// 全画面オーバーレイ。× ボタンとヘッダーロゴは固定のまま、中身(menuInner)だけスクロール。
 .mobileMenu {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100vh;
+  height: 100dvh;
   background-color: var(--color-bg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
   opacity: 0;
   visibility: hidden;
   transition: opacity var(--transition-base), visibility var(--transition-base);
-  z-index: calc(var(--z-header) - 1);
+  // header 内の兄弟。nav(z-index:2) より下に置き、ロゴ/×を前面に残す
+  z-index: 1;
 
   @include pc {
     display: none;
@@ -282,11 +268,27 @@
   visibility: visible;
 }
 
-.mobileNavList {
+// スクロールコンテナ（左寄せ縦並び）
+.menuInner {
+  height: 100%;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 32px;
+  align-items: flex-start;
+  // ヘッダーバー（ロゴ/×）を避けるため上に余白。Figma: nav 上端 top=120
+  @include fluid(padding-top, 102, 120, 320, 390);
+  @include fluid(padding-bottom, 60, 80, 320, 390);
+  @include fluid(padding-left, 34, 40, 320, 390);
+  @include fluid(padding-right, 34, 40, 320, 390);
+}
+
+// ── メインナビ ──
+.primaryNav {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  // Figma: 各トップレベル項目の gap 24
+  @include fluid(gap, 20, 24, 320, 390);
   list-style: none;
 }
 
@@ -296,12 +298,95 @@
   gap: 4px;
   color: var(--color-black);
   font-family: var(--font-en);
-  font-size: 16px;
+  // Figma: 17px / tracking 2.04px (= 0.12em)
+  @include fluid(font-size, 15, 17, 320, 390);
   font-weight: var(--font-weight-light);
-  letter-spacing: 1.12px;
+  line-height: normal;
+  letter-spacing: 0.12em;
   transition: color var(--transition-base);
 
   &:hover {
     color: var(--color-primary);
   }
+}
+
+// ── SERVICE グループ（SERVICE + 常時表示サブメニュー） ──
+.serviceGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  // Figma: SERVICE → サブリスト間 gap 20
+  @include fluid(gap, 16, 20, 320, 390);
+}
+
+.serviceSubList {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  // Figma: サブ項目間 gap 18
+  @include fluid(gap, 15, 18, 320, 390);
+  list-style: none;
+}
+
+.serviceSubLink {
+  color: var(--color-text-secondary);
+  font-family: var(--font-en);
+  // Figma: 16px / tracking 1.92px (= 0.12em) / #808080
+  @include fluid(font-size, 14, 16, 320, 390);
+  font-weight: var(--font-weight-light);
+  line-height: normal;
+  letter-spacing: 0.12em;
+  transition: color var(--transition-base);
+
+  &:hover {
+    color: var(--color-primary);
+  }
+}
+
+// ── CREATIVE PROJECTS ──
+.creativeSection {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  // Figma: ラベル → バナー間 gap 8（8px は固定許容）
+  gap: 8px;
+  // Figma: ナビブロック → CREATIVE PROJECTS 間 40
+  @include fluid(margin-top, 32, 40, 320, 390);
+}
+
+.creativeLabel {
+  color: var(--color-black);
+  font-family: var(--font-en);
+  // Figma: 16px / tracking 1.92px (= 0.12em)
+  @include fluid(font-size, 14, 16, 320, 390);
+  font-weight: var(--font-weight-light);
+  line-height: normal;
+  letter-spacing: 0.12em;
+}
+
+.creativeBanners {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  // Figma: バナー間 gap 20
+  @include fluid(gap, 16, 20, 320, 390);
+}
+
+.bannerLink {
+  display: block;
+  width: 100%;
+  // 角丸なし（指示）。クリック可能リンク。
+  transition: opacity var(--transition-base);
+
+  &:hover {
+    opacity: 0.85;
+  }
+}
+
+.bannerImage {
+  display: block;
+  width: 100%;
+  height: auto;
 }

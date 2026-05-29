@@ -29,6 +29,10 @@
 
   @include sp {
     @include fluid(padding-bottom, 40, 80);
+    // SP カードの左右余白（左右対称＝中央寄せ）。
+    // テキストが折り返さない範囲でカードを少し縮める（最小幅 320 でもバッファを確保）。
+    @include fluid(padding-left, 12, 22, 320, 390);
+    @include fluid(padding-right, 12, 22, 320, 390);
   }
 }
 
@@ -42,8 +46,8 @@
 
   @include sp {
     min-height: auto;
-    // Figma SP: card x=28 w=334 (本文 x=40 より -12 外側に張り出し)
-    margin-inline: -12px;
+    // width:100% + section の左右対称パディングで中央配置（負 margin ハックは廃止）
+    margin-inline: 0;
   }
 }
 
@@ -222,9 +226,9 @@
 // Row 3 (設立 / 代表者 / 従業員数):
 // PC Figma accent x=870→1042→1403→1620 → 172 / 361 / 217
 //   - 代表者 は 3 名表記「吉川 遼／廣森 氷河／中村 修人」を 1 行で収めるため 361 確保
-//   - 従業員数 は「９名（正社員）」「＋外部パートナー」の 2 行構成 (data の \n を改行展開)
+//   - 従業員数 は「９名（正社員）」「＋外部パートナー」の 2 行構成 (valueSegments + .brPc)
 // SP Figma: 従業員数 は 1 行で「９名（正社員）＋外部パートナー」(縦積みなので 1 行幅 OK)
-//   → SP では \n を改行展開せず通常スペースとして折りたたむ (white-space: normal)
+//   → SP では .brPc が display:none になりセグメントが連結（空白なし）
 .row3 {
   .cell:nth-child(1) {
     flex: 172 1 0;
@@ -240,13 +244,6 @@
   }
   .cell:nth-child(3) {
     flex: 217 1 0;
-
-    @include pc {
-      .cellValue {
-        // data の \n を改行として表示
-        white-space: pre-line;
-      }
-    }
   }
 }
 
@@ -283,8 +280,8 @@
   flex-shrink: 0;
 }
 
-// Figma SP: 16px medium / ls 4.48 (=0.28em) / lh 30
-// Figma PC: 同値
+// Figma PC: 16px medium / ls 4.48 / lh 30
+// Figma SP: 14px medium / ls 3.92 (=0.28em) / lh 26.4 / #808080
 .cellLabel {
   color: var(--color-text-secondary);
   font-family: 'Noto Sans JP', var(--font-jp);
@@ -292,9 +289,17 @@
   font-weight: var(--font-weight-medium);
   @include fluid(line-height, 26, 30);
   @include fluid(letter-spacing, 4.48, 4.48);
+
+  @include sp {
+    // 390 で 14px(Figma) / 320 で 12px に縮小して狭幅でも収める
+    @include fluid(font-size, 12, 14, 320, 390);
+    line-height: 1.89; // = 26.4 / 14（無次元でフォントに追従）
+    letter-spacing: 0.28em;
+  }
 }
 
-// Figma SP: 16px regular / ls 4.48 / lh 30
+// Figma PC: 16px regular / ls 4.48 / lh 30
+// Figma SP: 14px regular / ls 3.92 (=0.28em) / lh 26.4
 // SP: value text は accent (1px) + accent→label gap (12px) = 13px 分インデントして
 //    ラベルテキストと左端を揃える (Figma SP: value x=61, accent x=48, label x=61)。
 .cellValue {
@@ -308,15 +313,26 @@
 
   @include sp {
     padding-left: 13px;
+    // 390 で 14px(Figma) / 320 で 12px
+    @include fluid(font-size, 12, 14, 320, 390);
+    line-height: 1.89; // = 26.4 / 14
+    letter-spacing: 0.28em;
   }
 }
 
-// 設立値「2024/05」だけ Mozaic GEO Light 18px / ls 5.04
+// 設立値「2024/05」だけ Mozaic GEO Light
+// Figma PC: 18px / ls 5.04 / Figma SP: 14px / ls 3.92 (=0.28em)
 .cellValueEn {
   font-family: var(--font-en);
   @include fluid(font-size, 18, 18);
   font-weight: var(--font-weight-light);
   @include fluid(letter-spacing, 5.04, 5.04);
+
+  @include sp {
+    // 390 で 14px(Figma) / 320 で 12px
+    @include fluid(font-size, 12, 14, 320, 390);
+    letter-spacing: 0.28em;
+  }
 }
 
 // 事業内容リスト
@@ -326,7 +342,8 @@
   padding: 0;
 }
 
-// Figma SP: 14px regular / ls 3.92 / lh 32
+// Figma PC: 14px regular / ls 3.92 / lh 32
+// Figma SP: 12px regular / ls 0.96 (=0.08em) / lh 22 / 各項目を指定位置で 2 行 + ぶら下げ字下げ
 .serviceItem {
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
@@ -334,4 +351,33 @@
   font-weight: var(--font-weight-regular);
   @include fluid(line-height, 28, 32);
   @include fluid(letter-spacing, 3.92, 3.92);
+
+  @include sp {
+    // 390 で 12px(Figma) / 320 で 10px に縮小し、明示改行(2行)を狭幅でも維持
+    @include fluid(font-size, 10, 12, 320, 390);
+    line-height: 1.83; // = 22 / 12
+    letter-spacing: 0.08em;
+    // ぶら下げインデント: 折返し 2 行目を ・ の後ろ（約 1 字）に揃える
+    padding-left: 1em;
+    text-indent: -1em;
+  }
+}
+
+// ── ブレークポイント別の改行制御 ──
+// SP のみ改行（PC では非表示にして前後セグメントを連結）
+.brSp {
+  display: none;
+
+  @include sp {
+    display: inline;
+  }
+}
+
+// PC のみ改行（SP では非表示にして連結 — 例: 従業員数）
+.brPc {
+  display: inline;
+
+  @include sp {
+    display: none;
+  }
 }

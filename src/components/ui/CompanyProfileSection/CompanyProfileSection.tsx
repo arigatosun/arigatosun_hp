@@ -1,3 +1,4 @@
+import { Fragment } from 'react';
 import Image from 'next/image';
 import styles from './CompanyProfileSection.module.scss';
 import { COMPANY_INFO_ROWS, COMPANY_SERVICE_ITEMS } from '@/data/company-profile';
@@ -62,7 +63,22 @@ export default function CompanyProfileSection() {
                         cell.valueFont === 'en' ? styles.cellValueEn : ''
                       }`}
                     >
-                      {cell.value}
+                      {cell.valueSegments
+                        ? cell.valueSegments.map((seg, i) => (
+                            <Fragment key={i}>
+                              {i > 0 && (
+                                <br
+                                  className={
+                                    cell.breakOn === 'pc'
+                                      ? styles.brPc
+                                      : styles.brSp
+                                  }
+                                />
+                              )}
+                              {seg}
+                            </Fragment>
+                          ))
+                        : cell.value}
                     </dd>
                   </div>
                 ))}
@@ -78,9 +94,15 @@ export default function CompanyProfileSection() {
                 </div>
                 <dd className={styles.cellValue}>
                   <ul className={styles.serviceList}>
-                    {COMPANY_SERVICE_ITEMS.map((item) => (
-                      <li key={item} className={styles.serviceItem}>
-                        ・{item}
+                    {COMPANY_SERVICE_ITEMS.map((segments, idx) => (
+                      <li key={idx} className={styles.serviceItem}>
+                        ・
+                        {segments.map((seg, i) => (
+                          <Fragment key={i}>
+                            {i > 0 && <br className={styles.brSp} />}
+                            {seg}
+                          </Fragment>
+                        ))}
                       </li>
                     ))}
                   </ul>
