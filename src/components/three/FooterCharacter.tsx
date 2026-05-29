@@ -7,7 +7,6 @@ import { clone as skeletonClone } from 'three/examples/jsm/utils/SkeletonUtils.j
 import * as THREE from 'three';
 
 // Phase 18 追補: 粘土風シェーディングの新手振りモデルに差し替え。
-// 旧 arigatokun_bye.glb は履歴/ロールバック用に残置。
 const DEFAULT_GLB_PATH = '/models/arigatokunn_wave_meshopt.glb';
 // glb 内のアニメ名。新エクスポート (simple/felt) は "Wave"、旧 glb は "ArmatureAction.001"、
 // 座りキャラ glb は "Sit"。useAnimations の actions マップで順に探して再生する。
