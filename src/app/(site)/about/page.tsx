@@ -75,7 +75,9 @@ export default function AboutPage() {
           as="h1"
         />
 
-        <h2 className={styles.heading}>妥協なき愛で、世を照らす太陽であれ。</h2>
+        {/* "太陽" の間に WORD JOINER (U+2060) を入れて、SP で「太」と「陽」が
+            別行に分かれないようにする (見た目には何も挿入しない、改行禁止文字のみ)。 */}
+        <h2 className={styles.heading}>妥協なき愛で、世を照らす太⁠陽であれ。</h2>
 
         <div className={styles.body}>
           {/* Figma 1578:65234 は 2 段落構成。
