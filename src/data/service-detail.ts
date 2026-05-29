@@ -105,12 +105,12 @@ const DESIGN_BRANDING: ServiceDetailData = {
       bodyTracking: 4,
       visual: {
         kind: 'image',
-        // Figma Group 1224 (355×351, 線画) + Group 1225 (350×350, マスク) の SVG ペア
+        // Group 1282 (351×351) で線画を差し替え。旧 Group 1224 (355×351) からサイズ更新。
         src: '/images/sections/service/detail/concept-flow.svg',
         alt: '制作フローを表すネットワーク図。デザイン・ブランディングを中心に各スキルが連携する様子',
-        width: 355,
+        width: 351,
         height: 351,
-        // マスク (350×350) は線画 (355×351) とほぼ同寸。5px 差は size 100% 100% で吸収
+        // マスク (350×350) は新線画 (351×351) とほぼ同寸。1px 差は size 100% 100% で吸収
         mask: {
           src: '/images/sections/service/detail/concept-flow-mask.svg',
           size: '100% 100%',
