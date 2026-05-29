@@ -32,8 +32,16 @@
   // Figma: カード間 40px
   @include fluid(gap, 16, 40);
 
-  // 1024px 未満は1列縦積み
-  @include max(1023px) {
+  // 3 → 2 → 1 のレスポンシブ（PC=3列 / タブレット=2列 / スマホ=1列）
+  // タブレット(768〜1023)は2列
+  @include min(768px) {
+    @include max(1023px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  // スマホ(≤767)は1列縦積み
+  @include max(767px) {
     grid-template-columns: 1fr;
   }
 
