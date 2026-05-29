@@ -1,6 +1,12 @@
 @use '@/styles/fluid' as *;
 @use '@/styles/breakpoints' as *;
 
+// ── レスポンシブ方針（news 詳細「その間」対応 / 2026-05） ──
+// PC レンジ(≥1024)を 1920 基準 clamp に、SP(≤1023) は 1200 据え置き。
+//   - PC を 1920 に乗せたいベース宣言だけ `…, 390, 1920` を付ける。
+//   - SP に効く無防備な値は `@include sp { @include fluid(…, 390, 1200) }` で SP を不変に保つ。
+// ※ .page padding-bottom は @include pc 固定（Footer アーチ合わせ）のため base は据え置き。
+
 .page {
   padding-top: 80px; // Header(position: fixed) 分のオフセット
   // SP（vw < 1024）は元の fluid を維持
@@ -25,9 +31,9 @@
 }
 
 .inner {
-  @include fluid(padding-left, 20, 200);
-  @include fluid(padding-right, 20, 200);
-  @include fluid(padding-top, 48, 120);
+  @include fluid(padding-left, 20, 200, 390, 1920);
+  @include fluid(padding-right, 20, 200, 390, 1920);
+  @include fluid(padding-top, 48, 120, 390, 1920);
 
   @include sp {
     // Figma SP(390): 左右 padding 42 / 上 40
@@ -41,7 +47,7 @@
 .article {
   display: flex;
   align-items: flex-start;
-  @include fluid(gap, 40, 120);
+  @include fluid(gap, 40, 120, 390, 1920);
 
   @include sp {
     flex-direction: column;
@@ -52,7 +58,7 @@
 .eyecatch {
   position: relative;
   flex-shrink: 0;
-  @include fluid(width, 280, 640);
+  @include fluid(width, 280, 640, 390, 1920);
   aspect-ratio: 640 / 360;
   overflow: hidden;
   background: var(--color-white);
@@ -83,9 +89,9 @@
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
   font-weight: var(--font-weight-regular);
-  @include fluid(font-size, 15, 20);
-  @include fluid(line-height, 28, 38);
-  @include fluid(letter-spacing, 2, 3.2);
+  @include fluid(font-size, 15, 20, 390, 1920);
+  @include fluid(line-height, 28, 38, 390, 1920);
+  @include fluid(letter-spacing, 2, 3.2, 390, 1920);
 
   @include sp {
     // Figma SP: 16 / lh 26 / ls 2.56 = 0.16em
@@ -97,10 +103,10 @@
 
 .meta {
   margin: 0;
-  @include fluid(margin-top, 20, 40);
+  @include fluid(margin-top, 20, 40, 390, 1920);
   display: flex;
   align-items: baseline;
-  @include fluid(gap, 12, 24);
+  @include fluid(gap, 12, 24, 390, 1920);
 
   @include sp {
     // Figma SP: title 末→meta 20 / 日付右端→カテゴリ文字 34
@@ -114,12 +120,14 @@
   color: var(--color-text-secondary);
   font-family: var(--font-en);
   font-weight: var(--font-weight-light);
-  @include fluid(font-size, 14, 20);
-  @include fluid(letter-spacing, 1.4, 2.6);
+  @include fluid(font-size, 14, 20, 390, 1920);
+  @include fluid(letter-spacing, 1.4, 2.6, 390, 1920);
 
   @include sp {
     // Figma SP: 14 / ls 1.82 = 0.13em
     letter-spacing: 0.13em;
+    // base font-size は SP にも効くため現状(1200)カーブに固定
+    @include fluid(font-size, 14, 20, 390, 1200);
   }
 }
 
@@ -138,11 +146,11 @@
 
 // SNS シェアアイコン（右寄せ）
 .share {
-  @include fluid(margin-top, 24, 48);
+  @include fluid(margin-top, 24, 48, 390, 1920);
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  @include fluid(gap, 12, 18);
+  @include fluid(gap, 12, 18, 390, 1920);
 
   @include sp {
     // Figma SP: meta(469+13=482) → share(522.73) = ~40 / gap 18
@@ -196,8 +204,8 @@
 // Figma 実測：X 21×22 / FB 23.5×23.5 / LINE 24.3×23.1 / Link 20.4×20.4
 // SP(390) でも Figma は PC 同サイズなので、SP は 320→390 で max 値までスケール
 .shareIconX {
-  @include fluid(width, 17, 21);
-  @include fluid(height, 18, 22);
+  @include fluid(width, 17, 21, 390, 1920);
+  @include fluid(height, 18, 22, 390, 1920);
 
   @include sp {
     @include fluid(width, 18, 21, 320, 390);
@@ -206,8 +214,8 @@
 }
 
 .shareIconFb {
-  @include fluid(width, 19, 24);
-  @include fluid(height, 19, 24);
+  @include fluid(width, 19, 24, 390, 1920);
+  @include fluid(height, 19, 24, 390, 1920);
 
   @include sp {
     @include fluid(width, 20, 24, 320, 390);
@@ -223,8 +231,8 @@
 }
 
 .shareIconLine {
-  @include fluid(width, 19, 24);
-  @include fluid(height, 18, 23);
+  @include fluid(width, 19, 24, 390, 1920);
+  @include fluid(height, 18, 23, 390, 1920);
 
   @include sp {
     @include fluid(width, 20, 24, 320, 390);
@@ -233,8 +241,8 @@
 }
 
 .shareIconLink {
-  @include fluid(width, 16, 20);
-  @include fluid(height, 16, 20);
+  @include fluid(width, 16, 20, 390, 1920);
+  @include fluid(height, 16, 20, 390, 1920);
 
   @include sp {
     @include fluid(width, 17, 20, 320, 390);
@@ -255,7 +263,7 @@
   display: block;
   width: 100%;
   height: 1px;
-  @include fluid(margin-top, 24, 42);
+  @include fluid(margin-top, 24, 42, 390, 1920);
   background: var(--color-black);
 
   @include sp {
@@ -268,7 +276,7 @@
 
 // ── 本文 ──
 .body {
-  @include fluid(margin-top, 40, 76);
+  @include fluid(margin-top, 40, 76, 390, 1920);
 
   @include sp {
     // Figma SP: divider(575.73) → body heading(623.73) = 48
@@ -281,12 +289,12 @@
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
   font-weight: var(--font-weight-medium);
-  @include fluid(font-size, 15, 18);
-  @include fluid(line-height, 28, 34);
-  @include fluid(letter-spacing, 2, 2.88);
+  @include fluid(font-size, 15, 18, 390, 1920);
+  @include fluid(line-height, 28, 34, 390, 1920);
+  @include fluid(letter-spacing, 2, 2.88, 390, 1920);
 
   &:not(:first-child) {
-    @include fluid(margin-top, 32, 60);
+    @include fluid(margin-top, 32, 60, 390, 1920);
   }
 
   @include sp {
@@ -303,7 +311,7 @@
 }
 
 .bodyParagraphs {
-  @include fluid(margin-top, 6, 12);
+  @include fluid(margin-top, 6, 12, 390, 1920);
 
   @include sp {
     // Figma SP: 見出し末(683) → 段落(699) = 16
@@ -316,12 +324,12 @@
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
   font-weight: var(--font-weight-regular);
-  @include fluid(font-size, 13, 14);
-  @include fluid(line-height, 26, 32);
-  @include fluid(letter-spacing, 1.2, 1.82);
+  @include fluid(font-size, 13, 14, 390, 1920);
+  @include fluid(line-height, 26, 32, 390, 1920);
+  @include fluid(letter-spacing, 1.2, 1.82, 390, 1920);
 
   & + & {
-    @include fluid(margin-top, 16, 24);
+    @include fluid(margin-top, 16, 24, 390, 1920);
   }
 
   @include sp {
@@ -341,7 +349,7 @@
 .backWrap {
   display: flex;
   justify-content: center;
-  @include fluid(margin-top, 60, 140);
+  @include fluid(margin-top, 60, 140, 390, 1920);
 
   @include sp {
     // Figma SP: share 末(1753) → button(1793) = 40
@@ -353,16 +361,16 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  @include fluid(width, 240, 380);
-  @include fluid(height, 48, 64);
+  @include fluid(width, 240, 380, 390, 1920);
+  @include fluid(height, 48, 64, 390, 1920);
   border: 1px solid var(--color-black);
   border-radius: 999px;
   background: var(--color-white);
   color: var(--color-black);
   font-family: var(--font-en);
   font-weight: var(--font-weight-light);
-  @include fluid(font-size, 14, 20);
-  @include fluid(letter-spacing, 1.4, 2.6);
+  @include fluid(font-size, 14, 20, 390, 1920);
+  @include fluid(letter-spacing, 1.4, 2.6, 390, 1920);
   // WORKS ページネーション（WorksPagination）の NEXT/BACK と同じ hover 挙動：
   // 背景は白のまま・文字色と枠線だけ primary に切り替え
   transition:
