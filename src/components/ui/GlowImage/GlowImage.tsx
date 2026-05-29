@@ -1,8 +1,8 @@
 'use client';
 
-import { useCallback, useRef, type CSSProperties } from 'react';
+import { type CSSProperties, type ComponentProps } from 'react';
 import Image from 'next/image';
-import { useMediaQuery } from '@/lib/useMediaQuery';
+import SlimeGlow, { SLIME_GLOW_STANDARD } from '@/components/ui/SlimeGlow';
 import type { ServiceConceptMask, ServiceImageOverlay } from '@/types/service';
 import styles from './GlowImage.module.scss';
 
@@ -16,12 +16,46 @@ type GlowImageProps = {
   mask?: ServiceConceptMask | null;
   /** 画像の上に重ねるテキストオーバーレイ */
   overlays?: ServiceImageOverlay[];
+  /**
+   * SlimeGlow の追加上書きパラメータ。
+   * 既定は SLIME_GLOW_STANDARD (サービスページ「アリガトサン・スタンダード」と同じ見た目)。
+   * このオブジェクトで一部のキーだけ渡すと、プリセットにマージされる。
+   *
+   * @example
+   *   <GlowImage src={...} mask={...} glowOverrides={{ color: '#FF8800' }} />
+   */
+  glowOverrides?: Partial<ComponentProps<typeof SlimeGlow>>;
 };
 
 /**
- * 線画イラスト + カーソル追従の赤グロー。
- * mask を渡すと、グローはその形（雲・泡など）の内側だけに表示される。
- * 768px 未満ではカーソル追従を無効化し、浮遊アニメのみ。
+ * 線画イラスト + 不定形の赤いスライム状グロー。
+ * PC / SP 共通で SlimeGlow Canvas を使用 (自律ドリフト + 呼吸モーフ + ポインタ追従/touch)。
+ *
+ * 構造:
+ *   wrap (aspect-ratio = width/height)
+ *     ├─ glowClip       z-index 1 (mask で形にクリップされたグロー層)
+ *     │    └─ SlimeGlow canvas (blur 18px で 1 塊に溶け合った濃淡)
+ *     ├─ image          z-index 2 (線画 + テキストの PNG)
+ *     └─ overlays       z-index 3 (任意のテキストオーバーレイ)
+ *
+ * @example 基本（サービスページと同じ「ARIGATOSUN STANDARD」の見た目）:
+ *   <GlowImage
+ *     src="/images/sections/service/detail/concept-standard.png"
+ *     alt="..."
+ *     width={1376}
+ *     height={1343}
+ *     mask={{
+ *       src: '/images/sections/service/detail/concept-standard-mask.png',
+ *       size: '100% 100%',
+ *       position: 'center',
+ *     }}
+ *   />
+ *
+ * @example 色だけ変えたい時:
+ *   <GlowImage ... glowOverrides={{ color: '#0080FF' }} />
+ *
+ * @example 動きをもっと早くしたい時:
+ *   <GlowImage ... glowOverrides={{ breathSpeed: 0.0005, driftSpeed: 0.0004 }} />
  */
 export default function GlowImage({
   src,
@@ -30,39 +64,8 @@ export default function GlowImage({
   height,
   mask = null,
   overlays = [],
+  glowOverrides,
 }: GlowImageProps) {
-  const glowRef = useRef<HTMLDivElement>(null);
-  const isPC = useMediaQuery('(min-width: 768px)');
-
-  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width) * 100;
-    const y = ((e.clientY - rect.top) / rect.height) * 100;
-    const glow = glowRef.current;
-    if (glow) {
-      glow.style.left = `${x}%`;
-      glow.style.top = `${y}%`;
-    }
-  }, []);
-
-  const handleMouseEnter = useCallback(() => {
-    const glow = glowRef.current;
-    if (glow) {
-      glow.classList.remove(styles.floating);
-      glow.classList.add(styles.hovering);
-    }
-  }, []);
-
-  const handleMouseLeave = useCallback(() => {
-    const glow = glowRef.current;
-    if (glow) {
-      glow.classList.remove(styles.hovering);
-      glow.classList.add(styles.floating);
-      glow.style.removeProperty('left');
-      glow.style.removeProperty('top');
-    }
-  }, []);
-
   // マスク画像（形のシルエット）でグロー層をクリップする
   const clipStyle: CSSProperties | undefined = mask
     ? {
@@ -77,13 +80,12 @@ export default function GlowImage({
       }
     : undefined;
 
+  const slimeProps = { ...SLIME_GLOW_STANDARD, ...glowOverrides };
+
   return (
     <div
       className={styles.wrap}
       style={{ aspectRatio: `${width} / ${height}` }}
-      onMouseMove={isPC ? handleMouseMove : undefined}
-      onMouseEnter={isPC ? handleMouseEnter : undefined}
-      onMouseLeave={isPC ? handleMouseLeave : undefined}
     >
       {src ? (
         <Image
@@ -97,7 +99,7 @@ export default function GlowImage({
         <div className={styles.placeholder} role="img" aria-label={alt} />
       )}
       <div className={styles.glowClip} style={clipStyle} aria-hidden="true">
-        <div ref={glowRef} className={`${styles.glow} ${styles.floating}`} />
+        <SlimeGlow {...slimeProps} />
       </div>
 
       {overlays.length > 0 && (

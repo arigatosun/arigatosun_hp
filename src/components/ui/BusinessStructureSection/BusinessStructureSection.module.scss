@@ -5,13 +5,21 @@
   display: flex;
   // Figma 1920 frame 実測: left 660 + gap 163 + right 637 = 1460 (section 内容幅)
   @include fluid(gap, 24, 163, 320, 1920);
-  @include fluid(padding-left, 20, 200);
-  @include fluid(padding-right, 20, 200);
+  @include fluid(padding-left, 40, 200);
+  @include fluid(padding-right, 40, 200);
   // Figma 実測: PrinciplesSection 下端 1586 → 本セクション上端 1846 = ギャップ 260
   @include fluid(padding-top, 80, 260, 320, 1920);
 
   @include sp {
     flex-direction: column;
+    // Figma SP: 本文 bottom y=2726 → 連携図 top y=2774 = 48
+    gap: 48px;
+    // Figma SP: 社会に bottom y=2197 → 事業領域 title y=2323 = 126
+    //          PrinciplesSection.padding-bottom 46 + 本セクション padding-top 80 = 126
+    padding-top: 80px;
+    // SP: 連携図 bottom → メンバー title y までの実測ギャップ = 149
+    //     本セクション padding-bottom 69 + Member padding-top 80 = 149
+    padding-bottom: 69px;
   }
 }
 
@@ -35,18 +43,25 @@
 // セクションタイトルは SectionHeader 共通コンポーネントを使用
 
 .body {
+  // Figma SP: SectionHeader sub bottom y=2364 → body top y=2396 = 32
   @include fluid(margin-top, 24, 60);
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
-  // Figma 1578:66070 実測: 16 / lh 34 / ls 3.68 (em 換算 0.23em)
+  // Figma SP: 14 / lh 30 / ls 2.52 (=0.18em)
+  // Figma PC: 16 / lh 34 / ls 3.68 (=0.23em)
   @include fluid(font-size, 14, 16);
   font-weight: var(--font-weight-regular);
-  @include fluid(line-height, 28, 34);
-  letter-spacing: 0.23em;
+  @include fluid(line-height, 30, 34);
+  @include fluid(letter-spacing, 2.52, 3.68);
+
+  @include sp {
+    margin-top: 32px;
+  }
 }
 
 // ── 右側: 連携体制図 ──
 // Figma 1578:66075 実測: 637×647（外側小円含む）。fluid で画像も比率追従させる
+// Figma SP: x=20 w=350 (本文 x=40 より -20 外側に張り出して大きく見せる)
 .right {
   position: relative;
   flex-shrink: 0;
@@ -54,14 +69,18 @@
   aspect-ratio: 637 / 647;
 
   @include sp {
-    width: 100%;
-    max-width: 480px;
-    margin-inline: auto;
+    width: auto;
+    max-width: none;
+    margin-inline: -20px;
     aspect-ratio: 637 / 647;
   }
 }
 
+// 連携体制図 (4-clover + 中央十字 + ラベル AI/IP/DESIGN/SALES)
+// SlimeGlow (z=1) より上の z=2 に置き、テキスト・線画の下に赤グロー透ける
 .structureImage {
+  position: relative;
+  z-index: 2;
   width: 100%;
   height: 100%;
   display: block;
@@ -85,11 +104,13 @@
   -webkit-mask-repeat: no-repeat;
 }
 
-// ── ヒートマップグロー共通（640×640px画像基準） ──
+// SP フォールバック: SlimeGlow を mount しない代わりに radial-gradient で
+// 浮遊する赤グローを表示 (PC は SlimeGlow canvas が同層に入る)。
+// mask 層 (.glowMaskLayer) で 4-clover + 外側 2 小円シルエットにクリップ。
 .heatmapGlow {
   position: absolute;
-  width: 46.9%;                  // 300 / 640
-  height: 46.9%;                 // 300 / 640
+  width: 46.9%;
+  height: 46.9%;
   background: radial-gradient(
     circle,
     var(--color-primary-rgba-55) 0%,
@@ -101,8 +122,8 @@
   pointer-events: none;
   transform: translate(-50%, -50%);
   // デフォルト位置（図の中心交差部付近）
-  left: calc(55% + 3.75%);      // 24 / 640
-  top: calc(50% + 2.8%);        // 18 / 640
+  left: calc(55% + 3.75%);
+  top: calc(50% + 2.8%);
 
   @include sp {
     width: 40%;
@@ -110,16 +131,9 @@
   }
 }
 
-// 浮遊アニメーション（ホバー前）
+// 浮遊アニメーション（SP フォールバック専用）
 .floating {
   animation: float 6s ease-in-out infinite;
-  transition: left 0.6s ease-out, top 0.6s ease-out;
-}
-
-// ホバー中（カーソル追従）
-.hovering {
-  animation: none;
-  transition: left 0.1s ease-out, top 0.1s ease-out;
 }
 
 // 浮遊キーフレーム — ゆっくり円を描くように動く（%ベース: 640px基準）
@@ -128,13 +142,13 @@
     transform: translate(-50%, -50%) translate(0, 0);
   }
   25% {
-    transform: translate(-50%, -50%) translate(3.1%, -2.3%);   // 20/640, 15/640
+    transform: translate(-50%, -50%) translate(3.1%, -2.3%);
   }
   50% {
-    transform: translate(-50%, -50%) translate(-1.6%, -3.9%);  // 10/640, 25/640
+    transform: translate(-50%, -50%) translate(-1.6%, -3.9%);
   }
   75% {
-    transform: translate(-50%, -50%) translate(-3.1%, 1.6%);   // 20/640, 10/640
+    transform: translate(-50%, -50%) translate(-3.1%, 1.6%);
   }
   100% {
     transform: translate(-50%, -50%) translate(0, 0);

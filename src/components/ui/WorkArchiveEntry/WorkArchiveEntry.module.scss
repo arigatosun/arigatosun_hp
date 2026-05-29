@@ -4,70 +4,101 @@
 );
 @use '@/styles/breakpoints' as *;
 
-// 見出し・本文・CREDIT は左右 PC=200 / SP=40 基準
-.text {
-  @include fluid(padding-left, 20, 200);
-  @include fluid(padding-right, 20, 200);
-  @include fluid(margin-top, 22, 44); // スライダー → ■見出し
-
+// ─── PC スライダー ───────────────────────────────────────
+.sliderPc {
   @include sp {
-    padding-left: 40px;
-    padding-right: 40px;
-    margin-top: 24px;
+    display: none;
   }
 }
 
-// ■見出し（日本語 Noto / 英字 Mozaic を自動切替）
+// ─── SP カード（白背景 390×346 + 内側ロゴ画像 390 or 720 幅） ────
+// SP 基準 390 → fluid_max_viewport 1920 で正規化
+.cardSp {
+  display: none;
+
+  @include sp {
+    display: block;
+    position: relative;
+    width: 100%;
+    aspect-ratio: 390 / 346;
+    background: var(--color-white);
+    overflow: visible;
+  }
+}
+
+.cardSpInner {
+  display: none;
+
+  @include sp {
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    aspect-ratio: 390 / 226; // 内側ロゴカードの基本比率（IGC/Halotaro/CHORITZ/Men'te）
+    overflow: hidden;
+  }
+}
+
+// 720 幅 full-bleed の 4 エントリ（Thoot / MAISON / NEST / アリガトサン）
+.cardSpExtended .cardSpInner {
+  @include sp {
+    // 720/390 = 184.615% → SP ビューポート両端を 165px ずつはみ出す
+    width: 184.615%;
+    aspect-ratio: 720 / 227;
+  }
+}
+
+.cardSpImage {
+  object-fit: cover;
+}
+
+.cardSpPlaceholder {
+  position: absolute;
+  inset: 0;
+  background: var(--color-placeholder);
+}
+
+// ─── 見出し・本文・CREDIT ───────────────────────────────
+// PC: 左右 x=200, SP: 左右 40 (Figma 実測)
+.text {
+  @include fluid(padding-left, 40, 200);
+  @include fluid(padding-right, 40, 200);
+  @include fluid(margin-top, 40, 44); // カード → ■見出し（SP=40, PC=44）
+}
+
+// ■見出し（SP 16px / PC 20px）
 .heading {
   margin: 0;
   color: var(--color-black);
   font-family: var(--font-primary);
   font-weight: var(--font-weight-regular);
-  @include fluid(font-size, 15, 20);
-  @include fluid(line-height, 38, 56);
-  @include fluid(letter-spacing, 2.5, 4);
-
-  @include sp {
-    font-size: 16px;
-    line-height: 32px;
-    letter-spacing: 2.4px;
-  }
+  @include fluid(font-size, 16, 20);
+  @include fluid(line-height, 28, 56);
+  @include fluid(letter-spacing, 3.2, 4);
 }
 
 .body {
   margin: 0;
-  // ■見出し(line-height 56)下端の余白を相殺し、Figma 実測の見出し→本文 46px に合わせる
-  margin-top: -10px;
+  // ■見出し下端の余白を相殺し、Figma 実測の見出し→本文 28-46px に合わせる
+  @include fluid(margin-top, 20, -10);
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
   font-weight: var(--font-weight-regular);
-  @include fluid(font-size, 13, 16);
-  @include fluid(line-height, 26, 32);
-  @include fluid(letter-spacing, 1, 1.92);
-
-  @include sp {
-    margin-top: -4px;
-    font-size: 13px;
-    line-height: 28px;
-    letter-spacing: 1.2px;
-  }
+  @include fluid(font-size, 14, 16);
+  @include fluid(line-height, 28, 32);
+  @include fluid(letter-spacing, 2.52, 1.92);
 }
 
-// ＜CREDIT＞行（Mozaic GEO Light・グレー）
+// <CREDIT> 4 行ブロック（Mozaic GEO Light・グレー）
 .credit {
   margin: 0;
-  @include fluid(margin-top, 10, 16);
+  @include fluid(margin-top, 24, 16);
   color: var(--color-text-secondary);
   font-family: var(--font-primary);
   font-weight: var(--font-weight-light);
-  @include fluid(font-size, 12, 14);
-  @include fluid(line-height, 24, 32);
-  @include fluid(letter-spacing, 1.6, 2.8);
-
-  @include sp {
-    margin-top: 12px;
-    font-size: 12px;
-    line-height: 24px;
-    letter-spacing: 1.8px;
-  }
+  @include fluid(font-size, 14, 14);
+  @include fluid(line-height, 32, 32);
+  @include fluid(letter-spacing, 1.68, 2.8);
 }

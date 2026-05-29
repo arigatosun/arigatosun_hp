@@ -6,13 +6,24 @@
 .wrap {
   position: relative;
   width: 100%;
-  // 赤グローを端でも切り取らない（ABOUT のヒートマップと同方式）。
-  // はみ出した分は overflow: clip した親（.page）で受ける。
+
+  // Figma SP: 線画ビジュアル（STANDARD/FLOW 等）は x=16〜20 と本文(x=40)より
+  // 22〜24px 外側に張り出して大きく見せる。.page が overflow-x:clip するため
+  // 横スクロールは出ない。
+  //
+  // margin-inline だけだと box の left がずれて右側は本文幅のまま (左 18 / 右 328)
+  // と非対称になる。width を 44px 拡張することで両側 22px ずつ均等にはみ出し、
+  // 中央揃えのままビジュアルだけ大きく見せる。
+  @include sp {
+    width: calc(100% + 44px);
+    margin-inline: -22px;
+  }
 }
 
 .image {
   position: relative;
-  z-index: 0;
+  // テキスト・線画 (PNG) はグローより上に表示
+  z-index: 2;
   display: block;
   width: 100%;
   height: 100%;
@@ -31,57 +42,9 @@
 .glowClip {
   position: absolute;
   inset: 0;
+  // 画像 (z=2) より下、ただしオーバーレイ (z=3 想定) よりは下
   z-index: 1;
   pointer-events: none;
-}
-
-// カーソル追従の赤グロー
-.glow {
-  position: absolute;
-  width: 47%;
-  height: 47%;
-  border-radius: 50%;
-  background: radial-gradient(circle, var(--color-primary) 0%, transparent 70%);
-  opacity: 0.55;
-  filter: blur(8px);
-  pointer-events: none;
-  transform: translate(-50%, -50%);
-  // デフォルト位置（中央やや右下）
-  left: 58%;
-  top: 56%;
-
-  @include sp {
-    width: 58%;
-    height: 58%;
-  }
-}
-
-// 浮遊アニメーション（ホバー前）
-.floating {
-  animation: glowFloat 6s ease-in-out infinite;
-  transition: left 0.6s ease-out, top 0.6s ease-out;
-}
-
-// ホバー中（カーソル追従）
-.hovering {
-  animation: none;
-  transition: left 0.12s ease-out, top 0.12s ease-out;
-}
-
-@keyframes glowFloat {
-  0%,
-  100% {
-    transform: translate(-50%, -50%) translate(0, 0);
-  }
-  25% {
-    transform: translate(-50%, -50%) translate(4%, -3%);
-  }
-  50% {
-    transform: translate(-50%, -50%) translate(-2%, -5%);
-  }
-  75% {
-    transform: translate(-50%, -50%) translate(-4%, 2%);
-  }
 }
 
 // ── テキストオーバーレイ層（AI/DEV アリガトサン・スタンダードの3標準等） ──
@@ -89,14 +52,15 @@
 .overlays {
   position: absolute;
   inset: 0;
-  z-index: 2;
+  z-index: 3;
   pointer-events: none;
 }
 
 .overlay {
   position: absolute;
   margin: 0;
-  color: var(--color-black);
+  // Figma 実測: #808080 (= --color-text-secondary)
+  color: var(--color-text-secondary);
   font-family: 'Noto Sans JP', var(--font-jp);
   font-weight: var(--font-weight-regular);
   // Figma 実測: 16〜18px / lh 26〜32 / ls ≒ 0.2em
@@ -105,4 +69,6 @@
   letter-spacing: 0.2em;
   text-align: center;
   white-space: pre-line;
+  // 背後のスライムや線画と馴染ませる（Figma: mix-blend-multiply）
+  mix-blend-mode: multiply;
 }

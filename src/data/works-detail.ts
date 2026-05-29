@@ -5,48 +5,70 @@ import type { WorkDetailContent } from '@/types/work';
 
 const CHORITZ = '/images/works/choritz';
 
-// ヒーロー写真コラージュ・座標は 1920×760 ヒーロー基準の Figma 実測値
+// ヒーロー写真コラージュ。
+// - PC: 6 枚プレースホルダー（画像は後日差し替え）。座標は 1920×760 基準の Figma 実測値。
+// - SP: ピンク帯 + 6 枚写真 + CHORITZ ロゴが一体になった焼き込み画像
+//   (hero-sp-collage.png 780×1080 = 390×540 @2x) を 1 枚で全面描画。
+//   ロゴと帯がすでに画像に含まれているため spLogo:false、border-radius 無効化。
 const CHORITZ_DETAIL: WorkDetailContent = {
   slug: 'work-1',
   pattern: 'detail',
   hero: {
-    // SP(390) は Figma 縦長レイアウト 390×540 に切替
-    spAspect: '390 / 540',
+    spWidth: 390,
+    spHeight: 540,
+    spLogo: false,
+    spFlatPhoto: true,
+    // Figma SP: ヘッダー 80 + 白ギャップ 30 = ヒーロー上端 y=110。
+    // 実装ヘッダーは 101 (fluid padding 含む) のため、視覚的にヘッダー:ギャップ = 8:3 比を
+    // 保つため margin 58 (見た目ギャップ ≈ 37) に設定。
+    spOffsetTop: 58,
     photos: [
-      { src: `${CHORITZ}/rect-220.jpg`, x: 561, y: -37, width: 302, height: 197 },
-      { src: `${CHORITZ}/rect-4684.jpg`, x: 1319, y: -27, width: 564, height: 377 },
-      { src: `${CHORITZ}/rect-4683.jpg`, x: -28.8, y: 112.46, width: 518.17, height: 399.36 },
-      { src: `${CHORITZ}/rect-216.jpg`, x: 220.65, y: 571.74, width: 446.285, height: 299.52 },
-      { src: `${CHORITZ}/rect-217.jpg`, x: 1478.61, y: 527.81, width: 507.187, height: 333.466 },
-      { src: `${CHORITZ}/rect-215.jpg`, x: 956.28, y: 603.08, width: 315.494, height: 190.694 },
+      // PC 用 1 枚焼き込み画像 (Figma Group 1253 を 1920×760 で JPG 化)
+      {
+        src: `${CHORITZ}/hero-pc.jpg`,
+        x: 0,
+        y: 0,
+        width: 1920,
+        height: 760,
+      },
     ],
-    logo: {
-      wordmark: `${CHORITZ}/logo-2.svg`,
-      mark: `${CHORITZ}/logo-1.svg`,
-    },
+    // SP 用 1 枚焼き込み画像（390×540 を full-bleed カバー）
+    spPhotos: [
+      {
+        src: `${CHORITZ}/hero-sp-collage.png`,
+        x: 0,
+        y: 0,
+        width: 390,
+        height: 540,
+      },
+    ],
+    // ロゴは PC / SP どちらの hero 画像にも焼き込み済みのため overlay は出さない
   },
   // gap = 直前要素からの上余白（Figma 実測 px・1920 基準）
   blocks: [
     {
       type: 'lead',
       gap: 240,
+      // Figma SP: ヒーロー下 → リード見出し上のギャップ
+      spGap: 80,
       heading: '数値では測れない想いや姿勢を、ブランドの核心へ宿す。',
       subheading: '社名からVIまで、一気通貫のブランド構築',
       body: [
-        '自社プロジェクト「KUSOMEGANE」でのやり取りをきっかけに',
-        '朱さんからWebサイト制作のご相談をいただいたことが、このプロジェクトのはじまりでした。',
+        '自社プロジェクト「KUSOMEGANE」でのやり取りをきっかけに朱さんからWebサイト制作のご相談をいただいたことが、このプロジェクトのはじまりでした。',
       ],
     },
     {
       type: 'textSection',
       gap: 240,
+      // SP: 240 * 0.42 ≒ 101 だと余白が大きすぎるため明示縮小
+      spGap: 60,
       level: 'main',
       heading: '■ヒアリングと現状把握',
+      // Figma SP (2812:49934): 3 段落 / 自然 wrap (14px / lh 30 / ls 2.52)
       body: [
         'Web制作にあたり具体的な話を進めていく中で、正式なロゴはなく名前も定まったものがないという話が出てきました。',
-        'KUSOMEGANEでのやり取りの頃から朱さんとは個人名でやり取りをしていたため、',
-        '新たにWebへ誘導できたとしても覚えてもらいづらい。',
-        'しっかりと記憶に残るシンボルとなるネーミングとロゴをまずは作ることを提案しました。',
+        'KUSOMEGANEでのやり取りの頃から朱さんとは個人名でやり取りをしていたため、新たにWebへ誘導できたとしても覚えてもらいづらい。',
+        'しっかりと記憶に残るシンボルとなる\nネーミングとロゴをまずは作ることを提案しました。',
       ],
     },
     {
@@ -75,16 +97,22 @@ const CHORITZ_DETAIL: WorkDetailContent = {
           visual: { src: `${CHORITZ}/card-logo.svg`, w: 238.902, h: 27.1897 },
         },
       ],
+      // SP: ラベル＋ロゴ＋会社名を 1 枚画像で表現 (Figma SP: 390×346 を full-bleed)
+      spImage: {
+        src: `${CHORITZ}/naming-card-sp.png`,
+        w: 390,
+        h: 346,
+      },
     },
     {
       type: 'textSection',
       gap: 80,
       level: 'sub',
       heading: '＜名前に込めた意味＞',
+      // Figma SP (2822:51218): 2 段落構成 (旧 3 段落の 2/3 を結合)
       body: [
         '朱さんのお名前を企業・サービス名として活用する案として作成しました。',
-        '輸入からOEMにおいて上流から関わり、最後(Z)まで責任を持って伴走する姿勢をイメージとして伝えることを意図しています。',
-        'また日本企業らしい「企業感＝信頼感」を重視し、堅実で安心して任せられる印象につながるネーミングです。',
+        '輸入からOEMにおいて上流から関わり、最後(Z)まで責任を持って伴走する姿勢をイメージとして伝えることを意図しています。また日本企業らしい「企業感＝信頼感」を重視し、堅実で安心して任せられる印象につながるネーミングです。',
       ],
     },
     {
@@ -140,13 +168,11 @@ const CHORITZ_DETAIL: WorkDetailContent = {
       type: 'imageGrid',
       gap: 80,
       cardHeight: 840,
-      images: Array.from(
-        { length: 15 },
-        (_, i) => `${CHORITZ}/prop-${i + 1}.jpg`,
-      ),
-      imageRatio: { w: 297, h: 167 },
+      // 4×4 グリッドを 1 枚に焼き込んだ画像 (Group 1254)。元の prop-1〜15 + 強ブラー
+      // から差し替え。画像内に弱ブラー済みなのでコード側 blur は不要。
+      images: [`${CHORITZ}/prop-grid.png`],
+      imageRatio: { w: 1990, h: 860 },
       caption: '＜ロゴデザイン初回提案書(一部抜粋)＞',
-      blur: true,
     },
     {
       type: 'imageGrid',
@@ -259,14 +285,8 @@ const CHORITZ_DETAIL: WorkDetailContent = {
   ],
 };
 
-// ── パターンB: ロゴ・VI プロジェクトアーカイブ（スライダーカードのループ）──
+// ── パターンB: ロゴ・VI プロジェクトアーカイブ（カード積み上げ）──
 const ARCHIVE = '/images/works/archive';
-
-// MAISON ORICHAN / NEST は Figma 上で IGC のプレースホルダー本文のままのため、
-// 同じ文言を共有用に切り出している。
-const ARCHIVE_PLACEHOLDER_BODY = [
-  '頭文字「IGC」をベースに構成されたシンボルマークです。「I」はゴルフピンとボールをモチーフに、日本らしい要素を加えることで、上質さと信頼感を表現。特別な体験や出会いの場としての輝きを象徴しています。また、「G」と「C」は一部を重ね合わせることで、ボールの軌道やスイングの美しさを連想させ、プレーヤーのスコア向上やゴルフへの愛着が右肩上がりに深まっていく様子を表現しています。全体として、上質さ・親しみ・成長のストーリーを兼ね備えた、クラブの理念を体現するデザインです。',
-];
 
 const IGC_ARCHIVE: WorkDetailContent = {
   slug: 'work-2',
@@ -280,89 +300,131 @@ const IGC_ARCHIVE: WorkDetailContent = {
     ],
   },
   entries: [
+    // 1. IMANISHI GOLF CLUB（カード幅 SP 390, inner 242h ※Figma 実測で他より縦長）
     {
       heading: '■ゴルフショップ「 IMANISHI GOLF CLUB 」のロゴ・VI設計',
       body: [
         '頭文字「IGC」を基点に構成したシンボルマーク。「I」はゴルフピンとボールをモチーフとし、日の丸を想起させる赤で日本らしさを織り込むことで、上質さと信頼感、そして特別な出会いの場としての輝きを表現した。「G」と「C」を一部重ね合わせた構成は、ボールの軌道とスイングの美しさを連想させ、右肩上がりにスコアとゴルフへの愛着が高まっていくクラブの物語を象徴している。',
       ],
       credit: [
-        '<CREDIT> CLIENT : IMANISHI GOLF CLUB　|　PROJECT MANAGEMENT : RYO YOSHIKAWA　|　DESIGN DIRECTION / DESIGN : YUGO NISHIMOTO',
-        '<SCOPE> LOGO / VI　<TERM> 2025.5 ~ 2025.8',
+        '<CREDIT>',
+        'CLIENT : IMANISHI GOLF CLUB | PROJECT MANAGEMENT : RYO YOSHIKAWA |  DESIGN DIRECTION / DESIGN : YUGO NISHIMOTO',
+        '<SCOPE> LOGO / VI',
+        '<TERM> 2025.5 ~ 2025.8',
       ],
       images: [`${ARCHIVE}/logo-imanishi-golf-club.png`],
+      cardAspect: '390 / 242',
     },
+    // 2. ハロタロ（カード幅 SP 390）
     {
       heading: '■会計サービス「ハロタロ」のブランディング',
       body: [
-        '美容院とその利用者の関係を、より良く軽快につなぐサービス「ハロタロ」のロゴ・VI設計。 ロゴマークは、発信と双方の良い出会い、そして関西発であることを、ビリケン様の目をモチーフに表現。明るく陽気で親しみやすいかたちへ落とし込んだ。 新規サービスとしての信頼感を持たせるため、ロゴタイプは真面目でシンプルな書体を一から制作している。',
+        '美容院とその利用者の関係を、より良く軽快につなぐサービス「ハロタロ」のロゴ・VI設計。',
+        'ロゴマークは、発信と双方の良い出会い、そして関西発であることを、ビリケン様の目をモチーフに表現。明るく陽気で親しみやすいかたちへ落とし込んだ。',
+        '新規サービスとしての信頼感を持たせるため、ロゴタイプは真面目でシンプルな書体を一から制作している。',
       ],
       credit: [
-        '<CREDIT> CLIENT : ハロタロ　|　PROJECT MANAGEMENT : RYO YOSHIKAWA　|　DESIGN DIRECTION / DESIGN / COPY WRITING : YUGO NISHIMOTO',
-        '<SCOPE> TAG LINE / LOGO　<TERM> 2024.6 ~ 2024.8',
+        '<CREDIT>',
+        'CLIENT : ハロタロ | PROJECT MANAGEMENT : RYO YOSHIKAWA | DESIGN DIRECTION / DESIGN / COPY WRITING : YUGO NISHIMOTO',
+        '<SCOPE> TAG LINE / LOGO',
+        '<TERM> 2024.6 ~ 2024.8',
       ],
       images: [`${ARCHIVE}/logo-halotaro-v2.png`],
     },
+    // 3. Thoot（カード幅 SP 720 / full-bleed）
     {
       heading: '■歯科医と歯科助手を繋ぐ「 Thoot 」のロゴ・VI設計',
       body: [
-        '歯科医と歯科衛生士がつながり、連携をより円滑に、輝かせるサービス「Thoot（スート）」のロゴ・VI設計。 マークは円のモチーフのみで構成することで、つながることの円滑な印象と親しみやすさ、そしてシンプルさゆえの清潔感と誠実さを表現。 青を歯科医、ピンクを歯科衛生士に見立て、動きのある配置によって両者の結びつきと、つながることへの期待感を併せ持たせた。',
+        '歯科医と歯科衛生士がつながり、連携をより円滑に、輝かせるサービス「Thoot（スート）」のロゴ・VI設計。',
+        'マークは円のモチーフのみで構成することで、つながることの円滑な印象と親しみやすさ、そしてシンプルさゆえの清潔感と誠実さを表現。',
+        '青を歯科医、ピンクを歯科衛生士に見立て、動きのある配置によって両者の結びつきと、つながることへの期待感を併せ持たせた。',
       ],
       credit: [
-        '<CREDIT> CLIENT : THOOT　|　PROJECT MANAGEMENT : RYO YOSHIKAWA　|　DESIGN DIRECTION / DESIGN : YUGO NISHIMOTO',
-        '<SCOPE> LOGO / VI　<TERM> 2024.5 ~ 2024.7',
+        '<CREDIT>',
+        'CLIENT : THOOT | PROJECT MANAGEMENT : RYO YOSHIKAWA | DESIGN DIRECTION / DESIGN : YUGO NISHIMOTO',
+        '<SCOPE> LOGO / VI',
+        '<TERM> 2024.5 ~ 2024.7',
       ],
       images: [`${ARCHIVE}/logo-thoot-v2.png`],
+      extended: true,
     },
+    // 4. CHORITZ（カード幅 SP 390）
     {
       heading: '■OEM・中国輸入代行会社「 CHORITZ 」のロゴ・VI設計',
       body: [
-        '中国のものづくりと日本の利用者をつなぐ「CHORITZ」のロゴ・VI設計。 ロゴは頂立の「頂」をモチーフに構成し、CHORITZが中心となって双方の価値を調和させながら、より良いプロダクトを生み出していく姿勢を表現した。 カラーは代表者の名に由来する「朱」の赤系を採用し、想いと誠実さの感じられる印象へと落とし込んでいる。',
+        '中国のものづくりと日本の利用者をつなぐ「CHORITZ」のロゴ・VI設計。',
+        'ロゴは頂立の「頂」をモチーフに構成し、CHORITZが中心となって双方の価値を調和させながら、より良いプロダクトを生み出していく姿勢を表現した。',
+        'カラーは代表者の名に由来する「朱」の赤系を採用し、想いと誠実さの感じられる印象へと落とし込んでいる。',
       ],
       credit: [
-        '<CREDIT> CLIENT : 頂立輸入代行会社　|　PROJECT MANAGEMENT : RYO YOSHIKAWA　|　DESIGN DIRECTION / DESIGN : YUGO NISHIMOTO',
-        '<SCOPE> NAMING / TAG LINE / LOGO　<TERM> 2025.12 ~ 2026.4',
+        '<CREDIT>',
+        'CLIENT : 頂立輸入代行会社 | PROJECT MANAGEMENT : RYO YOSHIKAWA | DESIGN DIRECTION / DESIGN : YUGO NISHIMOTO',
+        '<SCOPE> NAMING / TAG LINE / LOGO',
+        '<TERM> 2025.12 ~ 2026.4',
       ],
       images: [`${ARCHIVE}/logo-choritz-v2.png`],
     },
+    // 5. Men'te（カード幅 SP 390）
     {
       heading: '■理美容師検索予約アプリ「 Men’te 」のロゴ・VI設計',
       body: [
-        'シンプルなオリジナルフォントで構成した「Men’te」のロゴ・VI設計。 「メンズ」を想起させる「Men」を際立たせるため、「’」にのみ擬似金の装飾を加えた。 この「’」と、跳ねるように処理した「t」「e」によって、Men’teを通じて気分やモチベーションが前向きに高まっていく様子を表現している。',
+        'シンプルなオリジナルフォントで構成した「Men’te」のロゴ・VI設計。',
+        '「メンズ」を想起させる「Men」を際立たせるため、「’」にのみ擬似金の装飾を加えた。この「’」と、跳ねるように処理した「t」「e」によって、Men’teを通じて気分やモチベーションが前向きに高まっていく様子を表現している。',
       ],
       credit: [
-        '<CREDIT> CLIENT : Men’te　|　PROJECT MANAGEMENT : RYO YOSHIKAWA　|　DESIGN DIRECTION / DESIGN : YUGO NISHIMOTO',
-        '<SCOPE> LOGO / VI　<TERM> 2025.8 ~ 2026.2',
+        '<CREDIT>',
+        'CLIENT : Men’te | PROJECT MANAGEMENT : RYO YOSHIKAWA | DESIGN DIRECTION / DESIGN : YUGO NISHIMOTO',
+        '<SCOPE> LOGO / VI',
+        '<TERM> 2025.8 ~ 2026.2',
       ],
       images: [`${ARCHIVE}/logo-mente-v2.png`],
     },
+    // 6. MAISON ORICHAN（カード幅 SP 720 / full-bleed）
     {
       heading: '■「 MAISON ORICHAN 」のロゴ・VI設計',
-      body: ARCHIVE_PLACEHOLDER_BODY,
+      body: [
+        'MAISON ORICHANは、AIを活用してシャンパンのラベルを一人ひとりが自由にカスタマイズできるD2C ECサービス。ロゴタイプは、カスタマイズによって生まれる多様なデザインや、顧客それぞれが思い描く世界観の邪魔をしすぎないことを想定して作成した。サービスの特徴である「A」と「I」の文字にだけ別の処理を加えながら、全体をシンプルにまとめている。',
+      ],
       credit: [
-        '<CREDIT> CLIENT : 株式会社 BUBBIC　|　PROJECT MANAGEMENT : RYO YOSHIKAWA　|　DESIGN DIRECTION / DESIGN : YUGO NISHIMOTO',
-        '<SCOPE> LOGO / VI　<TERM> 2025.10 ~ 2026.1',
+        '<CREDIT>',
+        'CLIENT : 株式会社 BUBBIC | PROJECT MANAGEMENT : RYO YOSHIKAWA | DESIGN DIRECTION / DESIGN : YUGO NISHIMOTO',
+        '<SCOPE> LOGO / VI',
+        '<TERM> 2025.10 ~ 2026.1',
       ],
       images: [`${ARCHIVE}/logo-maison-orichan.png`],
+      extended: true,
     },
+    // 7. NEST（カード幅 SP 720 / full-bleed）
     {
       heading: '■ヴィラ「 NEST 」のロゴ・VI設計',
-      body: ARCHIVE_PLACEHOLDER_BODY,
+      body: [
+        'NESTの「N」を、実際のハケ・ローラー・判子を使って描いたロゴデザイン。',
+        'デジタルで整えたラインではなく、手の温もりや偶然性が宿る質感をそのままロゴにしている。',
+        'NEST＝巣。家族や友人、恋人と過ごす特別な時間を提供する場所として、遊び心とこだわりが共存するサービスのシンボルを目指した。',
+      ],
       credit: [
-        '<CREDIT> CLIENT : NEST　|　PROJECT MANAGEMENT : RYO YOSHIKAWA　|　DESIGN DIRECTION / DESIGN : YUGO NISHIMOTO',
-        '<SCOPE> LOGO / VI　<TERM> NEST BIWAKO : 2024.7 ~ 2024.9　｜　NEST AMANO HASHIDATE : 2026.2',
+        '<CREDIT> CLIENT : NEST | PROJECT MANAGEMENT : RYO YOSHIKAWA | DESIGN DIRECTION / DESIGN : YUGO NISHIMOTO',
+        '<SCOPE> LOGO / VI',
+        '<TERM> NEST BIWAKO : 2024.7 ~ 2024.9 | NEST AMANO HASHIDATE : 2026.2',
       ],
       images: [`${ARCHIVE}/logo-nest.png`],
+      extended: true,
     },
+    // 8. 株式会社アリガトサン（カード幅 SP 720 / full-bleed）
     {
       heading: '■「 株式会社アリガトサン 」のブランディング',
       body: [
-        '自社「アリガトサン」のロゴ・VI設計。コンセプトは「ナシをアリにする」——非常識・不可能とされてきたことを実現し、正解とされる枠組みを疑い、不正解の中にも新たな美と価値を見出す思想を込めた。ロゴタイプはあえてアンバランスに組んだ文字を、絶妙な均衡で成り立つまで追求。AIを駆使する会社でありながら、機械的な計算では届かない最終的なバランスを、人の判断と執着に似た愛で成り立たせている。ロゴタイプの要素で太陽を象り、形も境遇も異なる9名の創業メンバーが一つの均衡を成す姿を、9本の放射線として落とし込んだ。',
+        '自社「アリガトサン」のロゴ・VI設計。コンセプトは「ナシをアリにする」——',
+        '非常識・不可能とされてきたことを実現し、正解とされる枠組みを疑い、不正解の中にも新たな美と価値を見出す思想を込めた。ロゴタイプはあえてアンバランスに組んだ文字を、絶妙な均衡で成り立つまで追求。AIを駆使する会社でありながら、機械的な計算では届かない最終的なバランスを、人の判断と執着に似た愛で成り立たせている。ロゴタイプの要素で太陽を象り、形も境遇も異なる9名の創業メンバーが一つの均衡を成す姿を、9本の放射線として落とし込んだ。',
       ],
       credit: [
-        '<CREDIT> CLIENT : 株式会社アリガトサン　|　DESIGN DIRECTION / DESIGN : YUGO NISHIMOTO',
-        '<SCOPE> LOGO / VI　<TERM> 2026.1 ~ 2026.7',
+        '<CREDIT>',
+        'CLIENT : 株式会社アリガトサン | DESIGN DIRECTION / DESIGN : YUGO NISHIMOTO',
+        '<SCOPE> LOGO / VI',
+        '<TERM> 2026.1 ~ 2026.7',
       ],
       images: [`${ARCHIVE}/logo-arigatosun.png`],
+      extended: true,
     },
   ],
 };
@@ -374,13 +436,31 @@ const NEST_DETAIL: WorkDetailContent = {
   slug: 'work-3',
   pattern: 'detail',
   hero: {
-    // Figma の hero フレーム 2497:85745 実測 1920×820
+    // PC: Figma フレーム 2497:85745 実測 1920×820 (既存 1 枚画像コラージュ)
     width: 1920,
     height: 820,
     band: 'none',
-    // 1 枚画像（Figma の Mask group をそのまま書き出したコラージュ）でヒーロー全域を覆う。
     photos: [
       { src: `${NEST}/hero-collage-v3.png`, x: 0, y: 0, width: 1920, height: 820 },
+    ],
+    // SP: Figma フレーム 2887:90709 内 Group 938 実測 1020×558。
+    // 10 枚のフォトコラージュ。座標は Group 1180 (x=-315 起点) を 0 にシフトした相対値。
+    // 画像は後追いのためプレースホルダー描画。
+    spWidth: 1020,
+    spHeight: 558,
+    spPhotos: [
+      // 1〜3: 上段 (大 361×279)
+      { x: 417.95, y: -45.83, width: 361.72, height: 279.02 },
+      { x: 75.21, y: -94, width: 361.72, height: 279.02 },
+      { x: 760.67, y: 2.33, width: 361.72, height: 279.02 },
+      // 4〜10: 下段 (中 271×209)
+      { x: 784.13, y: 440.95, width: 271.29, height: 209.26 },
+      { x: 15.22, y: 332.89, width: 271.29, height: 209.26 },
+      { x: 527.83, y: 404.93, width: 271.29, height: 209.26 },
+      { x: 271.52, y: 368.91, width: 271.29, height: 209.26 },
+      { x: 809.98, y: 257.03, width: 271.29, height: 209.26 },
+      { x: 41.07, y: 148.96, width: 271.29, height: 209.26 },
+      { x: 553.68, y: 221.01, width: 271.29, height: 209.26 },
     ],
   },
   blocks: [
@@ -395,13 +475,14 @@ const NEST_DETAIL: WorkDetailContent = {
         'このプロジェクトの出発点でした。',
       ],
     },
-    // 母体 NEST ロゴ（白/黒ペアが 1 枚に焼き込まれた書き出し画像 1520×560）
+    // 母体 NEST ロゴ。PC は焼き込み 1520×560 画像、SP は白カード上 / 黒カード下のプレースホルダー
     {
       type: 'mockupCard',
       gap: 240,
       src: `${NEST}/nest-main-pair.png`,
       w: 1520,
       h: 560,
+      sp: { variant: 'pairStacked', spAspectRatio: '390 / 400' },
     },
     {
       type: 'textSection',
@@ -415,21 +496,23 @@ const NEST_DETAIL: WorkDetailContent = {
         'NEST＝巣。家族や友人、恋人と過ごす特別な時間を提供する場所として、遊び心とこだわりが共存するサービスのシンボルを目指しました。',
       ],
     },
-    // NEST 琵琶湖（白/黒ペア 1 枚画像 1520×1100）
+    // NEST 琵琶湖。PC は 1520×1100、SP は 左右 2 列 (白/黒) プレースホルダー
     {
       type: 'mockupCard',
       gap: 260,
       src: `${NEST}/nest-biwako-pair.png`,
       w: 1520,
       h: 1100,
+      sp: { variant: 'pairSplit2', spAspectRatio: '390 / 380' },
     },
-    // NEST 天橋立（白/黒ペア 1 枚画像 1520×1100）
+    // NEST 天橋立。PC は 1520×1100、SP は 左右 2 列 (白/黒) プレースホルダー
     {
       type: 'mockupCard',
       gap: 120,
       src: `${NEST}/nest-amanohashidate-pair.png`,
       w: 1520,
       h: 1100,
+      sp: { variant: 'pairSplit2', spAspectRatio: '390 / 380' },
     },
     {
       type: 'textSection',
@@ -438,24 +521,22 @@ const NEST_DETAIL: WorkDetailContent = {
       heading: '■施設ごとのVI展開',
       body: [
         '母体ロゴはモノクロで設計し、各施設のアクセントカラーで個性を持たせました。',
-        'NEST琵琶湖には湖面を想起させるブルー、NEST天橋立には温かみのあるオレンジを採用。',
-        '共通のマークを持ちながら、施設ごとの空気感や独自性が色で伝わる設計です。',
-        'また部屋名にも同様のロゴ展開を行い、「NEST琵琶湖 夢」「NEST天橋立 燈」のように、',
-        'ブランドの世界観が施設の隅々まで一貫して宿るようにしています。',
+        'NEST琵琶湖には湖面を想起させるブルー、NEST天橋立には温かみのあるオレンジを採用。共通のマークを持ちながら、施設ごとの空気感や独自性が色で伝わる設計です。また部屋名にも同様のロゴ展開を行い、「NEST琵琶湖 夢」「NEST天橋立 燈」のように、ブランドの世界観が施設の隅々まで一貫して宿るようにしています。',
       ],
     },
-    // ロゴバリエーション大判画像（1520×942）
+    // ロゴバリエーション。PC は 1520×942、SP は 3+4+4 タイル (Figma Group 916) プレースホルダー
     {
       type: 'mockupCard',
       gap: 260,
       src: `${NEST}/logo-variations.png`,
       w: 1520,
       h: 942,
+      sp: { variant: 'variations11', spAspectRatio: '391 / 293' },
     },
     {
       type: 'caption',
       gap: 8,
-      text: '＜資料名の説明＞',
+      text: '＜ロゴデザイン簡易ガイドライン(一部抜粋)＞',
     },
     {
       type: 'textSection',

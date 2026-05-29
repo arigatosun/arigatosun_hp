@@ -78,7 +78,7 @@ export default async function Home() {
           <p className={styles.heroInfoBody}>Arigatosun Inc.</p>
           <p className={styles.heroInfoBody}>Address : Room 802, ZERO Bldg. 4-6-26</p>
           <p className={styles.heroInfoBody}>Nishinaniwa-cho, Amagasaki-shi Hyogo Japan</p>
-          <p className={styles.heroInfoCopyright}>&copy; 2026 ARIGATOSUN. ALL RIGHTS RESEAVED.</p>
+          <p className={styles.heroInfoCopyright}>&copy; 2026 ARIGATOSUN. ALL RIGHTS RESERVED.</p>
         </div>
 
       </section>
@@ -110,7 +110,7 @@ export default async function Home() {
               <RevealLine>「正解を導くこと」は簡単になったかもしれません。</RevealLine>
             </RevealBlock>
 
-            <div className={styles.aboutLastRow}>
+            <div className={styles.aboutLastRow} data-motifs-trigger>
               <RevealBlock className={styles.aboutBlock}>
                 <RevealLine>しかし、</RevealLine>
                 <RevealLine>人が人らしく生きる上で忘れてはいけないものは「心の動き」です。</RevealLine>

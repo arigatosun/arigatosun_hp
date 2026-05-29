@@ -16,8 +16,8 @@
 }
 
 .titleLogoImage {
-  // Figma SP: 144px / Figma PC: 220px
-  @include fluid(width, 144, 220);
+  // Figma SP: 158px / Figma PC: 220px
+  @include fluid(width, 158, 220);
   height: auto;
 }
 

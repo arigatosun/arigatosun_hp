@@ -30,9 +30,16 @@ export default function CompanyProfileSection() {
         </header>
 
         <div className={styles.inner}>
-          {/* 画像エリア（520×520） — 暫定プレースホルダー */}
+          {/* 地図エリア（520×520） — Google Maps embed (API キー不要) */}
           <div className={styles.imageWrap}>
-            <div className={styles.imagePlaceholder} aria-hidden="true" />
+            <iframe
+              src="https://maps.google.com/maps?q=%E5%85%B5%E5%BA%AB%E7%9C%8C%E5%B0%BC%E5%B4%8E%E5%B8%82%E6%9D%B1%E9%9B%A3%E6%B3%A2%E7%94%BA4%E4%B8%81%E7%9B%AE6-26%20ZERO%E3%83%93%E3%83%AB&t=&z=17&ie=UTF8&iwloc=&output=embed"
+              className={styles.map}
+              title="株式会社アリガトサン 所在地マップ"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              allowFullScreen
+            />
           </div>
 
           {/* 情報テーブル */}

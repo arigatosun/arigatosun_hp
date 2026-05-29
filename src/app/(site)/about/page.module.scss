@@ -28,7 +28,7 @@
 }
 
 // TOP の ServiceSection / NewsSection / Service 詳細 ServiceDetailHero と同じ赤帯マーカー方式。
-// span に background-image: linear-gradient で帯を持ち、hover/active で帯幅を transition 拡張。
+// span に background-image: linear-gradient で帯を持ち、hover/active で赤帯を即座に表示（アニメーションなし）。
 // Mozaic GEO は文字実体が行ボックス中心より約0.094em下に来るため、帯も同じだけ下げて中央合わせ。
 .sideNavItem {
   display: block;
@@ -53,8 +53,6 @@
   background-repeat: no-repeat;
   background-position: right calc(50% + 0.094em);
   background-size: 0 0.85em;
-  transition: color var(--transition-base),
-    background-size var(--transition-base);
   color: var(--color-text-secondary);
 }
 
@@ -85,12 +83,15 @@
 }
 
 // ── フィロソフィーセクション ──
+// Figma SP: page 上端 → アバウトロゴ top y=159
+//   = page.padding-top (60) + philosophy.padding-top (99) = 159
 .philosophySection {
-  @include fluid(padding-left, 20, 200);
-  @include fluid(padding-right, 20, 200);
+  @include fluid(padding-left, 40, 200);
+  @include fluid(padding-right, 40, 200);
   // ヘッダー直下 → タイトル「アバウト」までの余白。
-  // 既存 35/100 だと詰まって見える指摘あり → 60/180 に拡張
-  @include fluid(padding-top, 60, 180);
+  // SP: page.padding-top 60 + philosophy.padding-top 99 = 159 (Figma 一致)
+  // PC: 既存 180
+  @include fluid(padding-top, 99, 180);
   @include fluid(padding-bottom, 80, 260);
 }
 
@@ -119,33 +120,35 @@
 }
 
 // 大見出し「妥協なき愛で、世を照らす太陽であれ。」
-// Figma 1578:65029: #140700 / Noto Sans JP Regular 28px / lh 56 / ls 7.84 / width 920
-// Figma 縦位置: ABOUT label 下端 y≈369 → 見出し top y=449（gap 80px）、見出し下端 504 → body top 544（gap 40px）
+// Figma SP: 18px / lh 36 / ls 4.32 (=0.24em) / Noto Sans JP Regular
+// Figma PC: 28px / lh 56 / ls 7.84
+// Figma SP 縦位置: ABOUT label 下端 y≈219 → 見出し top y=279 (gap 60)
 .heading {
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
-  @include fluid(font-size, 16, 28);
+  @include fluid(font-size, 18, 28);
   font-weight: var(--font-weight-regular);
   font-style: normal;
-  @include fluid(line-height, 30, 56);
-  @include fluid(letter-spacing, 3.5, 7.84);
-  @include fluid(margin-top, 32, 80); // Figma: ABOUTラベル→見出し 80px
-  @include fluid(margin-bottom, 20, 40);
-  // Figma: テキスト幅 920px → fluid で SP 全幅まで縮む
+  @include fluid(line-height, 36, 56);
+  @include fluid(letter-spacing, 4.32, 7.84);
+  @include fluid(margin-top, 32, 80);
+  // Figma SP: 見出し下端 y=351 → body top y=379 = 28
+  @include fluid(margin-bottom, 28, 40);
   width: 100%;
   @include fluid(max-width, 320, 920);
 }
 
 // 本文 — Figma 1578:65234 は 2 段落構成
-// Figma: #140700 / Noto Sans JP Regular 16px / lh 38 / ls 4.48 / width 945
+// Figma SP: 14px / lh 30 / ls 2.52 (=0.18em)
+// Figma PC: 16px / lh 38 / ls 4.48
 .body {
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
   @include fluid(font-size, 14, 16);
   font-weight: var(--font-weight-regular);
   font-style: normal;
-  @include fluid(line-height, 28, 38);
-  @include fluid(letter-spacing, 2, 4.48);
+  @include fluid(line-height, 30, 38);
+  @include fluid(letter-spacing, 2.52, 4.48);
   width: 100%;
   @include fluid(max-width, 320, 945);
 
@@ -156,8 +159,7 @@
   }
 }
 
-// ── 会社写真エリア（Figma Rectangle 346: 1920×1080 のグレー帯） ──
-// 後から実画像差し替え予定の placeholder。
+// ── 会社写真エリア（Figma Rectangle 346: 1920×1080 ZERO ビル外観モノクロ写真） ──
 // Figma 配置: y=3761（メンバーカード bottom 3506 から gap 255）, h=1080
 // → 会社概要セクションは margin-top -350 でこのグレー帯の下端 350px に
 //   白カードが overlap する形（Figma Rectangle 347 配置）
@@ -165,10 +167,17 @@
   width: 100vw;
   margin-left: calc(50% - 50vw);
   background-color: var(--color-placeholder);
+  background-image: url('/images/sections/about/company-image.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   @include fluid(margin-top, 80, 255);
   @include fluid(height, 360, 1080);
 
   @include sp {
-    @include fluid(height, 240, 480);
+    // Figma SP: メンバー row5 bottom y=4490 → 写真 top y=4610 = 120
+    margin-top: 120px;
+    // Figma SP: Rectangle 346 高さ 300px
+    height: 300px;
   }
 }

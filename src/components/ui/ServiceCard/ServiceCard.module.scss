@@ -129,8 +129,11 @@
   z-index: 3;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  // Figma: 上237.6 / 下60 / 左右60px（1920px基準 vw）
+  // VIEW マーカーをカード直下（カスタムカーソル）に移動したため、
+  // content には .info のみが残り bottom 寄せが必要。
+  justify-content: flex-end;
+  // Figma: 上237.6 / 下60 / 左右60px（1920px基準 vw）。
+  // 上 padding はマウス追従カーソルが移動後は不要だが、念のため残す。
   padding: 12.375vw 3.125vw 3.125vw;
 
   @include sp {
@@ -145,29 +148,57 @@
   }
 }
 
-// ── カード上部 VIEW マーカー（2行・各行に赤帯） ──
+// ── VIEW マーカー（マウス追従カスタムカーソル） ──
+// 通常は非表示。カード上にマウスが乗ると CSS 変数 --x / --y で指定された位置に
+// 「ふわっと」フェードイン。transform はトランジションを掛けないので
+// マウス移動には即時追従し、フェード演出だけが滑らかに行われる。
 .viewButton {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 5; // gradient(2), dots(3), content(3) より前面
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  // Figma: カード左端から 65px（content 左 padding 60 + 5px）
-  margin-left: 0.26vw;
   color: var(--color-white);
   font-family: var(--font-en);
   font-size: 1.0417vw; // Figma 20px
   font-weight: var(--font-weight-light);
   font-style: normal;
   letter-spacing: 0.1354vw; // Figma 2.6px
-  cursor: pointer;
-  transition: opacity var(--transition-base);
-
-  &:hover {
-    opacity: 0.8;
-  }
+  // 位置: マウス座標から要素中央分だけオフセットしてカーソルセンターに重ねる
+  // 注意: scale はここでは指定せず、後段の `scale` プロパティで独立に扱う
+  //       （transform は瞬時追従、scale は transition でフェード）
+  transform: translate(
+    calc(var(--x, 0px) - 50%),
+    calc(var(--y, 0px) - 50%)
+  );
+  // 初期: 非表示 + 少し小さい状態
+  opacity: 0;
+  scale: 0.85;
+  // 表示/非表示の「ふわっと」感
+  transition:
+    opacity 0.28s ease,
+    scale 0.28s cubic-bezier(0.2, 0.8, 0.3, 1);
+  pointer-events: none; // クリックは親 Link が拾う
+  will-change: transform, opacity, scale;
 
   @include sp {
-    // Figma SP: カード上の VIEW マーカーは非表示
+    // SP ではカスタムカーソル UX を出さない（タッチ操作のため）
     display: none;
+  }
+}
+
+// マウス侵入中: フェードイン
+.viewButtonVisible {
+  opacity: 1;
+  scale: 1;
+}
+
+// カード上ではシステムカーソルを隠してカスタムカーソルに置き換える（PCのみ）
+@include pc {
+  .card {
+    cursor: none;
   }
 }
 
@@ -258,6 +289,8 @@
   font-style: normal;
   line-height: 1.857; // Figma 26px / 14px
   letter-spacing: 0.0948vw; // Figma 1.82px
+  // Figma の明示的改行 (`\n`) を保ちつつ、自然折返しも有効化
+  white-space: pre-line;
 
   @include sp {
     // Figma SP: 12px / line-height 24 / letter-spacing 1.56

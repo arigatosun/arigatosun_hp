@@ -4,26 +4,42 @@
 @use '@/styles/breakpoints' as *;
 
 // ── セクション枠 ──
+// Figma SP: 前セクション (philosophy body bottom y=619) → アリガト3原則 title y=745 = 126
+//          → philosophy.padding-bottom 80 + 本セクション padding-top 46
+// Figma SP: 社会に bottom y=2197 → 事業領域 title y=2323 = 126
+//          → 本セクション padding-bottom 46 + 次セクション padding-top 80
 .section {
-  @include fluid(padding-left, 20, 200);
-  @include fluid(padding-right, 20, 200);
+  @include fluid(padding-left, 40, 200);
+  @include fluid(padding-right, 40, 200);
+
+  @include sp {
+    padding-top: 46px;
+    padding-bottom: 46px;
+  }
 }
 
 // ── メイン2カラム ──
+// PC Figma: SectionHeader bottom (y≒980) → 原則リスト最初の項目 head top (y=1040) gap = 60
+// SP Figma: SectionHeader bottom y=786 → diagram top y=844 = 58
+//          diagram bottom y=1099 → 仲間に y=1159 = 60
 .content {
   display: flex;
   align-items: flex-start;
   @include fluid(gap, 40, 190);
-  @include fluid(margin-top, 30, 88);
+  @include fluid(margin-top, 30, 60);
 
   @include sp {
     flex-direction: column;
     align-items: stretch;
-    @include fluid(gap, 32, 80);
+    // SP: diagram → 原則リスト の縦余白 60px
+    gap: 60px;
+    margin-top: 58px;
   }
 }
 
 // ── 左側: 楕円ダイアグラム ──
+// Figma: diagram top y=1098 / 最初の原則 head top y=1040 → diagram は principles より 58px 下
+// Figma SP: ダイアグラム x=20 w=350 (本文 x=40 より -20 外側)
 .diagramArea {
   position: relative;
   flex-shrink: 0;
@@ -32,23 +48,42 @@
   @include fluid(margin-top, 0, 58);
 
   @include sp {
-    width: 100%;
-    max-width: 480px;
+    width: auto;
+    max-width: none;
     margin-top: 0;
-    margin-inline: auto;
+    // SP: 本文 padding-left=40 から 20px 外に張り出して幅 350 を確保
+    margin-left: -20px;
+    margin-right: -20px;
   }
 }
 
-// 線画 SVG（3楕円 + 周回矢印 + 中央小円）
+// 線画 SVG（3楕円 + 周回矢印 + 中央小円 + 埋め込みテキスト）
+// SlimeGlow (z=1) より上の z=2 に置き、テキスト・線画の下に赤グロー透ける
 .diagramBase {
   position: relative;
-  z-index: 0;
+  z-index: 2;
   display: block;
   width: 100%;
   height: 100%;
 }
 
+// PC 専用ダイアグラム (590×431) — SP では非表示
+.diagramPc {
+  @include sp {
+    display: none;
+  }
+}
+
+// SP 専用ダイアグラム (351×256) — PC では非表示
+.diagramSp {
+  display: none;
+  @include sp {
+    display: block;
+  }
+}
+
 // 赤グロー層：mask-image で外側楕円形に切り抜く（はみ出しゼロ）
+// PC: principles-mask-outline.svg / SP: principles-mask-outline-sp.svg (350×255)
 .glowMaskLayer {
   position: absolute;
   inset: 0;
@@ -62,74 +97,57 @@
   -webkit-mask-position: center;
   mask-repeat: no-repeat;
   -webkit-mask-repeat: no-repeat;
+
+  @include sp {
+    mask-image: url('/images/sections/about/principles-mask-outline-sp.svg');
+    -webkit-mask-image: url('/images/sections/about/principles-mask-outline-sp.svg');
+  }
 }
 
-// 個別グロー（mask 層内で配置 → 外側楕円より外には絶対出ない）
+// SP フォールバック: SlimeGlow を mount しない代わりに radial-gradient で
+// 浮遊する赤グローを表示 (PC は SlimeGlow canvas が同層に入る)。
+// mask 層 (.glowMaskLayer) で外側楕円形にクリップされるため形外には漏れない。
 .heatmapGlow {
   position: absolute;
+  width: 58%;
+  height: 58%;
   border-radius: 50%;
-  pointer-events: none;
+  background: radial-gradient(circle, var(--color-primary) 0%, transparent 70%);
+  opacity: 0.55;
   filter: blur(8px);
-  opacity: 0;
-}
-
-// 仲間: 最も小さな内コア（仲間oval 中心 21.4%）
-.glow1 {
-  width: 32%;
-  height: 35%;
-  left: 22%;
-  top: 50%;
+  pointer-events: none;
   transform: translate(-50%, -50%);
-  background: radial-gradient(
-    ellipse,
-    var(--color-primary-rgba-75) 0%,
-    var(--color-primary-rgba-55) 30%,
-    var(--color-primary-rgba-25) 55%,
-    transparent 80%
-  );
-}
-
-// お客様: 中サイズ（仲間〜お客様の境界をふんわり覆う）
-.glow2 {
-  width: 70%;
-  height: 70%;
-  left: 40%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  background: radial-gradient(
-    ellipse,
-    var(--color-primary-rgba-55) 0%,
-    var(--color-primary-rgba-25) 40%,
-    transparent 80%
-  );
-}
-
-// 社会: 最大グロー（仲間/お客様/社会 3ラベルの中央 ≒ 50% に配置）
-// mask 層が外側楕円形に切り抜くため、これより大きく取っても外にはみ出さない
-.glow3 {
-  width: 120%;
-  height: 105%;
   left: 50%;
   top: 50%;
-  transform: translate(-50%, -50%);
-  // 中心から 80% まで赤を維持して 社会(80.4%)までしっかり届ける
-  background: radial-gradient(
-    ellipse,
-    var(--color-primary-rgba-55) 0%,
-    var(--color-primary-rgba-55) 30%,
-    var(--color-primary-rgba-25) 60%,
-    var(--color-primary-rgba-25) 85%,
-    transparent 100%
-  );
+}
+
+// 浮遊アニメーション — ゆっくり円を描くように動く
+.floating {
+  animation: principlesGlowFloat 6s ease-in-out infinite;
+}
+
+@keyframes principlesGlowFloat {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) translate(0, 0);
+  }
+  25% {
+    transform: translate(-50%, -50%) translate(4%, -3%);
+  }
+  50% {
+    transform: translate(-50%, -50%) translate(-2%, -5%);
+  }
+  75% {
+    transform: translate(-50%, -50%) translate(-4%, 2%);
+  }
 }
 
 // ── ラベル群（仲間 / お客様 / 社会） ──
-// Figma実測 x座標 (302/442/652) を 590px 幅の diagramArea に対する % で配置
+// 新しい PC (Group 1248) / SP (Group 1243) ダイアグラム SVG はテキストを
+// パスとして埋め込んでいるため、React 側オーバーレイは常時非表示。
+// (オーバーレイと SVG の二重表示防止)
 .mapLabels {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  pointer-events: none;
+  display: none;
 }
 
 .mapLabel {
@@ -161,7 +179,7 @@
 .mapLabelJa {
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
-  @include fluid(font-size, 12, 16);
+  @include fluid(font-size, 14, 16);
   font-weight: var(--font-weight-regular);
   line-height: 1.4;
   letter-spacing: 0.28em;
@@ -170,15 +188,17 @@
 .mapLabelEn {
   color: var(--color-text-secondary);
   font-family: var(--font-en);
-  @include fluid(font-size, 10, 12);
+  @include fluid(font-size, 11, 12);
   font-weight: var(--font-weight-light);
   line-height: 1.4;
   letter-spacing: 0.13em;
   mix-blend-mode: multiply;
-  @include fluid(margin-top, 2, 4);
+  @include fluid(margin-top, 4, 4);
 }
 
 // ── 右側: 原則リスト ──
+// PC Figma: gap = 72px (原則 body 末尾 → 次の原則 head top)
+// SP Figma: 原則1 wrap bottom y=1485 → 原則2 head y=1545 = 60
 .principlesList {
   flex: 1;
   display: flex;
@@ -187,6 +207,14 @@
 
   @include sp {
     width: 100%;
+    gap: 60px;
+  }
+}
+
+// SP: link を description の下右に絶対配置するため item を relative にする
+.principleItem {
+  @include sp {
+    position: relative;
   }
 }
 
@@ -195,6 +223,11 @@
   align-items: center;
   justify-content: space-between;
   @include fluid(gap, 12, 24);
+
+  @include sp {
+    // SP: link は head から外し、principleDesc の下端右に絶対配置する
+    justify-content: flex-start;
+  }
 }
 
 .principleHeadLeft {
@@ -203,30 +236,41 @@
   @include fluid(gap, 6, 10);
 }
 
+// 「仲間に」「お客様に」「社会に」
+// Figma SP: 18px / lh 36 / ls 4.32 (=0.24em) / Noto Sans JP Regular
+// Figma PC: 20px / ls 5.6
 .principleLabel {
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
-  @include fluid(font-size, 14, 20);
+  @include fluid(font-size, 18, 20);
   font-weight: var(--font-weight-regular);
   line-height: 1.5;
   letter-spacing: 0.28em;
+
+  @include sp {
+    line-height: 36px;
+    letter-spacing: 0.24em;
+  }
 }
 
+// アリガトサンロゴ
+// Figma SP: 180×26 / Figma PC: 200×30
 .principleLogo {
   height: auto;
-  @include fluid(width, 120, 200);
+  @include fluid(width, 180, 200);
 }
 
+// SERVICE > / WORKS > / NEWS > リンク
+// Figma SP: 20px / lh 24 / ls 2.6 (=0.13em) / Mozaic GEO Light / 右寄せ / 説明文下に配置
+// Figma PC: 20px / lh 17 / ls 2.6
 .principleLink {
   // Figma 実測 (2481:51627): 白背景 121×17, テキスト 120×17 right-align
-  // → 背景帯はテキストとほぼ同寸（左右の余白ほぼ無し / 高さは cap height 相当）
   flex-shrink: 0;
   display: inline-block;
   color: var(--color-black);
   font-family: var(--font-en);
-  @include fluid(font-size, 14, 20);
+  @include fluid(font-size, 20, 20);
   font-weight: var(--font-weight-light);
-  // 帯の縦寸を Figma の 17/20 ≒ 0.85 に揃える
   line-height: calc(17 / 20);
   letter-spacing: 0.13em;
   text-decoration: none;
@@ -237,14 +281,42 @@
   &:hover {
     color: var(--color-primary);
   }
+
+  // SP: principleItem の右下に絶対配置（Figma SP: 説明文 bottom 付近・右寄せ）
+  // PC と同じ inline-block + auto-width + 白背景 + 1 行表示
+  // Figma SP: 白背景 h=17 (text bbox と同じ)。line-height: 17 でタイトに。
+  @include sp {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    line-height: 17px;
+    white-space: nowrap;
+  }
 }
 
+// 白背景は .principleLink に残し、テキストだけを 0.1em 上にオフセット
+.principleLinkText {
+  display: inline-block;
+  transform: translateY(-0.1em);
+}
+
+// 本文 — Figma SP: 14 / lh 30 / ls 2.52 (=0.18em) / Noto Sans JP Regular
+// SP Figma: 仲間に head bottom y=1195 → body top y=1215 = 20
+// SP: principleLink を bottom 右に絶対配置するため、最終行が link と重なる
+//    のを防ぐ目的で padding-bottom を 1 行分確保。
 .principleDesc {
   @include fluid(margin-top, 10, 21);
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
-  @include fluid(font-size, 12, 14);
+  @include fluid(font-size, 14, 14);
   font-weight: var(--font-weight-regular);
   line-height: calc(30 / 14);
   letter-spacing: 0.18em;
+
+  @include sp {
+    margin-top: 20px;
+    // Figma SP: body bottom → link top = 12, link h = 18, link bottom = wrap bottom
+    // → padding-bottom = 12 + 18 = 30 (リンク + 上余白)
+    padding-bottom: 30px;
+  }
 }

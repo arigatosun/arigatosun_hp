@@ -2,7 +2,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import type { Metadata } from 'next';
 import SectionTitle from '@/components/ui/SectionTitle';
-import { getNewsList } from '@/data/news';
+import { getCategories, getPublishedNewsList } from '@/lib/news/queries';
+import { formatNewsDate, newsDetailHref } from '@/lib/news/format';
 import styles from './page.module.scss';
 
 export const metadata: Metadata = {
@@ -12,19 +13,22 @@ export const metadata: Metadata = {
 // 1ページあたりの記事数
 const PAGE_SIZE = 6;
 
-// カテゴリは現状は見た目のみ（絞り込みは WordPress 連携時に実装）
-const CATEGORIES = ['・ALL >', '・INFOMATION >', '・EVENTS >', '・PRESS >'];
-
 type NewsPageProps = {
-  searchParams: Promise<{ page?: string }>;
+  searchParams: Promise<{ page?: string; category?: string }>;
 };
 
+export const revalidate = 60; // ISR で1分キャッシュ
+
 export default async function NewsPage({ searchParams }: NewsPageProps) {
-  const news = await getNewsList();
-  const { page } = await searchParams;
+  const { page, category } = await searchParams;
+  const activeCategory = category ?? 'all';
+
+  const [news, categories] = await Promise.all([
+    getPublishedNewsList({ categorySlug: activeCategory }),
+    getCategories(),
+  ]);
 
   const totalPages = Math.max(1, Math.ceil(news.length / PAGE_SIZE));
-  // 不正・範囲外のページ番号は 1〜totalPages にクランプ
   const requested = Number.parseInt(page ?? '1', 10);
   const currentPage = Math.min(
     totalPages,
@@ -35,9 +39,27 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
     currentPage * PAGE_SIZE,
   );
 
-  const prevHref = currentPage > 1 ? `/news?page=${currentPage - 1}` : null;
-  const nextHref =
-    currentPage < totalPages ? `/news?page=${currentPage + 1}` : null;
+  const buildPageHref = (p: number) => {
+    const params = new URLSearchParams();
+    if (activeCategory !== 'all') params.set('category', activeCategory);
+    if (p > 1) params.set('page', String(p));
+    const qs = params.toString();
+    return qs ? `/news?${qs}` : '/news';
+  };
+
+  const buildCategoryHref = (slug: string) => {
+    if (slug === 'all') return '/news';
+    return `/news?category=${slug}`;
+  };
+
+  const prevHref = currentPage > 1 ? buildPageHref(currentPage - 1) : null;
+  const nextHref = currentPage < totalPages ? buildPageHref(currentPage + 1) : null;
+
+  // 「ALL >」を先頭にしてカテゴリーリストを構築
+  const tabs = [
+    { slug: 'all', label: 'ALL' },
+    ...categories.map((c) => ({ slug: c.slug, label: c.label })),
+  ];
 
   return (
     <div className={styles.page} data-news-list>
@@ -54,14 +76,19 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
             className={styles.titleSection}
           />
           <ul className={styles.categoryList}>
-            {CATEGORIES.map((label, index) => (
-              <li
-                key={label}
-                className={index === 0 ? styles.categoryActive : styles.category}
-              >
-                <span>{label}</span>
-              </li>
-            ))}
+            {tabs.map((tab) => {
+              const isActive = activeCategory === tab.slug;
+              return (
+                <li
+                  key={tab.slug}
+                  className={isActive ? styles.categoryActive : styles.category}
+                >
+                  <Link href={buildCategoryHref(tab.slug)}>
+                    <span>・{tab.label} &gt;</span>
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
           <span className={styles.sidebarDivider} aria-hidden="true" />
           <Link href="/contact" className={styles.contactLink}>
@@ -71,81 +98,81 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
 
         {/* 右: 記事リスト */}
         <div className={styles.main}>
-          <ul className={styles.articleList}>
-            {pagedNews.map((item) => (
-              <li key={item.slug} className={styles.articleItem}>
-                <Link href={`/news/${item.slug}`} className={styles.article}>
-                  <div className={styles.articleContent}>
-                    <h2 className={styles.articleTitle}>{item.title}</h2>
-                    <p className={styles.articleMeta}>
-                      <span className={styles.articleDate}>{item.date}</span>
-                      <span className={styles.articleCategory}>
-                        #{item.category}
-                      </span>
-                    </p>
-                  </div>
-                  <div className={styles.articleThumbnail}>
-                    {item.thumbnail ? (
-                      <Image
-                        src={item.thumbnail}
-                        alt=""
-                        fill
-                        className={styles.thumbnailImage}
-                        sizes="(max-width: 1023px) 40vw, 266px"
-                      />
-                    ) : (
-                      <span
-                        className={styles.thumbnailPlaceholder}
-                        aria-hidden="true"
-                      />
-                    )}
-                  </div>
-                </Link>
-                <span className={styles.articleDivider} aria-hidden="true" />
-              </li>
-            ))}
-          </ul>
+          {pagedNews.length === 0 ? (
+            <p className={styles.emptyMessage}>該当する記事がまだありません。</p>
+          ) : (
+            <ul className={styles.articleList}>
+              {pagedNews.map((item) => (
+                <li key={item.id} className={styles.articleItem}>
+                  <Link
+                    href={newsDetailHref(item.slug_year, item.slug)}
+                    className={styles.article}
+                  >
+                    <div className={styles.articleContent}>
+                      <h2 className={styles.articleTitle}>{item.title}</h2>
+                      <p className={styles.articleMeta}>
+                        <span className={styles.articleDate}>
+                          {formatNewsDate(item.published_at)}
+                        </span>
+                        <span className={styles.articleCategory}>
+                          #{item.category?.label ?? ''}
+                        </span>
+                      </p>
+                    </div>
+                    <div className={styles.articleThumbnail}>
+                      {item.thumbnail_url ? (
+                        <Image
+                          src={item.thumbnail_url}
+                          alt=""
+                          fill
+                          className={styles.thumbnailImage}
+                          sizes="(max-width: 1023px) 40vw, 266px"
+                        />
+                      ) : (
+                        <span className={styles.thumbnailPlaceholder} aria-hidden="true" />
+                      )}
+                    </div>
+                  </Link>
+                  <span className={styles.articleDivider} aria-hidden="true" />
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </div>
 
-      {/* ページネーション（コンテンツ全幅で中央配置） */}
-      <div className={styles.pagination}>
-        {prevHref ? (
-          <Link
-            href={prevHref}
-            className={styles.pageButton}
-            aria-label="前のページへ"
-          >
-            &lt; BACK
-          </Link>
-        ) : (
-          <span
-            className={`${styles.pageButton} ${styles.pageButtonDisabled}`}
-            aria-disabled="true"
-          >
-            &lt; BACK
+      {/* ページネーション */}
+      {totalPages > 1 && (
+        <div className={styles.pagination}>
+          {prevHref ? (
+            <Link href={prevHref} className={styles.pageButton} aria-label="前のページへ">
+              &lt; BACK
+            </Link>
+          ) : (
+            <span
+              className={`${styles.pageButton} ${styles.pageButtonDisabled}`}
+              aria-disabled="true"
+            >
+              &lt; BACK
+            </span>
+          )}
+          <span className={styles.pageInfo}>
+            {currentPage}/{totalPages}
           </span>
-        )}
-        <span className={styles.pageInfo}>
-          {currentPage}/{totalPages}
-        </span>
-        {nextHref ? (
-          <Link
-            href={nextHref}
-            className={styles.pageButton}
-            aria-label="次のページへ"
-          >
-            NEXT &gt;
-          </Link>
-        ) : (
-          <span
-            className={`${styles.pageButton} ${styles.pageButtonDisabled}`}
-            aria-disabled="true"
-          >
-            NEXT &gt;
-          </span>
-        )}
-      </div>
+          {nextHref ? (
+            <Link href={nextHref} className={styles.pageButton} aria-label="次のページへ">
+              NEXT &gt;
+            </Link>
+          ) : (
+            <span
+              className={`${styles.pageButton} ${styles.pageButtonDisabled}`}
+              aria-disabled="true"
+            >
+              NEXT &gt;
+            </span>
+          )}
+        </div>
+      )}
     </div>
   );
 }

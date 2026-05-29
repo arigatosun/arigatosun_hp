@@ -25,10 +25,18 @@ export default function WorkTextSection({
       )}
       {body && body.length > 0 && (
         <p className={styles.body}>
-          {body.map((line, index) => (
-            <Fragment key={index}>
-              {index > 0 && <br />}
-              {line}
+          {body.map((segment, i) => (
+            <Fragment key={i}>
+              {i > 0 && <br />}
+              {/* セグメント内の `\n` は SP 専用改行 (PC では非表示) */}
+              {segment.split('\n').map((sub, j, arr) => (
+                <Fragment key={j}>
+                  {sub}
+                  {j < arr.length - 1 && (
+                    <br className={styles.spOnlyBr} />
+                  )}
+                </Fragment>
+              ))}
             </Fragment>
           ))}
         </p>

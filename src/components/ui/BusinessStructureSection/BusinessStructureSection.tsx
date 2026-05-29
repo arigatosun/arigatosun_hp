@@ -1,48 +1,11 @@
 'use client';
 
-import { useRef, useCallback } from 'react';
 import Image from 'next/image';
-import { useMediaQuery } from '@/lib/useMediaQuery';
 import SectionHeader from '@/components/ui/SectionHeader';
+import SlimeGlow, { SLIME_GLOW_STANDARD } from '@/components/ui/SlimeGlow';
 import styles from './BusinessStructureSection.module.scss';
 
 export default function BusinessStructureSection() {
-  const glowRef = useRef<HTMLDivElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  // SP/PC判定（768px以上でマウスインタラクション有効）
-  const isPC = useMediaQuery('(min-width: 768px)');
-
-  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-
-    if (glowRef.current) {
-      glowRef.current.style.left = `${x}px`;
-      glowRef.current.style.top = `${y}px`;
-    }
-  }, []);
-
-  const handleMouseEnter = useCallback(() => {
-    // DOM直接操作でクラスを切り替え（React再レンダリングを回避）
-    if (glowRef.current) {
-      glowRef.current.classList.remove(styles.floating);
-      glowRef.current.classList.add(styles.hovering);
-    }
-  }, []);
-
-  const handleMouseLeave = useCallback(() => {
-    if (glowRef.current) {
-      // クラスを浮遊モードに戻す
-      glowRef.current.classList.remove(styles.hovering);
-      glowRef.current.classList.add(styles.floating);
-      // インラインスタイルを削除してCSSデフォルト位置に戻す
-      glowRef.current.style.removeProperty('left');
-      glowRef.current.style.removeProperty('top');
-    }
-  }, []);
-
   return (
     <section className={styles.section}>
       {/* 左側: タイトル + 説明テキスト */}
@@ -64,14 +27,8 @@ export default function BusinessStructureSection() {
         </p>
       </div>
 
-      {/* 右側: 連携体制図 + ヒートマップ */}
-      <div
-        ref={containerRef}
-        className={styles.right}
-        onMouseMove={isPC ? handleMouseMove : undefined}
-        onMouseEnter={isPC ? handleMouseEnter : undefined}
-        onMouseLeave={isPC ? handleMouseLeave : undefined}
-      >
+      {/* 右側: 連携体制図 + 赤スライムグロー */}
+      <div className={styles.right}>
         <Image
           src="/images/sections/about/structure-layer.png"
           alt="事業領域と連携体制図"
@@ -79,13 +36,11 @@ export default function BusinessStructureSection() {
           height={640}
           className={styles.structureImage}
         />
-        {/* 赤グロー層: mask-image で 4-clover + 外側2小円のシルエットに切り抜く
+        {/* 赤スライムグロー層: mask-image で 4-clover + 外側2小円のシルエットに切り抜く
             → 連携体制図の輪郭外には絶対にはみ出さない */}
+        {/* PC / SP 共に SlimeGlow を表示 (サービス詳細「アリガトサン・スタンダード」と同一) */}
         <div className={styles.glowMaskLayer} aria-hidden="true">
-          <div
-            ref={glowRef}
-            className={`${styles.heatmapGlow} ${styles.floating}`}
-          />
+          <SlimeGlow {...SLIME_GLOW_STANDARD} />
         </div>
       </div>
     </section>

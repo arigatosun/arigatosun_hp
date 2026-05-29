@@ -3,69 +3,106 @@
 );
 @use '@/styles/breakpoints' as *;
 
+.container {
+  position: relative;
+}
+
 .list {
+  position: relative; // overlay より上に label を出すため z-index 設定の文脈確保
+  z-index: 1;
   list-style: none;
   margin: 0;
   padding: 0;
   display: flex;
   flex-direction: column;
-  // Figma: 行ピッチ 66px / ピル高 38px → 行間 28px
-  @include fluid(gap, 14, 28);
+  // Figma PC: 行ピッチ 66px / ピル高 38px → 行間 28px
+  // Figma SP (2837:53828): pill→items 12px / items→次pill 11px → 行間合計 11px ≒ 12px
+  @include fluid(gap, 11, 28);
 }
 
 .row {
   display: flex;
   align-items: center;
-  @include fluid(gap, 16, 40);
+  @include fluid(gap, 12, 40);
+
+  // Figma SP (2837:53828): 各行は pill (200×32) を上、items (lh 24, w 310) を下に縦積み
+  @include sp {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px; // pill bottom → items top = 12px
+  }
 }
 
-// ピル（BRANDING / IDENTITY 等）
+// ピル外枠 (背景透過で、後ろにある SlimeGlow が透けて見える)
 .pill {
+  position: relative;
   flex-shrink: 0;
   display: flex;
   align-items: center;
+  // PC は中央寄せ
   justify-content: center;
-  // Figma: ピル 188×38
-  @include fluid(width, 124, 188);
-  @include fluid(height, 30, 38);
-  border: 1px solid var(--color-text-secondary);
+  // Figma PC: ピル 188×38 / SP: 200×32
+  @include fluid(width, 200, 188);
+  @include fluid(height, 32, 38);
+  // Figma SP: border 0.6px solid #808080
+  border: 0.6px solid var(--color-text-secondary);
   border-radius: var(--border-radius-full);
   color: var(--color-text-secondary);
   font-family: var(--font-en);
-  @include fluid(font-size, 13, 18);
+  // Figma SP: ラベル 15px / ls 2.25 / Mozaic GEO Light
+  // Figma PC: 18px / ls 2.7
+  @include fluid(font-size, 15, 18);
   font-weight: var(--font-weight-light);
-  @include fluid(letter-spacing, 1.6, 2.7);
+  @include fluid(letter-spacing, 2.25, 2.7);
+  background: transparent;
+  // Figma SP: label / items 共に mix-blend-multiply で背後のスライムと馴染ませる
+  mix-blend-mode: multiply;
 
-  // カーソル追従の赤グロー。
-  // 背景グラデはピルの角丸でクリップされる（＝マスクされた表示）。
-  // --gx / --gy はカーソル位置（JS が各ピルのローカル座標で更新）。既定は画面外。
-  --gx: -999px;
-  --gy: -999px;
-  @include fluid(--glow-radius, 90, 150);
-  // 中心の濃さは GlowImage（アリガトサン・スタンダード等）のグローに合わせる。
-  // GlowImage は radial-gradient(primary→transparent) + opacity 0.55 ＝ 実効 primary 55%。
-  background: radial-gradient(
-    circle var(--glow-radius) at var(--gx) var(--gy),
-    color-mix(in srgb, var(--color-primary) 55%, transparent) 0%,
-    color-mix(in srgb, var(--color-primary) 30%, transparent) 38%,
-    color-mix(in srgb, var(--color-primary) 9%, transparent) 70%,
-    transparent 100%
-  );
+  // Figma SP (2837:53828): label は pill 左から 20px の位置に左寄せ
+  // (pill left=40, label box left=60, label box w=116 内で text 中央)
+  @include sp {
+    justify-content: flex-start;
+    padding-left: 20px;
+  }
 }
 
-// 赤アクセントピル（BRANDING）
-// マウス未操作時の既定位置。Figma 同様このピルが赤い状態から始まる。
-.pillAccent {
-  --gx: 90%;
-  --gy: 140%;
+// ピル列全体を覆う SlimeGlow オーバーレイ。
+// JS が pill 位置から left/top/width/height とマスク SVG を計算してセットする。
+// マスクは 5 つのピル形状の rect 群。スライムはピル列の世界座標で自由に動き、
+// マスクに重なった瞬間だけ可視。pointer-events:none で下のテキストも操作可能。
+.slimeOverlay {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  // mask source は SVG。alpha モードで rect 内のみ可視。
+  mask-mode: alpha;
+  -webkit-mask-mode: alpha;
+  mask-repeat: no-repeat;
+  -webkit-mask-repeat: no-repeat;
+  mask-size: 100% 100%;
+  -webkit-mask-size: 100% 100%;
+}
+
+// ラベルテキストはオーバーレイより上 (.list の z-index:1 配下)
+.label {
+  position: relative;
 }
 
 // カテゴリ列挙テキスト
+// Figma SP (2837:53828): 13-14px / ls 1.95-2.1 / lh 24 / w=310 / Mozaic GEO Light / #808080
+// Figma PC: 16px / ls 2.4
 .items {
   color: var(--color-text-secondary);
   font-family: var(--font-en);
-  @include fluid(font-size, 12, 16);
+  @include fluid(font-size, 13, 16);
   font-weight: var(--font-weight-light);
-  @include fluid(letter-spacing, 1.5, 2.4);
+  @include fluid(letter-spacing, 1.95, 2.4);
   line-height: 1.5;
+  // Figma: items にも mix-blend-multiply
+  mix-blend-mode: multiply;
+
+  @include sp {
+    width: 100%;
+    line-height: 24px; // Figma SP lh 24
+  }
 }

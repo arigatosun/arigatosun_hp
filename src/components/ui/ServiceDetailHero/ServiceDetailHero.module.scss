@@ -5,10 +5,13 @@
 
 .hero {
   position: relative;
-  @include fluid(padding-left, 20, 200);
-  @include fluid(padding-right, 20, 200);
-  // Figma: 見出しアイコン上端 y=283（固定ヘッダー分を内包）
-  @include fluid(padding-top, 120, 283);
+  // SP (Figma 390): 本文・タイトル text の左基準は x=40 / 右 40。
+  // PC (Figma 1920): x=200。
+  @include fluid(padding-left, 40, 200);
+  @include fluid(padding-right, 40, 200);
+  // Figma SP: 見出しアイコン上端 y=160 (固定ヘッダー約 101px を含む)
+  // Figma PC: y=283
+  @include fluid(padding-top, 160, 283);
 }
 
 // ── 側面ナビ ──
@@ -47,9 +50,8 @@
   // 赤帯に対してテキストを 1px 上に見せる（帯を 1px 下にずらす）。hover/active 共通。
   background-position: right calc(50% + 1px);
   background-size: 0 0.85em;
-  transition: color var(--transition-base),
-    background-size var(--transition-base);
 
+  // hover/active で赤帯を即座に表示（アニメーションなし） — SERVICE/NEWS/About と統一
   &:hover {
     color: var(--color-white);
     background-size: calc(100% - 5px) 0.85em;
@@ -76,15 +78,21 @@
 }
 
 // ── ページ見出し ──
+// Figma SP: アイコン x=28（本文 x=40 より 12px 外側に張り出す）。
+// PC でも本文と同じ x=200 ベース。SP のみ -12px で外側へ寄せる。
 .titleBlock {
   display: flex;
   align-items: center;
-  @include fluid(gap, 12, 24);
+  @include fluid(gap, 10, 24);
+
+  @include sp {
+    margin-left: -12px;
+  }
 }
 
 .titleIcon {
   flex-shrink: 0;
-  @include fluid(width, 40, 61);
+  @include fluid(width, 42, 61);
   height: auto;
 }
 
@@ -98,58 +106,93 @@
   margin: 0;
   color: var(--color-black);
   font-family: var(--font-en);
-  @include fluid(font-size, 22, 34);
+  // Figma SP 20px (ls 2.6) / PC 34px (ls 4.42)
+  @include fluid(font-size, 20, 34);
   font-weight: var(--font-weight-light);
   line-height: 1.2;
-  @include fluid(letter-spacing, 2.2, 4.42);
+  @include fluid(letter-spacing, 2.6, 4.42);
 }
 
 .titleJa {
   margin: 0;
   color: var(--color-text-secondary);
   font-family: 'Noto Sans JP', var(--font-jp);
-  @include fluid(font-size, 13, 16);
+  // Figma SP 12px (ls 1.56 / leading 19.2) / PC 16px (ls 2.08)
+  @include fluid(font-size, 12, 16);
   font-weight: var(--font-weight-regular);
   line-height: 2;
-  @include fluid(letter-spacing, 1, 2.08);
+  @include fluid(letter-spacing, 1.56, 2.08);
+
+  // SP は Figma の leading 19.2 に合わせて line-height を詰める。
+  // ブラウザの line-height: 2 だと 12px font に対し 24px の line box になり、
+  // JA テキスト下に約 6px の余分な余白が発生し、quote までの視覚的ギャップが
+  // Figma より広く感じられる。19.2 (1.6) にしてタイトル下端を Figma に揃える。
+  @include sp {
+    line-height: 19.2px;
+  }
 }
 
 // ── 引用文 ──
+// Figma SP: 18px / lh 36 / ls 4.32 / Noto Sans JP Regular
+// Figma PC: 28px / lh 56 / ls 8.12
+// 改行は JSX 側で `<br className={pcOnlyBr}>` として注入し、SP では非表示にして
+// auto-wrap (kinsoku) に任せる。Chrome は \n + pre-line 併用時に最初の行が
+// 1 文字早く折り返されるため、明示 break を SP で消すと自然な 2 行配置になる。
 .quote {
-  @include fluid(margin-top, 56, 137);
+  @include fluid(margin-top, 60, 137);
   margin-bottom: 0;
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
   font-weight: var(--font-weight-regular);
   @include fluid(font-size, 18, 28);
-  @include fluid(line-height, 34, 56);
-  @include fluid(letter-spacing, 4, 8.12);
-  // Figma で改行が含まれる quote (AI/DEVELOPMENT 等) を \n のまま反映
-  white-space: pre-line;
+  @include fluid(line-height, 36, 56);
+  // SP 4.0 (14 文字 × 22 = 308 で 310 に収まる) / PC 8.12
+  @include fluid(letter-spacing, 4.0, 8.12);
+}
+
+// PC では明示改行を <br className="pcOnlyBr" /> で挿入し、SP では非表示にして
+// browser auto-wrap (kinsoku) に任せる。これで PC は Figma 通りに改行され、
+// SP は 14 文字を 1 行に収めにくい Chrome の癖を回避できる。
+.pcOnlyBr {
+  @include sp {
+    display: none;
+  }
+}
+
+// 逆ケース: SP では強制改行したいが PC は 1 行で収めたい場面で使う <br>
+// (例: IP/CREATIVE subQuote 「、」 で SP のみ改行)
+.spOnlyBr {
+  @include pc {
+    display: none;
+  }
 }
 
 // ── 小引用文（IP/CREATIVE 専用、quote の下に置く 22px の小キャッチ） ──
-// Figma 2697:43669 (y=659 — quote 下端 y=599 から 60px 下)
+// Figma SP (IP): 16px / lh 32 / ls 2.88 / mt 32 (quote bottom→subQuote top)
+// Figma PC: 22px / lh 38 / ls 5.28 / mt 60
 .subQuote {
-  @include fluid(margin-top, 28, 60);
+  @include fluid(margin-top, 32, 60);
   margin-bottom: 0;
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
   font-weight: var(--font-weight-regular);
   @include fluid(font-size, 16, 22);
-  @include fluid(line-height, 28, 38);
-  @include fluid(letter-spacing, 2.4, 5.28);
+  @include fluid(line-height, 32, 38);
+  @include fluid(letter-spacing, 2.88, 5.28);
 }
 
 // ── 説明文 ──
+// Figma SP: 14px / lh 30 / ls 2.52 (=0.18em) / Noto Sans JP Regular / w=310
+// Figma PC: 16px / lh 38 / ls 3.84
+// SP の段間隔は IP/CREATIVE のサブキャッチ→説明文 で gap 32 / それ以外は quote→説明文 gap 28
 .description {
-  @include fluid(margin-top, 24, 40);
+  @include fluid(margin-top, 32, 40);
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
   font-weight: var(--font-weight-regular);
   @include fluid(font-size, 14, 16);
-  @include fluid(line-height, 28, 38);
-  @include fluid(letter-spacing, 2, 3.84);
+  @include fluid(line-height, 30, 38);
+  @include fluid(letter-spacing, 2.52, 3.84);
 
   p {
     margin: 0;
@@ -157,9 +200,16 @@
 }
 
 // ── 主画像 ──
+// Figma SP: Rectangle 4660 が x=0 w=390 で全幅（左右 0 margin）
 // Figma IP/CREATIVE: 説明文下端 y=877 → 画像上端 y=957（gap 80px）
 .heroImage {
-  @include fluid(margin-top, 32, 80);
+  @include fluid(margin-top, 60, 80);
+
+  @include sp {
+    // SP は全幅で見せる（フレーム外まで張り出し、.page の overflow-x:clip で受ける）
+    margin-left: -40px;
+    margin-right: -40px;
+  }
 }
 
 .heroImageInner {
@@ -172,4 +222,9 @@
   width: 100%;
   aspect-ratio: 1520 / 855;
   background-color: var(--color-placeholder);
+
+  // Figma SP: 390 × 259
+  @include sp {
+    aspect-ratio: 390 / 259;
+  }
 }

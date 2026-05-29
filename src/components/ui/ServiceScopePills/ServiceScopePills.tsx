@@ -1,7 +1,7 @@
 'use client';
 
-import { useCallback, useRef } from 'react';
-import { useMediaQuery } from '@/lib/useMediaQuery';
+import { useEffect, useRef, useState } from 'react';
+import SlimeGlow from '@/components/ui/SlimeGlow';
 import type { ServicePillRow } from '@/types/service';
 import styles from './ServiceScopePills.module.scss';
 
@@ -9,61 +9,116 @@ type ServiceScopePillsProps = {
   rows: ServicePillRow[];
 };
 
+type OverlayRect = {
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+  mask: string;
+};
+
+const PILLS_GLOW_PROPS = {
+  color: '#DA2719',
+  radiusRatio: 0.45,
+  subBlobCount: 7,
+  maxOpacity: 0.28,
+  followSpeed: 0.04,
+  cursorBlend: 0.85,
+  releaseMs: 800,
+  driftSpeed: 0.00028,
+  coreBoost: 1.4,
+  gradientFalloff: 2.0,
+  intensityVariance: 0.55,
+  breathSpeed: 0.0006,
+  breathAmount: 0.22,
+};
+
 /**
- * 能動的デザインの領域セクションのピルリスト（5行）。
- * カーソルに追従して赤グローが移動。グローは各ピルの角丸でクリップされる（マスク表示）。
- * 768px 未満はカーソル追従を無効化（既定位置のまま）。
+ * 能動的デザインの領域セクションのピルリスト。
+ * - PC: HTML ピル 5 個を横並び (label + items 横並び), JS 生成マスクで SlimeGlow をクリップ
+ * - SP: HTML ピル 5 個を縦積み (label と items 縦並び — Figma 2837:53828),
+ *   同様に JS 生成マスクで SlimeGlow をクリップ
  */
 export default function ServiceScopePills({ rows }: ServiceScopePillsProps) {
-  const listRef = useRef<HTMLUListElement>(null);
-  const frameRef = useRef(0);
-  const isPC = useMediaQuery('(min-width: 768px)');
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [overlayRect, setOverlayRect] = useState<OverlayRect | null>(null);
 
-  const handleMouseMove = useCallback(
-    (e: React.MouseEvent<HTMLUListElement>) => {
-      const x = e.clientX;
-      const y = e.clientY;
-      cancelAnimationFrame(frameRef.current);
-      frameRef.current = requestAnimationFrame(() => {
-        listRef.current
-          ?.querySelectorAll<HTMLElement>(`.${styles.pill}`)
-          .forEach((pill) => {
-            const rect = pill.getBoundingClientRect();
-            pill.style.setProperty('--gx', `${x - rect.left}px`);
-            pill.style.setProperty('--gy', `${y - rect.top}px`);
-          });
-      });
-    },
-    [],
-  );
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
 
-  const handleMouseLeave = useCallback(() => {
-    cancelAnimationFrame(frameRef.current);
-    listRef.current
-      ?.querySelectorAll<HTMLElement>(`.${styles.pill}`)
-      .forEach((pill) => {
-        pill.style.removeProperty('--gx');
-        pill.style.removeProperty('--gy');
+    function update() {
+      const c = containerRef.current;
+      if (!c) return;
+      const cRect = c.getBoundingClientRect();
+      const pills = c.querySelectorAll<HTMLElement>('[data-pill]');
+      if (pills.length === 0) return;
+      const first = pills[0].getBoundingClientRect();
+      const last = pills[pills.length - 1].getBoundingClientRect();
+      const left = first.left - cRect.left;
+      const top = first.top - cRect.top;
+      const width = first.width;
+      const height = last.top + last.height - first.top;
+      if (width <= 0 || height <= 0) return;
+
+      // 各ピルの相対位置で角丸 rect を並べた SVG マスクを生成
+      let rects = '';
+      pills.forEach((p) => {
+        const r = p.getBoundingClientRect();
+        const x = r.left - cRect.left - left;
+        const y = r.top - cRect.top - top;
+        const rx = r.height / 2;
+        rects += `<rect x="${x}" y="${y}" width="${r.width}" height="${r.height}" rx="${rx}" ry="${rx}" fill="white" />`;
       });
+      const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='${width}' height='${height}' viewBox='0 0 ${width} ${height}'>${rects}</svg>`;
+      const mask = `url("data:image/svg+xml;utf8,${encodeURIComponent(svg)}")`;
+
+      setOverlayRect({ left, top, width, height, mask });
+    }
+
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(container);
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('scroll', update);
+      window.removeEventListener('resize', update);
+    };
   }, []);
 
   return (
-    <ul
-      ref={listRef}
-      className={styles.list}
-      onMouseMove={isPC ? handleMouseMove : undefined}
-      onMouseLeave={isPC ? handleMouseLeave : undefined}
-    >
-      {rows.map((row) => (
-        <li key={row.label} className={styles.row}>
-          <span
-            className={`${styles.pill} ${row.accent ? styles.pillAccent : ''}`}
-          >
-            {row.label}
-          </span>
-          <span className={styles.items}>{row.items}</span>
-        </li>
-      ))}
-    </ul>
+    <div ref={containerRef} className={styles.container}>
+      {overlayRect && (
+        <div
+          className={styles.slimeOverlay}
+          style={{
+            left: overlayRect.left,
+            top: overlayRect.top,
+            width: overlayRect.width,
+            height: overlayRect.height,
+            maskImage: overlayRect.mask,
+            WebkitMaskImage: overlayRect.mask,
+          }}
+          aria-hidden="true"
+        >
+          <SlimeGlow {...PILLS_GLOW_PROPS} />
+        </div>
+      )}
+      <ul className={styles.list}>
+        {rows.map((row) => (
+          <li key={row.label} className={styles.row}>
+            <span
+              data-pill
+              className={`${styles.pill} ${row.accent ? styles.pillAccent : ''}`}
+            >
+              <span className={styles.label}>{row.label}</span>
+            </span>
+            <span className={styles.items}>{row.items}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }

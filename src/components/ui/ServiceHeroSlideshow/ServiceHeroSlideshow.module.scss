@@ -3,13 +3,18 @@
 );
 @use '@/styles/breakpoints' as *;
 
-// Figma Rectangle 4704 (1520x800) → aspect 1.9:1
+// Figma PC: Rectangle 4704 (1520x800) → aspect 1.9:1
+// Figma SP: Rectangle 4660 / 4710 (390x259) → aspect ≒ 1.506:1
 .root {
   position: relative;
   width: 100%;
   aspect-ratio: 1520 / 800;
   overflow: hidden;
   background: var(--color-placeholder);
+
+  @include sp {
+    aspect-ratio: 390 / 259;
+  }
 }
 
 .viewport {

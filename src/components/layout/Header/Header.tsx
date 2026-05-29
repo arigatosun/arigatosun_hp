@@ -25,7 +25,7 @@ const rightNav = [
 
 const snsNav = [
   {
-    href: 'https://instagram.com/',
+    href: 'https://www.instagram.com/arigatosun_inc?igsh=MXh5Z3dmM29hazJhNw==',
     label: 'IG',
     external: true,
   },
@@ -58,7 +58,11 @@ export default function Header() {
                   {serviceDropdown.map((sub) => (
                     <li key={sub.href}>
                       <Link href={sub.href} className={styles.dropdownLink}>
-                        {sub.label}
+                        <span className={styles.dropdownLinkLabel}>
+                          <span className={styles.dropdownLinkLabelText}>
+                            {sub.label}
+                          </span>
+                        </span>
                       </Link>
                     </li>
                   ))}

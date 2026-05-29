@@ -56,11 +56,19 @@
 }
 
 // ── 左カラム: タイトル + リード文 ──
+// /news ページの sidebar と同じく position: sticky で右側フォームが流れ切るまで追従。
+// 親 .inner は align-items: flex-start なので sticky が効く（align-self は念のため明示）。
+// top は /news の sidebar と統一: fluid(136, 240) = header(80) + .inner padding-top(56〜160)
 .intro {
   flex-shrink: 0;
+  align-self: flex-start;
+  position: sticky;
+  @include fluid(top, 136, 240);
   @include fluid(width, 280, 560);
 
   @include sp {
+    position: static;
+    top: auto;
     width: 100%;
   }
 }

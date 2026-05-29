@@ -39,12 +39,24 @@
   }
 }
 
+// 1 枚の合成済み画像を full-bleed で出すモード
+.gridSingle {
+  display: block;
+}
+
 // 各サムネ。aspect-ratio はインライン style（データの画像比）。
 .cell {
   position: relative;
   overflow: hidden;
   background: var(--color-white);
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
+}
+
+// 1 枚モード時はカード内幅一杯に伸ばし、影は出さない（画像自体に組み込み済み）
+.gridSingle .cell {
+  width: 100%;
+  box-shadow: none;
+  background: transparent;
 }
 
 .image {

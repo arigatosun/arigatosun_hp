@@ -64,8 +64,9 @@
 }
 
 // ── 左側（sticky） ──
-// スクロール進行（--service-progress 0→1）に合わせて opacity を 1→0 にフェードアウト。
-// スクロールを戻すと scrub により progress が 1→0 となり、自動的にフェードインで戻る。
+// 1枚目のカードが leftContent と重なった瞬間に即座に非表示にする（グラデーション的な
+// フェードは行わない）。重なり判定は JS 側で getBoundingClientRect を比較し、
+// --left-hidden を 0/1 で切り替える。スクロールを戻して重なりが解けると即復帰。
 .left {
   width: 50%;
   flex-shrink: 0;
@@ -74,7 +75,7 @@
   @include fluid(padding-left, 20, 200);
   @include fluid(padding-top, 40, 80);
   padding-right: 2vw;
-  opacity: calc(1 - var(--service-progress, 0));
+  opacity: calc(1 - var(--left-hidden, 0));
 
   @include sp {
     // Figma SP @390: section x=20 + 内側コンテンツ x=40 → page 端から 40px
@@ -209,10 +210,10 @@
   color: inherit;
 }
 
-// 赤マーカー帯（Service 詳細ページ ServiceDetailHero 側面ナビと同方式）
+// 赤マーカー帯（シンプル版）
 // Mozaic GEO は文字実体が行ボックス中心より約0.094em下に来るため、
 // 帯も同じだけ下げて文字の中央に重ねる。
-// 非アクティブ＝帯幅0／アクティブ・hover＝右寄せで calc(100% - 5px) に展開
+// 非アクティブ＝非表示／アクティブ・hover＝赤帯を即座に表示（アニメーションなし）
 .menuItem span,
 .menuItemActive span {
   background-image: linear-gradient(
@@ -222,8 +223,6 @@
   background-repeat: no-repeat;
   background-position: right calc(50% + 0.094em);
   background-size: 0 0.85em;
-  transition: color var(--transition-base),
-    background-size var(--transition-base);
 }
 
 .menuItem span {

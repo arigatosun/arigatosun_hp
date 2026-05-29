@@ -4,18 +4,13 @@
 );
 @use '@/styles/breakpoints' as *;
 
-// 導入リードブロック。テキスト左端は Figma PC=200 / SP(390)=40。
+// 導入リードブロック。テキスト左端は Figma 実測 x=200 (PC) / x=40 (SP)
 .lead {
-  @include fluid(padding-left, 20, 200);
-  @include fluid(padding-right, 20, 200);
-
-  @include sp {
-    padding-left: 40px;
-    padding-right: 40px;
-  }
+  @include fluid(padding-left, 40, 200);
+  @include fluid(padding-right, 40, 200);
 }
 
-// Figma SP(390): heading h=72 / 2行 / font ~24 / line-height 36 / letter-spacing ~4
+// SP 18 / PC 28
 .heading {
   margin: 0;
   color: var(--color-black);
@@ -23,62 +18,39 @@
   font-weight: var(--font-weight-regular);
   @include fluid(font-size, 18, 28);
   @include fluid(line-height, 36, 56);
-  @include fluid(letter-spacing, 4, 8.12);
-
-  @include sp {
-    font-size: 18px;
-    line-height: 36px;
-    letter-spacing: 2.6px;
-  }
+  @include fluid(letter-spacing, 4.32, 8.12);
 }
 
-// Figma SP(390): subheading h=64 / 2行 / font ~16 / line-height 32 / letter-spacing ~3.5
+// SP 16 / PC 24
 .subheading {
   margin: 0;
-  @include fluid(margin-top, 4, 8);
+  // Figma SP: 見出し→サブ 24px / PC: 8px
+  @include fluid(margin-top, 24, 8);
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
   font-weight: var(--font-weight-regular);
   @include fluid(font-size, 16, 24);
   @include fluid(line-height, 32, 56);
-  @include fluid(letter-spacing, 3.5, 6.96);
-
-  @include sp {
-    font-size: 14px;
-    line-height: 32px;
-    letter-spacing: 2.4px;
-  }
+  @include fluid(letter-spacing, 2.88, 6.96);
 }
 
-// 見出し群と本文の間の短い横線（Figma: 48×1px / #140700）
+// 短い横線 (Figma SP: 48×1 / #140700, gap 上下 32)
 .divider {
   display: block;
-  @include fluid(margin-top, 20, 40);
-  @include fluid(margin-bottom, 20, 40);
-  @include fluid(width, 32, 48);
+  @include fluid(margin-top, 32, 40);
+  @include fluid(margin-bottom, 32, 40);
+  width: 48px;
   height: 1px;
   background: var(--color-black);
-
-  @include sp {
-    margin-top: 32px;
-    margin-bottom: 32px;
-    width: 48px;
-  }
 }
 
-// Figma SP(390): body h=150 / 5行 / font ~13 / line-height 30 / letter-spacing ~2
+// SP 14 / lh 30 / ls 2.52, PC 16 / lh 36 / ls 3.84
 .body {
   margin: 0;
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
   font-weight: var(--font-weight-regular);
-  @include fluid(font-size, 13, 16);
-  @include fluid(line-height, 28, 36);
-  @include fluid(letter-spacing, 2, 3.84);
-
-  @include sp {
-    font-size: 13px;
-    line-height: 30px;
-    letter-spacing: 1.8px;
-  }
+  @include fluid(font-size, 14, 16);
+  @include fluid(line-height, 30, 36);
+  @include fluid(letter-spacing, 2.52, 3.84);
 }

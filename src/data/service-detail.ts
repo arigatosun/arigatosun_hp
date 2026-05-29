@@ -17,11 +17,11 @@ const DESIGN_BRANDING: ServiceDetailData = {
   slug: 'design-branding',
   titleEn: 'DESIGN / BRANDING',
   titleJa: 'デザイン・ブランディング',
-  quote: '「いいデザインは、その先の未来を想像させる。」',
+  // SP のみ「未」と「来」の間で改行 (`||` = SP 専用改行マーカー)
+  quote: '「いいデザインは、その先の未||来を想像させる。」',
   description: [
     'モノやコトが溢れる世界において、ブランド自らが声を上げ、らしさを振る舞い、情報を正しく伝えていく。',
-    '私たちは、目的を達成するための「自ら動き、働きかけるデザイン＝能動的デザイン」が、',
-    'ブランディングに欠かせない要素のひとつと考えています。',
+    '私たちは、目的を達成するための「自ら動き、働きかけるデザイン＝能動的デザイン」が、ブランディングに欠かせない要素のひとつと考えています。',
     'そのために、本質を見極め、戦略と表現を往来しながら、細部にいたるまでこだわり抜く。',
     '時代の流れに揺るがず、定められた寿命を全うし、未来でも機能し続ける構造を生み出す。',
     'それが、デザイン・ブランディング部の仕事です。',
@@ -48,27 +48,27 @@ const DESIGN_BRANDING: ServiceDetailData = {
       id: 'standard',
       title: 'アリガトサン・スタンダード',
       subtitle: 'ARIGATOSUN STANDARD',
-      // Figma 実測: 5 セグメント（明示的改行）
+      // Figma SP (2837:53673) は 5 段落構成
       body: [
-        'デザインとは、表現を司る「意匠」、らしさを機能させるための「設計」。',
+        'デザインとは、表現を司る「意匠」、',
+        'らしさを機能させるための「設計」。',
         'そして現代において、物事の本質を見定め、正しい方向へと導く「課題解決」という思考は欠かせません。「美しさ」や「機能性」に加え、目的を達成するための「戦略」までもが、デザインという営みに集約されています。',
-        'アリガトサンではこれらを一貫した指針とし、',
-        'さらに「価値拡張」と「独自性」という新たな価値を組み込んだものを、',
+        'アリガトサンではこれらを一貫した指針とし、さらに「価値拡張」と「独自性」という新たな価値を組み込んだものを、',
         '独自の定義としています。',
       ],
       bodyTracking: 3.84,
       visual: {
         kind: 'image',
-        src: '/images/sections/service/detail/concept-standard.png',
+        // Figma Group 1030 (351×240) — 線画 SVG。Group 1226 (350×240) はマスク
+        src: '/images/sections/service/detail/concept-standard.svg',
         alt: 'アリガトサン・スタンダードを表すクラウド型の概念図。意匠・設計・課題解決・価値拡張・独自性の5要素で構成される',
-        // 線画PNGの実寸（wrap のアスペクトを画像と完全一致させる）
-        width: 2043,
-        height: 1398,
-        // 雲シルエットのマスク（線画より小さめ枠で書き出されているため size/position で補正）
+        width: 351,
+        height: 240,
+        // マスクは線画とほぼ同寸 (350×240 vs 351×240) — 1px 差は size 100% 100% で吸収
         mask: {
-          src: '/images/sections/service/detail/concept-standard-mask.png',
-          size: '93.98% 88.2%',
-          position: '48.8% 50.3%',
+          src: '/images/sections/service/detail/concept-standard-mask.svg',
+          size: '100% 100%',
+          position: '50% 50%',
         },
       },
     },
@@ -76,10 +76,11 @@ const DESIGN_BRANDING: ServiceDetailData = {
       id: 'scope',
       title: '能動的デザインの領域',
       subtitle: 'DESIGN & BRANDING SCOPE',
-      // Figma 実測: 2 セグメント（明示的改行）
+      // Figma SP: 「による」までを 1 行に収めたいので 3 セグメント構成にする
       body: [
         'ロゴやVI設計、Webといった既存の領域を超え、本質的な「価値」を能動的に発信するデザインを構築。',
-        '論理的な設計と感覚的な表現を横断し、一貫したデザイン・ブランディングによる可能性の最大化と拡張を目指します。',
+        '論理的な設計と感覚的な表現を横断し、一貫したデザイン・ブランディングによる',
+        '可能性の最大化と拡張を目指します。',
       ],
       bodyTracking: 4.48,
       visual: {
@@ -96,27 +97,24 @@ const DESIGN_BRANDING: ServiceDetailData = {
     {
       id: 'flow',
       title: '制作フロー',
-      // NOTE: Figma 上のサブ見出しは「DESIGN & BRANDING SCOPE」のまま（コピペ漏れの可能性）。
-      subtitle: 'DESIGN & BRANDING SCOPE',
-      // Figma 実測: 2 セグメント（明示的改行）
+      // Figma SP (2837:53731) はサブ見出し PROCESS / body は単一段落で自然 wrap
+      subtitle: 'PROCESS',
       body: [
-        'プロジェクトの数だけ、最適解へのルートは存在します。',
-        'ただ制作フローに当てはめるのではなく、課題の核心に応じて柔軟にプロセスを再定義。独自の価値を見出し、まだ見ぬ可能性を具現化するための最適な「カタチ」を共創します。',
+        'プロジェクトの数だけ、最適解へのルートは存在します。ただ制作フローに当てはめるのではなく、課題の核心に応じて柔軟にプロセスを再定義。独自の価値を見出し、まだ見ぬ可能性を具現化するための最適な「カタチ」を共創します。',
       ],
       bodyTracking: 4,
       visual: {
         kind: 'image',
-        src: '/images/sections/service/detail/concept-flow.png',
+        // Figma Group 1224 (355×351, 線画) + Group 1225 (350×350, マスク) の SVG ペア
+        src: '/images/sections/service/detail/concept-flow.svg',
         alt: '制作フローを表すネットワーク図。デザイン・ブランディングを中心に各スキルが連携する様子',
-        // 線画PNGの実寸
-        width: 1998,
-        height: 1953,
-        // 泡シルエットのマスク。マスク(1998×1951)を線画(1998×1953)枠いっぱいに伸ばし、
-        // 高さ2px差は 0.1% 拡大で吸収（4辺を一致させる）。
+        width: 355,
+        height: 351,
+        // マスク (350×350) は線画 (355×351) とほぼ同寸。5px 差は size 100% 100% で吸収
         mask: {
-          src: '/images/sections/service/detail/concept-flow-mask.png',
+          src: '/images/sections/service/detail/concept-flow-mask.svg',
           size: '100% 100%',
-          position: '0% 0%',
+          position: '50% 50%',
         },
       },
     },
@@ -196,7 +194,8 @@ const AI_DEV: ServiceDetailData = {
           body: '新しい事業に必要なのは、最初から完璧なシステムではなく、早く触れ、学び、改善できる土台です。私たちは、速度と継続可能性を両立させながら、挑戦を事業基盤へ変えていきます。',
         },
         {
-          catchphrase: '技術を、ただの便利さで終わらせない。',
+          // Figma SP は「技術を、」で明示改行
+          catchphrase: '技術を、\nただの便利さで終わらせない。',
           body: 'AIもシステムも、機能の説明だけでは人の心を動かせません。想像を超える体験こそが、導入の確信になり、人と事業を前へ進める力になると、私たちは信じています。',
         },
       ],
@@ -227,29 +226,26 @@ const AI_DEV: ServiceDetailData = {
       id: 'standard',
       title: 'アリガトサン・スタンダード',
       subtitle: 'ARIGATOSUN STANDARD',
-      // Figma 実測 (x=200 y=3991 w=700 h=149 / 4 セグメント)
+      // Figma SP (2837:55068 / x=40 y=3436 w=310 h=240): 2 段落構成
+      //   段落 1: 私たちは、言われたものを…ではありません。
+      //   段落 2: 要望の奥にある本質を…理想は現実に近づきます。
+      //   (段落 2 の内部はコンテナ幅に応じて auto-wrap)
       body: [
         '私たちは、言われたものをそのまま作るだけの開発会社ではありません。',
-        '要望の奥にある本質を見極め、何を作るべきか、どこまで作るべきかを再定義する。',
-        'そして、机上の仕様書ではなく、まず動くものをつくり、見えたものを起点に正解を更新していく。',
-        'そうして初めて、理想は現実に近づきます。',
+        '要望の奥にある本質を見極め、何を作るべきか、どこまで作るべきかを再定義する。そして、机上の仕様書ではなく、まず動くものをつくり、見えたものを起点に正解を更新していく。そうして初めて、理想は現実に近づきます。',
       ],
       bodyTracking: 4.48,
       visual: {
         kind: 'image',
-        // AI/DEV 用クラウドダイアグラム (3 main bubbles + 2 small circles)
-        // 3 つの「ただ◯◯ではなく…」キャッチコピーは画像内に焼き込み済みのため
-        // overlays は使用しない
-        src: '/images/sections/service/detail/concept-standard-ai.png',
+        // AI/DEV 用クラウドダイアグラム (Figma Group 1227 線画 + Group 1230 マスク)
+        // 3 つの「ただ◯◯ではなく…」キャッチコピーは SVG 内に焼き込み済みのため overlays 不要
+        src: '/images/sections/service/detail/concept-standard-ai.svg',
         alt: 'アリガトサン・スタンダード（AI/DEV）を表すクラウド型の概念図。3つの主バブル + 2つのサテライト円、各バブル内に「ただ◯◯ではなく…」のキャッチコピー',
-        // 線画 PNG 実寸
-        width: 1376,
-        height: 1343,
-        // バブルシルエットのマスク（赤グローを形の中にクリップ）
-        // 線画(1376×1343) と マスク(1376×1342) はほぼ同寸（高さ1px差のみ）
-        // → size 100% 100% で線画にフィットさせる（1px の差は誤差レベルで吸収）
+        width: 354,
+        height: 346,
+        // 線画 (354×346) とマスク (354×346) は同寸
         mask: {
-          src: '/images/sections/service/detail/concept-standard-ai-mask.png',
+          src: '/images/sections/service/detail/concept-standard-ai-mask.svg',
           size: '100% 100%',
           position: '50% 50%',
         },
@@ -330,7 +326,8 @@ const IP_CREATIVE: ServiceDetailData = {
   // Hero 太字キャッチ (Figma 2692:38184 / x=200 y=487 w=920 h=112 / 28px / 8.12px tracking / 2 セグメント)
   quote: 'ひとつのアイデンティティを、\n世界が愛するカルチャーへ。',
   // Hero 小キャッチ (Figma 2697:43669 / x=200 y=659 w=1163 h=38 / 22px / 5.28px tracking)
-  subQuote: '「個性の熱量」を真ん中に置き、時代を超える物語を創り出す。',
+  // SP のみ「、」で改行 → 「、時」が同じ行になるのを防ぐ
+  subQuote: '「個性の熱量」を真ん中に置き、\n時代を超える物語を創り出す。',
   // Hero 説明 (Figma 2692:38185 / x=200 y=725 w=1163 h=152 / 16px / 3.84px tracking)
   // Figma 構造: 3 <p> で中央 <p> に <br> 1 本 → 実体は 4 セグメント
   description: [
@@ -405,14 +402,21 @@ const IP_CREATIVE: ServiceDetailData = {
         {
           // Figma 2704:43797 (x=760 y=2616 w=400 h=72) — 明示的 2 行
           catchphrase: '『消費』ではなく\n『愛着』を生む',
-          // Figma 2704:43799 (x=760 y=2712 w=400 h=136) — 「なく、」の後で明示的に改行
-          body: '数字を追うだけのトレンド消費ではなく、\nファンの人生に長く寄り添い、記憶に残り続ける深い愛着（ロイヤリティ）を市場に生み出します。',
+          // Figma 2704:43799 (x=760 y=2712 w=400 h=136)
+          // SP コンテナ幅 310 では「ではなく、」が 1 行に収まらず "ではな|く、" の
+          // 中途半端な auto-wrap が起きるため、強制改行は削除して全体を 1 段落にする。
+          body: '数字を追うだけのトレンド消費ではなく、ファンの人生に長く寄り添い、記憶に残り続ける深い愛着（ロイヤリティ）を市場に生み出します。',
         },
         {
           // Figma 2704:43766 (x=1320 y=2616 w=400 h=72) — 明示的 2 行
           catchphrase: 'クリエイティブで\n境界線を越える',
           // Figma 2704:43800 (x=1320 y=2712 w=400 h=102)
-          body: '国境、世代、そしてメディアの枠組みを越え、一つの熱狂が次の熱狂を呼ぶ『感情の循環』を世界中に広げていきます。',
+          // Figma SP の wrap: …『感情 / の循環』… で改行されるよう、
+          //「の」の直前に明示改行を入れる。
+          body: '国境、世代、そしてメディアの枠組みを越え、一つの熱狂が次の熱狂を呼ぶ『感情\nの循環』を世界中に広げていきます。',
+          // SP: ls 2.52 だと「枠組みを越」が 1 行に収まらず Figma と wrap 位置がズレるため、
+          //     2.16 まで詰めて Figma 通りの 1 行 19 文字に揃える。
+          bodyTrackingSp: 2.16,
         },
       ],
     },
@@ -432,16 +436,16 @@ const IP_CREATIVE: ServiceDetailData = {
       bodyTracking: 3.84,
       visual: {
         kind: 'callouts',
-        // 3 つの callout テキストは線画 PNG に焼き込み済みのため overlay は出さない
+        // 3 つの callout テキストは SVG に焼き込み済みのため overlay は出さない
         items: [],
-        // 線画 (Group 1136) + マスク (Group 1134) は 1376x1343 同寸
+        // Figma Group 1239 (350×341, 線画) + Group 1240 (350×341, マスク)
         image: {
-          src: '/images/sections/service/detail/concept-standard-ip.png',
+          src: '/images/sections/service/detail/concept-standard-ip.svg',
           alt: 'アリガトサン・スタンダード（IP/CREATIVE）を表す 3 つの大バブル + 衛星円の概念図',
-          width: 1376,
-          height: 1343,
+          width: 350,
+          height: 341,
           mask: {
-            src: '/images/sections/service/detail/concept-standard-ip-mask.png',
+            src: '/images/sections/service/detail/concept-standard-ip-mask.svg',
             size: '100% 100%',
             position: '50% 50%',
           },
@@ -466,14 +470,14 @@ const IP_CREATIVE: ServiceDetailData = {
       bodyTracking: 3.84,
       visual: {
         kind: 'image',
-        // 線画 (Group 1138, 1337x1337) — 9 つのバブルと全テキストが焼き込み済み
-        src: '/images/sections/service/detail/concept-creator-first-ip.png',
+        // 線画 + 9 ラベル一体型 SVG (Figma Group 1233) — テキストは path として焼き込み済み
+        src: '/images/sections/service/detail/concept-creator-first-ip.svg',
         alt: 'CREATOR FIRST のギルド型組織図。中央「作者」を内周「プロデュース／ディレクション」が囲み、外周にコラボレーション・コンテンツ企画制作・アプリゲーム開発・グッズ管理・EC・3D デザイン等が並ぶ',
-        width: 1337,
-        height: 1337,
-        // マスク (Group 1137, 1335x1335) — 線画と 2px 差は size 100% 100% で吸収
+        width: 351,
+        height: 351,
+        // 赤グローはマスク (Figma Group 1234 = クローバー + 4 隅バブル) の内側だけに表示
         mask: {
-          src: '/images/sections/service/detail/concept-creator-first-ip-mask.png',
+          src: '/images/sections/service/detail/concept-creator-first-ip-mask.svg',
           size: '100% 100%',
           position: '50% 50%',
         },
@@ -489,7 +493,8 @@ const IP_CREATIVE: ServiceDetailData = {
         'IPは一度生み出して終わりではなく、',
         '育てながら次の世代に手渡していくものです。',
         '発掘・言語化から、世界観構築、メディアミックスによる多角展開、',
-        'そして10年20年と愛され続ける運用フェーズまで ―――',
+        // SP は「運用」と「フェーズ」の間で改行
+        'そして10年20年と愛され続ける運用\nフェーズまで ―――',
         '各段階に最適な座組みでプロジェクトを進行します。',
       ],
       bodyTracking: 3.84,

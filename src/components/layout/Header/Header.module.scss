@@ -107,7 +107,10 @@
 .dropdownLink {
   display: block;
   white-space: nowrap;
-  padding: 5px 28px;
+  // Figma 実測: 各アイテムの間隔 39px。line-height ~17px (font-size:14 × 1.2 相当)
+  // padding-y 11px で (11 + 17 + 11) = 39px のリズム。
+  // padding-x はクリック領域の余白として残す（マーカーはこの外側ではなく label のみに当てる）。
+  padding: 11px 28px;
   color: var(--color-black);
   font-family: var(--font-en);
   font-size: 14px;
@@ -116,15 +119,50 @@
   line-height: normal;
   letter-spacing: 1.4px;
   text-align: center;
-  background-color: var(--color-bg);
-  transition:
-    background-color var(--transition-base),
-    color var(--transition-base);
+  background-color: transparent;
+  transition: color var(--transition-base);
 
   &:hover {
-    background-color: var(--color-primary);
     color: var(--color-white);
+
+    .dropdownLinkLabel::before {
+      opacity: 1;
+    }
   }
+}
+
+// マーカーはテキスト幅にぴったり合わせる必要があるため、
+// label を inline-block でラップし、その上に ::before を被せる。
+.dropdownLinkLabel {
+  display: inline-block;
+  position: relative;
+  // ::before の z-index: -1 を label のスコープ内に閉じる
+  isolation: isolate;
+
+  // Figma 蛍光ペン風マーカー。
+  // Figma 値: bar 150px / text container 154px。約 4px 内側に入れる。
+  // 位置は label の中央 (50%) で固定 — テキストだけ上にずらしてもマーカーは動かない。
+  &::before {
+    content: '';
+    position: absolute;
+    left: -2px;
+    right: -2px;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 11px;
+    background-color: var(--color-primary);
+    z-index: -1;
+    opacity: 0;
+    transition: opacity var(--transition-base);
+  }
+}
+
+// テキスト本体だけを 0.1em 上にオフセット。
+// transform はレイアウトに影響しない (line-box の高さは維持) ので、
+// マーカーバー (label の中央に固定) はそのまま、テキストグリフだけが上にずれる。
+.dropdownLinkLabelText {
+  display: inline-block;
+  transform: translateY(-0.1em);
 }
 
 .externalIcon {

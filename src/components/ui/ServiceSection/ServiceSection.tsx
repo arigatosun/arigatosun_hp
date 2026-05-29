@@ -71,21 +71,81 @@ export default function ServiceSection() {
       // GPU合成レイヤーに昇格
       gsap.set(track, { force3D: true });
 
-      gsap.to(track, {
-        x: getScrollAmount,
-        ease: 'none',
-        force3D: true,
+      // pin 開始位置は元の `top 32px` に戻し、pin 後の最初の DELAY_RATIO ぶんは
+      // 横スクロールを停止させて「待機区間」を作る。これによりセクションの見た目の
+      // 位置はそのままで、モチーフ入場アニメの完了を待ってから横スクロールが始まる。
+      // タイムラインに空のセグメントを挟む形で実装する。
+      const DELAY_RATIO = 0.2;
+
+      const tl = gsap.timeline({
         scrollTrigger: {
           trigger: section,
           start: 'top 32px',
-          end: () => `+=${Math.max(track.scrollWidth, window.innerWidth)}`,
+          // 横移動分 + 待機区間分 を合算した end。
+          // 例: 移動分 940px / 待機 940 * 0.3/0.7 ≒ 403px → end +=1343
+          end: () => {
+            const animPx =
+              Math.max(track.scrollWidth, window.innerWidth) / 2;
+            return `+=${animPx / (1 - DELAY_RATIO)}`;
+          },
           pin: true,
-          scrub: 1.2,
+          // 追従の遅延も半分に短縮（より機敏な反応）
+          scrub: 0.6,
           invalidateOnRefresh: true,
           onUpdate: (self) => {
-            const progress = self.progress;
-            // 左サイドバーをスクロール進行に合わせてフェード（戻りも自動で再生）
+            const totalProgress = self.progress;
+            // 待機区間中は animProgress=0、それ以降は 0→1 にリスケール
+            const progress =
+              totalProgress < DELAY_RATIO
+                ? 0
+                : (totalProgress - DELAY_RATIO) / (1 - DELAY_RATIO);
             section.style.setProperty('--service-progress', String(progress));
+
+            // 全カードの合算カバー率が COVERAGE_THRESHOLD を超えた瞬間に左カラムを
+            // 即座に非表示。カード1枚 (612px) では leftContent (721px) を完全に
+            // 覆えないため、2枚目が右側に乗り上げてきて合算で約 95% 以上を覆った
+            // タイミング = ユーザーの「完全に重なってから消える」基準に合わせる。
+            // カード間の 16px ギャップは原理的に常に残るので、上限は ~97.8%。
+            const leftContentEl = section.querySelector<HTMLElement>(
+              `.${styles.leftContent}`
+            );
+            const cards = leftContentEl
+              ? (Array.from(track.children) as HTMLElement[])
+              : [];
+            if (leftContentEl && cards.length) {
+              const contentRect = leftContentEl.getBoundingClientRect();
+              // 各カードと leftContent の交差区間を求める
+              const intervals: Array<[number, number]> = [];
+              for (const card of cards) {
+                const r = card.getBoundingClientRect();
+                const l = Math.max(r.left, contentRect.left);
+                const rt = Math.min(r.right, contentRect.right);
+                if (rt > l) intervals.push([l, rt]);
+              }
+              // ソートしてマージ → 合算カバー幅
+              intervals.sort((a, b) => a[0] - b[0]);
+              let covered = 0;
+              let curStart = -Infinity;
+              let curEnd = -Infinity;
+              for (const [s, e] of intervals) {
+                if (s > curEnd) {
+                  if (curEnd > curStart) covered += curEnd - curStart;
+                  curStart = s;
+                  curEnd = e;
+                } else if (e > curEnd) {
+                  curEnd = e;
+                }
+              }
+              if (curEnd > curStart) covered += curEnd - curStart;
+
+              const COVERAGE_THRESHOLD = 0.95;
+              const coverageRatio = covered / contentRect.width;
+              section.style.setProperty(
+                '--left-hidden',
+                coverageRatio > COVERAGE_THRESHOLD ? '1' : '0'
+              );
+            }
+
             // 左メニューの active 更新
             const menuCount = SERVICE_MENU_ITEMS.length;
             const newIndex = Math.min(
@@ -95,6 +155,16 @@ export default function ServiceSection() {
             updateActiveMenu(newIndex);
           },
         },
+      });
+
+      // 1. 待機セグメント（横スクロールしない）— 全体の DELAY_RATIO 分
+      tl.to({}, { duration: DELAY_RATIO });
+      // 2. 実際の横スクロール — 残りの 1 - DELAY_RATIO 分
+      tl.to(track, {
+        x: getScrollAmount,
+        ease: 'none',
+        force3D: true,
+        duration: 1 - DELAY_RATIO,
       });
     });
 
@@ -129,7 +199,13 @@ export default function ServiceSection() {
             />
 
             <div className={styles.description}>
-              <p>最先端のAI開発技術で、アイデアや理想を形に。ブランディングで、世の中に届けるところまで。構想からリリースまで一気通貫で進めます。</p>
+              <p>
+                最先端のAI開発技術で、アイデアや理想を形に。
+                <br />
+                ブランディングで、世の中に届けるところまで。
+                <br />
+                構想からリリースまで一気通貫で進めます。
+              </p>
             </div>
 
             <ul className={styles.menuList} ref={menuRef}>

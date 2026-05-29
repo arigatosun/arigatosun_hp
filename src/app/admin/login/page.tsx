@@ -4,9 +4,10 @@ import { createClient } from '@/lib/supabase/server';
 import { signIn } from './actions';
 import styles from './page.module.scss';
 
+// robots: noindex は親 app/admin/layout.tsx で適用済み。
+// title.template `%s | 管理画面` により最終的に "ログイン | 管理画面" となる。
 export const metadata: Metadata = {
-  title: '管理画面ログイン',
-  robots: 'noindex, nofollow',
+  title: 'ログイン',
 };
 
 interface LoginPageProps {

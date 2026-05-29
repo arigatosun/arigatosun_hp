@@ -1,14 +1,10 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import SectionHeader from '@/components/ui/SectionHeader';
+import SlimeGlow, { SLIME_GLOW_STANDARD } from '@/components/ui/SlimeGlow';
 import styles from './PrinciplesSection.module.scss';
-
-gsap.registerPlugin(ScrollTrigger);
 
 type Principle = {
   labelJa: string;
@@ -31,94 +27,24 @@ const principles: Principle[] = [
     link: { text: 'WORKS', href: '/works' },
     description: [
       '期待を託してくれたことに感謝し、圧倒的な価値（Give）で報いよう。',
-      '言われたことをこなすのではなく、見えぬ細部に愛を宿した仕事だけが、顧客の想像を超え、',
-      '偽りなき「ありがとう」を掘り起こす。我々の成長（RISE）は、お客さまの成功と共にある。',
+      '言われたことをこなすのではなく、見えぬ細部に愛を宿した仕事だけが、顧客の想像を超え、偽りなき「ありがとう」を掘り起こす。我々の成長（RISE）は、お客さまの成功と共にある。',
     ],
   },
   {
     labelJa: '社会に',
     link: { text: 'NEWS', href: '/news' },
     description: [
-      '仲間からお客さまへと波及した感謝と熱量は、やがて社会全体を照らす光（SUN）となる。',
-      '我々が生み出す妥協なき価値を起点として「ありがとう」の循環を世の中に広げ、',
-      '日本を向上させる未来を必ず創り上げる。',
+      '仲間からお客さまへと波及した感謝と熱量は、やがて社会全体を照らす光',
+      '（SUN）となる。',
+      '我々が生み出す妥協なき価値を起点として「ありがとう」の循環を世の中に広げ、日本を向上させる未来を必ず創り上げる。',
     ],
   },
 ];
 
 export default function PrinciplesSection() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const glow1Ref = useRef<HTMLDivElement>(null);
-  const glow2Ref = useRef<HTMLDivElement>(null);
-  const glow3Ref = useRef<HTMLDivElement>(null);
-  const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      const glow1 = glow1Ref.current;
-      const glow2 = glow2Ref.current;
-      const glow3 = glow3Ref.current;
-      const items = itemRefs.current;
-      if (!glow1 || !glow2 || !glow3) return;
-
-      // 初期状態: テキストは下から、グローは縮小+高ブラーで非表示
-      items.forEach((item) => {
-        if (item) gsap.set(item, { opacity: 0, y: 30 });
-      });
-      gsap.set(glow1, { opacity: 0, scale: 0.3, filter: 'blur(24px)' });
-      gsap.set(glow2, { opacity: 0, scale: 0.4, filter: 'blur(28px)' });
-      gsap.set(glow3, { opacity: 0, scale: 0.4, filter: 'blur(28px)' });
-
-      // SP判定（768px未満）
-      const isSP = window.matchMedia('(max-width: 767px)').matches;
-      const pauseDuration = isSP ? 0.6 : 1.2;
-      const finalPause = isSP ? 1 : 2;
-
-      // スクロール連動タイムライン（ピン固定でじっくり演出）
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: isSP ? 'top 25%' : 'top 15%',
-          end: isSP ? '+=1500' : '+=3000',
-          scrub: isSP ? 1 : 2,
-          pin: true,
-        },
-      });
-
-      // Phase 1: 仲間にアリガトサン + 内コアの赤グローが出現
-      tl.to(items[0]!, { opacity: 1, y: 0, duration: 1.5, ease: 'power3.out' })
-        .to(glow1, {
-          opacity: 1, scale: 1, filter: 'blur(8px)',
-          duration: 2.5, ease: 'expo.out',
-        }, '<0.15')
-        .to({}, { duration: pauseDuration })
-
-        // Phase 2: お客様にアリガトサン + 中サイズのグローが拡大
-        .to(items[1]!, { opacity: 1, y: 0, duration: 1.5, ease: 'power3.out' })
-        .to(glow2, {
-          opacity: 1, scale: 1, filter: 'blur(10px)',
-          duration: 3, ease: 'expo.out',
-        }, '<0.2')
-        .to({}, { duration: pauseDuration })
-
-        // Phase 3: 社会にアリガトサン + 最大グローが完全展開（外側楕円に押さえ込み）
-        // glow1/2 は最終的に薄くして glow3 を主役にし、仲間→お客様→社会まで満遍なく赤が届くようにする
-        .to(items[2]!, { opacity: 1, y: 0, duration: 1.5, ease: 'power3.out' })
-        .to(glow3, {
-          opacity: 1, scale: 1, filter: 'blur(14px)',
-          duration: 3, ease: 'expo.out',
-        }, '<0.2')
-        .to(glow1, { opacity: 0.35, duration: 2.5, ease: 'power2.out' }, '<')
-        .to(glow2, { opacity: 0.55, duration: 2.5, ease: 'power2.out' }, '<')
-        .to({}, { duration: finalPause });
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
-
   return (
-    <section ref={sectionRef} className={styles.section}>
-      {/* セクションタイトル */}
+    <section className={styles.section}>
+      {/* セクションタイトル (Figma: フル幅でメインコンテンツの上) */}
       <SectionHeader
         logo={{
           src: '/images/sections/about/title-sun.svg',
@@ -130,24 +56,31 @@ export default function PrinciplesSection() {
         subtitle="ARIGATOSUN THREE PRINCIPLES"
       />
 
-      {/* メインコンテンツ */}
+      {/* メインコンテンツ — 左: ダイアグラム / 右: 原則リスト (Figma レイアウト) */}
       <div className={styles.content}>
-        {/* 左側: 楕円ダイアグラム + 赤グロー（mask で外側楕円形にクリップ） */}
+        {/* 楕円ダイアグラム + 赤スライムグロー (mask で外側楕円形にクリップ) */}
         <div className={styles.diagramArea}>
-          {/* 線画: 3つの楕円 + 周回矢印 + 小装飾 */}
+          {/* 線画: 3つの楕円 + 周回矢印 + 小装飾 (PC: 590×431 / SP: 351×256 で別アセット) */}
           <Image
             src="/images/sections/about/principles-diagram.svg"
             alt="アリガト３原則 ダイアグラム"
             width={590}
             height={431}
-            className={styles.diagramBase}
+            className={`${styles.diagramBase} ${styles.diagramPc}`}
+          />
+          <Image
+            src="/images/sections/about/principles-diagram-sp.svg"
+            alt=""
+            width={351}
+            height={256}
+            className={`${styles.diagramBase} ${styles.diagramSp}`}
+            aria-hidden="true"
           />
 
-          {/* 赤グロー層: mask-image で外側楕円形にクリップ → はみ出さない */}
+          {/* 赤スライムグロー層: mask-image で外側楕円形にクリップ → はみ出さない */}
+          {/* PC / SP 共に SlimeGlow を表示 (サービス詳細「アリガトサン・スタンダード」と同一) */}
           <div className={styles.glowMaskLayer} aria-hidden="true">
-            <div ref={glow1Ref} className={`${styles.heatmapGlow} ${styles.glow1}`} />
-            <div ref={glow2Ref} className={`${styles.heatmapGlow} ${styles.glow2}`} />
-            <div ref={glow3Ref} className={`${styles.heatmapGlow} ${styles.glow3}`} />
+            <SlimeGlow {...SLIME_GLOW_STANDARD} />
           </div>
 
           {/* テキストラベル 仲間 / お客様 / 社会 */}
@@ -167,14 +100,10 @@ export default function PrinciplesSection() {
           </div>
         </div>
 
-        {/* 右側: 原則リスト */}
+        {/* 右側: 原則リスト (常時表示) */}
         <div className={styles.principlesList}>
-          {principles.map((principle, index) => (
-            <div
-              key={principle.labelJa}
-              ref={(el) => { itemRefs.current[index] = el; }}
-              className={styles.principleItem}
-            >
+          {principles.map((principle) => (
+            <div key={principle.labelJa} className={styles.principleItem}>
               <div className={styles.principleHead}>
                 <div className={styles.principleHeadLeft}>
                   <span className={styles.principleLabel}>{principle.labelJa}</span>
@@ -187,7 +116,9 @@ export default function PrinciplesSection() {
                   />
                 </div>
                 <Link href={principle.link.href} className={styles.principleLink}>
-                  {principle.link.text} &gt;
+                  <span className={styles.principleLinkText}>
+                    {principle.link.text} &gt;
+                  </span>
                 </Link>
               </div>
               <p className={styles.principleDesc}>

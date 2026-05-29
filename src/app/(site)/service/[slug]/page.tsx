@@ -50,8 +50,9 @@ export default async function ServiceDetailPage({ params }: PageParams) {
   const caseStudies: ServiceCaseStudy[] = allWorks.slice(0, 3).map((w) => ({
     id: w.id,
     client: w.client,
-    // works の title に含まれる \n（カード内表示用の改行）は実績カードでは除去
-    text: w.title.replace(/\n/g, ''),
+    // works の title に含まれる \n（カード内表示用の改行）は実績カードでは除去。
+    // また「|」の後ろに半角空白を入れて視認性を確保（前後の文を区切る区切り記号として）。
+    text: w.title.replace(/\n/g, '').replace(/\|/g, '| '),
     thumbnail: w.image,
   }));
 
@@ -96,6 +97,8 @@ export default async function ServiceDetailPage({ params }: PageParams) {
           body={concept.body}
           bodyTracking={concept.bodyTracking}
           variant={concept.visual.kind === 'phases' ? 'phases' : 'default'}
+          // PROCESS (steps) セクションは PC で左カラム sticky にする
+          stickyText={concept.visual.kind === 'steps'}
         >
           {concept.visual.kind === 'image' && (
             <GlowImage

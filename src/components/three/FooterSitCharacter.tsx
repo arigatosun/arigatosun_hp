@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useCallback, useLayoutEffect, useMemo, useRef } from 'react';
+import { Suspense, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { useAnimations, useGLTF } from '@react-three/drei';
 import { clone as skeletonClone } from 'three/examples/jsm/utils/SkeletonUtils.js';
@@ -99,6 +99,12 @@ function SitModel({ position, scale, rotationY, rotationX, freezeCursor }: SitMo
   const smoothedSpineDeltaQ = useRef(new THREE.Quaternion());
   const smoothedHeadDeltaQ = useRef(new THREE.Quaternion());
 
+  // ウィンドウベースのマウス座標 (-1..+1 正規化)。
+  // Canvas に pointer-events: none を設定しているため R3F の state.mouse が
+  // 更新されない（CONTACT US ボタンクリックを通すために必要な指定）。
+  // 代わりに window の pointermove を直接拾って正規化する。
+  const mouseRef = useRef({ x: 0, y: 0 });
+
   // useFrame 用の使い回しバッファ（GC 抑制）
   const tmpEuler = useRef(new THREE.Euler(0, 0, 0, 'YXZ'));
   const tmpQ = useRef(new THREE.Quaternion());
@@ -178,65 +184,29 @@ function SitModel({ position, scale, rotationY, rotationX, freezeCursor }: SitMo
     }
   }, [clonedScene]);
 
-  // Sit rest ポーズ（spine/head の local 回転＋腕チェーンの world 位置・回転）を捕捉する。
-  // 必ず Sit ポーズが骨へ適用された後に呼ぶこと（下の useLayoutEffect で同期適用してから呼ぶ）。
-  const captureRest = useCallback(() => {
-    const spine = spineBoneRef.current;
-    const head = headBoneRef.current;
-    if (!spine || !head) return;
-
-    const upperArmL = upperArmLBoneRef.current;
-    const lowarmL = lowarmLBoneRef.current;
-    const handL = handLBoneRef.current;
-    const upperArmR = upperArmRBoneRef.current;
-    const lowarmR = lowarmRBoneRef.current;
-    const handR = handRBoneRef.current;
-
-    restSpineQ.current.copy(spine.quaternion);
-    restHeadQ.current.copy(head.quaternion);
-    // 腕チェーン (L): Sit pose の world 位置・回転をキャプチャ
-    if (upperArmL && lowarmL && handL) {
-      upperArmL.getWorldPosition(restArmL.current.upperArmPos);
-      lowarmL.getWorldPosition(restArmL.current.lowarmPos);
-      handL.getWorldPosition(restArmL.current.handPos);
-      upperArmL.getWorldQuaternion(restArmL.current.upperArmWorldQ);
-      lowarmL.getWorldQuaternion(restArmL.current.lowarmWorldQ);
-      handL.getWorldQuaternion(restArmL.current.handWorldQ);
-      restArmL.current.L1 = restArmL.current.upperArmPos.distanceTo(restArmL.current.lowarmPos);
-      restArmL.current.L2 = restArmL.current.lowarmPos.distanceTo(restArmL.current.handPos);
-    }
-    if (upperArmR && lowarmR && handR) {
-      upperArmR.getWorldPosition(restArmR.current.upperArmPos);
-      lowarmR.getWorldPosition(restArmR.current.lowarmPos);
-      handR.getWorldPosition(restArmR.current.handPos);
-      upperArmR.getWorldQuaternion(restArmR.current.upperArmWorldQ);
-      lowarmR.getWorldQuaternion(restArmR.current.lowarmWorldQ);
-      handR.getWorldQuaternion(restArmR.current.handWorldQ);
-      restArmR.current.L1 = restArmR.current.upperArmPos.distanceTo(restArmR.current.lowarmPos);
-      restArmR.current.L2 = restArmR.current.lowarmPos.distanceTo(restArmR.current.handPos);
-    }
-    restCaptured.current = true;
-  }, []);
-
-  useLayoutEffect(() => {
-    // glb 内に含まれるアニメは静止ポーズ保持の 1 本のみ。
+  useEffect(() => {
+    // glb 内に含まれるアニメは 'Sit' のみ（静止ポーズ保持）
     const actionName = Object.keys(actions)[0];
-    const action = actionName ? actions[actionName] : null;
-    if (action) {
-      action.reset().play();
-      action.setLoop(THREE.LoopRepeat, Infinity);
-      // ここで Sit ポーズを同期的に骨へ適用してから rest を捕捉する。
-      // こうしないと、最初の useFrame が .play() より先に走ったときに
-      // bind ポーズ（T ポーズ相当で手が高い）を rest として焼き付けてしまい、
-      // IK が手を持ち上げたまま固定する＝「手が上がる／表示が安定しない」原因になる。
-      mixer?.update(0);
-      clonedScene.updateMatrixWorld(true);
-      captureRest();
+    if (actionName && actions[actionName]) {
+      actions[actionName].reset().play();
+      actions[actionName].setLoop(THREE.LoopRepeat, Infinity);
     }
     return () => {
       Object.values(actions).forEach((a) => a?.stop());
     };
-  }, [actions, mixer, clonedScene, captureRest]);
+  }, [actions]);
+
+  // ウィンドウ全体の pointermove を拾ってマウス座標を -1..+1 に正規化。
+  // Canvas が pointer-events: none のため R3F の state.mouse は使えない。
+  useEffect(() => {
+    const onMove = (e: PointerEvent) => {
+      mouseRef.current.x = (e.clientX / window.innerWidth) * 2 - 1;
+      // y は画面上が +1、下が -1 になるよう反転（R3F state.mouse の慣例に合わせる）
+      mouseRef.current.y = -((e.clientY / window.innerHeight) * 2 - 1);
+    };
+    window.addEventListener('pointermove', onMove, { passive: true });
+    return () => window.removeEventListener('pointermove', onMove);
+  }, []);
 
   useFrame((state, delta) => {
     // 1) Sit アニメ適用（毎フレーム静止ポーズに戻す）
@@ -253,10 +223,34 @@ function SitModel({ position, scale, rotationY, rotationX, freezeCursor }: SitMo
     const handL = handLBoneRef.current;
     const handR = handRBoneRef.current;
 
-    // 2) rest pose は mount 時の useLayoutEffect で Sit ポーズ適用後に同期捕捉済み。
-    //    万一まだ捕捉できていないフレーム（捕捉より前に frame が走った場合）は、
-    //    bind ポーズを誤って焼き付けないよう、この frame は処理せずスキップする。
-    if (!restCaptured.current) return;
+    // 2) 初回のみ Sit ポーズの回転＋ボーン位置を rest として退避（以降は再取得しない）
+    //    spine/head は local rotation を、腕チェーンは IK 用に world 位置＋world 回転を保持。
+    if (!restCaptured.current) {
+      restSpineQ.current.copy(spine.quaternion);
+      restHeadQ.current.copy(head.quaternion);
+      // 腕チェーン (L): Sit pose の world 位置・回転をキャプチャ
+      if (upperArmL && lowarmL && handL) {
+        upperArmL.getWorldPosition(restArmL.current.upperArmPos);
+        lowarmL.getWorldPosition(restArmL.current.lowarmPos);
+        handL.getWorldPosition(restArmL.current.handPos);
+        upperArmL.getWorldQuaternion(restArmL.current.upperArmWorldQ);
+        lowarmL.getWorldQuaternion(restArmL.current.lowarmWorldQ);
+        handL.getWorldQuaternion(restArmL.current.handWorldQ);
+        restArmL.current.L1 = restArmL.current.upperArmPos.distanceTo(restArmL.current.lowarmPos);
+        restArmL.current.L2 = restArmL.current.lowarmPos.distanceTo(restArmL.current.handPos);
+      }
+      if (upperArmR && lowarmR && handR) {
+        upperArmR.getWorldPosition(restArmR.current.upperArmPos);
+        lowarmR.getWorldPosition(restArmR.current.lowarmPos);
+        handR.getWorldPosition(restArmR.current.handPos);
+        upperArmR.getWorldQuaternion(restArmR.current.upperArmWorldQ);
+        lowarmR.getWorldQuaternion(restArmR.current.lowarmWorldQ);
+        handR.getWorldQuaternion(restArmR.current.handWorldQ);
+        restArmR.current.L1 = restArmR.current.upperArmPos.distanceTo(restArmR.current.lowarmPos);
+        restArmR.current.L2 = restArmR.current.lowarmPos.distanceTo(restArmR.current.handPos);
+      }
+      restCaptured.current = true;
+    }
 
     // freezeCursor: カーソル追従を OFF にして純粋な rest pose で固定する
     // （正面向き調整時の確認用フラグ）
@@ -267,8 +261,10 @@ function SitModel({ position, scale, rotationY, rotationX, freezeCursor }: SitMo
     }
 
     // 3) マウス → 基準 yaw/pitch（rad）
-    const mx = state.mouse.x;
-    const my = state.mouse.y;
+    //    Canvas が pointer-events: none のため state.mouse は更新されない。
+    //    window pointermove で更新される mouseRef を使う。
+    const mx = mouseRef.current.x;
+    const my = mouseRef.current.y;
     const mag = Math.hypot(mx, my);
     const within = mag < CURSOR_FOLLOW_CONFIG.deadzone;
     const baseRad = CURSOR_FOLLOW_CONFIG.baseAngleDeg * DEG2RAD;
@@ -540,14 +536,18 @@ export default function FooterSitCharacter({
       orthographic
       camera={{ position: cameraPosition, zoom: cameraZoom, near: 0.1, far: 1000 }}
       gl={{ antialias: true, alpha: true }}
+      // React Three Fiber は Canvas を <div style="pointer-events: auto"> でラップする。
+      // そのままだと .sitCharacter の CSS pointer-events: none を上書きしてしまい
+      // CONTACT 送信ボタン等を覆ってクリックを奪うため、明示的に none を指定する。
       style={
         debug
           ? {
               background: 'rgba(255, 200, 200, 0.25)',
               border: '2px dashed red',
               boxSizing: 'border-box',
+              pointerEvents: 'none',
             }
-          : { background: 'transparent' }
+          : { background: 'transparent', pointerEvents: 'none' }
       }
     >
       {/* 暗くて赤が濃く見える問題への対処:

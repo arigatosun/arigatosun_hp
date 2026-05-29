@@ -6,8 +6,8 @@
 
 // CREDIT / SCOPE / TERM のラベル＋内容ブロック。左端 PC=200 / SP=40。
 .creditList {
-  @include fluid(padding-left, 20, 200);
-  @include fluid(padding-right, 20, 200);
+  @include fluid(padding-left, 40, 200);
+  @include fluid(padding-right, 40, 200);
   display: flex;
   flex-direction: column;
   @include fluid(gap, 16, 28);

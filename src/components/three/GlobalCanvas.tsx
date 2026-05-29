@@ -14,6 +14,8 @@ const GLB_PATH = '/models/arigatokunn_walk_click.glb?v=3';
 const UNIFIED_GLB_PATH = '/models/arigatokunn_unified.glb';
 
 // Service セクションの歩行キャラ表示フラグ。false で非表示。
+// Phase 36 では Service の横スクロール演出（pin + 待機区間）を優先したいので OFF。
+// 将来的に「歩行キャラと共存」させたくなったら true に戻す。
 const SHOW_SERVICE_WALKER = false;
 
 // ページ全体で1つだけのグローバルCanvas
