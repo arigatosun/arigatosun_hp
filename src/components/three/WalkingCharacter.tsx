@@ -198,7 +198,7 @@ export default function WalkingCharacter({
   const root00RestQuat = useRef(new THREE.Quaternion());
 
   const { viewport, camera } = useThree();
-  const { scene, animations } = useGLTF(glbPath);
+  const { scene, animations } = useGLTF(glbPath, false, true); // glbPath(walk_click) は meshopt 圧縮版
   const clonedScene = useMemo(() => skeletonClone(scene) as THREE.Group, [scene]);
 
   const isLeftToRight = direction === 'left-to-right';

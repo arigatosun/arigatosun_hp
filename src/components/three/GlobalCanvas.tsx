@@ -8,7 +8,7 @@ import { useGLTF } from '@react-three/drei';
 
 // Phase 19: ニュース下のキャラを「クリック挙動」入りの新キャラに差し替え。
 // 0-28F = 歩行, 29-56F = クリック反応, 57-118F = 残りの歩行（Walk クリップは 0-28F のみ使用）。
-const GLB_PATH = '/models/arigatokunn_walk_click.glb?v=3';
+const GLB_PATH = '/models/arigatokunn_walk_click_meshopt.glb';
 // Phase 18 追補: スクロール連動用 unified glb（Idle / TurnToSide / Walk / StopWalk /
 // WaitingPose / ResumeWalk の 6 クリップ内包）。Service セクションで使用。
 const UNIFIED_GLB_PATH = '/models/arigatokunn_unified.glb';
@@ -103,8 +103,7 @@ export default function GlobalCanvas() {
   );
 }
 
-useGLTF.preload(GLB_PATH);
-useGLTF.preload(UNIFIED_GLB_PATH);
-// 右歩きからの停止時に再生する振り向き専用クリップ。ScrollWalkCharacter が内部でロードする
-// パスと一致させて preload しておく。
-useGLTF.preload('/models/arigatokunn_turn_right.glb');
+useGLTF.preload(GLB_PATH, false, true); // walk_click は meshopt 圧縮版（MeshoptDecoder で復号）
+// 以下は現状 TOP で未使用のため preload しない（初回ロード削減）:
+// - arigatokunn_unified.glb / arigatokunn_turn_right.glb は ScrollWalkCharacter(SHOW_SERVICE_WALKER=false) 専用。
+//   有効化時に当該コンポーネントが on-demand ロードする。

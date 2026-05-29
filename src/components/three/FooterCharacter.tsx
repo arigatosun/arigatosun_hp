@@ -8,7 +8,7 @@ import * as THREE from 'three';
 
 // Phase 18 追補: 粘土風シェーディングの新手振りモデルに差し替え。
 // 旧 arigatokun_bye.glb は履歴/ロールバック用に残置。
-const DEFAULT_GLB_PATH = '/models/arigatokunn_wave.glb';
+const DEFAULT_GLB_PATH = '/models/arigatokunn_wave_meshopt.glb';
 // glb 内のアニメ名。新エクスポート (simple/felt) は "Wave"、旧 glb は "ArmatureAction.001"、
 // 座りキャラ glb は "Sit"。useAnimations の actions マップで順に探して再生する。
 const ACTION_CANDIDATES = ['Wave', 'ArmatureAction.001', 'Sit'];
@@ -28,11 +28,13 @@ type WaveModelProps = {
   scale: number;
   rotationY?: number;
   loopMode?: 'pingpong' | 'repeat';
+  /** glb が meshopt 圧縮(EXT_meshopt_compression)なら true。drei が MeshoptDecoder で復号する */
+  meshopt?: boolean;
 };
 
-function WaveModel({ glbPath, position, scale, rotationY = 0, loopMode = 'pingpong' }: WaveModelProps) {
+function WaveModel({ glbPath, position, scale, rotationY = 0, loopMode = 'pingpong', meshopt = false }: WaveModelProps) {
   const group = useRef<THREE.Group>(null);
-  const { scene, animations } = useGLTF(glbPath);
+  const { scene, animations } = useGLTF(glbPath, false, meshopt);
   const clonedScene = useMemo(() => skeletonClone(scene) as THREE.Group, [scene]);
   // loopMode='repeat' のとき、各 track 末尾キー値を先頭値で上書きしてシームレスループにする。
   // Blender bake で frame 1 と frame end のポーズが微妙にズレているとループ境界でカクッと
@@ -101,17 +103,14 @@ function WaveModel({ glbPath, position, scale, rotationY = 0, loopMode = 'pingpo
   );
 }
 
-useGLTF.preload(DEFAULT_GLB_PATH);
-// 比較用バリアント (debug/wave-compare で使用)
-useGLTF.preload('/models/arigatokunn_wave_simple.glb');
-useGLTF.preload('/models/arigatokunn_wave_felt.glb');
-// Works セクション底部の座りキャラ (v=2: bake 済 IK pose 反映)
-useGLTF.preload('/models/arigatokunn_sit_clay.glb?v=7');
+useGLTF.preload(DEFAULT_GLB_PATH, false, true); // 圧縮版ヒーローモデル(meshopt)。FV 内なので preload
+// 比較用バリアント (wave_simple / wave_felt) は debug/wave-compare 専用のため TOP では preload しない。
+// Works 座りキャラ(sit_clay)は FV 外で DeferMount により遅延ロードするため preload しない。
 
 // ─── 公開コンポーネント Props ───
 export type FooterCharacterProps = {
-  /** 使用する glb のパス。default '/models/arigatokunn_wave.glb'
-   *  比較用に simple / felt 等の別ファイルを差し込める。 */
+  /** 使用する glb のパス。default '/models/arigatokunn_wave_meshopt.glb'(meshopt 圧縮版)。
+   *  別モデルを差し込む場合、その glb が meshopt 圧縮なら meshopt prop も合わせて指定する。 */
   glbPath?: string;
   /** キャラの group position。デフォルト [-19.37, -0.75, 0] */
   charPosition?: [number, number, number];
@@ -137,6 +136,8 @@ export type FooterCharacterProps = {
    *  - 'pingpong' (default): 順再生 → 逆再生 → ... 片道アニメ（Wave）向け
    *  - 'repeat': 普通の繰り返し（ループ自然なアニメ向け、Sit 等） */
   loopMode?: 'pingpong' | 'repeat';
+  /** glb が meshopt 圧縮なら true（圧縮版モデルを読み込む時に指定） */
+  meshopt?: boolean;
 };
 
 // WorksSectionフッター・TOP Hero 用の3Dキャラクター（独立Canvas）
@@ -152,6 +153,7 @@ export default function FooterCharacter({
   cameraZoom = DEFAULT_CAMERA_ZOOM,
   debug = false,
   loopMode = 'pingpong',
+  meshopt = true, // 既定モデル(DEFAULT_GLB_PATH)が meshopt 圧縮版のため既定 true
 }: FooterCharacterProps = {}) {
   return (
     <Canvas
@@ -201,6 +203,7 @@ export default function FooterCharacter({
           scale={charScale}
           rotationY={charRotationY}
           loopMode={loopMode}
+          meshopt={meshopt}
         />
       </Suspense>
     </Canvas>

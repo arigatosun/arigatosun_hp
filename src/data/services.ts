@@ -17,6 +17,7 @@ export const SERVICE_CARDS: readonly ServiceCardData[] = [
     bgVideo: {
       webm: '/videos/services/ai-dev.webm',
       mp4: '/videos/services/ai-dev.mp4',
+      poster: '/videos/services/ai-dev-poster.jpg',
     },
   },
   {
@@ -32,6 +33,7 @@ export const SERVICE_CARDS: readonly ServiceCardData[] = [
     bgVideo: {
       webm: '/videos/services/design-branding.webm',
       mp4: '/videos/services/design-branding.mp4',
+      poster: '/videos/services/design-branding-poster.jpg',
     },
   },
   {
@@ -47,6 +49,7 @@ export const SERVICE_CARDS: readonly ServiceCardData[] = [
     bgVideo: {
       webm: '/videos/services/ip-creative.webm',
       mp4: '/videos/services/ip-creative.mp4',
+      poster: '/videos/services/ip-creative-poster.jpg',
     },
   },
 ] as const;

@@ -19,7 +19,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
-      <body>{children}</body>
+      <body>
+        {/* フォント配信元への事前接続（DNS/TLS を先行させ、描画ブロッキングを短縮）。
+            React 19 が <link> を自動で <head> へホイストする。 */}
+        <link rel="preconnect" href="https://use.typekit.net" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        {children}
+      </body>
     </html>
   );
 }
