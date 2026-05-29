@@ -344,13 +344,17 @@
   @include fluid(width, 100, 156, 390, 1920);
   @include fluid(height, 100, 161, 390, 1920);
   // Hero と同じく枠ごとシフト（中の 3D は変えず translate のみ）
-  transform: translate(20px, 0);
+  // 微調整(2026-05): 少し下寄りだったため枠ごと 12px 上へ持ち上げる（PC のみ）。
+  transform: translate(20px, -12px);
 
   @include max(1023px) {
     // Figma SP @390: 140×144
     @include fluid(width, 140, 156);
     @include fluid(height, 144, 161);
-    transform: none;
+    // ボックスは中央だが、perspective カメラ + charRotationY によりキャンバス内で
+    // キャラが約10px 右に描画される。横ズレ量はキャンバス高さ比例で SP 全域ほぼ一定
+    // なので、定数 translateX で左へ戻して常に中央に揃える。
+    transform: translateX(-10px);
     // SP では 3D キャラを文字の上レイヤーに被せる（z-index 上）
     // Figma SP: button 下端 → text 上端 = 45px。キャラは現位置を維持。
     // 計算: gap(16) + char_h(144) + gap(16) + margin_bottom = 45

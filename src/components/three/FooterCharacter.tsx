@@ -29,9 +29,12 @@ type WaveModelProps = {
   loopMode?: 'pingpong' | 'repeat';
   /** glb が meshopt 圧縮(EXT_meshopt_compression)なら true。drei が MeshoptDecoder で復号する */
   meshopt?: boolean;
+  /** マテリアルを matte 化（roughness=1 / metalness=0 / envMapIntensity=0）。
+   *  白い顔が光沢・暗い環境反射を拾って影っぽく見えるのを防ぐ。FooterSitCharacter と同手法。 */
+  matte?: boolean;
 };
 
-function WaveModel({ glbPath, position, scale, rotationY = 0, loopMode = 'pingpong', meshopt = false }: WaveModelProps) {
+function WaveModel({ glbPath, position, scale, rotationY = 0, loopMode = 'pingpong', meshopt = false, matte = false }: WaveModelProps) {
   const group = useRef<THREE.Group>(null);
   const { scene, animations } = useGLTF(glbPath, false, meshopt);
   const clonedScene = useMemo(() => skeletonClone(scene) as THREE.Group, [scene]);
@@ -61,7 +64,20 @@ function WaveModel({ glbPath, position, scale, rotationY = 0, loopMode = 'pingpo
       const mesh = obj as THREE.Mesh;
       if (mesh.isMesh) {
         const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
-        mats.forEach((mat) => { if (mat) mat.needsUpdate = true; });
+        mats.forEach((mat) => {
+          if (!mat) return;
+          if (matte) {
+            // テカり（specular highlight）と暗い環境反射を抑えてマットに。
+            // 白い顔が影っぽく沈むのを防ぐ（FooterSitCharacter と同手法）。
+            const m = mat as THREE.MeshStandardMaterial;
+            if (m.isMeshStandardMaterial) {
+              m.roughness = 1.0;
+              m.metalness = 0;
+              m.envMapIntensity = 0;
+            }
+          }
+          mat.needsUpdate = true;
+        });
       }
     });
     // 直下 root（Armature）の transform は animation 参照が依存している可能性があるため
@@ -69,7 +85,7 @@ function WaveModel({ glbPath, position, scale, rotationY = 0, loopMode = 'pingpo
     clonedScene.position.set(0, 0, 0);
     clonedScene.quaternion.identity();
     clonedScene.scale.set(1, 1, 1);
-  }, [clonedScene]);
+  }, [clonedScene, matte]);
 
   useEffect(() => {
     // クリップ候補を順に探す。Wave / ArmatureAction.001 / Sit のいずれか。
@@ -137,6 +153,9 @@ export type FooterCharacterProps = {
   loopMode?: 'pingpong' | 'repeat';
   /** glb が meshopt 圧縮なら true（圧縮版モデルを読み込む時に指定） */
   meshopt?: boolean;
+  /** マテリアルを matte 化（roughness=1 / metalness=0 / envMapIntensity=0）。
+   *  白い顔が影っぽく沈むのを防ぐ。配置箇所ごとに opt-in（他インスタンスには波及しない）。 */
+  matte?: boolean;
 };
 
 // WorksSectionフッター・TOP Hero 用の3Dキャラクター（独立Canvas）
@@ -153,6 +172,7 @@ export default function FooterCharacter({
   debug = false,
   loopMode = 'pingpong',
   meshopt = true, // 既定モデル(DEFAULT_GLB_PATH)が meshopt 圧縮版のため既定 true
+  matte = false,
 }: FooterCharacterProps = {}) {
   return (
     <Canvas
@@ -203,6 +223,7 @@ export default function FooterCharacter({
           rotationY={charRotationY}
           loopMode={loopMode}
           meshopt={meshopt}
+          matte={matte}
         />
       </Suspense>
     </Canvas>

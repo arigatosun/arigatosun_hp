@@ -135,6 +135,7 @@ export default function WorksSection({ works }: WorksSectionProps) {
             charScale={5.0}
             charRotationY={-0.3}
             loopMode="repeat"
+            matte
           />
         </DeferMount>
 
