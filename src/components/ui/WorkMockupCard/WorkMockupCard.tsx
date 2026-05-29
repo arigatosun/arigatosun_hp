@@ -14,6 +14,8 @@ type WorkMockupCardProps = {
   spSrc?: string;
   spW?: number;
   spH?: number;
+  spFullBleed?: boolean;
+  spCaption?: string;
 };
 
 /**
@@ -93,12 +95,16 @@ export default function WorkMockupCard({
   spSrc,
   spW,
   spH,
+  spFullBleed = false,
+  spCaption,
 }: WorkMockupCardProps) {
   const spImageSrc = spSrc ?? src;
   const spRatioW = spW ?? w;
   const spRatioH = spH ?? h;
   return (
-    <div className={styles.wrap}>
+    <div
+      className={`${styles.wrap} ${spFullBleed ? styles.wrapFullBleed : ''}`}
+    >
       {/* PC: 既存の画像カード */}
       <div className={styles.cardPc} style={{ aspectRatio: `${w} / ${h}` }}>
         <Image
@@ -108,6 +114,9 @@ export default function WorkMockupCard({
           sizes="(max-width: 1023px) 92vw, 1520px"
           className={styles.image}
         />
+        {spCaption && (
+          <span className={styles.spCaption}>{spCaption}</span>
+        )}
       </div>
 
       {/* SP: sp が指定された場合は variant プレースホルダー、未指定は SP 画像（spSrc or src）カード */}
@@ -127,6 +136,9 @@ export default function WorkMockupCard({
             sizes="100vw"
             className={styles.image}
           />
+          {spCaption && (
+            <span className={styles.spCaption}>{spCaption}</span>
+          )}
         </div>
       )}
     </div>

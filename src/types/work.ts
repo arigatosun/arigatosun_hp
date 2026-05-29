@@ -163,10 +163,16 @@ export type WorkContentBlock = { gap: number; spGap?: number } & (
       /** SP 専用 w / h (aspect-ratio に使用)。省略時は w / h を流用 */
       spW?: number;
       spH?: number;
+      /** SP で 28px の左右 padding を解除して画面端まで広げる (pair プレースホルダーと同じ full-bleed 挙動) */
+      spFullBleed?: boolean;
+      /** SP のみ画像内右下にオーバーレイ表示するキャプション (PC では別途 caption ブロックを使う想定) */
+      spCaption?: string;
     }
   | {
       type: 'caption'; // 画像下の小さな注釈テキスト（＜資料名の説明＞ 等）
       text: string;
+      /** SP では非表示にする（直前の mockupCard が spCaption で内側にオーバーレイ表示する場合用） */
+      spHidden?: boolean;
     }
   | {
       type: 'divider'; // セクション区切りの短い横線

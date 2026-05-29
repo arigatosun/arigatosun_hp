@@ -127,10 +127,12 @@ export default async function WorkDetailPage({ params }: PageParams) {
               spSrc={block.spSrc}
               spW={block.spW}
               spH={block.spH}
+              spFullBleed={block.spFullBleed}
+              spCaption={block.spCaption}
             />
           );
         } else if (block.type === 'caption') {
-          node = <WorkCaption text={block.text} />;
+          node = <WorkCaption text={block.text} spHidden={block.spHidden} />;
         } else if (block.type === 'divider') {
           node = <WorkDivider />;
         } else if (block.type === 'creditList') {

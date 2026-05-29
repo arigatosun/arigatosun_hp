@@ -11,6 +11,13 @@
   @include fluid(padding-right, 40, 200);
 }
 
+// SP では非表示（直前 mockupCard の spCaption が内側オーバーレイする場合用）
+.spHidden {
+  @include sp {
+    display: none;
+  }
+}
+
 // font-size 16 / line-height 56 / letter-spacing 2.56（Figma 実測）
 .text {
   margin: 0;
