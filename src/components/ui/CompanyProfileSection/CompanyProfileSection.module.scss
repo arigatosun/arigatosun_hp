@@ -27,6 +27,14 @@
   @include fluid(padding-left, 40, 200);
   @include fluid(padding-right, 40, 200);
 
+  // 中間幅 PC (1024-1279): 会社情報テーブル (設立 / 代表者 / 従業員数) が
+  // 1 行で収まるよう左右 padding を 40px まで縮めて白カードを広げる。
+  // 1280px 以上は Figma 1920 デザイン準拠の fluid 値に戻る。
+  @media (min-width: 1024px) and (max-width: 1279px) {
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+
   @include sp {
     @include fluid(padding-bottom, 40, 80);
     // SP カードの左右余白（左右対称＝中央寄せ）。
@@ -236,10 +244,10 @@
   .cell:nth-child(2) {
     flex: 361 1 0;
 
-    // 代表者 3 名を 1 行で収めるための nowrap は十分な幅 (≥1280px) でだけ適用。
-    // 1024〜1279 の中間幅では代表者テキストが flex 361 のセル幅を超えて
-    // 従業員数セルに被るため、自然に折り返すように nowrap を解除する。
-    @include min(1280px) {
+    // 代表者 3 名を 1 行で収めるための nowrap (PC 全域)。
+    // 1024〜1279 の中間幅では .section の padding を 40 に縮めて
+    // カードを広げ、テーブルが収まるようにしている (.section 内 @media 参照)。
+    @include pc {
       .cellValue {
         white-space: nowrap;
       }
