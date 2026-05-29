@@ -381,9 +381,9 @@ const IP_CREATIVE: ServiceDetailData = {
     ],
     // Figma 2704:43762 SNS アイコン (Instagram / TikTok / YouTube)
     snsLinks: {
-      instagram: '#',
-      tiktok: '#',
-      youtube: '#',
+      instagram: 'https://www.instagram.com/megamegakun',
+      tiktok: 'https://www.tiktok.com/@megamegakun',
+      youtube: 'https://www.youtube.com/@kusomegane_studio',
     },
   },
   // ② 私たちが実現すること WHAT WE REALIZE (Figma 2704:43923 / x=200 y=2362 w=1520 h=526)
