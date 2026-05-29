@@ -1,0 +1,66 @@
+@use '@/styles/fluid' as *;
+@use '@/styles/breakpoints' as *;
+
+.wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  @include fluid(min-height, 480, 720);
+  @include fluid(padding-block, 80, 160);
+  @include fluid(padding-inline, 24, 80);
+  @include fluid(gap, 16, 28);
+}
+
+.code {
+  margin: 0;
+  font-family: var(--font-en);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary);
+  line-height: 1;
+  @include fluid(font-size, 56, 120);
+  @include fluid(letter-spacing, 2, 6);
+}
+
+.title {
+  margin: 0;
+  color: var(--color-black);
+  font-family: var(--font-primary);
+  font-weight: var(--font-weight-bold);
+  @include fluid(font-size, 18, 28);
+}
+
+.text {
+  margin: 0;
+  color: var(--color-text-secondary);
+  line-height: 1.8;
+  @include fluid(font-size, 13, 16);
+}
+
+.action {
+  display: flex;
+  align-items: center;
+  @include fluid(gap, 16, 24);
+  @include fluid(margin-top, 16, 32);
+
+  @include sp {
+    flex-direction: column;
+  }
+}
+
+.retry {
+  cursor: pointer;
+  background: none;
+  border: none;
+  color: var(--color-black);
+  font-family: var(--font-en);
+  font-weight: var(--font-weight-light);
+  letter-spacing: 1.12px;
+  @include fluid(font-size, 13, 15);
+  transition: color var(--transition-base);
+
+  &:hover {
+    color: var(--color-primary);
+  }
+}
