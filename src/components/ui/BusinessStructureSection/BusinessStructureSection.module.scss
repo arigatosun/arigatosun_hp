@@ -82,12 +82,16 @@
   flex-shrink: 0;
   width: 33.1771vw; // 637 / 1920（vw 比例で中間幅も溢れない）
   aspect-ratio: 637 / 647;
+  // PC(flex row): section の align-items:stretch で左テキストの高さに引き伸ばされ
+  // 図が縦に歪むのを防ぐ。flex-start で aspect-ratio 通りの高さを保つ（図はセクション上端配置）。
+  align-self: flex-start;
 
   @include sp {
     width: auto;
     max-width: none;
     margin-inline: -20px;
     aspect-ratio: 637 / 647;
+    align-self: stretch; // SP(column) は従来どおり全幅に伸ばす
   }
 }
 
