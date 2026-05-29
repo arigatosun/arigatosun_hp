@@ -18,8 +18,9 @@
 
   @include sp {
     // Figma SP @390: 画像（width 334）が左 x=28・右 x=362（左右 28px インセット）
-    @include fluid(padding-left, 28, 40);
-    @include fluid(padding-right, 28, 40);
+    // About と中間幅で左右余白を揃える: 補間範囲 390→1920 / 40→200(左)・40→80(右)
+    @include fluid(padding-left, 40, 200, 390, 1920);
+    @include fluid(padding-right, 40, 80, 390, 1920);
     // Figma SP @390: Service ボタン下端 y=4275 → Works タイトル y=4435 = gap 160px
     @include fluid(padding-top, 160, 240);
     // Figma SP @390: Works copyright 下端 → News タイトル = 176px は .news の padding-top で取る
