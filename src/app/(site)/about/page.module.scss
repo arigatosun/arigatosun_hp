@@ -135,9 +135,14 @@
   // Figma SP: 見出し下端 y=351 → body top y=379 = 28
   @include fluid(margin-bottom, 28, 40);
   width: 100%;
-  // SP min を 320 → 360 に拡張: WORD JOINER で繋いだ "太陽" (2 文字) が
-  // 1 行目に収まるように 1 文字分 (~22px) + マージン約 20px 広げる。
-  @include fluid(max-width, 360, 920);
+  @include fluid(max-width, 320, 920);
+}
+
+// SP のみ表示する <br>。PC では非表示にして 1 行表示を維持。
+.spOnlyBr {
+  @include pc {
+    display: none;
+  }
 }
 
 // 本文 — Figma 1578:65234 は 2 段落構成
