@@ -15,7 +15,8 @@
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
   font-weight: var(--font-weight-regular);
-  @include fluid(font-size, 13, 16);
-  @include fluid(line-height, 28, 36);
-  @include fluid(letter-spacing, 2, 3.84);
+  // Figma SP (2822:51375): 14px / lh 30 / ls 2.52 / PC: 16 / 36 / 3.84
+  @include fluid(font-size, 14, 16);
+  @include fluid(line-height, 30, 36);
+  @include fluid(letter-spacing, 2.52, 3.84);
 }

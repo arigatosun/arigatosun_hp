@@ -15,12 +15,18 @@
   }
 }
 
-// カード本体。高さは aspect-ratio（インライン style）で Figma 比率を維持。
+// カード本体。高さは aspect-ratio（CSS変数）で Figma 比率を維持。
+// --card-aspect: PC ベース / --card-aspect-sp: SP 上書き（未指定なら PC 値を流用）
 .card {
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
+  aspect-ratio: var(--card-aspect);
+
+  @include sp {
+    aspect-ratio: var(--card-aspect-sp, var(--card-aspect));
+  }
 }
 
 .white {

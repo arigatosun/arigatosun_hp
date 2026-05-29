@@ -121,10 +121,7 @@ const CHORITZ_DETAIL: WorkDetailContent = {
       level: 'sub',
       heading: '＜視覚的なひっかかり＞',
       body: [
-        '視覚的な特徴として、あえて少しのひっかかりを文字面と末尾の「Z」で作っています。',
-        '直接のやり取りが多い朱さんには名前を説明できる時間がある。そのひっかかりが記憶に残るための違和感として機能します。',
-        'ヒアリングだけでは汲み取れない、実際に仕事をする朱さんの姿勢や想いも含めて、',
-        '朱さんの働き方や動きにしっかりとフィットするようにネーミング設計を行っています。',
+        '視覚的な特徴として、あえて少しのひっかかりを文字面と末尾の「Z」で作っています。直接のやり取りが多い朱さんには名前を説明できる時間がある。そのひっかかりが記憶に残るための違和感として機能します。ヒアリングだけでは汲み取れない、実際に仕事をする朱さんの姿勢や想いも含めて、朱さんの働き方や動きにしっかりとフィットするようにネーミング設計を行っています。',
       ],
     },
     { type: 'textSection', gap: 260, level: 'main', heading: '■タグライン制作' },
@@ -133,6 +130,8 @@ const CHORITZ_DETAIL: WorkDetailContent = {
       gap: 40,
       background: 'white',
       card: { w: 1520, h: 480 },
+      // Figma SP「Group 1256」(780×668 = 2x) → 1x で 390×334。SP のみカードを縦長にして上下の余白を確保
+      spCard: { w: 390, h: 334 },
       graphic: { src: `${CHORITZ}/tagline.svg`, w: 400, h: 106 },
     },
     {
@@ -151,16 +150,17 @@ const CHORITZ_DETAIL: WorkDetailContent = {
       gap: 40,
       background: 'pink',
       card: { w: 1520, h: 660 },
+      // Figma SP「Group 1257」(780×668 = 2x) → 1x で 390×334。SP のみカードを縦長に
+      spCard: { w: 390, h: 334 },
       graphic: { src: `${CHORITZ}/choritz-logo.svg`, w: 310.5, h: 159.71 },
     },
     {
       type: 'paragraph',
       gap: 80,
+      // Figma SP 2822:51375 準拠の 3 段落構成
       body: [
-        '「頂」の字をモチーフに構成したマークは、',
-        'CHORITZが中心（軸）となり、中国と日本を繋ぎながらより良いものを生み出していく様を表現しています。',
-        'カラーは朱さんのお名前から赤系を採用。競合には誠実さや信頼感を訴求する青系ロゴも多く見られる中、',
-        '朱さん自身の誠実な印象もしっかりと表現したかったため、赤でありながらその両立を目指しました。',
+        '「頂」の字をモチーフに構成したマークは、CHORITZが中心（軸）となり、中国と日本を繋ぎながらより良いものを生み出していく様を表現しています。',
+        'カラーは朱さんのお名前から赤系を採用。競合には誠実さや信頼感を訴求する青系ロゴも多く見られる中、朱さん自身の誠実な印象もしっかりと表現したかったため、赤でありながらその両立を目指しました。',
         '競合の赤よりも柔らかめのトーンを選んだのも、温かみや推進力を保ちながら信頼感を成立させるための判断です。',
       ],
     },
@@ -168,10 +168,21 @@ const CHORITZ_DETAIL: WorkDetailContent = {
       type: 'imageGrid',
       gap: 80,
       cardHeight: 840,
-      // 4×4 グリッドを 1 枚に焼き込んだ画像 (Group 1254)。元の prop-1〜15 + 強ブラー
-      // から差し替え。画像内に弱ブラー済みなのでコード側 blur は不要。
+      // PC: 4×4 グリッドを 1 枚に焼き込んだ画像 (Group 1254)。画像内に弱ブラー済みなのでコード側 blur は不要。
       images: [`${CHORITZ}/prop-grid.png`],
       imageRatio: { w: 1990, h: 860 },
+      // Figma SP (3098:24658 内 2822:51409): 15 枚の個別スライドを 4 列で配置。
+      // 各スライドは Figma 実測 81.43 × 45.8 (≒1.78 比) → 既存 prop-N.jpg (700×393) と一致。
+      // 個別画像なので blur はコード側で適用（spBlur）。
+      spImages: Array.from(
+        { length: 15 },
+        (_, i) => `${CHORITZ}/prop-${i + 1}.jpg`,
+      ),
+      spImageRatio: { w: 81, h: 46 },
+      spGridCols: 4,
+      spBlur: true,
+      // Figma SP (3098:24658 内 2822:51407): カード高さ 286px
+      spCardHeight: 286,
       caption: '＜ロゴデザイン初回提案書(一部抜粋)＞',
     },
     {
@@ -183,6 +194,10 @@ const CHORITZ_DETAIL: WorkDetailContent = {
         (_, i) => `${CHORITZ}/guide-${i + 1}.jpg`,
       ),
       imageRatio: { w: 299, h: 211 },
+      // Figma SP (3098:24658 内 2822:51425): カード高さ 213px、4 列グリッド。
+      // 画像は PC と同じ guide-N.jpg を流用、列数だけ SP で 4 に切替。
+      spCardHeight: 213,
+      spGridCols: 4,
       caption: '＜ロゴデザイン簡易ガイドライン(一部抜粋)＞',
     },
     {
@@ -200,6 +215,10 @@ const CHORITZ_DETAIL: WorkDetailContent = {
       src: `${CHORITZ}/web-mockup-1.jpg`,
       w: 1520,
       h: 810,
+      // Figma SP「Frame 627200」(780×1440 = 2x) → 1x 390×720。SP は縦長の Web デザイン集合
+      spSrc: `${CHORITZ}/web-mockup-1-sp.png`,
+      spW: 780,
+      spH: 1440,
     },
     {
       type: 'paragraph',
@@ -217,14 +236,16 @@ const CHORITZ_DETAIL: WorkDetailContent = {
       src: `${CHORITZ}/web-mockup-2.jpg`,
       w: 1520,
       h: 810,
+      // Figma SP「Frame 627201」(780×416 = 2x) → 1x 390×208
+      spSrc: `${CHORITZ}/web-mockup-2-sp.png`,
+      spW: 780,
+      spH: 416,
     },
     {
       type: 'paragraph',
       gap: 180,
       body: [
-        '文字情報や素材共有だけでは受け取れない、朱さんのまだ言葉になっていなかった想いや姿勢。',
-        'それらを汲み取れたのは、KUSOMEGANEでのやり取りを通じて積み重ねてきた関係性があったからこそです。',
-        'データや数値では測れない部分が、CHORITZならではの独自の強みとして宿っています。',
+        '文字情報や素材共有だけでは受け取れない、朱さんのまだ言葉になっていなかった想いや姿勢。それらを汲み取れたのは、KUSOMEGANEでのやり取りを通じて積み重ねてきた関係性があったからこそです。データや数値では測れない部分が、CHORITZならではの独自の強みとして宿っています。',
       ],
     },
     { type: 'divider', gap: 180 },
@@ -246,20 +267,25 @@ const CHORITZ_DETAIL: WorkDetailContent = {
       // 書き出し PNG の余白超過分は object-fit: cover で切り落とす。
       w: 1503,
       h: 711,
+      // Figma SP「Group 1272」(780×320) — 名刺＋デバイス集合の SP 用合成
+      spSrc: `${CHORITZ}/namecard-mockup-sp.png`,
+      spW: 780,
+      spH: 320,
     },
     {
       type: 'paragraph',
       gap: 180,
       body: [
-        'ネーミングからはじまり、ロゴ・VI・Web・名刺まで一気通貫で設計したブランドは、',
-        '朱さんの根本にある時間が経っても変わらない本質的な部分をデザインとビジュアルに落とし込み、',
-        '時代の流れの中でもイメージを崩さず訴求し続けられる設計を目指しています。',
+        'ネーミングからはじまり、ロゴ・VI・Web・名刺まで一気通貫で設計したブランドは、朱さんの根本にある時間が経っても変わらない本質的な部分をデザインとビジュアルに落とし込み、時代の流れの中でもイメージを崩さず訴求し続けられる設計を目指しています。',
       ],
     },
-    { type: 'divider', gap: 180 },
+    // Figma SP (3098:24687): 段落末→divider 上 = 101px
+    { type: 'divider', gap: 180, spGap: 101 },
     {
       type: 'creditList',
       gap: 180,
+      // Figma SP (3098:24687): divider→CREDIT 上 = 51px
+      spGap: 51,
       groups: [
         {
           label: 'CREDIT',

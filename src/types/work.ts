@@ -117,6 +117,8 @@ export type WorkContentBlock = { gap: number; spGap?: number } & (
       type: 'showcaseCard'; // 色付きカード＋中央グラフィック
       background: 'white' | 'pink';
       card: { w: number; h: number }; // カードの Figma 寸法（アスペクト比に使用）
+      /** SP 専用のカード寸法（Figma SP 実測）。指定時は SP のみ aspect-ratio を上書き */
+      spCard?: { w: number; h: number };
       graphic: { src: string; w: number; h: number };
     }
   | {
@@ -127,6 +129,16 @@ export type WorkContentBlock = { gap: number; spGap?: number } & (
       caption: string;
       /** true の時、各サムネにブラーを適用（機密の提案資料用）。省略時は no-blur */
       blur?: boolean;
+      /** SP 専用の画像差し替え（Figma SP が PC と別構成のケース用）。指定時 SP のみ描画される */
+      spImages?: string[];
+      /** SP 専用の aspect-ratio。省略時は imageRatio を流用 */
+      spImageRatio?: { w: number; h: number };
+      /** SP 専用のカード高さ (Figma SP 実測 px)。指定時 SP のみ min-height を上書き */
+      spCardHeight?: number;
+      /** SP 専用のグリッド列数。省略時は 2 */
+      spGridCols?: number;
+      /** SP のみブラーを適用する（spImages 側のみ）。PC は blur プロパティで制御 */
+      spBlur?: boolean;
     }
   | {
       type: 'mockupCard'; // Web デザインモックアップ画像カード
@@ -146,6 +158,11 @@ export type WorkContentBlock = { gap: number; spGap?: number } & (
         variant: 'pairStacked' | 'pairSplit2' | 'variations11' | 'placeholder';
         spAspectRatio?: string;
       };
+      /** SP 専用の画像差し替え（PC とは別の SP 用モックアップ画像を出すケース用） */
+      spSrc?: string;
+      /** SP 専用 w / h (aspect-ratio に使用)。省略時は w / h を流用 */
+      spW?: number;
+      spH?: number;
     }
   | {
       type: 'caption'; // 画像下の小さな注釈テキスト（＜資料名の説明＞ 等）
