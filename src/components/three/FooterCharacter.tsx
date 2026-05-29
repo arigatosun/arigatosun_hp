@@ -102,9 +102,8 @@ function WaveModel({ glbPath, position, scale, rotationY = 0, loopMode = 'pingpo
 }
 
 useGLTF.preload(DEFAULT_GLB_PATH);
-// 比較用バリアント (debug/wave-compare で使用)
-useGLTF.preload('/models/arigatokunn_wave_simple.glb');
-useGLTF.preload('/models/arigatokunn_wave_felt.glb');
+// 比較用バリアント (wave_simple / wave_felt) は debug/wave-compare 専用のため TOP では preload しない
+// （初回ロード約36MB削減。debug ページ訪問時に各自 useGLTF で遅延ロードされる）。
 // Works セクション底部の座りキャラ (v=2: bake 済 IK pose 反映)
 useGLTF.preload('/models/arigatokunn_sit_clay.glb?v=7');
 

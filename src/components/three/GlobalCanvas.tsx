@@ -104,7 +104,7 @@ export default function GlobalCanvas() {
 }
 
 useGLTF.preload(GLB_PATH);
-useGLTF.preload(UNIFIED_GLB_PATH);
+// arigatokunn_unified.glb は SHOW_SERVICE_WALKER=false で現状未使用のため preload しない（初回ロード削減）。
 // 右歩きからの停止時に再生する振り向き専用クリップ。ScrollWalkCharacter が内部でロードする
 // パスと一致させて preload しておく。
 useGLTF.preload('/models/arigatokunn_turn_right.glb');
