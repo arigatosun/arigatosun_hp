@@ -20,6 +20,14 @@
   }
 }
 
+// spFullBleed=true で明示指定された場合も SP の padding を解除
+.wrapFullBleed {
+  @include sp {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
 // ── PC カード（既存）────────────────────────────────────
 .cardPc {
   position: relative;
@@ -40,6 +48,36 @@
 
   @include sp {
     display: block;
+  }
+}
+
+// 画像内右下に重ねるキャプション。PC / SP それぞれ Figma 実測値で配置。
+// PC (Figma 2833:279874): 12px / lh 56 / ls 1.2 / right 24 / bottom 0
+// SP (Figma 2833:234324): 10px / lh 22.4 / ls 1 / right 20 / bottom 8
+// cardPc / cardSpDefault のどちらか可視な側だけ表示される
+.spCaption {
+  position: absolute;
+  color: var(--color-text-secondary);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  font-weight: var(--font-weight-regular);
+  text-align: right;
+  white-space: nowrap;
+  pointer-events: none;
+
+  @include pc {
+    right: 24px;
+    bottom: 0;
+    font-size: 12px;
+    line-height: 56px;
+    letter-spacing: 1.2px;
+  }
+
+  @include sp {
+    right: 20px;
+    bottom: 8px;
+    font-size: 10px;
+    line-height: 22.4px;
+    letter-spacing: 1px;
   }
 }
 
