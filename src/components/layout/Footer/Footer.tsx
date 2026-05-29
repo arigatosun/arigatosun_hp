@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import FooterSitCharacterLoader from '@/components/three/FooterSitCharacterLoader';
+import DeferMount from '@/components/ui/DeferMount';
 import styles from './Footer.module.scss';
 
 const serviceSubmenu = [
@@ -28,10 +29,10 @@ export default function Footer() {
         />
       </div>
 
-      {/* アーチ上のキャラクター */}
-      <div className={styles.sitCharacter}>
+      {/* アーチ上のキャラクター（FV 外なので近づくまで遅延ロード） */}
+      <DeferMount className={styles.sitCharacter} rootMargin="1000px">
         <FooterSitCharacterLoader />
-      </div>
+      </DeferMount>
 
       {/* CONTACT US ボタン */}
       <div className={styles.contactArea}>

@@ -8,6 +8,7 @@ import Button from '@/components/ui/Button';
 import SectionTitle from '@/components/ui/SectionTitle';
 import type { WorkItem } from '@/types/work';
 import FooterCharacterLoader from '@/components/three/FooterCharacterLoader';
+import DeferMount from '@/components/ui/DeferMount';
 
 type WorksSectionProps = {
   works: readonly WorkItem[];
@@ -126,7 +127,7 @@ export default function WorksSection({ works }: WorksSectionProps) {
               - charPosition X = -scale * armature_x = -5.0 * (-2.70) = +13.50 で中央寄せ
               - loopMode='repeat': Sit はループ前提
             位置確認したい時は `debug` prop を付ければ視覚化される。 */}
-        <div className={styles.footerCharacter}>
+        <DeferMount className={styles.footerCharacter}>
           <FooterCharacterLoader
             glbPath="/models/arigatokunn_sit_clay_meshopt.glb"
             meshopt
@@ -135,7 +136,7 @@ export default function WorksSection({ works }: WorksSectionProps) {
             charRotationY={-0.3}
             loopMode="repeat"
           />
-        </div>
+        </DeferMount>
 
         <div className={styles.footerText}>
           <p className={styles.footerServices}>
