@@ -474,8 +474,8 @@ const NEST_DETAIL: WorkDetailContent = {
     ],
     // SP: Figma「Frame 627257」(780×1116) の縦長合成画像を 1 枚で hero に。
     // 旧プレースホルダー (10 枚コラージュ) はユーザー指示により撤回。
-    // work-1 (CHORITZ) 同様、ヘッダー直下から余白を開けてヒーローを配置（上から 120px）
-    spOffsetTop: 120,
+    // work-1 (CHORITZ) 同様、ヘッダー直下から余白を開けてヒーローを配置（上から 42.5px）
+    spOffsetTop: 42.5,
     spWidth: 390,
     spHeight: 558,
     spPhotos: [

@@ -2,6 +2,20 @@ import type { Metadata } from 'next';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import Preloader from '@/components/ui/Preloader';
+import JsonLd from '@/components/seo/JsonLd';
+
+// 全公開ページ共通の Organization 構造化データ。
+const ORGANIZATION_JSONLD = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: '株式会社アリガトサン',
+  alternateName: 'ARIGATOSUN',
+  url: 'https://arigatosun.com',
+  logo: 'https://arigatosun.com/icon.png',
+  description:
+    'AI(LLM)システムの開発からデザイン・ブランディング、IPコンテンツ制作を行うクリエイティブスタジオです。',
+  sameAs: ['https://www.instagram.com/arigatosun_inc'],
+};
 
 // 公開マーケサイト共通のレイアウト。Header / Footer はここで適用。
 // /admin 配下はこのレイアウトを経由しないため、admin にこのメタデータも届かない。
@@ -29,6 +43,7 @@ export default function SiteLayout({
 }>) {
   return (
     <>
+      <JsonLd data={ORGANIZATION_JSONLD} />
       <Preloader />
       <Header />
       <main>{children}</main>

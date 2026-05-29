@@ -9,6 +9,7 @@ import {
 import { renderNewsContentToHtml } from '@/lib/news/render';
 import { formatNewsDate } from '@/lib/news/format';
 import CopyLinkButton from '@/components/ui/CopyLinkButton';
+import JsonLd from '@/components/seo/JsonLd';
 import styles from './page.module.scss';
 
 type Props = {
@@ -129,8 +130,23 @@ export default async function NewsDetailPage({ params }: Props) {
   const contentHtml = renderNewsContentToHtml(entry.content);
   const shareUrl = `${SITE_ORIGIN}/news/${year}/${slug}`;
 
+  const articleJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'NewsArticle',
+    headline: entry.title,
+    datePublished: entry.published_at ?? undefined,
+    image: entry.thumbnail_url ? [entry.thumbnail_url] : undefined,
+    mainEntityOfPage: shareUrl,
+    publisher: {
+      '@type': 'Organization',
+      name: '株式会社アリガトサン',
+      logo: { '@type': 'ImageObject', url: `${SITE_ORIGIN}/icon.png` },
+    },
+  };
+
   return (
     <div className={styles.page} data-news-detail>
+      <JsonLd data={articleJsonLd} />
       <div className={styles.inner}>
         <div className={styles.article}>
           {/* 左: アイキャッチ画像 */}
