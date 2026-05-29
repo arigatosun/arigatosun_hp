@@ -1,13 +1,19 @@
 @use '@/styles/fluid' as *;
 @use '@/styles/breakpoints' as *;
 
+// ── レスポンシブ方針（TOP「その間」対応 / 2026-05・共有セクションタイトル） ──
+// PC レンジ(≥1024)を 1920 基準 clamp に、SP(≤1023) は 1200 据え置き。
+// SP に効く無防備な値は `@include sp { @include fluid(…, 390, 1200) }` で SP を不変に保つ。
+
 .wrapper {
-  @include fluid(margin-top, 12, 20);
-  @include fluid(margin-bottom, 24, 48);
+  @include fluid(margin-top, 12, 20, 390, 1920);
+  @include fluid(margin-bottom, 24, 48, 390, 1920);
 
   @include sp {
     // SP ではセクション padding-top 側で gap を確保するため wrapper の margin-top は 0
     margin-top: 0;
+    // base margin-bottom は SP にも効くため現状(1200)カーブに固定
+    @include fluid(margin-bottom, 24, 48);
   }
 }
 
@@ -17,23 +23,31 @@
 
 .titleLogoImage {
   // Figma SP: 158px / Figma PC: 220px
-  @include fluid(width, 158, 220);
+  @include fluid(width, 158, 220, 390, 1920);
   height: auto;
+
+  @include sp {
+    @include fluid(width, 158, 220);
+  }
 }
 
 .label {
   // Figma SP: gap 16px / Figma PC: 20px
-  @include fluid(margin-top, 16, 20);
+  @include fluid(margin-top, 16, 20, 390, 1920);
   color: var(--color-text-secondary);
   font-family: var(--font-en);
-  @include fluid(font-size, 14, 20);
+  @include fluid(font-size, 14, 20, 390, 1920);
   font-weight: var(--font-weight-light);
   font-style: normal;
   // Figma SP: line-height 11.52px → SP では行間タイト目
   line-height: 24px;
-  @include fluid(letter-spacing, 1.82, 2.6);
+  @include fluid(letter-spacing, 1.82, 2.6, 390, 1920);
 
   @include sp {
     line-height: 16px;
+    // base margin-top/font-size/letter-spacing は SP にも効くため現状(1200)カーブに固定
+    @include fluid(margin-top, 16, 20);
+    @include fluid(font-size, 14, 20);
+    @include fluid(letter-spacing, 1.82, 2.6);
   }
 }

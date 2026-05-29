@@ -1,16 +1,21 @@
 @use '@/styles/fluid' as *;
 @use '@/styles/breakpoints' as *;
 
+// ── レスポンシブ方針（TOP「その間」対応 / 2026-05） ──
+// PC レンジ(≥1024)を Hero/About と同じ 1920 基準 clamp でスケール、SP(≤1023) は 1200 据え置き。
+// PC を 1920 に乗せたいベース宣言だけ `…, 390, 1920` を付け、SP に効く無防備な値は
+// `@include sp { @include fluid(…, 390, 1200) }` を足して SP を不変に保つ。
+
 .message {
   // Figma: LogoSlider末尾→Message 360px
-  @include fluid(margin-top, 100, 360);
+  @include fluid(margin-top, 100, 360, 390, 1920);
   display: flex;
   flex-direction: column;
   align-items: center;
-  @include fluid(padding-left, 20, 40);
-  @include fluid(padding-right, 20, 40);
+  @include fluid(padding-left, 20, 40, 390, 1920);
+  @include fluid(padding-right, 20, 40, 390, 1920);
   // 本文末尾とフッターの 3D キャラクターの間に 160px の余白を確保
-  @include fluid(padding-bottom, 54, 108);
+  @include fluid(padding-bottom, 54, 108, 390, 1920);
 
   @include sp {
     // Figma SP @390: LogoSlider 末尾 y=9069 → Message 見出し y=9229 = gap 160px
@@ -18,6 +23,8 @@
     @include fluid(margin-top, 160, 360);
     @include fluid(padding-left, 40, 40);
     @include fluid(padding-right, 40, 40);
+    // base の padding-bottom は SP にも効くため現状(1200)カーブに固定
+    @include fluid(padding-bottom, 54, 108);
   }
 }
 
@@ -26,11 +33,11 @@
   text-align: center;
   white-space: nowrap;
   font-family: var(--font-en);
-  @include fluid(font-size, 20, 36);
+  @include fluid(font-size, 20, 36, 390, 1920);
   font-style: normal;
   font-weight: var(--font-weight-light);
   line-height: 1.056;
-  @include fluid(letter-spacing, 4.32, 8.64);
+  @include fluid(letter-spacing, 4.32, 8.64, 390, 1920);
 
   @include sp {
     // Figma SP: 20px / letter-spacing 4.8
@@ -41,16 +48,16 @@
 
 // ── メッセージ本文 ──
 .body {
-  @include fluid(margin-top, 42, 104);
+  @include fluid(margin-top, 42, 104, 390, 1920);
   width: 100%;
   max-width: 908px;
   text-align: center;
   font-family: 'Noto Sans JP', var(--font-jp);
-  @include fluid(font-size, 14, 24);
+  @include fluid(font-size, 14, 24, 390, 1920);
   font-style: normal;
   font-weight: var(--font-weight-regular);
   line-height: 2.583;
-  @include fluid(letter-spacing, 2.16, 4.32);
+  @include fluid(letter-spacing, 2.16, 4.32, 390, 1920);
 
   @include sp {
     // Figma SP: 14px / line-height 38 / letter-spacing 2.24

@@ -1,6 +1,14 @@
 @use '@/styles/fluid' as *;
 @use '@/styles/breakpoints' as *;
 
+// ── レスポンシブ方針（TOP「その間」対応 / 2026-05） ──
+// PC レンジ(≥1024)のコンテンツを Hero/About と同じ 1920 基準 clamp でスケール。
+// SP(≤1023) は従来通り（既定 1200 / 一部 320-390 指定）据え置き。
+//   - PC を 1920 に乗せたいベース宣言だけ `…, 390, 1920` を付ける。
+//   - SP に効く無防備な値は `@include sp { @include fluid(…, 390, 1200) }` で SP を不変に保つ。
+// ※ アーチ(.maskOverlay) と 3D 着座キャラ(.sitCharacter) と .footer padding-top は
+//   「キャラがアーチ頂点に座る」精密調整（1200〜1920 で定数一致）のため 1200 据え置きで触らない。
+
 // Figma 1920 基準: footer 全高 1364
 //   - y=0..201: 白い領域（キャラが座る上半身分）
 //   - y=201..  : 赤いアーチ + 内容部分
@@ -8,6 +16,7 @@
   position: relative;
   // オーバーレイ上で Figma とフッター位置を合わせるため SP/PC とも 100 に統一
   margin-top: 100px;
+  // ※ キャラ/アーチと連動するため 1200 据え置き（1920 化しない）
   @include fluid(padding-top, 80, 201);
   overflow: visible;
 
@@ -19,6 +28,7 @@
 
 // ── 背景マスクオーバーレイ ──
 // 白い領域 (footer top 〜 201px) より下から始める。bg-mask.png の上端 = アーチ頂点。
+// ※ 3D キャラと座標を合わせる精密要素のため 1200 据え置き（1920 化しない）。
 .maskOverlay {
   position: absolute;
   @include fluid(top, 80, 201);
@@ -64,6 +74,7 @@
 // 視覚的にどこにキャラを配置しても Canvas 外で切れることがない。
 // 実際の見た目位置は FooterSitCharacter の charPosition（3D coords）で制御する。
 // PC max を 130 のスケールで SP も表示する。
+// ※ アーチ頂点に足元を合わせる精密調整のため 1200 据え置き（1920 化しない）。
 .sitCharacter {
   position: absolute;
   // Canvas を上下方向にずらしてキャラ位置を微調整する。
@@ -109,8 +120,8 @@
   z-index: 1;
   display: flex;
   justify-content: center;
-  @include fluid(padding-top, 100, 179);
-  @include fluid(padding-bottom, 80, 195);
+  @include fluid(padding-top, 100, 179, 390, 1920);
+  @include fluid(padding-bottom, 80, 195, 390, 1920);
 
   // /contact および /contact/thanks では CONTACT US ボタンを非表示
   // (フォーム入力中・完了画面で二重 CTA を避ける)
@@ -141,18 +152,18 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  @include fluid(width, 240, 380);
-  @include fluid(height, 52, 72);
+  @include fluid(width, 240, 380, 390, 1920);
+  @include fluid(height, 52, 72, 390, 1920);
   border-radius: 43.2px;
   background-color: var(--color-white);
   box-shadow: 0 2px 20px 0 rgba(0, 0, 0, 0.08);
   color: var(--color-primary);
   font-family: var(--font-en);
-  @include fluid(font-size, 14, 22);
+  @include fluid(font-size, 14, 22, 390, 1920);
   font-weight: var(--font-weight-light);
   font-style: normal;
   line-height: 1;
-  @include fluid(letter-spacing, 1.43, 2.86);
+  @include fluid(letter-spacing, 1.43, 2.86, 390, 1920);
   text-align: center;
   white-space: nowrap;
   // 中央位置の微補正: PC オーバーレイ計測で水平中心から右に 17px ずれていたため左へ戻す
@@ -175,6 +186,8 @@
     transform: none;
     @include fluid(height, 48, 56, 320, 390);
     @include fluid(font-size, 14, 16, 320, 390);
+    // base letter-spacing は SP にも効くため現状(1200)カーブに固定
+    @include fluid(letter-spacing, 1.43, 2.86);
   }
 }
 
@@ -184,8 +197,8 @@
   z-index: 1;
   display: flex;
   justify-content: space-between;
-  @include fluid(padding-left, 20, 200);
-  @include fluid(padding-right, 20, 200);
+  @include fluid(padding-left, 20, 200, 390, 1920);
+  @include fluid(padding-right, 20, 200, 390, 1920);
 
   // Figma SP(390): .left（ナビ）と .right（CREATIVE）で左右 padding が異なる（40 vs 20）ため
   // ここの padding は 0 にして個別に持たせる。ナビ底 → CREATIVE top = 80
@@ -211,7 +224,7 @@
 
 .logoWrap {
   // Figma: ロゴ下端 (676) → ABOUT 上端 (736) = 60px
-  @include fluid(margin-bottom, 24, 60);
+  @include fluid(margin-bottom, 24, 60, 390, 1920);
 
   // Figma SP(390): ロゴ下端 490 → ABOUT top 542 = 52
   @include sp {
@@ -221,7 +234,7 @@
 
 .footerLogo {
   // Figma PC 1920: ロゴ width=370, height=85 (aspect 740/170 = 4.35)
-  @include fluid(width, 200, 370);
+  @include fluid(width, 200, 370, 390, 1920);
   height: auto;
   max-width: 100%;
 
@@ -235,7 +248,7 @@
   display: flex;
   flex-direction: column;
   // Figma: line-to-line 52px = font line-height 24 + gap 28
-  @include fluid(gap, 12, 28);
+  @include fluid(gap, 12, 28, 390, 1920);
   list-style: none;
 
   // Figma SP(390): line-to-line 46 = text box 20 + gap 26
@@ -250,11 +263,11 @@
   gap: 6px;
   color: var(--color-white);
   font-family: var(--font-en);
-  @include fluid(font-size, 14, 20);
+  @include fluid(font-size, 14, 20, 390, 1920);
   font-style: normal;
   font-weight: var(--font-weight-light);
   line-height: normal;
-  @include fluid(letter-spacing, 1.2, 2.4);
+  @include fluid(letter-spacing, 1.2, 2.4, 390, 1920);
   transition: color var(--transition-base);
 
   &:hover {
@@ -276,10 +289,10 @@
   display: flex;
   flex-direction: column;
   // Figma: line-to-line 41px = font line-height 22 + gap 19
-  @include fluid(gap, 8, 19);
+  @include fluid(gap, 8, 19, 390, 1920);
   list-style: none;
   // Figma: SERVICE 下 → AI/DEV top = 24px
-  @include fluid(margin-top, 10, 24);
+  @include fluid(margin-top, 10, 24, 390, 1920);
 
   // Figma SP(390): SERVICE 下 → AI/DEV top = 26、sub item line-to-line = 38 (box18 + gap20)
   @include sp {
@@ -291,11 +304,11 @@
 .subMenuItem {
   color: var(--color-text-secondary);
   font-family: var(--font-en);
-  @include fluid(font-size, 12, 18);
+  @include fluid(font-size, 12, 18, 390, 1920);
   font-style: normal;
   font-weight: var(--font-weight-light);
   line-height: normal;
-  @include fluid(letter-spacing, 1, 2.16);
+  @include fluid(letter-spacing, 1, 2.16, 390, 1920);
   transition: color var(--transition-base);
 
   &:hover {
@@ -327,25 +340,28 @@
 .projectsTitle {
   color: var(--color-white);
   font-family: var(--font-en);
-  @include fluid(font-size, 16, 24);
+  @include fluid(font-size, 16, 24, 390, 1920);
   font-style: normal;
   font-weight: var(--font-weight-light);
   line-height: normal;
-  @include fluid(letter-spacing, 1.4, 2.88);
-  @include fluid(margin-bottom, 8, 14);
+  @include fluid(letter-spacing, 1.4, 2.88, 390, 1920);
+  @include fluid(margin-bottom, 8, 14, 390, 1920);
 
   // Figma SP @390: タイトル x=28（右パネル枠 x=20 から +8px インデント）
   // KUSOMEGANE top 3082.67 → title bottom 3070.67 = 12
   @include sp {
     @include fluid(padding-left, 8, 8);
     @include fluid(margin-bottom, 12, 12, 320, 390);
+    // base font-size / letter-spacing は SP にも効くため現状(1200)カーブに固定
+    @include fluid(font-size, 16, 24);
+    @include fluid(letter-spacing, 1.4, 2.88);
   }
 }
 
 .projectImages {
   display: flex;
   flex-direction: column;
-  @include fluid(gap, 10, 20);
+  @include fluid(gap, 10, 20, 390, 1920);
 
   // Figma SP @390: KUSOMEGANE 下端 3197.39 → ASEAVE top 3213.39 = 16
   @include sp {
@@ -415,9 +431,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  @include fluid(gap, 24, 70);
-  @include fluid(margin-top, 36, 108);
-  @include fluid(padding-bottom, 28, 74);
+  @include fluid(gap, 24, 70, 390, 1920);
+  @include fluid(margin-top, 36, 108, 390, 1920);
+  @include fluid(padding-bottom, 28, 74, 390, 1920);
 
   // Figma SP(390): ASEAVE 下端 1274 → Arigatosun Inc. top 1374 = 100
   // footer 下端 1446 → copyright 下端 1422 = 24 (padding-bottom)
@@ -434,7 +450,7 @@
   color: var(--color-text-secondary);
   text-align: right;
   font-family: var(--font-en);
-  @include fluid(font-size, 12, 14);
+  @include fluid(font-size, 12, 14, 390, 1920);
   font-style: normal;
   font-weight: var(--font-weight-light);
   line-height: 24px;
@@ -442,6 +458,8 @@
 
   @include sp {
     text-align: center;
+    // base font-size は SP にも効くため現状(1200)カーブに固定
+    @include fluid(font-size, 12, 14);
   }
 }
 
@@ -449,7 +467,7 @@
   color: var(--color-white);
   text-align: right;
   font-family: var(--font-en);
-  @include fluid(font-size, 12, 14);
+  @include fluid(font-size, 12, 14, 390, 1920);
   font-style: normal;
   font-weight: var(--font-weight-light);
   line-height: 24px;
@@ -457,5 +475,7 @@
 
   @include sp {
     text-align: center;
+    // base font-size は SP にも効くため現状(1200)カーブに固定
+    @include fluid(font-size, 12, 14);
   }
 }

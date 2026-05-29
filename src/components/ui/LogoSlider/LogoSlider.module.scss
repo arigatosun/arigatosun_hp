@@ -1,10 +1,19 @@
 @use '@/styles/fluid' as *;
 @use '@/styles/breakpoints' as *;
 
+// ── レスポンシブ方針（TOP「その間」対応 / 2026-05） ──
+// PC レンジ(≥1024)を 1920 基準 clamp に、SP(≤1023) は 1200 据え置き。
+// PC を 1920 に乗せたいベース宣言に `…, 390, 1920` を付け、SP に効く無防備な値は
+// `@include sp { @include fluid(…, 390, 1200) }` で SP を不変に保つ。
+
 .wrapper {
   position: relative;
   // Figma: NEWS末尾→LogoSlider 320px（NEWS の padding-bottom 120 と合算）
-  @include fluid(margin-top, 120, 200);
+  @include fluid(margin-top, 120, 200, 390, 1920);
+
+  @include sp {
+    @include fluid(margin-top, 120, 200);
+  }
 }
 
 // ── ロゴスライダー ──
@@ -16,7 +25,9 @@
 
 .track {
   display: flex;
-  @include fluid(gap, 40, 75); // Figma: ロゴ間 75px
+  // gap は 1200 カーブ据え置き。@keyframes scrollLoop が -37.5px(=gap 75 の半分)を
+  // ハードコードしており、PC レンジで gap を変動させると無限ループの継ぎ目がズレるため。
+  @include fluid(gap, 40, 75);
   width: max-content;
   animation: scrollLoop 60s linear infinite;
 }
@@ -29,7 +40,8 @@
   flex-shrink: 0;
   display: flex;
   align-items: center;
-  @include fluid(width, 300, 648);
+  // ロゴ自体は 1920 カーブで比例縮小（width 変更は keyframe の -50% 相対値に影響しない）
+  @include fluid(width, 300, 648, 390, 1920);
   aspect-ratio: 649 / 150;
   position: relative;
 

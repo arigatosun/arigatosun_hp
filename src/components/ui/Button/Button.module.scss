@@ -1,22 +1,27 @@
 @use '@/styles/fluid' as *;
 @use '@/styles/breakpoints' as *;
 
+// ── レスポンシブ方針（TOP「その間」対応 / 2026-05・共有ボタン） ──
+// PC レンジ(≥1024)を 1920 基準 clamp に、SP(≤1023) は 1200 据え置き。
+// width は SP で 100% 上書きされるが、height/font/letter-spacing は SP にも効くため
+// `@include sp { @include fluid(…, 390, 1200) }` で SP を不変に保つ。
+
 .button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  @include fluid(width, 216, 332);
+  @include fluid(width, 216, 332, 390, 1920);
   // Figma SP: 56 / Figma PC: 64
-  @include fluid(height, 56, 64);
+  @include fluid(height, 56, 64, 390, 1920);
   border-radius: 37.26px;
   font-family: var(--font-en);
   // Figma SP: 16 / Figma PC: 20
-  @include fluid(font-size, 16, 20);
+  @include fluid(font-size, 16, 20, 390, 1920);
   font-weight: var(--font-weight-light);
   font-style: normal;
   line-height: 19.2px;
   // Figma SP: 2.08 / Figma PC: 2.6
-  @include fluid(letter-spacing, 2.08, 2.6);
+  @include fluid(letter-spacing, 2.08, 2.6, 390, 1920);
   text-align: center;
   transition: all var(--transition-base);
   cursor: pointer;
@@ -27,6 +32,10 @@
     // Figma SP: width=310 / セクション padding-left/right ~40 で 100% 拡張
     width: 100%;
     max-width: 320px;
+    // base の height/font/letter-spacing は SP にも効くため現状(1200)カーブに固定
+    @include fluid(height, 56, 64);
+    @include fluid(font-size, 16, 20);
+    @include fluid(letter-spacing, 2.08, 2.6);
   }
 }
 
@@ -55,14 +64,18 @@
 
 // 小サイズ（Figma: NEWS セクションの VIEW NEWS ボタン 300×60）
 .sm {
-  @include fluid(width, 200, 300);
-  @include fluid(height, 44, 60);
+  @include fluid(width, 200, 300, 390, 1920);
+  @include fluid(height, 44, 60, 390, 1920);
   border-radius: 32.4px;
-  @include fluid(font-size, 14, 18);
-  @include fluid(letter-spacing, 1.2, 2.34);
+  @include fluid(font-size, 14, 18, 390, 1920);
+  @include fluid(letter-spacing, 1.2, 2.34, 390, 1920);
 
   @include sp {
     width: 100%;
     max-width: 320px;
+    // base の height/font/letter-spacing は SP にも効くため現状(1200)カーブに固定
+    @include fluid(height, 44, 60);
+    @include fluid(font-size, 14, 18);
+    @include fluid(letter-spacing, 1.2, 2.34);
   }
 }
