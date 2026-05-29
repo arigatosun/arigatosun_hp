@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import styles from './ParallaxMotifs.module.scss';
 import { SP_MOTIFS_CONTAINER } from './motifs-sp-data';
 
@@ -8,9 +8,9 @@ import { SP_MOTIFS_CONTAINER } from './motifs-sp-data';
 // つまり motifs container はセクション上端から +274px の位置にあるが、
 // 実装側の本文行間や letter-spacing 込みの体感差を吸収するため +20 して 294 にしている。
 const SP_MOTIFS_OFFSET_FROM_ABOUT_TOP = 294;
-// Figma SVG エクスポート (840×964) は内部の Group 933 コンテンツが (12.3, 46.4) オフセットされている。
-// 実装側で SVG を配置する際にこの分を相殺する。
-const SP_SVG_CONTENT_OFFSET_X = 12.3;
+// Figma SVG エクスポート (840×964) は内部の Group 933 コンテンツが上端 46.4px オフセットされている。
+// SVG をスケール配置する際、この分を scale 込みで相殺して content 上端位置を揃える。
+// （横方向は left:50% 中央寄せにしたため X オフセット相殺は不要になった）
 const SP_SVG_CONTENT_OFFSET_Y = 46.4;
 
 // 赤モチーフ装飾（Figma「Group 870」書き出しの17シェイプ）。
@@ -53,21 +53,33 @@ export default function ParallaxMotifs() {
   // SP 用 combined SVG を inline 取得し、各 motif <g> に class を付与。
   // これで PC と同じく motif ごとにバラバラのフロート animation を当てられる。
   const [spInlineSvg, setSpInlineSvg] = useState<string>('');
+  // SP モチーフの入場 transition を確実に発火させるためのゲート。
+  // SVG は fetch で後から注入されるため、注入時点で既に entered=true だと
+  // motif が定位置に直接生成され、初期状態(画面下)がペイントされず「パキッ」と出る
+  // （PC の静的 SVG では初回レンダーが必ず entered=false なので起きない）。
+  // → 注入後に必ず1フレーム entered=false を描画させてから実値を反映する。
+  const [spReady, setSpReady] = useState(false);
   useEffect(() => {
     let cancelled = false;
     fetch('/images/sections/about/sp-motifs-combined.svg')
       .then((r) => r.text())
       .then((text) => {
         if (cancelled) return;
-        // 各 motif <g filter="url(#filter*_d_*)">: そのまま class 追加
+        // PC と同じ 2 階層構造にする:
+        //   外側 <g class=spMotifEntry>（transform で「画面下 ⇄ 定位置」入場）
+        //   内側 <g class=spMotif>（transform で浮遊）
+        // combined SVG は各 motif が入れ子なしの <g filter><path/></g>（計17個）なので、
+        // 開始タグを二重化し、全 </g> を二重化すればネストが揃う。
         let idx = 0;
-        const withClass = text.replace(
-          /<g filter="url\(#filter\d+_d_[^)]+\)">/g,
-          (match) => {
+        const withClass = text
+          .replace(/<g filter="url\(#filter\d+_d_[^)]+\)">/g, (match) => {
             const i = idx++;
-            return match.replace('<g ', `<g class="${styles.spMotif}" data-motif-idx="${i}" `);
-          },
-        );
+            return (
+              `<g class="${styles.spMotifEntry}" data-motif-idx="${i}">` +
+              match.replace('<g ', `<g class="${styles.spMotif}" `)
+            );
+          })
+          .replace(/<\/g>/g, '</g></g>');
         setSpInlineSvg(withClass);
       })
       .catch(() => {});
@@ -75,6 +87,17 @@ export default function ParallaxMotifs() {
       cancelled = true;
     };
   }, []);
+
+  // SVG 注入後、1フレーム後に spReady=true にする。
+  // 注入直後のレンダーは spReady=false（= data-entered を強制的に 'false'）で
+  // 画面下の初期状態をペイントさせ、次フレームで実際の entered を反映して
+  // transition を発火させる（パキッ防止）。
+  useEffect(() => {
+    if (!spInlineSvg) return;
+    setSpReady(false);
+    const raf = requestAnimationFrame(() => setSpReady(true));
+    return () => cancelAnimationFrame(raf);
+  }, [spInlineSvg]);
 
   // 「しかし、」のスクロール位置を監視し、motif の出入りを制御する。
   // - 「しかし、」の上端が viewport 中央 (50%) より上に来たら entered = true
@@ -205,6 +228,20 @@ export default function ParallaxMotifs() {
     };
   }, []);
 
+  // 注入した SVG を useMemo で固定。spInlineSvg が変わらない限り同一の React 要素を返すため、
+  // entered 切替や parallax で親が再レンダーされても <g> 要素は作り直されない（再生成による
+  // 「パキッ」を防ぐ）。display:contents の span で包み、レイアウト/サイズに影響させない。
+  const spSvgEl = useMemo(
+    () =>
+      spInlineSvg ? (
+        <span
+          style={{ display: 'contents' }}
+          dangerouslySetInnerHTML={{ __html: spInlineSvg }}
+        />
+      ) : null,
+    [spInlineSvg],
+  );
+
   // SP モチーフ container の top を .about セクション位置から動的に算出
   // Figma SP: motifs container = section top + 274 に配置
   useEffect(() => {
@@ -213,8 +250,16 @@ export default function ParallaxMotifs() {
         'section[class*="about"]:not([class*="aboutContent"]):not([class*="aboutHeading"]):not([class*="aboutMessage"])',
       ) as HTMLElement | null;
       if (!aboutSection) return;
+      // SVG 幅は CSS と同じ式: 840px を基準に、390 を超えた分を 0.5 倍で拡大。
+      const actualWidth = 840 + (window.innerWidth - 390) * 0.5;
+      const containerHeight = actualWidth * (964 / 840);
+      // 縦は「中心」を about セクション基準で固定し、その中心の周りに対称スケールさせる。
+      // → 390(スマホ) は従来と同じ位置、幅が広いほど上にも伸びて高い位置に見える。
+      //   中心位置 = 390基準の top(294-46.4=247.6) + 高さ964/2 = 729.6（about top から）。
+      const centerFromAboutTop =
+        SP_MOTIFS_OFFSET_FROM_ABOUT_TOP - SP_SVG_CONTENT_OFFSET_Y + 964 / 2;
       setSpMotifsTop(
-        aboutSection.offsetTop + SP_MOTIFS_OFFSET_FROM_ABOUT_TOP,
+        aboutSection.offsetTop + centerFromAboutTop - containerHeight / 2,
       );
     };
     compute();
@@ -240,17 +285,17 @@ export default function ParallaxMotifs() {
       <div
         ref={spImgRef}
         className={styles.spMotifs}
-        data-entered={entered ? 'true' : 'false'}
-        data-exited={exited ? 'true' : 'false'}
+        data-entered={spReady && entered ? 'true' : 'false'}
+        data-exited={spReady && exited ? 'true' : 'false'}
         style={{
-          left: `${SP_MOTIFS_CONTAINER.frameX - SP_SVG_CONTENT_OFFSET_X}px`,
-          top: `${spMotifsTop - SP_SVG_CONTENT_OFFSET_Y}px`,
-          width: '840px',
-          height: '964px',
+          // left / width / height / aspect-ratio は CSS(@include sp)で中央配置＋幅比例スケール。
+          // top のみ JS で about セクション基準（scale 補正済み）を渡す。
+          top: `${spMotifsTop}px`,
         }}
         aria-hidden="true"
-        dangerouslySetInnerHTML={{ __html: spInlineSvg }}
-      />
+      >
+        {spSvgEl}
+      </div>
 
       {/* ── PC 用 SVG（〜1023px では非表示） ── */}
       <svg
