@@ -53,7 +53,14 @@ export default function WorkArchiveEntry({
       </div>
 
       <div className={styles.text}>
-        <h2 className={styles.heading}>{heading}</h2>
+        <h2 className={styles.heading}>
+          {heading.split('\n').map((seg, i, arr) => (
+            <Fragment key={i}>
+              {seg}
+              {i < arr.length - 1 && <br className={styles.spOnlyBr} />}
+            </Fragment>
+          ))}
+        </h2>
         <p className={styles.body}>
           {body.map((line, index) => (
             <Fragment key={index}>
@@ -63,12 +70,27 @@ export default function WorkArchiveEntry({
           ))}
         </p>
         <p className={styles.credit}>
-          {credit.map((line, index) => (
-            <Fragment key={index}>
-              {index > 0 && <br />}
-              {line}
-            </Fragment>
-          ))}
+          {credit.map((line, lineIndex) => {
+            // ` | ` を境に分割。PC/SP とも ` | ` は表示。SP のみ後ろで <br> 改行。
+            const segments = line.split(' | ');
+            return (
+              <Fragment key={lineIndex}>
+                {lineIndex > 0 && <br />}
+                {segments.map((seg, segIndex) => (
+                  <Fragment key={segIndex}>
+                    {segIndex > 0 && (
+                      <>
+                        {/* Figma 準拠で全角スペース両側に挟む */}
+                        {'　|　'}
+                        <br className={styles.spOnlyBr} />
+                      </>
+                    )}
+                    {seg}
+                  </Fragment>
+                ))}
+              </Fragment>
+            );
+          })}
         </p>
       </div>
     </article>

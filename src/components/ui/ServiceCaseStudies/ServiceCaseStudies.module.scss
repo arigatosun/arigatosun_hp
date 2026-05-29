@@ -122,6 +122,7 @@
   font-weight: var(--font-weight-regular);
   @include fluid(font-size, 16, 18);
   @include fluid(line-height, 28, 36);
-  @include fluid(letter-spacing, 1.5, 2.34);
+  // Figma SP 2.56 (=0.16em) / PC 2.34 ─ ユーザー指摘で SP min を 1.5 → 2.56 に修正
+  @include fluid(letter-spacing, 2.56, 2.34);
   transition: color var(--transition-base);
 }
