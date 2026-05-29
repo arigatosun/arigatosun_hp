@@ -1,13 +1,20 @@
 @use '@/styles/fluid' as *;
 @use '@/styles/breakpoints' as *;
 
+// ── レスポンシブ方針（TOP「その間」対応 / 2026-05） ──
+// PC レンジ(≥1024)を Hero/About と同じ 1920 基準 clamp でスケールさせる。
+// SP(≤1023) は従来通り 1200 基準のまま（既定の $fluid-max-viewport は 1200 据え置き）。
+//   - PC を 1920 カーブに乗せたい宣言だけ明示引数 `…, 390, 1920` を付ける。
+//   - その宣言が ≤1023 にも効く（@include sp / @include max(1023px) の上書きが無い）場合は
+//     SP 用の @include で `@include fluid(…, 390, 1200)` を足して SP を不変に保つ。
+
 .works {
   position: relative;
   z-index: 5;
-  @include fluid(padding-left, 20, 200);
-  @include fluid(padding-right, 20, 183); // Figma: セクション右端 x1737 → ページ右端まで183px
-  @include fluid(padding-top, 52, 104);
-  @include fluid(padding-bottom, 60, 120);
+  @include fluid(padding-left, 20, 200, 390, 1920);
+  @include fluid(padding-right, 20, 183, 390, 1920); // Figma: セクション右端 x1737 → ページ右端まで183px
+  @include fluid(padding-top, 52, 104, 390, 1920);
+  @include fluid(padding-bottom, 60, 120, 390, 1920);
 
   @include sp {
     // Figma SP @390: 画像（width 334）が左 x=28・右 x=362（左右 28px インセット）
@@ -23,7 +30,7 @@
 
 // ── ヘッダー ──
 .header {
-  @include fluid(margin-bottom, 43, 130);
+  @include fluid(margin-bottom, 43, 130, 390, 1920);
 
   @include sp {
     @include fluid(margin-bottom, 40, 130);
@@ -34,7 +41,7 @@
   margin-top: 108px; // Figma: SERVICE末尾→WORKSタイトル 320px に合わせ調整
 
   img {
-    @include fluid(width, 75, 183);
+    @include fluid(width, 75, 183, 390, 1920);
   }
 
   @include sp {
@@ -55,7 +62,7 @@
 
 .item {
   display: flex;
-  @include fluid(gap, 20, 100); // Figma: テキスト560と画像877の間 100px
+  @include fluid(gap, 20, 100, 390, 1920); // Figma: テキスト560と画像877の間 100px
   align-items: flex-start;
 
   @include max(1023px) {
@@ -65,7 +72,7 @@
 }
 
 .itemSpaced {
-  @include fluid(margin-top, 90, 280);
+  @include fluid(margin-top, 90, 280, 390, 1920);
 
   @include max(1023px) {
     // Figma SP: カード間 80px（card1 end 5092 → card2 start 5173）
@@ -92,11 +99,11 @@
 .client {
   color: var(--color-text-secondary);
   font-family: var(--font-en);
-  @include fluid(font-size, 15, 20);
+  @include fluid(font-size, 15, 20, 390, 1920);
   font-style: normal;
   font-weight: var(--font-weight-light);
-  @include fluid(line-height, 22, 28);
-  @include fluid(letter-spacing, 1.7, 2.6);
+  @include fluid(line-height, 22, 28, 390, 1920);
+  @include fluid(letter-spacing, 1.7, 2.6, 390, 1920);
   margin-top: 12px;
 
   @include sp {
@@ -110,9 +117,9 @@
 }
 
 .clientName {
-  @include fluid(font-size, 14, 18);
+  @include fluid(font-size, 14, 18, 390, 1920);
   font-weight: var(--font-weight-regular);
-  @include fluid(letter-spacing, 1.5, 2.4);
+  @include fluid(letter-spacing, 1.5, 2.4, 390, 1920);
 
   @include sp {
     // Figma SP: 14px / Noto Sans JP / line-height 18
@@ -122,14 +129,14 @@
 }
 
 .itemTitle {
-  @include fluid(margin-top, 20, 40); // Figma: CLIENT行下端→タイトル 40px
+  @include fluid(margin-top, 20, 40, 390, 1920); // Figma: CLIENT行下端→タイトル 40px
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
-  @include fluid(font-size, 12, 20);
+  @include fluid(font-size, 12, 20, 390, 1920);
   font-style: normal;
   font-weight: var(--font-weight-regular);
-  @include fluid(line-height, 22, 40); // Figma: 40px
-  @include fluid(letter-spacing, 1.6, 3.2); // Figma: 3.2px
+  @include fluid(line-height, 22, 40, 390, 1920); // Figma: 40px
+  @include fluid(letter-spacing, 1.6, 3.2, 390, 1920); // Figma: 3.2px
 
   @include sp {
     // Figma SP: 16px / line-height 28 / letter-spacing 2.56
@@ -151,7 +158,11 @@
 }
 
 .afterSeparator {
-  @include fluid(letter-spacing, 1.4, 3.2);
+  @include fluid(letter-spacing, 1.4, 3.2, 390, 1920);
+
+  @include sp {
+    @include fluid(letter-spacing, 1.4, 3.2);
+  }
 }
 
 // Figma の `|` 後 2 行目を圧縮する独自補正は廃止し、line-height 40px の均等送りに揃える。
@@ -161,8 +172,8 @@
 
 // ── 横ライン装飾 ──
 .divider {
-  @include fluid(margin-top, 26, 52);
-  @include fluid(width, 25, 43);
+  @include fluid(margin-top, 26, 52, 390, 1920);
+  @include fluid(width, 25, 43, 390, 1920);
   height: 1px;
   background: var(--color-black);
 
@@ -176,14 +187,15 @@
 
 // ── 詳細情報 ──
 .detailsList {
-  @include fluid(margin-top, 26, 52); // Figma: 区切り線→詳細リスト 52px
+  @include fluid(margin-top, 26, 52, 390, 1920); // Figma: 区切り線→詳細リスト 52px
   display: flex;
   flex-direction: column;
-  @include fluid(gap, 5, 11); // Figma: D/B行→TERM行 約11px
+  @include fluid(gap, 5, 11, 390, 1920); // Figma: D/B行→TERM行 約11px
 
   @include max(1023px) {
     // Figma SP @390: 区切り線下端 y=4956 → D/B行 y=4984 = 28px
     @include fluid(margin-top, 28, 52);
+    @include fluid(gap, 5, 11);
   }
 }
 
@@ -199,11 +211,11 @@
 .detailLabel {
   color: var(--color-text-secondary);
   font-family: var(--font-en);
-  @include fluid(font-size, 13, 16);
+  @include fluid(font-size, 13, 16, 390, 1920);
   font-style: normal;
   font-weight: var(--font-weight-light);
-  @include fluid(line-height, 20, 24);
-  @include fluid(letter-spacing, 1.8, 2.7);
+  @include fluid(line-height, 20, 24, 390, 1920);
+  @include fluid(letter-spacing, 1.8, 2.7, 390, 1920);
   flex-shrink: 0;
 
   @include sp {
@@ -217,11 +229,11 @@
 .detailValue {
   color: var(--color-text-secondary);
   font-family: 'Noto Sans JP', var(--font-jp);
-  @include fluid(font-size, 13, 16);
+  @include fluid(font-size, 13, 16, 390, 1920);
   font-style: normal;
   font-weight: var(--font-weight-regular);
-  @include fluid(line-height, 18, 24); // Figma: 24px
-  @include fluid(letter-spacing, 1.4, 2.08); // Figma: 2.08px
+  @include fluid(line-height, 18, 24, 390, 1920); // Figma: 24px
+  @include fluid(letter-spacing, 1.4, 2.08, 390, 1920); // Figma: 2.08px
 
   @include sp {
     // Figma SP: 14px / line-height 24 / letter-spacing 1.82
@@ -235,7 +247,7 @@
 .itemRight {
   width: 57%; // Figma: 画像エリア877 / セクション幅1537
   flex-shrink: 0;
-  @include fluid(margin-top, -22, -44);
+  @include fluid(margin-top, -22, -44, 390, 1920);
 
   @include max(1023px) {
     // Figma SP: 画像はテキストの「上」に配置
@@ -276,19 +288,20 @@
   }
 }
 
+// .viewMore は ≤1023 で display:none のため、ここの fluid は PC レンジ専用 → 1920 基準のみ
 .viewMoreText {
   display: inline;
   color: var(--color-white);
   font-family: var(--font-en);
-  @include fluid(font-size, 14, 28);
+  @include fluid(font-size, 14, 28, 390, 1920);
   font-style: normal;
   font-weight: var(--font-weight-light);
-  @include fluid(line-height, 20, 24);
-  @include fluid(letter-spacing, 1.5, 3.64);
-  @include fluid(padding-top, 3, 4);
-  @include fluid(padding-bottom, 3, 4);
-  @include fluid(padding-left, 4, 6);
-  @include fluid(padding-right, 4, 6);
+  @include fluid(line-height, 20, 24, 390, 1920);
+  @include fluid(letter-spacing, 1.5, 3.64, 390, 1920);
+  @include fluid(padding-top, 3, 4, 390, 1920);
+  @include fluid(padding-bottom, 3, 4, 390, 1920);
+  @include fluid(padding-left, 4, 6, 390, 1920);
+  @include fluid(padding-right, 4, 6, 390, 1920);
   background-color: var(--color-primary);
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
@@ -306,11 +319,11 @@
 // Figma フレーム1920基準: ブロック x[400..1520]・幅1120・右マージン400（1920基準）
 // セクション padding-right 183 と合わせて 183+217=400 で右端 x=1520 に合わせる
 .footer {
-  @include fluid(margin-top, 60, 200);
+  @include fluid(margin-top, 60, 200, 390, 1920);
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  @include fluid(padding-right, 0, 217);
+  @include fluid(padding-right, 0, 217, 390, 1920);
 
   @include max(1023px) {
     flex-direction: column;
@@ -328,8 +341,8 @@
 // Figma: キャラ 156×161（1920基準）
 .footerCharacter {
   flex-shrink: 0;
-  @include fluid(width, 100, 156);
-  @include fluid(height, 100, 161);
+  @include fluid(width, 100, 156, 390, 1920);
+  @include fluid(height, 100, 161, 390, 1920);
   // Hero と同じく枠ごとシフト（中の 3D は変えず translate のみ）
   transform: translate(20px, 0);
 
@@ -353,8 +366,8 @@
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  @include fluid(width, 280, 593);
-  @include fluid(margin-left, 2, 4);
+  @include fluid(width, 280, 593, 390, 1920);
+  @include fluid(margin-left, 2, 4, 390, 1920);
 
   @include max(1023px) {
     // Figma SP @390: テキスト x=40 / width=310（page 端から 40px）
@@ -374,11 +387,11 @@
   color: var(--color-text-secondary);
   text-align: right;
   font-family: var(--font-en);
-  @include fluid(font-size, 11, 14);
+  @include fluid(font-size, 11, 14, 390, 1920);
   font-style: normal;
   font-weight: var(--font-weight-light);
-  @include fluid(line-height, 16, 21);
-  @include fluid(letter-spacing, 1, 1.82);
+  @include fluid(line-height, 16, 21, 390, 1920);
+  @include fluid(letter-spacing, 1, 1.82, 390, 1920);
 
   @include max(1023px) {
     // Figma SP @390: 14px / line-height 21 / letter-spacing 1.82
@@ -392,20 +405,21 @@
 
 // Figma: font 12 / line-height 15.75 / letter-spacing 1.56、テキスト下から 12px
 .footerCopyright {
-  @include fluid(margin-top, 8, 12);
+  @include fluid(margin-top, 8, 12, 390, 1920);
   color: var(--color-text-secondary);
   text-align: right;
   font-family: var(--font-en);
-  @include fluid(font-size, 10, 12);
+  @include fluid(font-size, 10, 12, 390, 1920);
   font-style: normal;
   font-weight: var(--font-weight-light);
-  @include fluid(line-height, 13, 15.75);
-  @include fluid(letter-spacing, 0.8, 1.56);
+  @include fluid(line-height, 13, 15.75, 390, 1920);
+  @include fluid(letter-spacing, 0.8, 1.56, 390, 1920);
 
   @include max(1023px) {
     // Figma SP @390: 12px / line-height 15.75
     // letter-spacing は Figma 1.56 だと 310 幅で 10px はみ出すため 1.2 に絞って 1 行に収める
     text-align: center;
+    @include fluid(margin-top, 8, 12);
     @include fluid(font-size, 12, 12);
     @include fluid(line-height, 15.75, 15.75);
     @include fluid(letter-spacing, 1.2, 1.56);
@@ -415,7 +429,7 @@
 // Figma: ボタン 332×64、テキストとの間 35px（Button コンポーネントが 332×64 で一致）
 .footerButton {
   flex-shrink: 0;
-  @include fluid(margin-left, 16, 35);
+  @include fluid(margin-left, 16, 35, 390, 1920);
 
   @include max(1023px) {
     // SP は column flex の align-items:center 配下で content 幅に縮むのを防ぐ

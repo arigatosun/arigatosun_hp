@@ -1,9 +1,17 @@
 @use '@/styles/fluid' as *;
 @use '@/styles/breakpoints' as *;
 
+// ── レスポンシブ方針（TOP「その間」対応 / 2026-05） ──
+// PC レンジ(≥1024)を Hero/About と同じ 1920 基準 clamp でスケールさせる。
+// SP(≤1023) は従来通り 1200 基準のまま（既定の $fluid-max-viewport は 1200 据え置き）。
+//   - PC を 1920 カーブに乗せたい宣言だけ明示引数 `…, 390, 1920` を付ける。
+//   - その宣言が ≤1023 にも効く（@include sp の上書きが無い）場合は
+//     `@include sp { @include fluid(…, 390, 1200) }` を足して SP を不変に保つ。
+// 横スクロール(cardsTrack 等)は vw 制御のままで触らない。
+
 .service {
   position: relative;
-  @include fluid(margin-top, 80, 250);
+  @include fluid(margin-top, 80, 250, 390, 1920);
   overflow-x: clip; // 横スクロールバー防止
   overflow-y: visible; // 装飾マスクのはみ出しを許容
 
@@ -72,8 +80,8 @@
   flex-shrink: 0;
   display: flex;
   align-items: flex-start;
-  @include fluid(padding-left, 20, 200);
-  @include fluid(padding-top, 40, 80);
+  @include fluid(padding-left, 20, 200, 390, 1920);
+  @include fluid(padding-top, 40, 80, 390, 1920);
   padding-right: 2vw;
   opacity: calc(1 - var(--left-hidden, 0));
 
@@ -122,7 +130,11 @@
 
   img {
     // Figma SP: 136 / Figma PC: 180
-    @include fluid(width, 136, 180);
+    @include fluid(width, 136, 180, 390, 1920);
+
+    @include sp {
+      @include fluid(width, 136, 180);
+    }
   }
 
   p {
@@ -136,25 +148,31 @@
 }
 
 .label {
-  @include fluid(margin-top, 10, 20);
+  @include fluid(margin-top, 10, 20, 390, 1920);
   color: var(--color-text-secondary);
   font-family: var(--font-en);
-  @include fluid(font-size, 14, 20);
+  @include fluid(font-size, 14, 20, 390, 1920);
   font-weight: var(--font-weight-light);
   font-style: normal;
   line-height: 24px;
-  @include fluid(letter-spacing, 1.2, 2.6);
+  @include fluid(letter-spacing, 1.2, 2.6, 390, 1920);
+
+  @include sp {
+    @include fluid(margin-top, 10, 20);
+    @include fluid(font-size, 14, 20);
+    @include fluid(letter-spacing, 1.2, 2.6);
+  }
 }
 
 .description {
-  @include fluid(margin-top, 23, 68);
+  @include fluid(margin-top, 23, 68, 390, 1920);
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
-  @include fluid(font-size, 13, 20);
+  @include fluid(font-size, 13, 20, 390, 1920);
   font-weight: var(--font-weight-regular);
   font-style: normal;
-  @include fluid(line-height, 30, 44); // Figma: 44px
-  @include fluid(letter-spacing, 1.8, 4.4);
+  @include fluid(line-height, 30, 44, 390, 1920); // Figma: 44px
+  @include fluid(letter-spacing, 1.8, 4.4, 390, 1920);
 
   @include sp {
     // Figma SP @390: タイトル下端 y=2298 → description y=2330 = gap 32px
@@ -168,12 +186,12 @@
 
 // ── メニューリスト ──
 .menuList {
-  @include fluid(margin-top, 24, 60);
+  @include fluid(margin-top, 24, 60, 390, 1920);
   list-style: none;
   display: flex;
   flex-direction: column;
-  @include fluid(gap, 13, 28); // Figma: 項目ピッチ52px − 行ボックス24px
-  @include fluid(margin-bottom, 29, 64);
+  @include fluid(gap, 13, 28, 390, 1920); // Figma: 項目ピッチ52px − 行ボックス24px
+  @include fluid(margin-bottom, 29, 64, 390, 1920);
 
   @include sp {
     // Figma SP @390: description 下端 y=2442 → menu y=2494 = gap 52px
@@ -188,11 +206,11 @@
 .menuItemActive {
   display: block;
   font-family: var(--font-en);
-  @include fluid(font-size, 14, 20);
+  @include fluid(font-size, 14, 20, 390, 1920);
   font-weight: var(--font-weight-light);
   font-style: normal;
   line-height: 1.2; // 赤帯がはみ出さない行ボックス高
-  @include fluid(letter-spacing, 1.4, 2.6);
+  @include fluid(letter-spacing, 1.4, 2.6, 390, 1920);
   white-space: nowrap;
   cursor: pointer;
 
