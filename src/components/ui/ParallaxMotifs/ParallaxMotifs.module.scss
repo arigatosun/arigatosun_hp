@@ -49,9 +49,16 @@
 
   @include sp {
     display: block;
-    // ラッパー: マウス追従 (--mx/--my) + scroll パララックス (--py) のみ。
+    // 中央配置 + 幅に応じて緩やかにスケール（= 横に散らばるが大きくなりすぎない）。
+    // 390px で 840px(Figma 基準) を維持し、それより広い分は 0.5 倍の伸び率で拡大。
+    // （比例 100vw*840/390 ≒2.15倍だと巨大化したため伸び率を抑制。JS の scale も同係数）
+    left: 50%;
+    width: calc(840px + (100vw - 390px) * 0.5);
+    height: auto;
+    aspect-ratio: 840 / 964;
+    // ラッパー: 中央寄せ(translateX -50%) + マウス追従 (--mx/--my) + scroll パララックス (--py)。
     // 個別 motif の動きは inline SVG 内の各 <g class=spMotif> に当てる。
-    transform: translate(var(--mx, 0px), var(--my, 0px))
+    transform: translateX(-50%) translate(var(--mx, 0px), var(--my, 0px))
       translateY(var(--py, 0px));
     transition: transform 0.5s ease-out;
 
@@ -73,23 +80,25 @@
   animation: spMotifFloatSm 6s ease-in-out infinite;
 }
 
-.spMotif:nth-of-type(5n + 1) {
+// 2階層化により .spMotif は各 .spMotifEntry の唯一の <g> 子になるため、
+// 速度バリエーションは PC と同様にラッパー (.spMotifEntry) の nth 経由で当てる。
+.spMotifEntry:nth-of-type(5n + 1) .spMotif {
   animation-duration: 7.2s;
   animation-delay: -0.4s;
 }
-.spMotif:nth-of-type(5n + 2) {
+.spMotifEntry:nth-of-type(5n + 2) .spMotif {
   animation-duration: 5.4s;
   animation-delay: -2.1s;
 }
-.spMotif:nth-of-type(5n + 3) {
+.spMotifEntry:nth-of-type(5n + 3) .spMotif {
   animation-duration: 6.8s;
   animation-delay: -3.7s;
 }
-.spMotif:nth-of-type(5n + 4) {
+.spMotifEntry:nth-of-type(5n + 4) .spMotif {
   animation-duration: 5.0s;
   animation-delay: -1.3s;
 }
-.spMotif:nth-of-type(5n) {
+.spMotifEntry:nth-of-type(5n) .spMotif {
   animation-duration: 8.0s;
   animation-delay: -2.8s;
 }
@@ -258,32 +267,53 @@
   }
 }
 
-// SP 個別 motif も同じく translate で個別に入場。
-.spMotif {
-  translate: 0 100vh;
-  transition: translate 1.3s cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: translate;
-}
-
 // 入場前は浮遊アニメも止めて画面下で静止。
 .spMotifs[data-entered='false'] .spMotif {
   animation-play-state: paused;
 }
 
-// 入場済: 定位置。
-.spMotifs[data-entered='true'] .spMotif {
-  translate: 0 0;
+// ── SP 個別 motif の入場（PC の .motifEntry と同じ 2階層 transform 方式）──
+// SVG 要素では translate 個別プロパティの transition が効きにくく「ぱちっ」と出てしまうため、
+// PC と同様に外側ラッパー (.spMotifEntry) の transform で「画面下 ⇄ 定位置」を切り替える。
+// 内側 .spMotif の浮遊 transform とは別要素なので合成され、両立する。
+.spMotifEntry {
+  --tx: 0px;
+  --ty-final: 0px;
+  transform: translate(var(--tx), 100vh);
+  transition: transform 1.3s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
 }
 
-// SP の緩急バリエーション (PC と同じパターンで)。
-.spMotif:nth-of-type(8n + 1) { transition-delay: 0s; transition-duration: 1.0s; }
-.spMotif:nth-of-type(8n + 2) { transition-delay: 0.28s; transition-duration: 1.9s; }
-.spMotif:nth-of-type(8n + 3) { transition-delay: 0.06s; transition-duration: 1.2s; }
-.spMotif:nth-of-type(8n + 4) { transition-delay: 0.40s; transition-duration: 2.0s; }
-.spMotif:nth-of-type(8n + 5) { transition-delay: 0.16s; transition-duration: 1.5s; }
-.spMotif:nth-of-type(8n + 6) { transition-delay: 0.04s; transition-duration: 0.85s; }
-.spMotif:nth-of-type(8n + 7) { transition-delay: 0.22s; transition-duration: 1.7s; }
-.spMotif:nth-of-type(8n)     { transition-delay: 0.10s; transition-duration: 1.3s; }
+// 入場済: 自然位置 + 個別オフセットへ。
+.spMotifs[data-entered='true'] .spMotifEntry {
+  transform: translate(var(--tx), var(--ty-final));
+}
+
+// 退場: Service セクションが上半分まで上がってきたら上方へ抜ける（PC と同じ）。
+.spMotifs[data-exited='true'] .spMotifEntry {
+  transform: translate(var(--tx), -150vh);
+  transition-timing-function: cubic-bezier(0.55, 0, 0.85, 0.3);
+}
+
+// 入場の緩急 + ばらけ（PC と同じパターン。SP はスケールが小さいのでオフセットは控えめ）。
+.spMotifEntry:nth-of-type(8n + 1) { --tx: -30px; --ty-final: -14px; transition-delay: 0s;    transition-duration: 1.0s; }
+.spMotifEntry:nth-of-type(8n + 2) { --tx: 28px;  --ty-final: 18px;  transition-delay: 0.28s; transition-duration: 1.9s; }
+.spMotifEntry:nth-of-type(8n + 3) { --tx: -22px; --ty-final: -28px; transition-delay: 0.06s; transition-duration: 1.2s; }
+.spMotifEntry:nth-of-type(8n + 4) { --tx: 36px;  --ty-final: -16px; transition-delay: 0.40s; transition-duration: 2.0s; }
+.spMotifEntry:nth-of-type(8n + 5) { --tx: -28px; --ty-final: 32px;  transition-delay: 0.16s; transition-duration: 1.5s; }
+.spMotifEntry:nth-of-type(8n + 6) { --tx: 32px;  --ty-final: -26px; transition-delay: 0.04s; transition-duration: 0.85s; }
+.spMotifEntry:nth-of-type(8n + 7) { --tx: -16px; --ty-final: 36px;  transition-delay: 0.22s; transition-duration: 1.7s; }
+.spMotifEntry:nth-of-type(8n)     { --tx: 22px;  --ty-final: 28px;  transition-delay: 0.10s; transition-duration: 1.3s; }
+
+// 退場の緩急（PC と同じく高速・delay 小さめ）。
+.spMotifs[data-exited='true'] .spMotifEntry:nth-of-type(8n + 1) { transition-duration: 0.55s; transition-delay: 0s; }
+.spMotifs[data-exited='true'] .spMotifEntry:nth-of-type(8n + 2) { transition-duration: 0.95s; transition-delay: 0.18s; }
+.spMotifs[data-exited='true'] .spMotifEntry:nth-of-type(8n + 3) { transition-duration: 0.7s;  transition-delay: 0.05s; }
+.spMotifs[data-exited='true'] .spMotifEntry:nth-of-type(8n + 4) { transition-duration: 1.05s; transition-delay: 0.24s; }
+.spMotifs[data-exited='true'] .spMotifEntry:nth-of-type(8n + 5) { transition-duration: 0.8s;  transition-delay: 0.1s; }
+.spMotifs[data-exited='true'] .spMotifEntry:nth-of-type(8n + 6) { transition-duration: 0.5s;  transition-delay: 0.03s; }
+.spMotifs[data-exited='true'] .spMotifEntry:nth-of-type(8n + 7) { transition-duration: 0.9s;  transition-delay: 0.2s; }
+.spMotifs[data-exited='true'] .spMotifEntry:nth-of-type(8n)     { transition-duration: 0.7s;  transition-delay: 0.08s; }
 
 // アクセシビリティ: 視差・浮遊・入場アニメを無効化（即定位置）。
 // JS 側でも entered=true を強制セットしているが、CSS でも transition を切る。
@@ -292,10 +322,14 @@
   .spMotifs {
     transition: none;
   }
+  // 入場ラッパーは transition を切る（JS が entered=true を強制するので定位置に即着地）。
+  .motifEntry,
+  .spMotifEntry {
+    transition: none;
+  }
   .motif,
   .spMotif {
     animation: none;
     transition: none;
-    translate: 0 0;
   }
 }
