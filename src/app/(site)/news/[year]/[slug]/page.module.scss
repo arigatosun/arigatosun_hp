@@ -274,75 +274,195 @@
   }
 }
 
-// ── 本文 ──
+// ── 本文（TipTap リッチテキストを dangerouslySetInnerHTML で描画） ──
+// 本文は管理画面 RichEditor で作成された生 HTML（クラス無しの h2/p/ul/a/img/table 等）。
+// globals.scss のリセット（ul,ol list-style:none / a color:inherit / 見出し既定サイズ）の
+// ままだと「箇条書きの点が消える・リンク色が無い・見出しサイズ不揃い・非レスポンシブ」に
+// なるため、ここで RichEditor のプレビューと同等の体裁を :global で当て直し、
+// さらに fluid() で 1920 基準にスケール（中間幅も比例）させる。
+// 参照: admin .../RichEditor/RichEditor.module.scss（WYSIWYG 一致のためサイズ感を合わせる）
 .body {
   @include fluid(margin-top, 40, 76, 390, 1920);
+  color: var(--color-black);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  @include fluid(font-size, 14, 16, 390, 1920);
+  line-height: 1.9;
+  @include fluid(letter-spacing, 1.2, 1.82, 390, 1920);
 
   @include sp {
     // Figma SP: divider(575.73) → body heading(623.73) = 48
     @include fluid(margin-top, 40, 48, 320, 390);
   }
-}
 
-.bodyHeading {
-  margin: 0;
-  color: var(--color-black);
-  font-family: 'Noto Sans JP', var(--font-jp);
-  font-weight: var(--font-weight-medium);
-  @include fluid(font-size, 15, 18, 390, 1920);
-  @include fluid(line-height, 28, 34, 390, 1920);
-  @include fluid(letter-spacing, 2, 2.88, 390, 1920);
-
-  &:not(:first-child) {
-    @include fluid(margin-top, 32, 60, 390, 1920);
-  }
-
-  @include sp {
-    // Figma SP: 16 / lh 30 / ls 2.08 = 0.13em
-    @include fluid(font-size, 14, 16, 320, 390);
-    line-height: 30px;
-    letter-spacing: 0.13em;
-
-    &:not(:first-child) {
-      // Figma SP: 段落末(1091) → 次の見出し(1159) = 68
-      @include fluid(margin-top, 48, 68, 320, 390);
-    }
-  }
-}
-
-.bodyParagraphs {
-  @include fluid(margin-top, 6, 12, 390, 1920);
-
-  @include sp {
-    // Figma SP: 見出し末(683) → 段落(699) = 16
-    @include fluid(margin-top, 10, 16, 320, 390);
-  }
-}
-
-.bodyParagraph {
-  margin: 0;
-  color: var(--color-black);
-  font-family: 'Noto Sans JP', var(--font-jp);
-  font-weight: var(--font-weight-regular);
-  @include fluid(font-size, 13, 14, 390, 1920);
-  @include fluid(line-height, 26, 32, 390, 1920);
-  @include fluid(letter-spacing, 1.2, 1.82, 390, 1920);
-
-  & + & {
+  // CSS Modules ではタグセレクタ（h2/p/ul 等）はモジュールクラス配下でも
+  // 自動的にグローバル扱いになるため、:global ラッパーは不要。
+  // ── ブロック間の標準余白 ──
+  > * + * {
     @include fluid(margin-top, 16, 24, 390, 1920);
   }
 
-  @include sp {
-    // Figma SP: 14 / lh 28 / ls 1.82 = 0.13em
-    @include fluid(font-size, 13, 14, 320, 390);
-    line-height: 28px;
-    letter-spacing: 0.13em;
-
-    & + & {
-      // Figma SP: 段落間 0（連続して流れる）
-      margin-top: 0;
+    // ── 見出し（RichEditor: h1 22 bold / h2 18 bold / h3 16 medium） ──
+    h1,
+    h2,
+    h3,
+    h4 {
+      margin: 0;
+      color: var(--color-black);
+      font-family: 'Noto Sans JP', var(--font-jp);
+      font-weight: var(--font-weight-bold);
+      line-height: 1.5;
     }
-  }
+
+    h1 {
+      @include fluid(font-size, 18, 22, 390, 1920);
+    }
+
+    h2 {
+      @include fluid(font-size, 16, 18, 390, 1920);
+    }
+
+    h3,
+    h4 {
+      font-weight: var(--font-weight-medium);
+      @include fluid(font-size, 15, 16, 390, 1920);
+    }
+
+    // 見出しの上は段落より広めに空ける（先頭要素は除く）
+    h1,
+    h2,
+    h3,
+    h4 {
+      &:not(:first-child) {
+        @include fluid(margin-top, 32, 56, 390, 1920);
+      }
+    }
+
+    // ── 段落 ──
+    p {
+      margin: 0;
+    }
+
+    // ── リスト（globals の list-style:none を本文内では復活） ──
+    ul,
+    ol {
+      margin: 0;
+      padding-left: 1.5em;
+    }
+
+    ul {
+      list-style: disc;
+    }
+
+    ol {
+      list-style: decimal;
+    }
+
+    li {
+      margin: 0;
+
+      & + & {
+        margin-top: 0.4em;
+      }
+
+      // リスト内のネストはブロック余白を詰める
+      > ul,
+      > ol {
+        margin-top: 0.4em;
+      }
+    }
+
+    // ── 強調 ──
+    strong {
+      font-weight: var(--font-weight-bold);
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    // ── リンク（RichEditor と同じ link-blue + 下線） ──
+    a {
+      color: var(--color-link-blue);
+      text-decoration: underline;
+      transition: opacity var(--transition-base);
+
+      &:hover {
+        opacity: 0.7;
+      }
+    }
+
+    // ── 引用 ──
+    blockquote {
+      margin: 0;
+      border-left: 3px solid var(--color-gray-300);
+      @include fluid(padding-left, 12, 20, 390, 1920);
+      color: var(--color-text-secondary);
+    }
+
+    // ── 画像 ──
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 6px;
+    }
+
+    // ── インラインコード / コードブロック ──
+    code {
+      background: var(--color-gray-100);
+      padding: 0.1em 0.3em;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.9em;
+    }
+
+    pre {
+      margin: 0;
+      background: var(--color-gray-800);
+      color: var(--color-white);
+      border-radius: 6px;
+      @include fluid(padding, 12, 16, 390, 1920);
+      font-family: var(--font-mono);
+      @include fluid(font-size, 12, 13, 390, 1920);
+      overflow-x: auto;
+
+      code {
+        background: none;
+        color: inherit;
+        padding: 0;
+        font-size: inherit;
+      }
+    }
+
+    // ── 水平線 ──
+    hr {
+      border: 0;
+      height: 1px;
+      background: var(--color-text-secondary);
+      opacity: 0.3;
+      @include fluid(margin-top, 24, 40, 390, 1920);
+      @include fluid(margin-bottom, 24, 40, 390, 1920);
+    }
+
+    // ── 表（RichEditor と同じ罫線・ヘッダ背景） ──
+    table {
+      border-collapse: collapse;
+      table-layout: fixed;
+      width: 100%;
+
+      td,
+      th {
+        border: 1px solid var(--color-gray-300);
+        @include fluid(padding, 6, 10, 390, 1920);
+        vertical-align: top;
+      }
+
+      th {
+        background: var(--color-gray-100);
+        font-weight: var(--font-weight-medium);
+        text-align: left;
+      }
+    }
 }
 
 // ── BACK TO LIST（PC） / TOP PAGE（SP） ──
