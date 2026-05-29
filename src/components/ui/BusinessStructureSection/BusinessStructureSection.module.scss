@@ -1,12 +1,20 @@
 @use '@/styles/fluid' as *;
 @use '@/styles/breakpoints' as *;
 
+// ── レスポンシブ方針（about「その間」対応 / 2026-05） ──
+// PC レンジ(≥1024)を 1920 基準でスケールし、SP(≤1023) は据え置き。
+// ★ 本セクションは「左カラム + gap + 右カラム」が固定幅(flex-shrink:0)で横並びのため、
+//   fluid(min,max) だと min 値が中間幅を膨らませ 1024〜約1360px で viewport を溢れる。
+//   そのため横方向の合計に効く padding/gap/左右幅は vw 比例(= 値/1920)にして
+//   「設計1920を比率そのまま縮小＝どの幅でも必ず収まる」形にする（1920ネイティブは同値）。
+//   テキスト等の非クリティカル値は従来通り fluid(…,1920)。SP は @include sp で固定。
+
 .section {
   display: flex;
   // Figma 1920 frame 実測: left 660 + gap 163 + right 637 = 1460 (section 内容幅)
-  @include fluid(gap, 24, 163, 320, 1920);
-  @include fluid(padding-left, 40, 200);
-  @include fluid(padding-right, 40, 200);
+  gap: 8.4896vw; // 163 / 1920
+  padding-left: 10.4167vw; // 200 / 1920
+  padding-right: 10.4167vw; // 200 / 1920
   // Figma 実測: PrinciplesSection 下端 1586 → 本セクション上端 1846 = ギャップ 260
   @include fluid(padding-top, 80, 260, 320, 1920);
 
@@ -20,6 +28,9 @@
     // SP: 連携図 bottom → メンバー title y までの実測ギャップ = 149
     //     本セクション padding-bottom 69 + Member padding-top 80 = 149
     padding-bottom: 69px;
+    // base の padding-left/right(vw) は SP にも効くため現状(1200)カーブに固定
+    @include fluid(padding-left, 40, 200, 390, 1200);
+    @include fluid(padding-right, 40, 200, 390, 1200);
   }
 }
 
@@ -31,7 +42,7 @@
 .left {
   flex-shrink: 0;
   min-width: 0;
-  @include fluid(width, 280, 660, 320, 1920);
+  width: 34.375vw; // 660 / 1920（vw 比例で中間幅も溢れない）
   @include fluid(margin-top, 0, 160, 320, 1920);
 
   @include sp {
@@ -44,18 +55,22 @@
 
 .body {
   // Figma SP: SectionHeader sub bottom y=2364 → body top y=2396 = 32
-  @include fluid(margin-top, 24, 60);
+  @include fluid(margin-top, 24, 60, 390, 1920);
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
   // Figma SP: 14 / lh 30 / ls 2.52 (=0.18em)
   // Figma PC: 16 / lh 34 / ls 3.68 (=0.23em)
-  @include fluid(font-size, 14, 16);
+  @include fluid(font-size, 14, 16, 390, 1920);
   font-weight: var(--font-weight-regular);
-  @include fluid(line-height, 30, 34);
-  @include fluid(letter-spacing, 2.52, 3.68);
+  @include fluid(line-height, 30, 34, 390, 1920);
+  @include fluid(letter-spacing, 2.52, 3.68, 390, 1920);
 
   @include sp {
     margin-top: 32px;
+    // base の font/lh/ls は SP にも効くため現状(1200)カーブに固定
+    @include fluid(font-size, 14, 16, 390, 1200);
+    @include fluid(line-height, 30, 34, 390, 1200);
+    @include fluid(letter-spacing, 2.52, 3.68, 390, 1200);
   }
 }
 
@@ -65,7 +80,7 @@
 .right {
   position: relative;
   flex-shrink: 0;
-  @include fluid(width, 280, 637, 320, 1920);
+  width: 33.1771vw; // 637 / 1920（vw 比例で中間幅も溢れない）
   aspect-ratio: 637 / 647;
 
   @include sp {

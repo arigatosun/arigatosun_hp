@@ -1,15 +1,25 @@
 @use '@/styles/fluid' as *;
 @use '@/styles/breakpoints' as *;
 
+// ── レスポンシブ方針（about「その間」対応 / 2026-05） ──
+// PC レンジ(≥1024)を Hero/About と同じ 1920 基準 clamp に、SP(≤1023) は 1200 据え置き。
+//   - PC を 1920 に乗せたいベース宣言だけ `…, 390, 1920` を付ける。
+//   - SP に効く無防備な値は `@include sp { @include fluid(…, 390, 1200) }` で SP を不変に保つ。
+// グリッドは 6列(1fr) のため横はみ出ししない。スライダーは @keyframes が translateX(-50%)
+// （相対値・ハードコード無し）なのでカード幅/余白を 1920 化しても継ぎ目は保たれる。
+
 .section {
-  @include fluid(padding-left, 40, 200);
-  @include fluid(padding-right, 40, 200);
+  @include fluid(padding-left, 40, 200, 390, 1920);
+  @include fluid(padding-right, 40, 200, 390, 1920);
   // BusinessStructure 末尾 → メンバータイトル間ギャップ 260（ユーザー指示）
   @include fluid(padding-top, 80, 260, 320, 1920);
 
   @include sp {
     // SP: BS.padding-bottom 69 + 本セクション padding-top 80 = 149
     padding-top: 80px;
+    // base の padding-left/right は SP にも効くため現状(1200)カーブに固定
+    @include fluid(padding-left, 40, 200, 390, 1200);
+    @include fluid(padding-right, 40, 200, 390, 1200);
   }
 }
 
@@ -26,8 +36,13 @@
 
 // slider variant のタイトル専用 wrap（.section から外した padding を再付与）
 .sliderTitleWrap {
-  @include fluid(padding-left, 20, 200);
-  @include fluid(padding-right, 20, 200);
+  @include fluid(padding-left, 20, 200, 390, 1920);
+  @include fluid(padding-right, 20, 200, 390, 1920);
+
+  @include sp {
+    @include fluid(padding-left, 20, 200, 390, 1200);
+    @include fluid(padding-right, 20, 200, 390, 1200);
+  }
 }
 
 // ── メンバーグリッド ──
@@ -37,8 +52,8 @@
 .grid {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
-  @include fluid(gap, 12, 24);
-  @include fluid(margin-top, 24, 60);
+  @include fluid(gap, 12, 24, 390, 1920);
+  @include fluid(margin-top, 24, 60, 390, 1920);
 
   @include sp {
     grid-template-columns: repeat(2, 1fr);
@@ -46,12 +61,18 @@
     row-gap: 28px;
     margin-left: -12px;
     margin-right: -12px;
+    // base の margin-top は SP にも効くため現状(1200)カーブに固定
+    @include fluid(margin-top, 24, 60, 390, 1200);
   }
 }
 
 // ── スライダー ──
 .sliderWrapper {
-  @include fluid(margin-top, 24, 60);
+  @include fluid(margin-top, 24, 60, 390, 1920);
+
+  @include sp {
+    @include fluid(margin-top, 24, 60, 390, 1200);
+  }
 }
 
 // シームレスループのため flex gap は使わず、各カードの margin-right で間隔を取る
@@ -71,10 +92,16 @@
 }
 
 // カードがスライダー内の場合は幅を固定 + 右マージンで gap を担う
+// width と margin-right は同率でスケールするため translateX(-50%) のループ継ぎ目は不変。
 .cardSlider {
-  @include fluid(width, 160, 233);
-  @include fluid(margin-right, 12, 24);
+  @include fluid(width, 160, 233, 390, 1920);
+  @include fluid(margin-right, 12, 24, 390, 1920);
   flex-shrink: 0;
+
+  @include sp {
+    @include fluid(width, 160, 233, 390, 1200);
+    @include fluid(margin-right, 12, 24, 390, 1200);
+  }
 }
 
 @keyframes memberSlide {
@@ -211,14 +238,19 @@
   margin-top: 8px;
   color: var(--color-text-secondary);
   font-family: var(--font-en);
-  @include fluid(font-size, 12, 14);
+  @include fluid(font-size, 12, 14, 390, 1920);
   font-weight: var(--font-weight-light);
   line-height: 18px;
-  @include fluid(letter-spacing, 1.2, 1.82);
+  @include fluid(letter-spacing, 1.2, 1.82, 390, 1920);
   text-transform: uppercase;
   transition:
     transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
     color 0.4s ease;
+
+  @include sp {
+    @include fluid(font-size, 12, 14, 390, 1200);
+    @include fluid(letter-spacing, 1.2, 1.82, 390, 1200);
+  }
 }
 
 // Figma SP: 14px / lh 18 / ls 1.4 (=0.1em) / Mozaic GEO Light / #000
@@ -227,12 +259,17 @@
   margin-top: 4px;
   color: var(--color-black);
   font-family: var(--font-en);
-  @include fluid(font-size, 14, 18);
+  @include fluid(font-size, 14, 18, 390, 1920);
   font-weight: var(--font-weight-light);
   line-height: 18px;
-  @include fluid(letter-spacing, 1.4, 2.34);
+  @include fluid(letter-spacing, 1.4, 2.34, 390, 1920);
   text-transform: uppercase;
   transition:
     transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
     color 0.4s ease;
+
+  @include sp {
+    @include fluid(font-size, 14, 18, 390, 1200);
+    @include fluid(letter-spacing, 1.4, 2.34, 390, 1200);
+  }
 }
