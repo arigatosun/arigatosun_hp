@@ -136,6 +136,12 @@
   @include fluid(margin-bottom, 28, 40);
   width: 100%;
   @include fluid(max-width, 320, 920);
+
+  // SP: 「妥協なき愛で、世を照らす太陽」(14 文字) を 1 行に収めるため
+  // letter-spacing を SP のみ微減 (4.32 → 3.6)。PC 側 7.84 は据え置き。
+  @include sp {
+    letter-spacing: 3.6px;
+  }
 }
 
 // SP のみ表示する <br>。PC では非表示にして 1 行表示を維持。
