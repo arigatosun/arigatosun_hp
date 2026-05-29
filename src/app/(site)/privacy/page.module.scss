@@ -1,0 +1,153 @@
+// Figma フレームは 1920px 幅で設計されているため、max-viewport を 1920 に上書き。
+// SP 基準ビューポートは既定の 390（Figma SP フレーム 3098:24617 と一致）。
+@use '@/styles/fluid' as * with (
+  $fluid-max-viewport: 1920
+);
+@use '@/styles/breakpoints' as *;
+
+// ── ページ枠 ──
+// Figma PC: padding-top 280 / 左右 200 / 下 100、SP@390: 上 120 / 左右 40。
+// 固定ヘッダー（fixed）と重なるため、ヘッダー領域は padding-top で吸収する。
+.page {
+  position: relative;
+  @include fluid(padding-top, 120, 280);
+  @include fluid(padding-left, 40, 200);
+  @include fluid(padding-right, 40, 200);
+  @include fluid(padding-bottom, 40, 100);
+}
+
+// ── タイトルブロック ──
+.intro {
+  // タイトルは左寄せ（Figma: x=200 / SP x=40 = page padding に一致）
+}
+
+// 英字大見出し（Figma: Mozaic GEO Light / 36px(PC)・20px(SP) / line-height 38px固定 / #140700）
+.title {
+  margin: 0;
+  color: var(--color-black);
+  font-family: var(--font-en);
+  font-weight: var(--font-weight-light);
+  @include fluid(font-size, 20, 36);
+  @include fluid(line-height, 38, 38);
+  letter-spacing: 0.24em; // 8.64/36 = 4.8/20 = 0.24em（両端同じ → font 追従）
+}
+
+// 和文サブ見出し（Figma: Noto Sans JP Regular / 18px(PC)・12px(SP) / #808080）
+.subtitle {
+  @include fluid(margin-top, 0, 8);
+  margin-bottom: 0;
+  color: var(--color-text-secondary);
+  font-family: var(--font-jp);
+  font-weight: var(--font-weight-regular);
+  @include fluid(font-size, 12, 18);
+  line-height: 1.2; // Figma: normal 相当
+  letter-spacing: 0.13em; // 2.34/18 = 1.56/12 = 0.13em
+}
+
+// ── 本文ラッパー（左寄せ・最大幅 990 / SP@390 は 310）──
+.content {
+  @include fluid(margin-top, 40, 74); // サブ見出し下端 → 本文上端
+  // Figma の本文ボックスは ~1000px 幅だが、その幅だとリード1行目が「…事業活動にお」まで
+  // 入ってしまう。1行目を「…事業活動に」で止め「お」を2行目へ送るため 990px に微調整。
+  // （実測: 985〜995px が「に止まり」の安全域 / 1000px だと「お」まで載る）。全セクション共通。
+  // 上限キャップなので固定値。SP は左右 padding 40 により自然に ~310 に収まる。
+  width: 100%;
+  max-width: 990px;
+}
+
+// リード文（Figma: Noto Sans JP Regular / 14px / line-height 28px(PC)・26px(SP) / #140700）
+.lead {
+  margin: 0;
+  color: var(--color-black);
+  font-family: var(--font-jp);
+  font-weight: var(--font-weight-regular);
+  @include fluid(font-size, 14, 14);
+  @include fluid(line-height, 26, 28);
+  // Figma: PC 0.56px / SP 1.12px（font 14px固定 = PC 0.04em / SP 0.08em）。
+  // SP値>PC値のため fluid() だと clamp が SP値に張り付く（PCでも広いまま）。
+  // em + ブレイクポイントで PC=0.04em / SP=0.08em に切り替える。
+  letter-spacing: 0.04em;
+  @include sp {
+    letter-spacing: 0.08em;
+  }
+}
+
+// 条項リスト（縦積み）
+.sections {
+  display: flex;
+  flex-direction: column;
+  @include fluid(margin-top, 32, 40); // リード → 1 条項目
+  @include fluid(row-gap, 32, 40); // 条項間
+}
+
+// 各条項（見出し + 本文）
+.section {
+  display: flex;
+  flex-direction: column;
+  @include fluid(gap, 12, 12); // 見出し ↔ 本文（PC/SP とも 12）
+}
+
+// 条項見出し（Figma: Noto Sans JP Medium / 18px固定 / line-height 24px(PC)・30px(SP)）
+.heading {
+  margin: 0;
+  color: var(--color-black);
+  font-family: var(--font-jp);
+  font-weight: var(--font-weight-medium);
+  @include fluid(font-size, 18, 18);
+  // Figma: 行間 PC 24px / SP 30px、字間 PC 0.72px / SP 1.44px（font 18px固定）。
+  // いずれも SP値>PC値で fluid() だと clamp が SP値に張り付くため、
+  // 無次元 line-height と em letter-spacing をブレイクポイントで切り替える。
+  line-height: 1.3333; // 24 / 18
+  letter-spacing: 0.04em; // 0.72 / 18
+  @include sp {
+    line-height: 1.6667; // 30 / 18
+    letter-spacing: 0.08em; // 1.44 / 18
+  }
+}
+
+// 条項本文
+.body {
+  color: var(--color-black);
+  font-family: var(--font-jp);
+  font-weight: var(--font-weight-regular);
+  @include fluid(font-size, 14, 14);
+  @include fluid(line-height, 26, 28);
+  // Figma: PC 0.56px / SP 1.12px（font 14px固定）。SP値>PC値のため em + ブレイクポイントで切替。
+  letter-spacing: 0.04em;
+  @include sp {
+    letter-spacing: 0.08em;
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
+// 箇条書き / 番号付きリスト（Figma: マーカー字下げ ms-21px ≒ 1.5em）
+.list {
+  margin: 0;
+  padding-left: 1.5em;
+
+  li {
+    margin: 0;
+  }
+}
+
+.bulletList {
+  list-style-type: disc;
+}
+
+.numberList {
+  list-style-type: decimal;
+}
+
+// メールリンク（Figma: 下線付き。ホバーでブランドレッド）
+.mailLink {
+  color: inherit;
+  text-decoration: underline;
+  transition: color var(--transition-base);
+
+  &:hover {
+    color: var(--color-primary);
+  }
+}
