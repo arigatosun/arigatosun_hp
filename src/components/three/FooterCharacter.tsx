@@ -28,11 +28,13 @@ type WaveModelProps = {
   scale: number;
   rotationY?: number;
   loopMode?: 'pingpong' | 'repeat';
+  /** glb が meshopt 圧縮(EXT_meshopt_compression)なら true。drei が MeshoptDecoder で復号する */
+  meshopt?: boolean;
 };
 
-function WaveModel({ glbPath, position, scale, rotationY = 0, loopMode = 'pingpong' }: WaveModelProps) {
+function WaveModel({ glbPath, position, scale, rotationY = 0, loopMode = 'pingpong', meshopt = false }: WaveModelProps) {
   const group = useRef<THREE.Group>(null);
-  const { scene, animations } = useGLTF(glbPath);
+  const { scene, animations } = useGLTF(glbPath, false, meshopt);
   const clonedScene = useMemo(() => skeletonClone(scene) as THREE.Group, [scene]);
   // loopMode='repeat' のとき、各 track 末尾キー値を先頭値で上書きしてシームレスループにする。
   // Blender bake で frame 1 と frame end のポーズが微妙にズレているとループ境界でカクッと
@@ -136,6 +138,8 @@ export type FooterCharacterProps = {
    *  - 'pingpong' (default): 順再生 → 逆再生 → ... 片道アニメ（Wave）向け
    *  - 'repeat': 普通の繰り返し（ループ自然なアニメ向け、Sit 等） */
   loopMode?: 'pingpong' | 'repeat';
+  /** glb が meshopt 圧縮なら true（圧縮版モデルを読み込む時に指定） */
+  meshopt?: boolean;
 };
 
 // WorksSectionフッター・TOP Hero 用の3Dキャラクター（独立Canvas）
@@ -151,6 +155,7 @@ export default function FooterCharacter({
   cameraZoom = DEFAULT_CAMERA_ZOOM,
   debug = false,
   loopMode = 'pingpong',
+  meshopt = false,
 }: FooterCharacterProps = {}) {
   return (
     <Canvas
@@ -200,6 +205,7 @@ export default function FooterCharacter({
           scale={charScale}
           rotationY={charRotationY}
           loopMode={loopMode}
+          meshopt={meshopt}
         />
       </Suspense>
     </Canvas>

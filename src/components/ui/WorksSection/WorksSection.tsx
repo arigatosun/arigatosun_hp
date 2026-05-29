@@ -128,7 +128,8 @@ export default function WorksSection({ works }: WorksSectionProps) {
             位置確認したい時は `debug` prop を付ければ視覚化される。 */}
         <div className={styles.footerCharacter}>
           <FooterCharacterLoader
-            glbPath="/models/arigatokunn_sit_clay.glb?v=7"
+            glbPath="/models/arigatokunn_sit_clay_meshopt.glb"
+            meshopt
             charPosition={[13.50, -0.75, 0]}
             charScale={5.0}
             charRotationY={-0.3}
