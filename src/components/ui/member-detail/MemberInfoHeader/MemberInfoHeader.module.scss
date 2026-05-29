@@ -1,6 +1,8 @@
 @use '@/styles/fluid' as *;
 @use '@/styles/breakpoints' as *;
 
+// レスポンシブ方針（member 詳細 / 2026-05）: PC(≥1024) は 1920 基準、SP(≤1023) は 1200 据え置き。
+
 // Figma 実測（node 2498:46776 のテキスト列ヘッダー）:
 //   role "エンジニア" y=280 / name y=320 (+40) / divider y=417 (+57, w=52)
 //   INSTAGRAM 右上 x=1610, y=280
@@ -8,11 +10,12 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  @include fluid(gap, 16, 40);
+  @include fluid(gap, 16, 40, 390, 1920);
 
   @include sp {
     flex-direction: row;
     flex-wrap: wrap;
+    @include fluid(gap, 16, 40, 390, 1200);
   }
 }
 
@@ -29,28 +32,46 @@
   color: var(--color-text-secondary);
   font-family: var(--font-jp);
   font-weight: var(--font-weight-regular);
-  @include fluid(font-size, 12, 14);
-  @include fluid(line-height, 18, 24);
-  @include fluid(letter-spacing, 0.91, 1.82);
+  @include fluid(font-size, 12, 14, 390, 1920);
+  @include fluid(line-height, 18, 24, 390, 1920);
+  @include fluid(letter-spacing, 0.91, 1.82, 390, 1920);
+
+  @include sp {
+    @include fluid(font-size, 12, 14, 390, 1200);
+    @include fluid(line-height, 18, 24, 390, 1200);
+    @include fluid(letter-spacing, 0.91, 1.82, 390, 1200);
+  }
 }
 
 .name {
   margin: 0;
-  @include fluid(margin-top, 8, 16);
+  @include fluid(margin-top, 8, 16, 390, 1920);
   color: var(--color-black);
   font-family: var(--font-en);
   font-weight: var(--font-weight-light);
-  @include fluid(font-size, 16, 28);
-  @include fluid(line-height, 22, 40);
-  @include fluid(letter-spacing, 1.82, 3.64);
+  @include fluid(font-size, 16, 28, 390, 1920);
+  @include fluid(line-height, 22, 40, 390, 1920);
+  @include fluid(letter-spacing, 1.82, 3.64, 390, 1920);
+
+  @include sp {
+    @include fluid(margin-top, 8, 16, 390, 1200);
+    @include fluid(font-size, 16, 28, 390, 1200);
+    @include fluid(line-height, 22, 40, 390, 1200);
+    @include fluid(letter-spacing, 1.82, 3.64, 390, 1200);
+  }
 }
 
 // 短い区切り線（Figma: w=52, name 下端から 57px）
 .divider {
-  @include fluid(margin-top, 28, 57);
-  @include fluid(width, 26, 52);
+  @include fluid(margin-top, 28, 57, 390, 1920);
+  @include fluid(width, 26, 52, 390, 1920);
   height: 1px;
   background-color: var(--color-black);
+
+  @include sp {
+    @include fluid(margin-top, 28, 57, 390, 1200);
+    @include fluid(width, 26, 52, 390, 1200);
+  }
 }
 
 // 右上 SNS リンク群（Figma 実測 node 1649:298674: Mozaic GEO Light 16 / lh 24 / ls 2.08 / #808080 / underline）
@@ -59,21 +80,31 @@
   flex-shrink: 0;
   display: flex;
   align-items: center;
-  @include fluid(gap, 12, 20);
+  @include fluid(gap, 12, 20, 390, 1920);
+
+  @include sp {
+    @include fluid(gap, 12, 20, 390, 1200);
+  }
 }
 
 .snsLink {
   color: var(--color-text-secondary);
   font-family: var(--font-en);
   font-weight: var(--font-weight-light);
-  @include fluid(font-size, 12, 16);
-  @include fluid(line-height, 18, 24);
-  @include fluid(letter-spacing, 1.04, 2.08);
+  @include fluid(font-size, 12, 16, 390, 1920);
+  @include fluid(line-height, 18, 24, 390, 1920);
+  @include fluid(letter-spacing, 1.04, 2.08, 390, 1920);
   text-decoration: underline;
   text-underline-offset: 2px;
   transition: color var(--transition-base);
 
   &:hover {
     color: var(--color-primary);
+  }
+
+  @include sp {
+    @include fluid(font-size, 12, 16, 390, 1200);
+    @include fluid(line-height, 18, 24, 390, 1200);
+    @include fluid(letter-spacing, 1.04, 2.08, 390, 1200);
   }
 }

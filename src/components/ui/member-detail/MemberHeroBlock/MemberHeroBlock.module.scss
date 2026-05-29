@@ -1,13 +1,20 @@
 @use '@/styles/fluid' as *;
 @use '@/styles/breakpoints' as *;
 
+// レスポンシブ方針（member 詳細 / 2026-05）: PC(≥1024) は 1920 基準、SP(≤1023) は 1200 据え置き。
+
 // Figma 実測（node 2498:46775）: 写真 293×293
 .photoFrame {
   flex-shrink: 0;
   position: relative;
   overflow: hidden;
-  @include fluid(width, 147, 293);
-  @include fluid(height, 147, 293);
+  @include fluid(width, 147, 293, 390, 1920);
+  @include fluid(height, 147, 293, 390, 1920);
+
+  @include sp {
+    @include fluid(width, 147, 293, 390, 1200);
+    @include fluid(height, 147, 293, 390, 1200);
+  }
 }
 
 .photo {

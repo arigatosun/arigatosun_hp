@@ -1,10 +1,19 @@
 @use '@/styles/fluid' as *;
 @use '@/styles/breakpoints' as *;
 
+// ── レスポンシブ方針（member 詳細「その間」対応 / 2026-05） ──
+// PC レンジ(≥1024)を Hero/About と同じ 1920 基準 clamp に、SP(≤1023) は 1200 据え置き。
+// このファイルは sp の fluid 上書きが無いため、各 base fluid を `…, 390, 1920` に乗せつつ
+// `@include sp { @include fluid(…, 390, 1200) }` で ≤1023 を不変に固定する。
+
 .page {
   background-color: var(--color-bg);
   padding-top: 80px; // Header(position: fixed) 分のオフセット
-  @include fluid(padding-bottom, 110, 250);
+  @include fluid(padding-bottom, 110, 250, 390, 1920);
+
+  @include sp {
+    @include fluid(padding-bottom, 110, 250, 390, 1200);
+  }
 }
 
 // 上部 2-col レイアウト（写真 ｜ テキスト列）
@@ -14,13 +23,17 @@
 .detailRow {
   display: flex;
   align-items: flex-start;
-  @include fluid(gap, 40, 100);
-  @include fluid(padding-inline, 20, 200);
-  @include fluid(padding-top, 56, 200);
+  @include fluid(gap, 40, 100, 390, 1920);
+  @include fluid(padding-inline, 20, 200, 390, 1920);
+  @include fluid(padding-top, 56, 200, 390, 1920);
 
   @include sp {
     flex-direction: column;
     align-items: stretch;
+    // SP は縦積み。gap/padding は現状(1200)カーブに固定
+    @include fluid(gap, 40, 100, 390, 1200);
+    @include fluid(padding-inline, 20, 200, 390, 1200);
+    @include fluid(padding-top, 56, 200, 390, 1200);
   }
 }
 
@@ -51,21 +64,37 @@
 
 // Figma: divider 下端(418) → quote 上端(473) = 55px
 .quoteBlock {
-  @include fluid(margin-top, 32, 55);
+  @include fluid(margin-top, 32, 55, 390, 1920);
+
+  @include sp {
+    @include fluid(margin-top, 32, 55, 390, 1200);
+  }
 }
 
 // Figma: quote 下端(505) → body 上端(529) = 24px
 .introBlock {
-  @include fluid(margin-top, 16, 24);
+  @include fluid(margin-top, 16, 24, 390, 1920);
+
+  @include sp {
+    @include fluid(margin-top, 16, 24, 390, 1200);
+  }
 }
 
 // Figma: body 下端(881) → 経歴 上端(953) = 72px
 .careerBlock {
-  @include fluid(margin-top, 40, 72);
+  @include fluid(margin-top, 40, 72, 390, 1920);
+
+  @include sp {
+    @include fluid(margin-top, 40, 72, 390, 1200);
+  }
 }
 
 // 関わったプロジェクト
 // Figma: career 本文下端(1157) → タイトル上端(1229) = 72px
 .projectsBlock {
-  @include fluid(margin-top, 40, 72);
+  @include fluid(margin-top, 40, 72, 390, 1920);
+
+  @include sp {
+    @include fluid(margin-top, 40, 72, 390, 1200);
+  }
 }
