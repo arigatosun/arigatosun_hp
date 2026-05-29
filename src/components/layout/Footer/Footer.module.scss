@@ -14,8 +14,14 @@
 //   - y=201..  : 赤いアーチ + 内容部分
 .footer {
   position: relative;
-  // オーバーレイ上で Figma とフッター位置を合わせるため SP/PC とも 100 に統一
+  // 「最後のセクション下端 → 赤いアーチ頂点」の余白を PC 240 / SP 100 に統一する。
+  // SP: アーチは footer 上端から始まる(maskOverlay top:0)ため、余白 = margin-top = 100。
   margin-top: 100px;
+  // PC: アーチは白い領域(padding-top)の分だけ下にあるため、
+  //     余白 = margin-top(39) + padding-top(201@1920) = 240。
+  @include pc {
+    margin-top: 39px;
+  }
   // ※ キャラ/アーチと連動するため 1200 据え置き（1920 化しない）
   @include fluid(padding-top, 80, 201);
   overflow: visible;
