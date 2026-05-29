@@ -236,7 +236,10 @@
   .cell:nth-child(2) {
     flex: 361 1 0;
 
-    @include pc {
+    // 代表者 3 名を 1 行で収めるための nowrap は十分な幅 (≥1280px) でだけ適用。
+    // 1024〜1279 の中間幅では代表者テキストが flex 361 のセル幅を超えて
+    // 従業員数セルに被るため、自然に折り返すように nowrap を解除する。
+    @include min(1280px) {
       .cellValue {
         white-space: nowrap;
       }
