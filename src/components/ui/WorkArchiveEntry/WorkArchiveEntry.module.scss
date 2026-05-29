@@ -20,6 +20,12 @@
     display: block;
     position: relative;
     width: 100%;
+    // ユーザー指定: SP では 390×346 px を上限。
+    // 320px 等の小型端末は 100% で比率縮小 (320×284)、
+    // 390〜1023px は 390×346 固定 + 中央寄せ。
+    max-width: 390px;
+    margin-left: auto;
+    margin-right: auto;
     aspect-ratio: 390 / 346;
     background: var(--color-white);
     overflow: visible;
@@ -102,3 +108,11 @@
   @include fluid(line-height, 32, 32);
   @include fluid(letter-spacing, 1.68, 2.8);
 }
+
+// 見出し / クレジット内の SP 専用改行 (`\n` または ` | ` の位置で SP のみ改行)
+.spOnlyBr {
+  @include pc {
+    display: none;
+  }
+}
+
