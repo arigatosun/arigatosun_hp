@@ -10,7 +10,9 @@ import { CURSOR_FOLLOW_CONFIG } from './cursorFollowConfig';
 
 const IS_DEV = process.env.NODE_ENV === 'development';
 
-const GLB_PATH = '/models/arigatokunn_sit.glb';
+// ?v= はキャッシュバスター。glb の中身を差し替えたらこの番号を上げる
+// （本番は next.config.ts で immutable キャッシュしているため、上げないと旧版が残る）。
+const GLB_PATH = '/models/arigatokunn_sit.glb?v=2';
 
 const DEG2RAD = Math.PI / 180;
 
