@@ -50,6 +50,7 @@ export default function ParallaxMotifs() {
     });
     return () => cancelAnimationFrame(raf);
   }, []);
+
   // SP 用 combined SVG を inline 取得し、各 motif <g> に class を付与。
   // これで PC と同じく motif ごとにバラバラのフロート animation を当てられる。
   const [spInlineSvg, setSpInlineSvg] = useState<string>('');
@@ -120,9 +121,10 @@ export default function ParallaxMotifs() {
     let raf = 0;
     const check = () => {
       const rect = trigger.getBoundingClientRect();
-      const threshold = window.innerHeight * 0.5;
-      // 上端が viewport 中央より上に来たら entered=true (motif は上で表示)
-      // 上端が中央より下に居る間は entered=false (motif は画面下に隠れる)
+      // 集合開始を早める: トリガー上端が viewport 下から 82% の位置に達した時点で entered=true。
+      // （0.5 だと about 見出しがかなり上に来てから集まり始め「完了が遅い」ため、早めに発火させる）
+      const threshold = window.innerHeight * 0.82;
+      // 上端がこの閾値より上に来たら entered=true（motif が散開→集合を開始）
       setEntered(rect.top < threshold);
 
       // 退場判定: Service セクションの上端がビューポートの上 40% に達したら
