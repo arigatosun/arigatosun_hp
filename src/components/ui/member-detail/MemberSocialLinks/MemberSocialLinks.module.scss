@@ -1,6 +1,7 @@
 @use '@/styles/fluid' as *;
 @use '@/styles/breakpoints' as *;
 
+// レスポンシブ方針（member 詳細 / 2026-05）: PC(≥1024) は 1920 基準、SP(≤1023) は 1200 据え置き。
 .root {
   display: flex;
 }
@@ -9,13 +10,19 @@
   color: var(--color-text-secondary);
   font-family: var(--font-en);
   font-weight: var(--font-weight-light);
-  @include fluid(font-size, 12, 16);
-  @include fluid(line-height, 14, 24);
-  @include fluid(letter-spacing, 1.04, 2.08);
+  @include fluid(font-size, 12, 16, 390, 1920);
+  @include fluid(line-height, 14, 24, 390, 1920);
+  @include fluid(letter-spacing, 1.04, 2.08, 390, 1920);
   text-decoration: underline;
   transition: color var(--transition-base);
 
   &:hover {
     color: var(--color-primary);
+  }
+
+  @include sp {
+    @include fluid(font-size, 12, 16, 390, 1200);
+    @include fluid(line-height, 14, 24, 390, 1200);
+    @include fluid(letter-spacing, 1.04, 2.08, 390, 1200);
   }
 }
