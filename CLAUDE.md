@@ -45,6 +45,7 @@
 | セクション間（上下）の余白を Figma と合わせる | `.claude/rules/section-spacing.md` |
 | 画像 / 3D 等のアセット配置・命名 | `.claude/rules/asset-management.md` |
 | コミット前のセルフチェック | `.claude/rules/pre-commit-checklist.md` |
+| 変更を本番反映する（ブランチ→PR→Preview→マージ） | `.claude/rules/deployment-workflow.md` |
 
 ---
 
