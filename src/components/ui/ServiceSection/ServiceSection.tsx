@@ -72,14 +72,19 @@ export default function ServiceSection() {
       gsap.set(track, { force3D: true });
 
       // pin 後のタイムラインを3区間に分ける:
-      //  ① DELAY_RATIO  : 横スクロールしない開始待機（モチーフ入場アニメの完了待ち）
-      //  ② MOVE_RATIO   : カードが中央に揃うまでの横スクロール本体
-      //  ③ HOLD_RATIO   : 3枚が揃った状態のまま静止する末尾の「間（ま）」
-      //                   ここで pin を保持し、ユーザーが揃ったカードを確認できるようにしてから
-      //                   下スクロールへ抜ける。空セグメントでスクロール量だけ消費する。
-      const DELAY_RATIO = 0.2;
-      const HOLD_RATIO = 0.25;
-      const MOVE_RATIO = 1 - DELAY_RATIO - HOLD_RATIO;
+      //  ① 開始待機 : 横スクロールしない待機（モチーフ入場アニメの完了待ち）
+      //  ② 横移動   : カードが中央に揃うまでの横スクロール本体
+      //  ③ 末尾静止 : 3枚が揃った状態のまま静止する末尾の「間（ま）」
+      //               ここで pin を保持し、揃ったカードを確認できるようにしてから下へ抜ける。
+      //
+      // 各区間の「長さ」は横移動量(animPx)に対する相対比で定義する。こうすると末尾静止を
+      // 足しても開始待機の実スクロール量が変わらない（総量基準だと連動して伸びてしまう）。
+      // 開始待機は既存の挙動（横移動量の 0.25 倍）を維持。末尾静止のみ新規追加。
+      const START_HOLD = 0.25; // 開始待機 ÷ 横移動量（既存と同じ。変更すると開始が伸縮）
+      const END_HOLD = 0.25; // 末尾静止 ÷ 横移動量（新規。揃った後の「間」の長さ）
+      const SPAN = START_HOLD + 1 + END_HOLD; // 横移動を 1 とした全体の相対量
+      const DELAY_RATIO = START_HOLD / SPAN;
+      const MOVE_RATIO = 1 / SPAN;
       const MOVE_END = DELAY_RATIO + MOVE_RATIO;
 
       const tl = gsap.timeline({
@@ -173,8 +178,8 @@ export default function ServiceSection() {
         force3D: true,
         duration: MOVE_RATIO,
       });
-      // ③ 末尾の静止セグメント（揃った状態のまま）— HOLD_RATIO 分
-      tl.to({}, { duration: HOLD_RATIO });
+      // ③ 末尾の静止セグメント（揃った状態のまま）— 残りの END_HOLD/SPAN 分
+      tl.to({}, { duration: END_HOLD / SPAN });
     });
 
     return () => mm.revert();
