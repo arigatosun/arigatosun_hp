@@ -4,6 +4,7 @@ import Footer from '@/components/layout/Footer';
 import Preloader from '@/components/ui/Preloader';
 import ScrollAnchorOnResize from '@/components/ui/ScrollAnchorOnResize';
 import JsonLd from '@/components/seo/JsonLd';
+import Analytics from '@/components/analytics/Analytics';
 import { SITE_URL } from '@/lib/site';
 
 // 全公開ページ共通の Organization 構造化データ。
@@ -49,6 +50,7 @@ export default function SiteLayout({
 }>) {
   return (
     <>
+      <Analytics />
       <JsonLd data={ORGANIZATION_JSONLD} />
       <Preloader />
       <ScrollAnchorOnResize />
