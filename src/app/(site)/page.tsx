@@ -124,7 +124,7 @@ export default async function Home() {
                 <RevealLine>正解を超える体験を創造するために、私たちは挑戦を続けます。</RevealLine>
               </RevealBlock>
 
-              <Button href="/about">VIEW ABOUT &gt;</Button>
+              <Button href="/about" size="sm">VIEW ABOUT &gt;</Button>
             </div>
           </RevealText>
         </div>

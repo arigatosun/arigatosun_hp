@@ -149,7 +149,7 @@ export default function WorksSection({ works }: WorksSectionProps) {
         </div>
 
         <div className={styles.footerButton}>
-          <Button href="/works">VIEW WORKS &gt;</Button>
+          <Button href="/works" size="sm">VIEW WORKS &gt;</Button>
         </div>
       </div>
     </section>

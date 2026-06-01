@@ -232,7 +232,7 @@ export default function ServiceSection() {
               ))}
             </ul>
 
-            <Button href="/service">VIEW SERVICE &gt;</Button>
+            <Button href="/service" size="sm">VIEW SERVICE &gt;</Button>
           </div>
         </div>
 
@@ -247,7 +247,7 @@ export default function ServiceSection() {
 
         {/* SP 専用 VIEW SERVICE ボタン（カードの後ろに配置） */}
         <div className={styles.spButtonRow}>
-          <Button href="/service">VIEW SERVICE &gt;</Button>
+          <Button href="/service" size="sm">VIEW SERVICE &gt;</Button>
         </div>
       </div>
 
