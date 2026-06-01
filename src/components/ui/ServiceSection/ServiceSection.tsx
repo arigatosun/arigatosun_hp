@@ -71,22 +71,27 @@ export default function ServiceSection() {
       // GPU合成レイヤーに昇格
       gsap.set(track, { force3D: true });
 
-      // pin 開始位置は元の `top 32px` に戻し、pin 後の最初の DELAY_RATIO ぶんは
-      // 横スクロールを停止させて「待機区間」を作る。これによりセクションの見た目の
-      // 位置はそのままで、モチーフ入場アニメの完了を待ってから横スクロールが始まる。
-      // タイムラインに空のセグメントを挟む形で実装する。
+      // pin 後のタイムラインを3区間に分ける:
+      //  ① DELAY_RATIO  : 横スクロールしない開始待機（モチーフ入場アニメの完了待ち）
+      //  ② MOVE_RATIO   : カードが中央に揃うまでの横スクロール本体
+      //  ③ HOLD_RATIO   : 3枚が揃った状態のまま静止する末尾の「間（ま）」
+      //                   ここで pin を保持し、ユーザーが揃ったカードを確認できるようにしてから
+      //                   下スクロールへ抜ける。空セグメントでスクロール量だけ消費する。
       const DELAY_RATIO = 0.2;
+      const HOLD_RATIO = 0.25;
+      const MOVE_RATIO = 1 - DELAY_RATIO - HOLD_RATIO;
+      const MOVE_END = DELAY_RATIO + MOVE_RATIO;
 
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: section,
           start: 'top 32px',
-          // 横移動分 + 待機区間分 を合算した end。
-          // 例: 移動分 940px / 待機 940 * 0.3/0.7 ≒ 403px → end +=1343
+          // 横移動分(animPx)を MOVE_RATIO に割り当てた end。
+          // 開始待機・末尾静止のぶんも合算した総スクロール量になる。
           end: () => {
             const animPx =
               Math.max(track.scrollWidth, window.innerWidth) / 2;
-            return `+=${animPx / (1 - DELAY_RATIO)}`;
+            return `+=${animPx / MOVE_RATIO}`;
           },
           pin: true,
           // 追従の遅延も半分に短縮（より機敏な反応）
@@ -94,11 +99,13 @@ export default function ServiceSection() {
           invalidateOnRefresh: true,
           onUpdate: (self) => {
             const totalProgress = self.progress;
-            // 待機区間中は animProgress=0、それ以降は 0→1 にリスケール
+            // 開始待機中は animProgress=0、移動区間で 0→1、末尾静止は 1 に張り付き
             const progress =
               totalProgress < DELAY_RATIO
                 ? 0
-                : (totalProgress - DELAY_RATIO) / (1 - DELAY_RATIO);
+                : totalProgress > MOVE_END
+                  ? 1
+                  : (totalProgress - DELAY_RATIO) / MOVE_RATIO;
             section.style.setProperty('--service-progress', String(progress));
 
             // 全カードの合算カバー率が COVERAGE_THRESHOLD を超えた瞬間に左カラムを
@@ -157,15 +164,17 @@ export default function ServiceSection() {
         },
       });
 
-      // 1. 待機セグメント（横スクロールしない）— 全体の DELAY_RATIO 分
+      // ① 開始待機セグメント（横スクロールしない）— 全体の DELAY_RATIO 分
       tl.to({}, { duration: DELAY_RATIO });
-      // 2. 実際の横スクロール — 残りの 1 - DELAY_RATIO 分
+      // ② 実際の横スクロール — MOVE_RATIO 分
       tl.to(track, {
         x: getScrollAmount,
         ease: 'none',
         force3D: true,
-        duration: 1 - DELAY_RATIO,
+        duration: MOVE_RATIO,
       });
+      // ③ 末尾の静止セグメント（揃った状態のまま）— HOLD_RATIO 分
+      tl.to({}, { duration: HOLD_RATIO });
     });
 
     return () => mm.revert();
