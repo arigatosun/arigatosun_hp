@@ -81,7 +81,7 @@ export default function ServiceSection() {
       // 足しても開始待機の実スクロール量が変わらない（総量基準だと連動して伸びてしまう）。
       // 開始待機は既存の挙動（横移動量の 0.25 倍）を維持。末尾静止のみ新規追加。
       const START_HOLD = 0.25; // 開始待機 ÷ 横移動量（既存と同じ。変更すると開始が伸縮）
-      const END_HOLD = 0.4; // 末尾静止 ÷ 横移動量（新規。揃った後の「間」の長さ）
+      const END_HOLD = 0.6; // 末尾静止 ÷ 横移動量（新規。揃った後の「間」の長さ）
       const SPAN = START_HOLD + 1 + END_HOLD; // 横移動を 1 とした全体の相対量
       const DELAY_RATIO = START_HOLD / SPAN;
       const MOVE_RATIO = 1 / SPAN;
