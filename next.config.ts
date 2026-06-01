@@ -47,6 +47,17 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  // 旧サイト（合同会社アリガトサン）にあって新サイトに無いパスを恒久リダイレクト。
+  // 検索インデックスやブックマークに残る旧URLが 404 にならないようにする。
+  // 共通パス（/about /works /news /contact）は新サイトにも存在するため不要。
+  async redirects() {
+    return [
+      // 旧トップ（/top）→ 新トップ（/）
+      { source: '/top', destination: '/', permanent: true },
+      // 旧インタビュー（/testimonials）は新サイトに該当ページが無いためトップへ
+      { source: '/testimonials', destination: '/', permanent: true },
+    ];
+  },
 };
 
 export default nextConfig;
