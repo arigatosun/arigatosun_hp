@@ -7,7 +7,7 @@ import { useGLTF } from '@react-three/drei';
 
 // Phase 19: ニュース下のキャラを「クリック挙動」入りの新キャラに差し替え。
 // 0-28F = 歩行, 29-56F = クリック反応, 57-118F = 残りの歩行（Walk クリップは 0-28F のみ使用）。
-const GLB_PATH = '/models/arigatokunn_walk_click_meshopt.glb';
+const GLB_PATH = '/models/arigatokunn_walk_click_meshopt.glb?v=opt1';
 
 // ページ全体で1つだけのグローバルCanvas
 // OrthographicCameraで描画（遠近法による見かけの回転を防止）

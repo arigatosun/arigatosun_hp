@@ -12,7 +12,7 @@ const IS_DEV = process.env.NODE_ENV === 'development';
 
 // ?v= はキャッシュバスター。glb の中身を差し替えたらこの番号を上げる
 // （本番は next.config.ts で immutable キャッシュしているため、上げないと旧版が残る）。
-const GLB_PATH = '/models/arigatokunn_sit.glb?v=5';
+const GLB_PATH = '/models/arigatokunn_sit.glb?v=opt1';
 
 const DEG2RAD = Math.PI / 180;
 

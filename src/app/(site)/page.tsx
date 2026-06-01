@@ -59,7 +59,7 @@ export default async function Home() {
                   キャラ自体の回転は変えていない。 */}
               <div className={styles.heroCharacterCanvas}>
                 <FooterCharacterLoader
-                  glbPath="/models/arigatokunn_wave_meshopt.glb"
+                  glbPath="/models/arigatokunn_wave_meshopt.glb?v=opt1"
                   meshopt
                   charPosition={[-20.93, -0.75, 0]}
                   charRotationY={0}

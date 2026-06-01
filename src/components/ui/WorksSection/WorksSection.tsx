@@ -129,7 +129,7 @@ export default function WorksSection({ works }: WorksSectionProps) {
             位置確認したい時は `debug` prop を付ければ視覚化される。 */}
         <DeferMount className={styles.footerCharacter}>
           <FooterCharacterLoader
-            glbPath="/models/arigatokunn_sit_clay_meshopt.glb"
+            glbPath="/models/arigatokunn_sit_clay_meshopt.glb?v=opt1"
             meshopt
             charPosition={[13.50, -0.75, 0]}
             charScale={5.0}
