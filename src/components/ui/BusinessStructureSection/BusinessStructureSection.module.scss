@@ -85,7 +85,9 @@
 .right {
   position: relative;
   flex-shrink: 0;
-  width: 33.1771vw; // 637 / 1920（vw 比例で中間幅も溢れない）
+  // Figma 637/1920 から約18%縮小（MacBook 等で図が大きく見えたため）。
+  // vw 比例なので全PC幅で比例して小さくなる。aspect-ratio で高さも追従。
+  width: 27.2vw; // ≈ 522 / 1920
   aspect-ratio: 637 / 647;
   // PC(flex row): section が align-items:center のため center で縦中央に揃える。
   // center は stretch と違い図を引き伸ばさないので aspect-ratio 通りの高さを保つ。
