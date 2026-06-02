@@ -43,17 +43,14 @@ export default function GlobalCanvas() {
         background: 'transparent',
       }}
     >
-      {/* 新キャラ（Clay rough 赤い粘土）は ambient 強すぎると赤が desaturate するため
-          ambient は控えめ（1.0）。
-          目のキャッチライトは「顔の向きと反対側・上方」の光が眼球で反射して生まれる。
-          キャラは右向き(left-to-right)なので、元の構成を左右反転して光源を上左に移す:
-            - key を [3,4,8]（上右）→ [-3,4,8]（上左）= 右向き時の目のキャッチライト + 主シェーディング
-            - fill を [-4,2,5]（左）→ [4,2,5]（右）でフィル */}
-      <ambientLight intensity={1.0} />
-      {/* キー（上左前・主シェーディング + 右向き時の目のキャッチライト） */}
-      <directionalLight position={[-3, 4, 8]} intensity={1.5} />
-      {/* フィル（右・目の高さ） */}
-      <directionalLight position={[4, 2, 5]} intensity={0.9} />
+      {/* 目にキャッチライトが入っている FooterCharacter（ヒーロー/WORKS 座りキャラ）と
+          同じライト構成を採用する。key [5,5,5] の強い右上前ライトが眼球で反射して
+          キャッチライトを作る。右向き(left-to-right)の歩行キャラでも右側の光が目に入る。 */}
+      <ambientLight intensity={1.5} />
+      {/* キー（右上前・強め＝目のキャッチライトの主因） */}
+      <directionalLight position={[5, 5, 5]} intensity={1.8} />
+      {/* フィル（左やや前） */}
+      <directionalLight position={[-3, 2, 4]} intensity={0.5} />
 
       <Suspense fallback={null}>
         {/* LogoSlider: 左→右に歩くキャラ。
