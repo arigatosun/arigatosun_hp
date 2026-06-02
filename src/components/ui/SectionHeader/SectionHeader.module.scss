@@ -111,14 +111,23 @@
   }
 
   .headerTitle {
-    @include fluid(font-size, 18, 28);
+    // PC はレイアウト(1920基準)と同じカーブに乗せる。既定(〜1200)だと MacBook(1512) で
+    // 最大値(28px/字間11.2px)に張り付き、「アリガトサン・スタンダード」等の長いタイトルが
+    // テキスト列(約550px)からはみ出して 2 行に折り返すため。1920基準だと 1512 で少し縮み 1 行に収まる。
+    @include fluid(font-size, 18, 28, 390, 1920);
     // Figma leading: SP 14.4 / PC ≒ 22-30。CSS は font-size に合わせて 1.0 に詰め、
     // wrapper 高さを Figma 実測（SP 41px）に近づける。
     line-height: 1;
-    @include fluid(letter-spacing, 2.34, 11.2);
+    @include fluid(letter-spacing, 2.34, 11.2, 390, 1920);
     font-weight: var(--font-weight-medium);
     // data 側 \n を改行として表示（例: CREATOR FIRST タイトル）
     white-space: pre-line;
+
+    // SP は従来の既定カーブ(〜1200)を維持して不変に保つ
+    @include sp {
+      @include fluid(font-size, 18, 28);
+      @include fluid(letter-spacing, 2.34, 11.2);
+    }
   }
 
   .headerSub {
