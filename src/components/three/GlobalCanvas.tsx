@@ -43,14 +43,14 @@ export default function GlobalCanvas() {
         background: 'transparent',
       }}
     >
-      {/* 目にキャッチライトが入っている FooterCharacter（ヒーロー/WORKS 座りキャラ）と
-          同じライト構成を採用する。key [5,5,5] の強い右上前ライトが眼球で反射して
-          キャッチライトを作る。右向き(left-to-right)の歩行キャラでも右側の光が目に入る。 */}
+      {/* FooterCharacter（ヒーロー/WORKS）と同じ ambient 1.5 をベースに、ライト位置は
+          左右反転する。元の [5,5,5] は左向き時に目へキャッチライトが入る配置だったため、
+          右向き(left-to-right)の歩行キャラ用に X を反転（[-5,5,5]）して右向き時に目へ光が入るようにする。 */}
       <ambientLight intensity={1.5} />
-      {/* キー（右上前・強め＝目のキャッチライトの主因） */}
-      <directionalLight position={[5, 5, 5]} intensity={1.8} />
-      {/* フィル（左やや前） */}
-      <directionalLight position={[-3, 2, 4]} intensity={0.5} />
+      {/* キー（左上前・強め＝右向き時の目のキャッチライトの主因。元 [5,5,5] の左右反転） */}
+      <directionalLight position={[-5, 5, 5]} intensity={1.8} />
+      {/* フィル（右やや前。元 [-3,2,4] の左右反転） */}
+      <directionalLight position={[3, 2, 4]} intensity={0.5} />
 
       <Suspense fallback={null}>
         {/* LogoSlider: 左→右に歩くキャラ。
