@@ -327,7 +327,9 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  @include fluid(padding-right, 0, 217, 390, 1920);
+  // 右寄せ余白。元 217 は MacBook 幅でブロックを左へ押しキャラが左寄りになるため縮小し、
+  // フッターブロック（キャラ＋テキスト＋ボタン）を右（作品画像の右端側）へ寄せる。
+  @include fluid(padding-right, 0, 40, 390, 1920);
 
   @include max(1023px) {
     flex-direction: column;
@@ -342,14 +344,15 @@
   }
 }
 
-// Figma: キャラ 156×161（1920基準）
+// Figma: キャラ 156×161（1920基準）。PC は右テキストに合わせ約1.5倍に拡大（234×242）。
 .footerCharacter {
   flex-shrink: 0;
-  @include fluid(width, 100, 156, 390, 1920);
-  @include fluid(height, 100, 161, 390, 1920);
-  // Hero と同じく枠ごとシフト（中の 3D は変えず translate のみ）
-  // 微調整(2026-05): 少し下寄りだったため枠ごと 12px 上へ持ち上げる（PC のみ）。
-  transform: translate(20px, -12px);
+  @include fluid(width, 150, 234, 390, 1920);
+  @include fluid(height, 150, 242, 390, 1920);
+  // Hero と同じく枠ごとシフト（中の 3D は変えず translate のみ）。
+  // 拡大に伴い左へ張り出すため、PC では translateX を増やして PC 幅と同等の位置感に寄せる。
+  // 微調整(2026-05): 少し下寄りだったため枠ごと上へ持ち上げる（PC のみ）。
+  transform: translate(20px, -18px);
 
   @include max(1023px) {
     // Figma SP @390: 140×144
