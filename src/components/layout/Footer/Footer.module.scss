@@ -135,11 +135,13 @@
 
     // SP のみ 3Dキャラを約60%に縮小（位置・動き方は不変）。
     // translateX と scale を同じ transform に混ぜるとキャラがずれるため、中央寄せは上の
-    // margin-left に逃がし、ここは scale のみ。原点をキャラ位置(canvas幅248px≒71% /
-    // 高さ294px=70%=足元)に置くことで、座り位置（足元をアーチ頂点）を保ったまま縮小する。
+    // margin-left に逃がし、ここは scale のみ。原点をキャラの「足元」に置くことで、
+    // 座り位置（足元＝アーチ頂点）を保ったまま縮小する。
+    //   - 水平: canvas幅248px(≒71%=中心175+描画オフセット73)＝キャラ水平中心
+    //   - 垂直: canvas高さ354px(84%)＝足元。top(-245)+354 = アーチ頂点(0.2795×390≒109)で一致。
     // ※カーソル追従は Canvas 内部処理のため、CSS 縮小では一切影響しない。
     transform: scale(0.6);
-    transform-origin: 248px 294px;
+    transform-origin: 248px 354px;
 
     // 391px 以上では SP 背景アーチ(bg-mask-sp.png)が object-fit:cover の
     // 幅基準スケールで沈む（CONTACT US ボタンと同様）。top を固定のままだと
