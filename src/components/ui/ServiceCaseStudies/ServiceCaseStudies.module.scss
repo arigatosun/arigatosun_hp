@@ -110,6 +110,14 @@
   font-weight: var(--font-weight-light);
 }
 
+// 英語のクライアント名は CLIENT ラベルと同じ体裁（font-en / 同サイズ / light）にする。
+// 日本語名は .client（Noto Sans JP / 小さめ）のまま維持。
+.clientValueEn {
+  font-family: var(--font-en);
+  @include fluid(font-size, 16, 17);
+  font-weight: var(--font-weight-light);
+}
+
 // 本文
 // Figma SP: Noto Sans JP Regular / 16px / lh 28 / ls 2.56 (=0.16em) / #140700
 // Figma PC: 18px / lh 36 / ls 2.34
