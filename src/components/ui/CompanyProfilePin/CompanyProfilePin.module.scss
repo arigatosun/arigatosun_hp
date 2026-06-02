@@ -7,10 +7,10 @@
 .pinWrap {
   position: relative;
   // 写真セクションとフッターの間に余白を入れる（ピン化で詰まったため）。
-  @include fluid(margin-bottom, 110, 200);
+  @include fluid(margin-bottom, 220, 400);
 
   @include sp {
-    @include fluid(margin-bottom, 64, 200);
+    @include fluid(margin-bottom, 128, 400);
   }
 }
 
