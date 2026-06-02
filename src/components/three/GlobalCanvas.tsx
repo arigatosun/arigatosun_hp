@@ -43,15 +43,18 @@ export default function GlobalCanvas() {
         background: 'transparent',
       }}
     >
-      {/* 歩行キャラは横向き（プロフィール）のため、側面ライトだと目の反射が画面外/背面へ行き
-          正面カメラからキャッチライトが見えない。そこで key を「正面寄り（カメラ方向 z=9）・
-          やや右上」に置き、右向きの目の前面に反射（キャッチライト）が乗るようにする。
-          ambient は赤が desaturate しないよう控えめ、左側に弱フィルで立体感を残す。 */}
-      <ambientLight intensity={1.0} />
+      {/* 歩行キャラは横向き（プロフィール）で右(+X)を向く。
+          ・正面寄り key [2,2.5,9] = 目のキャッチライト（維持）
+          ・右前 face ライト [4.5,2.5,6] = 顔(+X側)を明るく照らす（陰だった顔の明るさUP）
+          ・左フィル = 立体感
+          ambient は赤の desaturate を避けつつ少し上げて全体を明るく。 */}
+      <ambientLight intensity={1.2} />
       {/* 正面寄りキー（やや右上前・カメラ方向）＝右向き時の目のキャッチライト */}
-      <directionalLight position={[2, 2.5, 9]} intensity={1.6} />
+      <directionalLight position={[2, 2.5, 9]} intensity={1.7} />
+      {/* 右前 face ライト（右向きの顔を明るく） */}
+      <directionalLight position={[4.5, 2.5, 6]} intensity={1.1} />
       {/* 左フィル（立体感） */}
-      <directionalLight position={[-3, 2, 5]} intensity={0.5} />
+      <directionalLight position={[-3, 2, 5]} intensity={0.4} />
 
       <Suspense fallback={null}>
         {/* LogoSlider: 左→右に歩くキャラ。
