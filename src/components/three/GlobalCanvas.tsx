@@ -43,14 +43,16 @@ export default function GlobalCanvas() {
         background: 'transparent',
       }}
     >
-      {/* FooterCharacter（ヒーロー/WORKS）と同じ ambient 1.5 をベースに、ライト位置は
-          左右反転する。元の [5,5,5] は左向き時に目へキャッチライトが入る配置だったため、
-          右向き(left-to-right)の歩行キャラ用に X を反転（[-5,5,5]）して右向き時に目へ光が入るようにする。 */}
-      <ambientLight intensity={1.5} />
-      {/* キー（左上前・強め＝右向き時の目のキャッチライトの主因。元 [5,5,5] の左右反転） */}
-      <directionalLight position={[-5, 5, 5]} intensity={1.8} />
-      {/* フィル（右やや前。元 [-3,2,4] の左右反転） */}
-      <directionalLight position={[3, 2, 4]} intensity={0.5} />
+      {/* キャッチライトは「目の高さ寄り(y=3)・カメラ面(z=8)・左右の側面」ライトが
+          進行方向側の眼球に反射して生まれる。以前この左右対称配置のとき左向きの目に光が
+          入っていた実績があるため復元する（左右対称なのでどちら向きでも効く）。
+          歩行キャラは右向き(left-to-right)なので右の [3.5,3,8] が目のキャッチライトを作る。
+          ambient は赤が desaturate しないよう控えめ。 */}
+      <ambientLight intensity={1.0} />
+      {/* 右フロント（右向き時の目のキャッチライト） */}
+      <directionalLight position={[3.5, 3, 8]} intensity={1.5} />
+      {/* 左フロント（フィル / 左向き時のキャッチライト） */}
+      <directionalLight position={[-3.5, 3, 8]} intensity={1.2} />
 
       <Suspense fallback={null}>
         {/* LogoSlider: 左→右に歩くキャラ。
