@@ -1,0 +1,33 @@
+@use '@/styles/fluid' as *;
+@use '@/styles/breakpoints' as *;
+
+.pinWrap {
+  position: relative;
+}
+
+// 会社写真エリア（旧 about/page.module.scss .companyImageArea を移設）
+.imageArea {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  background-color: var(--color-placeholder);
+  background-image: url('/images/sections/about/company-image.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  @include fluid(margin-top, 80, 255);
+  @include fluid(height, 360, 1080);
+
+  @include sp {
+    // Figma SP: メンバー row5 bottom y=4490 → 写真 top y=4610 = 120
+    margin-top: 120px;
+    // Figma SP: Rectangle 346 高さ 300px
+    height: 300px;
+  }
+}
+
+// 会社概要カードのラッパー。ピン中はここを translateY して下からせり上げる。
+.cardMover {
+  position: relative;
+  z-index: 2;
+  will-change: transform;
+}
