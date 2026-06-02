@@ -43,26 +43,30 @@ export default function GlobalCanvas() {
         background: 'transparent',
       }}
     >
-      {/* Phase 19: 新キャラ（Clay rough 赤い粘土）は ambient 強すぎると
-          赤が desaturate してベージュに見えるので 1.8 → 0.9 に抑え、
-          directional 側で陰影を出して立体感を確保。 */}
-      <ambientLight intensity={0.9} />
-      <directionalLight position={[3, 4, 8]} intensity={1.4} />
-      <directionalLight position={[-4, 2, 5]} intensity={0.6} />
+      {/* 新キャラ（Clay rough 赤い粘土）は ambient 強すぎると赤が desaturate するため
+          ambient は控えめ（1.0）にし、全体の明るさは左右のフロントライトで稼ぐ。
+          左右をほぼ対称・正面寄り(z=8)・目の高さ寄り(y=3)に置くことで、
+          left-to-right（右向き）/ right-to-left（左向き）どちらの向きでも
+          進行方向側の目にキャッチライトが入る。 */}
+      <ambientLight intensity={1.0} />
+      {/* 右フロント（右向き=left-to-right 時の目のキャッチライト + キー） */}
+      <directionalLight position={[3.5, 3, 8]} intensity={1.5} />
+      {/* 左フロント（左向き=right-to-left 時の目のキャッチライト + フィル） */}
+      <directionalLight position={[-3.5, 3, 8]} intensity={1.2} />
 
       <Suspense fallback={null}>
-        {/* LogoSlider: 右→左に歩くキャラ。
+        {/* LogoSlider: 左→右に歩くキャラ。
             approachMarginPx を大きめにして、ロゴ帯が画面に入る前から歩き出させ、
             ロゴ表示時には既に画面内で歩いている状態にする（入りが遅い対策）。 */}
         <WalkingCharacter
           glbPath={GLB_PATH}
-          direction="right-to-left"
+          direction="left-to-right"
           speed={1.0}
           sectionSelector='[data-section="logo-slider"]'
           triggerOnVisible
           approachMarginPx={2800}
-          // 左に抜けてから再度右から入るまでの待ち時間（default 6000ms）。
-          // 左に抜けたら待ちなしで即右から再登場させる。
+          // 右に抜けてから再度左から入るまでの待ち時間（default 6000ms）。
+          // 右に抜けたら待ちなしで即左から再登場させる。
           waitMs={0}
           baseY={logoBaseY}
           scale={walkScale}
