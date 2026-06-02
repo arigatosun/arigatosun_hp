@@ -131,6 +131,13 @@
     @include fluid(width, 350, 350);
     @include fluid(height, 420, 420);
 
+    // SP のみ 3Dキャラを約60%に縮小（位置・動き方は不変）。
+    // 足元(canvas高さ70%=アーチ頂点) と キャラ水平中心(canvas幅約71%=中心+73px描画オフセット)
+    // を基準に縮小することで、座り位置（アーチ頂点に足元）を保ったままサイズだけ小さくする。
+    // ※カーソル追従は Canvas 内部処理のため、CSS 縮小では一切影響しない。
+    transform: translateX(-50%) scale(0.6);
+    transform-origin: 71% 70%;
+
     // 391px 以上では SP 背景アーチ(bg-mask-sp.png)が object-fit:cover の
     // 幅基準スケールで沈む（CONTACT US ボタンと同様）。top を固定のままだと
     // キャラだけ取り残されて白い領域に浮くため、アーチ頂点と同じ傾き
