@@ -66,9 +66,6 @@ export default function CompanyProfilePin() {
         },
       });
 
-      // [一時デバッグ] Preview で実値検証するため window に露出（後で削除）。
-      (window as unknown as { __pinST?: unknown }).__pinST = imagePin;
-
       return () => {
         gsap.set(card, { y: 0 });
         imagePin.kill();
