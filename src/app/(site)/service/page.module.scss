@@ -33,8 +33,8 @@
 }
 
 .introLogo {
-  // PC でも大きくなりすぎないよう上限を抑える（コンパクト表示）。Figma max 180→140。
-  @include fluid(width, 90, 140);
+  // Figma: サービスロゴ 180×41
+  @include fluid(width, 90, 180);
   height: auto;
 
   // Figma SP @390: ロゴ 136×31
@@ -45,15 +45,15 @@
 
 // SERVICE ラベル（Figma: Mozaic GEO Variable Light / 20px / #808080）
 .introLabel {
-  // コンパクト表示に合わせ PC 上限を抑制（margin 29→22 / font 20→16 / ls 2.6→2.0）。
-  @include fluid(margin-top, 15, 22);
+  // Figma: ロゴ下端 y=281 → ラベル上端 y=310 → 余白 29px
+  @include fluid(margin-top, 15, 29);
   margin-bottom: 0;
   color: var(--color-text-secondary);
   font-family: var(--font-en);
-  @include fluid(font-size, 14, 16);
+  @include fluid(font-size, 14, 20);
   font-weight: var(--font-weight-light);
   line-height: 1;
-  @include fluid(letter-spacing, 1.3, 2.0);
+  @include fluid(letter-spacing, 1.3, 2.6);
 
   // Figma SP @390: ロゴ下端 y=191 → ラベル top y=207 → 16px、font 14、ls 1.82
   @include sp {
@@ -65,14 +65,16 @@
 
 // 導入コピー（Figma: Noto Sans JP / 20px / line-height 44 / #140700）
 .introText {
-  // コンパクト表示に合わせ PC 上限を抑制（margin 68→48 / font 20→16 / line-height 44→32 / ls 4.4→3.4）。
-  @include fluid(margin-top, 34, 48);
+  // Figma: ラベル下端 y=328 → 本文上端 y=396 → 余白 68px
+  @include fluid(margin-top, 34, 68);
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
-  @include fluid(font-size, 14, 16);
+  @include fluid(font-size, 14, 20);
   font-weight: var(--font-weight-regular);
-  @include fluid(line-height, 24, 32);
-  @include fluid(letter-spacing, 2.2, 3.4);
+  @include fluid(line-height, 24, 44);
+  @include fluid(letter-spacing, 2.2, 4.4);
+  // Figma: 本文テキストボックス幅 600px。フォント(20)に比例させて 3 行折り返しを維持。
+  @include fluid(max-width, 420, 600);
 
   p {
     margin: 0;
@@ -84,5 +86,7 @@
     @include fluid(font-size, 14, 14);
     @include fluid(line-height, 28, 28);
     @include fluid(letter-spacing, 3.08, 3.08);
+    // スマホは viewport 幅で自然折り返し（600px 制約は外す）
+    max-width: none;
   }
 }
