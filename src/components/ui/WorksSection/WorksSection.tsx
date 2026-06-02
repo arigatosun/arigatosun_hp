@@ -90,10 +90,12 @@ export default function WorksSection({ works }: WorksSectionProps) {
                     <span className={styles.detailValue}>{detail.value}</span>
                   </p>
                 ))}
-                <p className={styles.detailRow}>
-                  <span className={styles.detailLabel}>TERM：</span>
-                  <span className={styles.detailValue}>{work.term}</span>
-                </p>
+                {work.term && (
+                  <p className={styles.detailRow}>
+                    <span className={styles.detailLabel}>TERM：</span>
+                    <span className={styles.detailValue}>{work.term}</span>
+                  </p>
+                )}
               </div>
             </div>
 

@@ -12,7 +12,7 @@ const WORKS_DATA: readonly WorkItem[] = [
     details: [
       { label: 'D / B：', value: 'ブランド構築、社名・VI 設計' },
     ],
-    term: '',
+    term: '2025.12 ~ 2026.4',
     image: '/images/sections/works/choritz.png',
     imageWidth: 920,
     imageHeight: 518,
@@ -36,7 +36,7 @@ const WORKS_DATA: readonly WorkItem[] = [
     details: [
       { label: 'D / B：', value: 'ロゴ・VI 設計' },
     ],
-    term: '',
+    term: 'NEST BIWAKO : 2024.7 ~ 2024.9 / NEST AMANO HASHIDATE : 2026.2',
     image: '/images/sections/works/nest.png',
     imageWidth: 920,
     imageHeight: 520,
