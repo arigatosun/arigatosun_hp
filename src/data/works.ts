@@ -10,7 +10,7 @@ const WORKS_DATA: readonly WorkItem[] = [
     client: '頂立輸入代行会社',
     title: '数値では測れない想いや姿勢を、ブランドの核心へ宿す。| 社名からVIまで、一気通貫のブランド構築',
     details: [
-      { label: 'D / B：', value: 'ブランド構築、社名・VI 設計' },
+      { label: 'D / B：', value: '会社名・タグライン・ロゴ・VI設計・WEB' },
     ],
     term: '2025.12 ~ 2026.4',
     image: '/images/sections/works/choritz.png',
