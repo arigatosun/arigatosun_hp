@@ -17,6 +17,23 @@ export default async function Home() {
 
   return (
     <div className={styles.page}>
+      {/* LCP対策: ヒーローのロゴ画像を head で先読み（SP/PC を media で出し分け）。
+          <img> 側の fetchPriority="high" と合わせ、最初の描画要素を最速で取得させる。
+          React が <link> を head へ巻き上げる。 */}
+      <link
+        rel="preload"
+        as="image"
+        href="/images/sections/hero/title-logo-sp.png"
+        media="(max-width: 1023px)"
+        fetchPriority="high"
+      />
+      <link
+        rel="preload"
+        as="image"
+        href="/images/sections/hero/title-logo.png"
+        media="(min-width: 1024px)"
+        fetchPriority="high"
+      />
       {/* サービスセクション歩行キャラ用3Dキャンバス */}
       <GlobalCanvasLoader />
       {/* 赤モチーフ（ページレベルで配置、セクション間をまたいで表示） */}
