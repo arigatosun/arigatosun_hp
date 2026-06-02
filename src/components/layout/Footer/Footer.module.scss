@@ -388,10 +388,15 @@
     @include fluid(letter-spacing, 1.4, 2.88);
   }
 
-  // PC: 見出しを左ナビ(.mainMenuItem)と同じ文字サイズに合わせる（配置は元の左揃えのまま）。
+  // MacBook帯(1024〜1512)は左ナビ(.mainMenuItem)と同じ小さめサイズに。配置は元の左揃え。
   @include pc {
     @include fluid(font-size, 14, 20, 390, 1920);
     @include fluid(letter-spacing, 1.2, 2.4, 390, 1920);
+  }
+  // 1512〜1920 は元サイズ(24 / 2.88)へ戻す＝PC全幅(1920)は元デザインのまま（段差なし）。
+  @include min(1512px) {
+    @include fluid(font-size, 18.4, 24, 1512, 1920);
+    @include fluid(letter-spacing, 2.08, 2.88, 1512, 1920);
   }
 }
 
@@ -416,9 +421,18 @@
   position: relative;
   overflow: hidden;
 
-  // PC: バナーを少し小さめに（左揃えのまま左端基準）。SP は従来どおり 100%。
+  // MacBook帯(1024〜1512)はバナーを少し小さめに（カラムの約88%・左端基準）。SP は従来どおり 100%。
   @include pc {
-    width: 88%;
+    width: 100%;
+    @include fluid(max-width, 348, 503, 1024, 1512);
+  }
+  // 1512〜1920 で元のフル幅(720=カラム100%)へ戻す（段差なし）。
+  @include min(1512px) {
+    @include fluid(max-width, 503, 720, 1512, 1920);
+  }
+  // 1920 以上は上限解除＝元どおり 100%（大型モニタに追従）。
+  @include min(1920px) {
+    max-width: none;
   }
 
   // ホバー時のオーバーレイ光彩
