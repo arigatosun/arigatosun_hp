@@ -44,17 +44,15 @@ export default function GlobalCanvas() {
       }}
     >
       {/* 新キャラ（Clay rough 赤い粘土）は ambient 強すぎると赤が desaturate するため
-          ambient は控えめ（1.0）。明るさは key + 左右フロントライトで稼ぐ。
-          目のキャッチライトは「目の高さ(y=2)・キャラとカメラの間(z=5)」の側面フロント光が作る。
-          進行方向側（顔の向く側）の光が反射して目に入るため、左右両方に置く:
-            - [-4,2,5] = 左向き(right-to-left)時の目の光
-            - [ 4,2,5] = 右向き(left-to-right)時の目の光（今回の主目的で追加）*/}
+          ambient は控えめ（1.0）。
+          目のキャッチライトは「顔の向きと反対側・上方」の光が眼球で反射して生まれる。
+          キャラは右向き(left-to-right)なので、元の構成を左右反転して光源を上左に移す:
+            - key を [3,4,8]（上右）→ [-3,4,8]（上左）= 右向き時の目のキャッチライト + 主シェーディング
+            - fill を [-4,2,5]（左）→ [4,2,5]（右）でフィル */}
       <ambientLight intensity={1.0} />
-      {/* キー（右上前・主シェーディング + 明るさ） */}
-      <directionalLight position={[3, 4, 8]} intensity={1.5} />
-      {/* 左フロント・目の高さ（左向き時の目のキャッチライト + フィル） */}
-      <directionalLight position={[-4, 2, 5]} intensity={0.9} />
-      {/* 右フロント・目の高さ（右向き=left-to-right 時の目のキャッチライト） */}
+      {/* キー（上左前・主シェーディング + 右向き時の目のキャッチライト） */}
+      <directionalLight position={[-3, 4, 8]} intensity={1.5} />
+      {/* フィル（右・目の高さ） */}
       <directionalLight position={[4, 2, 5]} intensity={0.9} />
 
       <Suspense fallback={null}>
