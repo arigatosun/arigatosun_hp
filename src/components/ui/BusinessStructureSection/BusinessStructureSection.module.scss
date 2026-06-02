@@ -18,6 +18,13 @@
   // Figma 実測: PrinciplesSection 下端 1586 → 本セクション上端 1846 = ギャップ 260
   @include fluid(padding-top, 80, 260, 320, 1920);
 
+  // PC(flex row): 左テキストと右図を縦中央で揃える。
+  // 図の高さは width 連動(aspect-ratio)でスケールするため、固定オフセットでは中間幅
+  // (MacBook ≈1512 等)で中心がズレる。center にすることでどの幅でも中心が一致する。
+  @include pc {
+    align-items: center;
+  }
+
   @include sp {
     flex-direction: column;
     // Figma SP: 本文 bottom y=2726 → 連携図 top y=2774 = 48
@@ -35,15 +42,13 @@
 }
 
 // ── 左側: タイトル + 説明 ──
-// Figma: width 660px。テキストの改行位置を Figma と一致させるため固定幅を持つ
-// Figma 実測: 右図 (Group 568) は y=1846（section top）に配置、
-// 左タイトル (Group 780) は y=2006（section top + 160）に配置
-// → .left に margin-top: 160 を追加し、右図は section top のまま
+// Figma: width 660px。テキストの改行位置を Figma と一致させるため固定幅を持つ。
+// 縦位置は section の align-items:center (PC) で右図と中心を揃えるため、
+// 以前の margin-top オフセットは廃止（固定オフセットだと中間幅で中心がズレるため）。
 .left {
   flex-shrink: 0;
   min-width: 0;
   width: 34.375vw; // 660 / 1920（vw 比例で中間幅も溢れない）
-  @include fluid(margin-top, 0, 160, 320, 1920);
 
   @include sp {
     width: 100%;
@@ -82,9 +87,9 @@
   flex-shrink: 0;
   width: 33.1771vw; // 637 / 1920（vw 比例で中間幅も溢れない）
   aspect-ratio: 637 / 647;
-  // PC(flex row): section の align-items:stretch で左テキストの高さに引き伸ばされ
-  // 図が縦に歪むのを防ぐ。flex-start で aspect-ratio 通りの高さを保つ（図はセクション上端配置）。
-  align-self: flex-start;
+  // PC(flex row): section が align-items:center のため center で縦中央に揃える。
+  // center は stretch と違い図を引き伸ばさないので aspect-ratio 通りの高さを保つ。
+  align-self: center;
 
   @include sp {
     width: auto;
