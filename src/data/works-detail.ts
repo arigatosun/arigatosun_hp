@@ -468,6 +468,8 @@ const NEST_DETAIL: WorkDetailContent = {
     // PC: Figma フレーム 2497:85745 実測 1920×820 (既存 1 枚画像コラージュ)
     width: 1920,
     height: 820,
+    // PC で大きすぎたため右寄せで 52% に縮小（左端をヘッダー中央ロゴ付近に・右端は全幅維持）
+    pcWidthPct: 52,
     band: 'none',
     photos: [
       { src: `${NEST}/hero-collage-v3.png`, x: 0, y: 0, width: 1920, height: 820 },

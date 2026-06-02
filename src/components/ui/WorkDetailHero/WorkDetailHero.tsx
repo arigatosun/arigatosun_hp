@@ -85,7 +85,13 @@ export default function WorkDetailHero({ hero }: WorkDetailHeroProps) {
     <>
       <div
         className={`${styles.hero} ${styles.heroPc}`}
-        style={{ aspectRatio: `${pcW} / ${pcH}` }}
+        style={{
+          aspectRatio: `${pcW} / ${pcH}`,
+          // pcWidthPct 指定時は右寄せで縮小（右端固定・左端を内側へ）
+          ...(hero.pcWidthPct
+            ? { width: `${hero.pcWidthPct}%`, marginLeft: 'auto' }
+            : {}),
+        }}
       >
         {band !== 'none' && <div className={styles.band} aria-hidden="true" />}
         <Collage photos={hero.photos} frameW={pcW} frameH={pcH} variant="pc" />
