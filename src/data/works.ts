@@ -10,9 +10,9 @@ const WORKS_DATA: readonly WorkItem[] = [
     client: '頂立輸入代行会社',
     title: '数値では測れない想いや姿勢を、ブランドの核心へ宿す。| 社名からVIまで、一気通貫のブランド構築',
     details: [
-      { label: 'D / B：', value: 'ブランド構築、社名・VI 設計' },
+      { label: 'D / B：', value: '会社名・タグライン・ロゴ・VI設計・WEB' },
     ],
-    term: '',
+    term: '2025.12 ~ 2026.4',
     image: '/images/sections/works/choritz.png',
     imageWidth: 920,
     imageHeight: 518,
@@ -22,7 +22,7 @@ const WORKS_DATA: readonly WorkItem[] = [
     client: 'VARIOUS CLIENTS',
     title: '独自の核を構築する。| ロゴ・VIのプロジェクトアーカイブ。',
     details: [
-      { label: 'D / B：', value: 'ロゴ・VI アーカイブ' },
+      { label: 'D / B：', value: 'ロゴデザイン' },
     ],
     term: '',
     image: '/images/sections/works/logo-archive.png',
@@ -36,7 +36,7 @@ const WORKS_DATA: readonly WorkItem[] = [
     details: [
       { label: 'D / B：', value: 'ロゴ・VI 設計' },
     ],
-    term: '',
+    term: 'NEST BIWAKO : 2024.7 ~ 2024.9 / NEST AMANO HASHIDATE : 2026.2',
     image: '/images/sections/works/nest.png',
     imageWidth: 920,
     imageHeight: 520,
