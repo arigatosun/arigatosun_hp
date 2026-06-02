@@ -55,6 +55,12 @@
   font-family: var(--font-en);
 }
 
+// 英語のクライアント名は CLIENT ラベルと同体裁（font-en）にする。サイズ/ウェイト/字間は
+// .client から継承するためラベルと完全一致。日本語名は .clientName のまま維持。
+.clientValueEn {
+  font-family: var(--font-en);
+}
+
 .clientName {
   font-family: 'Noto Sans JP', var(--font-jp);
   font-weight: var(--font-weight-regular);
