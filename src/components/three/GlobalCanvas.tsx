@@ -43,16 +43,15 @@ export default function GlobalCanvas() {
         background: 'transparent',
       }}
     >
-      {/* キャッチライトは「目の高さ寄り(y=3)・カメラ面(z=8)・左右の側面」ライトが
-          進行方向側の眼球に反射して生まれる。以前この左右対称配置のとき左向きの目に光が
-          入っていた実績があるため復元する（左右対称なのでどちら向きでも効く）。
-          歩行キャラは右向き(left-to-right)なので右の [3.5,3,8] が目のキャッチライトを作る。
-          ambient は赤が desaturate しないよう控えめ。 */}
+      {/* 歩行キャラは横向き（プロフィール）のため、側面ライトだと目の反射が画面外/背面へ行き
+          正面カメラからキャッチライトが見えない。そこで key を「正面寄り（カメラ方向 z=9）・
+          やや右上」に置き、右向きの目の前面に反射（キャッチライト）が乗るようにする。
+          ambient は赤が desaturate しないよう控えめ、左側に弱フィルで立体感を残す。 */}
       <ambientLight intensity={1.0} />
-      {/* 右フロント（右向き時の目のキャッチライト） */}
-      <directionalLight position={[3.5, 3, 8]} intensity={1.5} />
-      {/* 左フロント（フィル / 左向き時のキャッチライト） */}
-      <directionalLight position={[-3.5, 3, 8]} intensity={1.2} />
+      {/* 正面寄りキー（やや右上前・カメラ方向）＝右向き時の目のキャッチライト */}
+      <directionalLight position={[2, 2.5, 9]} intensity={1.6} />
+      {/* 左フィル（立体感） */}
+      <directionalLight position={[-3, 2, 5]} intensity={0.5} />
 
       <Suspense fallback={null}>
         {/* LogoSlider: 左→右に歩くキャラ。
