@@ -11,17 +11,18 @@
   // Figma: 左右 200px（タイトルブロックと左端を揃える）
   @include fluid(padding-left, 20, 200);
   @include fluid(padding-right, 20, 200);
-  // Figma: カード下端 y=1154 / 次セクション y=1394 → 余白 240px
-  @include fluid(padding-bottom, 96, 240);
+  // カード下端 → フッターの余白。旧値 fluid(96,240) は「次セクションまで(240px)」の Figma 値で、
+  // 実際は次がフッターなので過大だった。TOP のフッター直前(MessageSection)と同じ fluid(54,108) に統一。
+  @include fluid(padding-bottom, 54, 108, 390, 1920);
 
   // Figma SP @390: 説明文下端 y=363 → カード上端 y=423 = 60px
   // 左右 20px の余白でカードを viewport から少し引っ込める
-  // padding-bottom: 96 → 46（フッターまでの余白を 50px 削減）
   @include sp {
     @include fluid(margin-top, 60, 66);
     @include fluid(padding-left, 20, 0);
     @include fluid(padding-right, 20, 0);
-    @include fluid(padding-bottom, 16, 240);
+    // PC 側に合わせて上限を 240→108 に。スマホは min 16 で従来どおりタイトに。
+    @include fluid(padding-bottom, 16, 108);
   }
 }
 
@@ -29,8 +30,8 @@
 .cards {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  // Figma: カード間 40px
-  @include fluid(gap, 16, 40);
+  // TOP の ServiceSection（カード間 16px）に合わせて 40→16px に縮小。
+  @include fluid(gap, 16, 16);
 
   // 3 → 2 → 1 のレスポンシブ（PC=3列 / タブレット=2列 / スマホ=1列）
   // タブレット(768〜1023)は2列

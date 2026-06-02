@@ -73,6 +73,8 @@
   font-weight: var(--font-weight-regular);
   @include fluid(line-height, 24, 44);
   @include fluid(letter-spacing, 2.2, 4.4);
+  // Figma: 本文テキストボックス幅 600px。フォント(20)に比例させて 3 行折り返しを維持。
+  @include fluid(max-width, 420, 600);
 
   p {
     margin: 0;
@@ -84,5 +86,7 @@
     @include fluid(font-size, 14, 14);
     @include fluid(line-height, 28, 28);
     @include fluid(letter-spacing, 3.08, 3.08);
+    // スマホは viewport 幅で自然折り返し（600px 制約は外す）
+    max-width: none;
   }
 }
