@@ -93,6 +93,10 @@ function SitModel({ position, scale, rotationY, rotationX, freezeCursor }: SitMo
     handWorldQ: new THREE.Quaternion(),
   });
   const restCaptured = useRef(false);
+  // Sit ポーズ(mixer)が確実に適用されてから rest を捕捉するためのウォームアップ frame カウンタ。
+  // 初回フレームでバインドポーズ(腕が上がった状態)を掴むと、IK が手をそこに固定し続けて
+  // 腕が上がったまま固定される（"たまに"発生）ため、数フレーム待ってから捕捉する。
+  const restWarmupFrames = useRef(0);
 
   // 平滑化された delta 回転（rest からの差分）
   const smoothedSpineDeltaQ = useRef(new THREE.Quaternion());
@@ -181,8 +185,10 @@ function SitModel({ position, scale, rotationY, rotationX, freezeCursor }: SitMo
     }
   }, [clonedScene]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     // glb 内に含まれるアニメは 'Sit' のみ（静止ポーズ保持）
+    // useLayoutEffect で初回フレーム(useFrame)より前に確実に再生開始し、
+    // mixer.update が初回から Sit ポーズを適用できるようにする（腕上がり対策）。
     const actionName = Object.keys(actions)[0];
     if (actionName && actions[actionName]) {
       actions[actionName].reset().play();
@@ -300,6 +306,11 @@ function SitModel({ position, scale, rotationY, rotationX, freezeCursor }: SitMo
     // 2) 初回のみ Sit ポーズの回転＋ボーン位置を rest として退避（以降は再取得しない）
     //    spine/head は local rotation を、腕チェーンは IK 用に world 位置＋world 回転を保持。
     if (!restCaptured.current) {
+      // Sit クリップ(1フレーム)の適用が初回フレームに間に合わず、バインドポーズ(腕が
+      // 上がった状態)を rest として掴むと、IK が手をそこに固定し続けて腕が上がったまま
+      // になる。mixer.update を数フレーム回して Sit ポーズが確実に反映されてから捕捉する。
+      restWarmupFrames.current += 1;
+      if (restWarmupFrames.current < 5) return;
       restSpineQ.current.copy(spine.quaternion);
       restHeadQ.current.copy(head.quaternion);
       // 腕チェーン (L): Sit pose の world 位置・回転をキャプチャ
