@@ -30,8 +30,8 @@
 .cards {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  // Figma: カード間 40px
-  @include fluid(gap, 16, 40);
+  // TOP の ServiceSection（カード間 16px）に合わせて 40→16px に縮小。
+  @include fluid(gap, 16, 16);
 
   // 3 → 2 → 1 のレスポンシブ（PC=3列 / タブレット=2列 / スマホ=1列）
   // タブレット(768〜1023)は2列
