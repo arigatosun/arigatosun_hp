@@ -1,8 +1,17 @@
-@use '@/styles/fluid' as *;
+// Figma フレーム 1920px 準拠（旧 about/page.module.scss と同じ基準に揃える）
+@use '@/styles/fluid' as * with (
+  $fluid-max-viewport: 1920
+);
 @use '@/styles/breakpoints' as *;
 
 .pinWrap {
   position: relative;
+  // 写真セクションとフッターの間に少し余白を入れる（ピン化で詰まったため）。
+  @include fluid(margin-bottom, 60, 120);
+
+  @include sp {
+    @include fluid(margin-bottom, 40, 120);
+  }
 }
 
 // 会社写真エリア（旧 about/page.module.scss .companyImageArea を移設）
