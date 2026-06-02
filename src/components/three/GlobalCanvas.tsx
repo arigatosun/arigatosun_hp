@@ -21,8 +21,8 @@ export default function GlobalCanvas() {
     mq.addEventListener('change', update);
     return () => mq.removeEventListener('change', update);
   }, []);
-  // PC 0.6 → SP 0.35（約 58% に縮小）
-  const walkScale = isSp ? 0.35 : 0.6;
+  // PC は上側2つの3D（Hero/WORKS）に合わせて縮小（0.6 → 0.45）。SP は 0.35 を維持。
+  const walkScale = isSp ? 0.35 : 0.45;
   // SP は両キャラを 70px (camera zoom 150 → +0.467 world unit) 上にオフセット
   const SP_OFFSET_Y = 0.467;
   const logoBaseY = isSp ? -1.5 + SP_OFFSET_Y : -1.5;
@@ -43,15 +43,21 @@ export default function GlobalCanvas() {
         background: 'transparent',
       }}
     >
-      {/* Phase 19: 新キャラ（Clay rough 赤い粘土）は ambient 強すぎると
-          赤が desaturate してベージュに見えるので 1.8 → 0.9 に抑え、
-          directional 側で陰影を出して立体感を確保。 */}
-      <ambientLight intensity={0.9} />
-      <directionalLight position={[3, 4, 8]} intensity={1.4} />
-      <directionalLight position={[-4, 2, 5]} intensity={0.6} />
+      {/* 歩行キャラは横向き（プロフィール）で右(+X)を向く。
+          ・正面寄り key [2,2.5,9] = 目のキャッチライト（維持）
+          ・右前 face ライト [4.5,2.5,6] = 顔(+X側)を明るく照らす（陰だった顔の明るさUP）
+          ・左フィル = 立体感
+          ambient は赤の desaturate を避けつつ少し上げて全体を明るく。 */}
+      <ambientLight intensity={1.2} />
+      {/* 正面寄りキー（やや右上前・カメラ方向）＝右向き時の目のキャッチライト */}
+      <directionalLight position={[2, 2.5, 9]} intensity={1.7} />
+      {/* 右前 face ライト（右向きの顔を明るく） */}
+      <directionalLight position={[4.5, 2.5, 6]} intensity={1.1} />
+      {/* 左フィル（立体感） */}
+      <directionalLight position={[-3, 2, 5]} intensity={0.4} />
 
       <Suspense fallback={null}>
-        {/* LogoSlider: 左→右に逆方向で歩く 2 体目。
+        {/* LogoSlider: 左→右に歩くキャラ。
             approachMarginPx を大きめにして、ロゴ帯が画面に入る前から歩き出させ、
             ロゴ表示時には既に画面内で歩いている状態にする（入りが遅い対策）。 */}
         <WalkingCharacter
