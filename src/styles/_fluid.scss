@@ -72,3 +72,15 @@ $fluid-base-font-size: 16 !default;
     @include fluid($property, $min, $max);
   }
 }
+
+// ============================================
+// フッター手前の余白（全公開ページ共通・単一ソース）
+// ============================================
+// 「コンテンツ最下部 → 赤いアーチ」の余白は Footer 側（.footer の padding-top /
+// .maskOverlay / .sitCharacter）で一元管理し、各ページ側では一切持たせない。
+// そのため各公開ページの「最後の要素」にこの mixin を当てて padding-bottom を 0 に揃える
+// （ページごとにバラバラだった上乗せ余白を撤去）。
+// 余白量の調整は Footer.module.scss の該当値（現状: 合計約120px @PC）で行う。
+@mixin footer-gap {
+  padding-bottom: 0;
+}

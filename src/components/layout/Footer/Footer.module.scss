@@ -18,12 +18,13 @@
   // SP: アーチは footer 上端から始まる(maskOverlay top:0)ため、余白 = margin-top = 100。
   margin-top: 100px;
   // PC: アーチは白い領域(padding-top)の分だけ下にあるため、
-  //     余白 = margin-top(39) + padding-top(201@1920) = 240。
+  //     余白 = margin-top(39) + padding-top(81) = 120（全ページ統一・狭め）。
+  //     ※旧 201 → 81 に縮小（アーチ/キャラも同じ120px上方へ協調シフト）。
   @include pc {
     margin-top: 39px;
   }
   // ※ キャラ/アーチと連動するため 1200 据え置き（1920 化しない）
-  @include fluid(padding-top, 80, 201);
+  @include fluid(padding-top, 80, 81);
   overflow: visible;
 
   // Figma SP(390): フレーム上端 → CONTACT US ボタン top = 203
@@ -42,11 +43,12 @@
 }
 
 // ── 背景マスクオーバーレイ ──
-// 白い領域 (footer top 〜 201px) より下から始める。bg-mask.png の上端 = アーチ頂点。
+// 白い領域 (footer top 〜 81px) より下から始める。bg-mask.png の上端 = アーチ頂点。
 // ※ 3D キャラと座標を合わせる精密要素のため 1200 据え置き（1920 化しない）。
+//   余白を 240→120 に詰めるため top を 201→81（padding-top と同値）に。
 .maskOverlay {
   position: absolute;
-  @include fluid(top, 80, 201);
+  @include fluid(top, 80, 81);
   left: 0;
   right: 0;
   bottom: 0;
@@ -95,7 +97,8 @@
   // Canvas を上下方向にずらしてキャラ位置を微調整する。
   // PC max: アーチ頂点に足元が乗る基準値 -219 から 130px 上方向（= -349）に持ち上げ。
   // SP min: 同じ比率（PC max × 0.594）でスケール → -208。
-  @include fluid(top, -208, -349);
+  // ※ アーチ頂点を 201→81 に上げた(余白240→120)ぶん、PC max を 120px 上方へ追従（-349 → -469）。
+  @include fluid(top, -208, -469);
   left: 50%;
   transform: translateX(-50%);
   // 左方向シフト。PC max -135 / SP min -80（同比率）。

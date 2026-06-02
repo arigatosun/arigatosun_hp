@@ -13,7 +13,8 @@
   @include fluid(padding-top, 120, 280);
   @include fluid(padding-left, 40, 200);
   @include fluid(padding-right, 40, 200);
-  @include fluid(padding-bottom, 40, 100);
+  // フッター手前の余白は全ページ共通の footer-gap mixin で統一（_fluid.scss で一元管理）
+  @include footer-gap;
 }
 
 // ── タイトルブロック ──

@@ -7,7 +7,7 @@
 .page {
   position: relative;
   padding-top: 80px; // Header(position: fixed) 分のオフセット
-  // 最終セクション（実績・事例）→ グローバルフッターの間隔
-  @include fluid(padding-bottom, 96, 240);
+  // フッター手前の余白は全ページ共通の footer-gap mixin で統一（_fluid.scss で一元管理）
+  @include footer-gap;
   overflow-x: clip;
 }
