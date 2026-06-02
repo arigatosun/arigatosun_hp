@@ -38,7 +38,13 @@ export default function MessageSection() {
     const FLY = 0; // 0=フライングなし(順次切替) / >0=次行を先行させる重なり量
     let thresholds = new Array<number>(chars.length).fill(0);
 
+    // テキストブロックの縦方向の範囲（セクション上端からの相対オフセット）。
+    // 白→赤の境界をビューポート中央に合わせるための基準として paint() で使う。
+    let textTopOffset = 0;
+    let textHeight = 1;
+
     const measure = () => {
+      const sectionTop = section.getBoundingClientRect().top;
       // getBoundingClientRect の top で視覚的な「行」にグループ化
       const tops = chars.map((c) => c.getBoundingClientRect().top);
       const lineOf = new Array<number>(chars.length);
@@ -72,6 +78,13 @@ export default function MessageSection() {
       const maxRaw = Math.max(...raw);
       // 0 と 1 に張り付かないよう正規化（progress 0 で全白・1 で全赤になる）
       thresholds = raw.map((v) => (v + 0.5) / (maxRaw + 1));
+
+      // テキストブロックの縦範囲を測る（セクション上端からの相対値なのでスクロール非依存）。
+      // 先頭行の上端 〜 最終行の下端。最終行の文字高で下端を補う。
+      const lastH = chars[chars.length - 1].getBoundingClientRect().height;
+      textTopOffset = tops[0] - sectionTop;
+      const textBottomOffset = tops[tops.length - 1] - sectionTop + lastH;
+      textHeight = Math.max(textBottomOffset - textTopOffset, 1);
     };
 
     // 直近に適用した状態（0=白 / 1=赤）。変化した文字だけ書き換える。
@@ -82,22 +95,16 @@ export default function MessageSection() {
       rafId = 0;
       const rect = section.getBoundingClientRect();
       const vh = window.innerHeight;
-      // 進行度を「セクションの実位置」基準で求める（端末・セクション高さ非依存）:
-      //   開始 (progress=0): section.top が viewport 下端から 15% 入った時点
-      //                       (section.top = vh * START_TOP)
-      //   終了 (progress=1): section.bottom が viewport 下端より少し下に
-      //                       残っている段階で完了 (section.bottom = vh * END_BOTTOM)
-      //   → 最後の行が画面に入ってくる前にリベール完了 → どの端末・どの
-      //     セクション高さでも「フッター手前で赤になり切る」状態を保証する。
-      //   セクションが極端に短い場合に分母が小さくなり過ぎないよう最低値を設ける。
-      const START_TOP = 0.85;
-      const END_BOTTOM = 0.9;
-      const distance = Math.max(
-        rect.height - (END_BOTTOM - START_TOP) * vh,
-        vh * 0.6,
-      );
-      const scrolled = START_TOP * vh - rect.top;
-      let prog = scrolled / distance;
+      // 進行度を「テキストブロックがビューポート中央線を通過した割合」で求める。
+      //   CENTER … 白→赤の境界を置くビューポートの縦位置（0.5 = 画面中央 /
+      //            小さいほど上寄り）。中央よりやや上で切り替える指定。
+      //   progress = (基準線 − テキスト上端) / テキスト高さ。
+      //   → 基準線をちょうど横切っている文字が白→赤の境界になる＝
+      //     各行がこの高さを通過する瞬間に赤へ切り替わる。
+      const CENTER = 0.42;
+      const centerY = vh * CENTER;
+      const textTopViewport = rect.top + textTopOffset;
+      let prog = (centerY - textTopViewport) / textHeight;
       prog = prog < 0 ? 0 : prog > 1 ? 1 : prog;
 
       // スクロールに双方向連動: 基準値を超えた文字は赤、未満は白。
