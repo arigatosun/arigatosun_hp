@@ -40,35 +40,35 @@ export default function CompanyProfilePin() {
       const getRise = () =>
         Math.max(image.offsetHeight / 2 + card.offsetHeight / 2 - overlap, 0);
 
+      // ① 写真ピン: 写真中央〜カードの溜め終わりまで固定。カードはこの間に通常
+      // スクロールで上を自然にせり上がる（transform 補正をしないのでブレない）。
       const imagePin = ScrollTrigger.create({
         trigger: image,
         start: 'center center',
-        // ピン長 = rise（中央まで）+ 溜め HOLD_PX + 抜け HOLD_PX。
-        end: () => `+=${getRise() + HOLD_PX * 2}`,
+        end: () => `+=${getRise() + HOLD_PX}`,
         pin: image,
         // スペーサー無し＝写真を固定したまま会社概要が上を流れる。
         pinSpacing: false,
         anticipatePin: 1,
         invalidateOnRefresh: true,
-        // カードの「中央での溜め」を transform で作る:
-        //   rise 中 (scroll≤Sc)        : y=0（自然にせり上がる）
-        //   溜め (Sc〜Sc+HOLD)          : y=scroll-Sc（中央に visually 固定＝止まる）
-        //   抜け (Sc+HOLD〜Sc+2HOLD)    : y を 0 へ戻す（上へ抜けてフッターへ）
-        onUpdate: (self) => {
-          const Sc = self.start + getRise();
-          const scroll = self.scroll();
-          let y = 0;
-          if (scroll <= Sc) y = 0;
-          else if (scroll <= Sc + HOLD_PX) y = scroll - Sc;
-          else if (scroll <= Sc + HOLD_PX * 2) y = Sc + HOLD_PX * 2 - scroll;
-          else y = 0;
-          gsap.set(card, { y });
-        },
+      });
+
+      // ② カードの溜め: カード中心が画面中央に来たら、カード自体を本当にピン固定
+      // （position:fixed）して HOLD_PX ぶん静止＝「カチッ」と止まる。transform 補正
+      // ではなく実ピンなのでブルブル震えない。pinSpacing:true で解除時もジャンプなし。
+      const cardPin = ScrollTrigger.create({
+        trigger: card,
+        start: 'center center',
+        end: () => `+=${HOLD_PX}`,
+        pin: card,
+        pinSpacing: true,
+        anticipatePin: 1,
+        invalidateOnRefresh: true,
       });
 
       return () => {
-        gsap.set(card, { y: 0 });
         imagePin.kill();
+        cardPin.kill();
       };
     });
 
