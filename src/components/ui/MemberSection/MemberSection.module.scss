@@ -259,7 +259,8 @@
   margin-top: 4px;
   color: var(--color-black);
   font-family: var(--font-en);
-  @include fluid(font-size, 14, 18, 390, 1920);
+  // 名前テキストは MacBook 等で大きく感じたため PC 基準(1920)を 18→16 に縮小。
+  @include fluid(font-size, 14, 16, 390, 1920);
   font-weight: var(--font-weight-light);
   line-height: 18px;
   @include fluid(letter-spacing, 1.4, 2.34, 390, 1920);
