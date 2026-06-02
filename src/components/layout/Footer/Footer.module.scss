@@ -388,11 +388,10 @@
     @include fluid(letter-spacing, 1.4, 2.88);
   }
 
-  // PC: 見出しを左ナビ(.mainMenuItem)と同じ文字サイズに合わせ、ブロックを右揃えに。
+  // PC: 見出しを左ナビ(.mainMenuItem)と同じ文字サイズに合わせる（配置は元の左揃えのまま）。
   @include pc {
     @include fluid(font-size, 14, 20, 390, 1920);
     @include fluid(letter-spacing, 1.2, 2.4, 390, 1920);
-    text-align: right;
   }
 }
 
@@ -406,9 +405,9 @@
     @include fluid(gap, 16, 16, 320, 390);
   }
 
-  // PC: バナーを右揃え（右端固定で左に縮ませるため）
+  // PC: バナーは元どおり左揃え（左端基準）。
   @include pc {
-    align-items: flex-end;
+    align-items: flex-start;
   }
 }
 
@@ -417,9 +416,9 @@
   position: relative;
   overflow: hidden;
 
-  // PC: バナーを小さめに（右揃え=右端固定のまま左へ縮む）。SP は従来どおり 100%。
+  // PC: バナーを少し小さめに（左揃えのまま左端基準）。SP は従来どおり 100%。
   @include pc {
-    width: 75%;
+    width: 88%;
   }
 
   // ホバー時のオーバーレイ光彩
