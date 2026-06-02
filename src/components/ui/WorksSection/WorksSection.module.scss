@@ -353,11 +353,17 @@
   // 中央寄せ化に伴い旧右寄せ用の translateX(20px) は撤去（塊を正確に中央へ）。
   // 微調整(2026-05): 少し下寄りだったため枠ごと上へ持ち上げる（PC のみ）。
   transform: translateY(-18px);
+  // キャラ box は右側に空きキャンバスがあり、見た目の「キャラ→テキスト」余白が
+  // 「テキスト→ボタン」より広くなる。負の margin-right でテキストを空き部分へ引き寄せ、
+  // 左右の余白を揃える（塊は flex center で再センタリングされ中央維持）。SP では 0。
+  margin-right: -32px;
 
   @include max(1023px) {
     // Figma SP @390: 140×144
     @include fluid(width, 140, 156);
     @include fluid(height, 144, 161);
+    // PC 用の負 margin は SP（縦積み中央）では位置がずれるため解除
+    margin-right: 0;
     // ボックスは中央だが、perspective カメラ + charRotationY によりキャンバス内で
     // キャラが約10px 右に描画される。横ズレ量はキャンバス高さ比例で SP 全域ほぼ一定
     // なので、定数 translateX で左へ戻して常に中央に揃える。
