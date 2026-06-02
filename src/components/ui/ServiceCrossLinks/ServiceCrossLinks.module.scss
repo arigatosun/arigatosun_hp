@@ -9,8 +9,8 @@
   @include fluid(padding-left, 40, 200);
   @include fluid(padding-right, 40, 200);
   @include fluid(margin-top, 64, 121);
-  // 上余白 margin-top と対称にして、フッターまでが間延びしないようにする
-  @include fluid(padding-bottom, 64, 121);
+  // フッター手前の余白は全ページ共通の footer-gap mixin で統一（_fluid.scss で一元管理）
+  @include footer-gap;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   // Figma: カード間 80px

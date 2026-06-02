@@ -13,15 +13,14 @@
   @include fluid(padding-right, 20, 200);
   // Figma 実測: サイドバー上端 y=200 (page top 込み) − header 80 = 120 / SP: 80 (y=160 - header 80)
   @include fluid(padding-top, 45, 120);
-  @include fluid(padding-bottom, 60, 200);
+  // フッター手前の余白は全ページ共通の footer-gap mixin で統一（_fluid.scss で一元管理）
+  @include footer-gap;
 
   // SP(390): カード横幅 334 を中央に置くため 28px 左右に固定 / 上部余白も Figma SP 80 に合わせる
-  // padding-bottom は fluid 既定値から -30px 縮めて pagination → アリガトくん 余白を詰める
   @include sp {
     padding-left: 28px;
     padding-right: 28px;
     padding-top: 80px;
-    padding-bottom: calc(66px - 30px);
   }
 }
 

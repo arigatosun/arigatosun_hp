@@ -14,15 +14,16 @@
 //   - y=201..  : 赤いアーチ + 内容部分
 .footer {
   position: relative;
-  // 「最後のセクション下端 → 赤いアーチ頂点」の余白を PC 240 / SP 100 に統一する。
+  // 「最後のセクション下端 → 赤いアーチ頂点」の余白を全ページ統一する。
   // SP: アーチは footer 上端から始まる(maskOverlay top:0)ため、余白 = margin-top = 100。
   margin-top: 100px;
-  // PC: アーチは白い領域(padding-top)の分だけ下にあるため、
-  //     余白 = margin-top(39) + padding-top(201@1920) = 240。
+  // PC: フッター内部（アーチ/キャラ/ボタンの相対位置）は元のまま一切触らず、
+  //     フッター全体を margin-top のマイナスで丸ごと上へ引き上げて余白だけ詰める。
+  //     余白 = margin-top(-51) + padding-top(201) = 150（旧 240 → 150）。
   @include pc {
-    margin-top: 39px;
+    margin-top: -51px;
   }
-  // ※ キャラ/アーチと連動するため 1200 据え置き（1920 化しない）
+  // ※ キャラ/アーチと連動するため内部値は据え置き（1920 化しない）
   @include fluid(padding-top, 80, 201);
   overflow: visible;
 
@@ -43,7 +44,7 @@
 
 // ── 背景マスクオーバーレイ ──
 // 白い領域 (footer top 〜 201px) より下から始める。bg-mask.png の上端 = アーチ頂点。
-// ※ 3D キャラと座標を合わせる精密要素のため 1200 据え置き（1920 化しない）。
+// ※ 3D キャラと座標を合わせる精密要素のため内部値は据え置き（余白詰めは .footer margin-top で行う）。
 .maskOverlay {
   position: absolute;
   @include fluid(top, 80, 201);

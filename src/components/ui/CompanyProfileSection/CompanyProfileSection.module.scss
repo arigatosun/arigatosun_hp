@@ -23,7 +23,8 @@
   //       A = -60 - (-18.125)*3.2 = -60 + 58 = -2
   // 結果: clamp(-350px, calc(-2px - 18.125vw), -60px)
   margin-top: clamp(-350px, calc(-2px - 18.125vw), -60px);
-  @include fluid(padding-bottom, 100, 250);
+  // フッター手前の余白は全ページ共通の footer-gap mixin で統一（_fluid.scss で一元管理）
+  @include footer-gap;
   @include fluid(padding-left, 40, 200);
   @include fluid(padding-right, 40, 200);
 
@@ -36,7 +37,6 @@
   }
 
   @include sp {
-    @include fluid(padding-bottom, 40, 80);
     // SP カードの左右余白（左右対称＝中央寄せ）。
     // テキストが折り返さない範囲でカードを少し縮める（最小幅 320 でもバッファを確保）。
     @include fluid(padding-left, 12, 22, 320, 390);
