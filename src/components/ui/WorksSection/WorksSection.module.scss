@@ -326,10 +326,10 @@
   @include fluid(margin-top, 60, 200, 390, 1920);
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  // 右寄せ余白。元 217 は MacBook 幅でブロックを左へ押しキャラが左寄りになるため縮小し、
-  // フッターブロック（キャラ＋テキスト＋ボタン）を右（作品画像の右端側）へ寄せる。
-  @include fluid(padding-right, 0, 40, 390, 1920);
+  // 3要素（キャラ＋テキスト＋VIEW WORKS）を1つの塊として中央寄せにする。
+  // 以前は flex-end + padding-right だったが右に寄りすぎたため center に変更。
+  justify-content: center;
+  padding-right: 0;
 
   @include max(1023px) {
     flex-direction: column;
@@ -349,10 +349,10 @@
   flex-shrink: 0;
   @include fluid(width, 150, 234, 390, 1920);
   @include fluid(height, 150, 242, 390, 1920);
-  // Hero と同じく枠ごとシフト（中の 3D は変えず translate のみ）。
-  // 拡大に伴い左へ張り出すため、PC では translateX を増やして PC 幅と同等の位置感に寄せる。
+  // 枠ごとシフト（中の 3D は変えず translate のみ）。
+  // 中央寄せ化に伴い旧右寄せ用の translateX(20px) は撤去（塊を正確に中央へ）。
   // 微調整(2026-05): 少し下寄りだったため枠ごと上へ持ち上げる（PC のみ）。
-  transform: translate(20px, -18px);
+  transform: translateY(-18px);
 
   @include max(1023px) {
     // Figma SP @390: 140×144
@@ -398,11 +398,12 @@
   color: var(--color-text-secondary);
   text-align: right;
   font-family: var(--font-en);
-  @include fluid(font-size, 11, 14, 390, 1920);
+  // PC は一回り小さく（元 14 → 12）。SP は @include max(1023px) で 14 のまま維持。
+  @include fluid(font-size, 10, 12, 390, 1920);
   font-style: normal;
   font-weight: var(--font-weight-light);
-  @include fluid(line-height, 16, 21, 390, 1920);
-  @include fluid(letter-spacing, 1, 1.82, 390, 1920);
+  @include fluid(line-height, 14, 18, 390, 1920);
+  @include fluid(letter-spacing, 0.9, 1.56, 390, 1920);
 
   @include max(1023px) {
     // Figma SP @390: 14px / line-height 21 / letter-spacing 1.82
