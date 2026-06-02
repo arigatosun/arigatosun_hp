@@ -326,8 +326,10 @@
   @include fluid(margin-top, 60, 200, 390, 1920);
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  @include fluid(padding-right, 0, 217, 390, 1920);
+  // 3要素（キャラ＋テキスト＋VIEW WORKS）を1つの塊として中央寄せにする。
+  // 以前は flex-end + padding-right だったが右に寄りすぎたため center に変更。
+  justify-content: center;
+  padding-right: 0;
 
   @include max(1023px) {
     flex-direction: column;
@@ -342,19 +344,26 @@
   }
 }
 
-// Figma: キャラ 156×161（1920基準）
+// Figma: キャラ 156×161（1920基準）。PC は右テキストに合わせ約1.5倍に拡大（234×242）。
 .footerCharacter {
   flex-shrink: 0;
-  @include fluid(width, 100, 156, 390, 1920);
-  @include fluid(height, 100, 161, 390, 1920);
-  // Hero と同じく枠ごとシフト（中の 3D は変えず translate のみ）
-  // 微調整(2026-05): 少し下寄りだったため枠ごと 12px 上へ持ち上げる（PC のみ）。
-  transform: translate(20px, -12px);
+  @include fluid(width, 150, 234, 390, 1920);
+  @include fluid(height, 150, 242, 390, 1920);
+  // 枠ごとシフト（中の 3D は変えず translate のみ）。
+  // 中央寄せ化に伴い旧右寄せ用の translateX(20px) は撤去（塊を正確に中央へ）。
+  // 微調整(2026-05): 少し下寄りだったため枠ごと上へ持ち上げる（PC のみ）。
+  transform: translateY(-18px);
+  // キャラ box は右側に空きキャンバスがあり、見た目の「キャラ→テキスト」余白が
+  // 「テキスト→ボタン」より広くなる。負の margin-right でテキストを空き部分へ引き寄せ、
+  // 左右の余白を揃える（塊は flex center で再センタリングされ中央維持）。SP では 0。
+  margin-right: -32px;
 
   @include max(1023px) {
     // Figma SP @390: 140×144
     @include fluid(width, 140, 156);
     @include fluid(height, 144, 161);
+    // PC 用の負 margin は SP（縦積み中央）では位置がずれるため解除
+    margin-right: 0;
     // ボックスは中央だが、perspective カメラ + charRotationY によりキャンバス内で
     // キャラが約10px 右に描画される。横ズレ量はキャンバス高さ比例で SP 全域ほぼ一定
     // なので、定数 translateX で左へ戻して常に中央に揃える。
@@ -395,11 +404,12 @@
   color: var(--color-text-secondary);
   text-align: right;
   font-family: var(--font-en);
-  @include fluid(font-size, 11, 14, 390, 1920);
+  // PC は一回り小さく（元 14 → 12）。SP は @include max(1023px) で 14 のまま維持。
+  @include fluid(font-size, 10, 12, 390, 1920);
   font-style: normal;
   font-weight: var(--font-weight-light);
-  @include fluid(line-height, 16, 21, 390, 1920);
-  @include fluid(letter-spacing, 1, 1.82, 390, 1920);
+  @include fluid(line-height, 14, 18, 390, 1920);
+  @include fluid(letter-spacing, 0.9, 1.56, 390, 1920);
 
   @include max(1023px) {
     // Figma SP @390: 14px / line-height 21 / letter-spacing 1.82
