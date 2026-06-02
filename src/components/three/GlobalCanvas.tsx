@@ -21,8 +21,8 @@ export default function GlobalCanvas() {
     mq.addEventListener('change', update);
     return () => mq.removeEventListener('change', update);
   }, []);
-  // PC 0.6 → SP 0.35（約 58% に縮小）
-  const walkScale = isSp ? 0.35 : 0.6;
+  // PC は上側2つの3D（Hero/WORKS）に合わせて縮小（0.6 → 0.45）。SP は 0.35 を維持。
+  const walkScale = isSp ? 0.35 : 0.45;
   // SP は両キャラを 70px (camera zoom 150 → +0.467 world unit) 上にオフセット
   const SP_OFFSET_Y = 0.467;
   const logoBaseY = isSp ? -1.5 + SP_OFFSET_Y : -1.5;
@@ -51,18 +51,18 @@ export default function GlobalCanvas() {
       <directionalLight position={[-4, 2, 5]} intensity={0.6} />
 
       <Suspense fallback={null}>
-        {/* LogoSlider: 左→右に逆方向で歩く 2 体目。
+        {/* LogoSlider: 右→左に歩くキャラ。
             approachMarginPx を大きめにして、ロゴ帯が画面に入る前から歩き出させ、
             ロゴ表示時には既に画面内で歩いている状態にする（入りが遅い対策）。 */}
         <WalkingCharacter
           glbPath={GLB_PATH}
-          direction="left-to-right"
+          direction="right-to-left"
           speed={1.0}
           sectionSelector='[data-section="logo-slider"]'
           triggerOnVisible
           approachMarginPx={2800}
-          // 右に抜けてから再度左から入るまでの待ち時間（default 6000ms）。
-          // 右に抜けたら待ちなしで即左から再登場させる。
+          // 左に抜けてから再度右から入るまでの待ち時間（default 6000ms）。
+          // 左に抜けたら待ちなしで即右から再登場させる。
           waitMs={0}
           baseY={logoBaseY}
           scale={walkScale}
