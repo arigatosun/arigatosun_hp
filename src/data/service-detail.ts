@@ -381,7 +381,7 @@ const IP_CREATIVE: ServiceDetailData = {
     ],
     // Figma 2704:43762 SNS アイコン (Instagram / TikTok / YouTube)
     snsLinks: {
-      instagram: 'https://www.instagram.com/megamegakun',
+      instagram: 'https://www.instagram.com/kusomegane.c',
       tiktok: 'https://www.tiktok.com/@megamegakun',
       youtube: 'https://www.youtube.com/@kusomegane_studio',
     },
