@@ -191,9 +191,6 @@ export default function ParallaxMotifs() {
   // PC・SP どちらも同じロジックで適用（CSS 側で transform に --py を組み込む）。
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    // モバイル軽量化: SP(≤1023px) ではスクロール視差を無効化する。
-    // スクロールのたびにフィルタ付き SVG を transform で再ラスタライズするのが実機で重いため。
-    if (window.matchMedia('(max-width: 1023px)').matches) return;
     const PARALLAX_AMP = 30; // 最大上下移動 (px) — 控えめ
     let raf = 0;
     const onScroll = () => {
