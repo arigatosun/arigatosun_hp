@@ -121,3 +121,13 @@
     letter-spacing: var(--body-ls-sp, 2.52px);
   }
 }
+
+// data 側 \n を SP だけ改行に使う <br>。PC では display:none で改行を無効化し、
+// 本文を自然に流す（『感情の循環』等の語が PC で分断されないようにする）。
+.bodyBreakSp {
+  display: none;
+
+  @include sp {
+    display: inline;
+  }
+}

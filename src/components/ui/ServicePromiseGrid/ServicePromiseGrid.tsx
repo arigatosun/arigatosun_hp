@@ -49,7 +49,15 @@ export default function ServicePromiseGrid({
                     : undefined
                 }
               >
-                {item.body}
+                {/* data 側 \n は Figma SP の wrap 用の強制改行。PC(MacBook含む) では
+                    分断したくない（例: 『感情の循環』）ため、SP のみ有効な <br> に変換して
+                    PC では改行せず自然に流す。 */}
+                {item.body.split('\n').map((seg, idx) => (
+                  <Fragment key={idx}>
+                    {idx > 0 && <br className={styles.bodyBreakSp} />}
+                    {seg}
+                  </Fragment>
+                ))}
               </p>
             </div>
           </Fragment>
