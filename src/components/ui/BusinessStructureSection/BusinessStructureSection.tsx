@@ -29,12 +29,22 @@ export default function BusinessStructureSection() {
 
       {/* 右側: 連携体制図 + 赤スライムグロー */}
       <div className={styles.right}>
+        {/* PC: 横長レイアウトの連携図 / SP: 縦向けに最適化した別アセット（出し分け） */}
         <Image
-          src="/images/sections/about/structure-layer.png"
+          src="/images/sections/about/structure-diagram.svg"
           alt="事業領域と連携体制図"
-          width={640}
-          height={640}
-          className={styles.structureImage}
+          width={638}
+          height={648}
+          className={`${styles.structureImage} ${styles.structureImagePc}`}
+          sizes="(max-width: 1023px) 90vw, 35vw"
+        />
+        <Image
+          src="/images/sections/about/structure-diagram-sp.svg"
+          alt=""
+          aria-hidden="true"
+          width={351}
+          height={356}
+          className={`${styles.structureImage} ${styles.structureImageSp}`}
           sizes="(max-width: 1023px) 90vw, 35vw"
         />
         {/* 赤スライムグロー層: mask-image で 4-clover + 外側2小円のシルエットに切り抜く

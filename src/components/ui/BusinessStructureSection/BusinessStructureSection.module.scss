@@ -112,6 +112,21 @@
   display: block;
 }
 
+// PC / SP で別アセットを出し分け（PrinciplesSection の diagramPc/diagramSp と同方式）
+.structureImagePc {
+  @include sp {
+    display: none;
+  }
+}
+
+.structureImageSp {
+  display: none;
+
+  @include sp {
+    display: block;
+  }
+}
+
 // ── 赤グロー mask 層 ──
 // .right を覆い、4-clover + 外側2小円のシルエット SVG で切り抜く。
 // マウス追従の glow が内側に置かれ、シルエット外には絶対に出ない。
