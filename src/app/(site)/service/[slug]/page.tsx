@@ -109,8 +109,11 @@ export default async function ServiceDetailPage({ params }: PageParams) {
           body={concept.body}
           bodyTracking={concept.bodyTracking}
           variant={concept.visual.kind === 'phases' ? 'phases' : 'default'}
-          // PROCESS (steps) セクションは PC で左カラム sticky にする
-          stickyText={concept.visual.kind === 'steps'}
+          // PROCESS 系（steps / phases）セクションは PC で左カラムを sticky 固定にする
+          // （AI ページの進め方 = steps と同じ挙動を IP の phases にも適用）
+          stickyText={
+            concept.visual.kind === 'steps' || concept.visual.kind === 'phases'
+          }
         >
           {concept.visual.kind === 'image' && (
             <GlowImage
