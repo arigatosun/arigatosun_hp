@@ -246,7 +246,9 @@
 
 // ── 右側画像 ──
 .itemRight {
-  width: 57%; // Figma: 画像エリア877 / セクション幅1537
+  // 元 57%（Figma: 画像エリア877 / セクション幅1537）。PC で画像が大きいため縮小。
+  // itemRight は行の右端に接しているため width を縮めると「右端固定・左から縮小」になる。
+  width: 45%;
   flex-shrink: 0;
   @include fluid(margin-top, -22, -44, 390, 1920);
 
