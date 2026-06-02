@@ -276,10 +276,12 @@
   text-decoration: none;
   background-color: var(--color-white);
   padding: 0;
-  transition: color var(--transition-base);
+  transition: color var(--transition-base), background-color var(--transition-base);
 
+  // ホバー（選択）時は PHILOSOPHY アクティブ表示と同じ「赤背景＋白文字」に。
   &:hover {
-    color: var(--color-primary);
+    color: var(--color-white);
+    background-color: var(--color-primary);
   }
 
   // SP: principleItem の右下に絶対配置（Figma SP: 説明文 bottom 付近・右寄せ）
