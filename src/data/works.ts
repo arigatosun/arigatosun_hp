@@ -22,7 +22,7 @@ const WORKS_DATA: readonly WorkItem[] = [
     client: 'VARIOUS CLIENTS',
     title: '独自の核を構築する。| ロゴ・VIのプロジェクトアーカイブ。',
     details: [
-      { label: 'D / B：', value: 'ロゴ・VI アーカイブ' },
+      { label: 'D / B：', value: 'ロゴデザイン' },
     ],
     term: '',
     image: '/images/sections/works/logo-archive.png',
