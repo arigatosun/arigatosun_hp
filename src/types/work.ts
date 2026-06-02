@@ -47,12 +47,6 @@ export type WorkHero = {
   /** SP ヒーロー全体サイズ（Figma 基準）。省略時は 390×540。 */
   spWidth?: number;
   spHeight?: number;
-  /**
-   * PC ヒーローの幅（ビューポート幅に対する %）。省略時は 100（全幅）。
-   * 指定すると右寄せ（margin-left: auto）で縮小表示する（右端固定・左端を内側へ）。
-   * 例: NEST は 52（左端をヘッダー中央ロゴ付近に合わせる）。SP には影響しない。
-   */
-  pcWidthPct?: number;
   /** 背景帯のスタイル。省略時は pink。 */
   band?: 'pink' | 'none';
   photos: WorkHeroPhoto[];
