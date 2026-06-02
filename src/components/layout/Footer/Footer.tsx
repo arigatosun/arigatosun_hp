@@ -31,7 +31,8 @@ export default function Footer() {
 
       {/* アーチ上のキャラクター（FV 外なので近づくまで遅延ロード） */}
       <DeferMount className={styles.sitCharacter} rootMargin="1000px">
-        <FooterSitCharacterLoader />
+        {/* TODO(一時): キャラ位置デバッグ用。Canvas枠(赤破線)+カメラ中心(黄)+キャラ原点(シアン)を表示。確認後に外す。 */}
+        <FooterSitCharacterLoader debug />
       </DeferMount>
 
       {/* CONTACT US ボタン */}
