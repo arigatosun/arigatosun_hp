@@ -64,7 +64,16 @@ export default function WorksSection({ works }: WorksSectionProps) {
           >
             {/* 左側: テキスト情報 */}
             <div className={styles.itemLeft}>
-              <p className={styles.client}>CLIENT：<span className={styles.clientName}>{work.client}</span></p>
+              {/* クライアント名: 日本語は .clientName（Noto Sans JP の現状スタイル）、
+                  英語は CLIENT ラベルと完全一致させるため素のテキストで .client を継承させる。 */}
+              <p className={styles.client}>
+                CLIENT：
+                {/[぀-ヿ㐀-鿿ｦ-ﾟ]/.test(work.client) ? (
+                  <span className={styles.clientName}>{work.client}</span>
+                ) : (
+                  work.client
+                )}
+              </p>
 
               <h3 className={styles.itemTitle}>
                 {work.title.split('|').map((part, i, arr) => (
