@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { gsap } from 'gsap';
 import styles from './Preloader.module.scss';
 
@@ -21,6 +22,10 @@ const SESSION_KEY = 'arigatosun:preloaded';
  * - セッション中は一度だけ（sessionStorage）。prefers-reduced-motion を尊重
  */
 export default function Preloader() {
+  const pathname = usePathname();
+  // 入口ページがプライバシーポリシーの場合はオープニングを出さない。
+  // (site) レイアウトはページ遷移で再マウントされないため、マウント時の入口で確定させる。
+  const [skipOpening] = useState(() => pathname === '/privacy');
   const [visible, setVisible] = useState(true);
   const [progress, setProgress] = useState(0);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -29,6 +34,10 @@ export default function Preloader() {
   const scanRef = useRef<HTMLDivElement>(null);
 
   useIsomorphicLayoutEffect(() => {
+    // プライバシーポリシーが入口ページなら、オープニング処理を一切行わない
+    // （アニメ・スクロールロック・sessionStorage 書き込みすべてスキップ）。
+    if (skipOpening) return;
+
     // 既にこのセッションで表示済みなら何もしない（ペイント前に消す）。
     if (sessionStorage.getItem(SESSION_KEY)) {
       setVisible(false);
@@ -173,9 +182,9 @@ export default function Preloader() {
       ctx.revert();
       unlock();
     };
-  }, []);
+  }, [skipOpening]);
 
-  if (!visible) return null;
+  if (skipOpening || !visible) return null;
 
   return (
     <div
