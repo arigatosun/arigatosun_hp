@@ -118,7 +118,9 @@
     // Figma leading: SP 14.4 / PC ≒ 22-30。CSS は font-size に合わせて 1.0 に詰め、
     // wrapper 高さを Figma 実測（SP 41px）に近づける。
     line-height: 1;
-    @include fluid(letter-spacing, 2.34, 11.2, 390, 1920);
+    // PC 字間は元 11.2 だが、MacBook(1512) ではアイコン分でタイトル幅が約470pxに制限され
+    // 最長タイトル「クリエイターの才能を活かす、」(14文字)が 1 行に収まらず折り返すため 9 に詰める。
+    @include fluid(letter-spacing, 2.34, 9, 390, 1920);
     font-weight: var(--font-weight-medium);
     // data 側 \n を改行として表示（例: CREATOR FIRST タイトル）
     white-space: pre-line;
