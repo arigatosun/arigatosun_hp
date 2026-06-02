@@ -30,10 +30,10 @@ export default function BusinessStructureSection() {
       {/* 右側: 連携体制図 + 赤スライムグロー */}
       <div className={styles.right}>
         <Image
-          src="/images/sections/about/structure-layer.png"
+          src="/images/sections/about/structure-diagram.svg"
           alt="事業領域と連携体制図"
-          width={640}
-          height={640}
+          width={638}
+          height={648}
           className={styles.structureImage}
           sizes="(max-width: 1023px) 90vw, 35vw"
         />
