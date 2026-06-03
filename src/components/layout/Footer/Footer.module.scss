@@ -158,12 +158,9 @@
 
   // /contact および /contact/thanks では CONTACT US ボタンを非表示
   // (フォーム入力中・完了画面で二重 CTA を避ける)
-  // ただし display:none だとボタンの占有スペースごと消えて下のロゴ/ナビ/バナーが上にずれ、
-  // 他ページとフッターのレイアウトが変わってしまう。visibility:hidden で「スペースは保持・
-  // ボタンだけ非表示（非操作・非読み上げ）」とし、ボタンの有無でレイアウトを不変に保つ。
-  :global(body:has([data-contact-page])) & {
-    visibility: hidden;
-  }
+  // ボタンの非表示は .contactButton 側で display:none（＝ボタンの占有高さだけを詰める）。
+  // .contactArea の上下 padding（ボタン有り時の余白）はそのまま残すので、下のロゴ/ナビは
+  // 「ボタンの分」だけ上に上がり、余白感はボタン有り時と同じになる。
 
   // Figma SP(390): footer.padding-top 側で 203 を消化済 → ここの padding-top は 0
   // button bottom (y=259) → logo top (y=419) = 160
@@ -188,6 +185,14 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+
+  // /contact・/contact/thanks ではボタンを非表示にし、占有高さも詰める。
+  // 親 .contactArea の上下 padding は維持されるため、下のロゴ/ナビが
+  // 「ボタンの高さ分」だけ上に上がり、余白感はボタン有り時と同じになる。
+  :global(body:has([data-contact-page])) & {
+    display: none;
+  }
+
   @include fluid(width, 240, 380, 390, 1920);
   @include fluid(height, 52, 72, 390, 1920);
   border-radius: 43.2px;
