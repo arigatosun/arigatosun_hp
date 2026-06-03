@@ -2,6 +2,7 @@
 // 現状は CHORITZ ブランディング案件の1デザインのみ。WordPress 連携時は
 // getWorkDetailBySlug の中身を fetch に差し替えれば利用側は無修正で済む。
 import type { WorkDetailContent } from '@/types/work';
+import { getMemberBySlug } from './members';
 
 const CHORITZ = '/images/works/choritz';
 
@@ -293,8 +294,11 @@ const CHORITZ_DETAIL: WorkDetailContent = {
             'CLIENT : 頂立輸入代行会社',
             'PROJECT MANAGEMENT : RYO YOSHIKAWA',
             'BRANDING / DESIGN : YUGO NISHIMOTO',
-            // hideya-mifuji 非表示の要望により一旦非表示（再表示する時はこの行を戻す）
-            // 'WEB DEVELOPMENT : HIDEYA MIFUJI',
+            // hideya-mifuji が About で公開（members.ts の hidden 解除）された時だけ
+            // このクレジットも自動で表示する。getMemberBySlug は hidden 中 undefined を返す。
+            ...(getMemberBySlug('hideya-mifuji')
+              ? ['WEB DEVELOPMENT : HIDEYA MIFUJI']
+              : []),
           ],
         },
         {
