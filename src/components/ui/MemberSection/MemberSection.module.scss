@@ -136,6 +136,16 @@
   --glow-y: 50%;
 }
 
+// 未記入メンバー（詳細未完成）: クリック無効・ホバー演出なしの非反応カード。
+// ホバー/タップしてもカラー写真を出さず、カーソルも通常にする。
+.cardDisabled {
+  cursor: default;
+
+  .cardPhotoColor {
+    display: none;
+  }
+}
+
 // ── 写真ラッパー（3D tilt + リフトアップ対象） ──
 .cardPhotoWrap {
   position: relative;
