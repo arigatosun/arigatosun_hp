@@ -100,10 +100,10 @@
   color: var(--color-white);
   font-family: var(--font-en);
   font-weight: var(--font-weight-light);
-  // PC で一回り小さく（元 max32 → 28）。SP は @include sp で従来維持。
-  @include fluid(font-size, 16, 28);
+  // PC でさらに小さく（元 max32 → 25）。SP は @include sp で従来維持。
+  @include fluid(font-size, 16, 25);
   line-height: 1.2;
-  @include fluid(letter-spacing, 2.08, 3.64);
+  @include fluid(letter-spacing, 2.08, 3.25);
   text-align: center;
   white-space: nowrap;
   transition: color var(--transition-base);
@@ -113,7 +113,8 @@
     @include fluid(letter-spacing, 2.08, 4.16);
   }
 
+  // ホバー色は赤(primary)ではなくサイト標準のグレーに
   .card:hover & {
-    color: var(--color-primary);
+    color: var(--color-text-secondary);
   }
 }
