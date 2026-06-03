@@ -47,9 +47,10 @@
     var(--color-primary)
   );
   background-repeat: no-repeat;
-  // Mozaic GEO は文字実体が行ボックス中心より約0.094em下に来るため、帯も同量下げて
-  // 文字の中央に重ねる（NEWS カテゴリの赤帯と完全に同じ位置揃え）。hover/active 共通。
-  background-position: right calc(50% + 0.094em);
+  // 赤帯を文字に対し縦中央に重ねる。TOP ニュース(inline span)と同じ「帯中心=baseline上0.32em」
+  // に合わせた値。この要素は display:block(背景枠=line-height)のため、inline の NEWS と同じ
+  // 見た目にするには 0.073em（NEWS の 0.094em とは display 差の分だけ異なる）。hover/active 共通。
+  background-position: right calc(50% + 0.073em);
   background-size: 0 0.85em;
 
   // hover/active で赤帯を即座に表示（アニメーションなし） — SERVICE/NEWS/About と統一
