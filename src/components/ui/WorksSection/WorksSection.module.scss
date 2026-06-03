@@ -65,6 +65,10 @@
   display: flex;
   @include fluid(gap, 20, 100, 390, 1920); // Figma: テキスト560と画像877の間 100px
   align-items: flex-start;
+  // アイテム全体を /works/[id] への <Link> 化（画像・テキストどこでもクリックで詳細へ）。
+  // リンク既定スタイル（下線・青）を打ち消す。文字色は各子要素で個別指定済み。
+  text-decoration: none;
+  color: inherit;
 
   @include max(1023px) {
     flex-direction: column;
