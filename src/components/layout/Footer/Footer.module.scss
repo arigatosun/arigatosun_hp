@@ -166,7 +166,7 @@
 
     @include sp {
       padding-top: 0; // SP は footer.padding-top 側で吸収済みのため 0 を維持
-      @include fluid(padding-bottom, 90, 120, 320, 390);
+      @include fluid(padding-bottom, 60, 80, 320, 390);
     }
   }
 
