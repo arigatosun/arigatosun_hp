@@ -40,6 +40,19 @@
   object-fit: contain;
 }
 
+// PC/SP 出し分け（spSrc 指定時）。PC は src(.imagePc)、SP は spSrc(.imageSp) のみ表示。
+.imagePc {
+  @include sp {
+    display: none;
+  }
+}
+
+.imageSp {
+  @include pc {
+    display: none;
+  }
+}
+
 // Figma 書き出し画像が未用意の間のプレースホルダー
 .placeholder {
   width: 100%;

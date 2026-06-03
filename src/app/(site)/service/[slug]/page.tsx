@@ -121,6 +121,9 @@ export default async function ServiceDetailPage({ params }: PageParams) {
               alt={concept.visual.alt}
               width={concept.visual.width}
               height={concept.visual.height}
+              spSrc={concept.visual.spSrc}
+              spWidth={concept.visual.spWidth}
+              spHeight={concept.visual.spHeight}
               mask={concept.visual.mask}
               overlays={concept.visual.overlays}
               compactSp={concept.visual.compactSp}
