@@ -5,11 +5,14 @@
 @use '@/styles/breakpoints' as *;
 
 // 全幅の白バンド。左右 PC=200 / SP=0 (Figma SP は画面端まで広げる)
+// 上下: 白背景をロゴの上下に +20px 分広げる（フレーム=ロゴ・矢印は中央のまま）。
 .band {
   width: 100%;
   background: var(--color-white);
   @include fluid(padding-left, 20, 200);
   @include fluid(padding-right, 20, 200);
+  @include fluid(padding-top, 14, 20);
+  @include fluid(padding-bottom, 14, 20);
 
   @include sp {
     padding-left: 0;
