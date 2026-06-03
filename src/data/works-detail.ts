@@ -293,7 +293,8 @@ const CHORITZ_DETAIL: WorkDetailContent = {
             'CLIENT : 頂立輸入代行会社',
             'PROJECT MANAGEMENT : RYO YOSHIKAWA',
             'BRANDING / DESIGN : YUGO NISHIMOTO',
-            'WEB DEVELOPMENT : HIDEYA MIFUJI',
+            // hideya-mifuji 非表示の要望により一旦非表示（再表示する時はこの行を戻す）
+            // 'WEB DEVELOPMENT : HIDEYA MIFUJI',
           ],
         },
         {
