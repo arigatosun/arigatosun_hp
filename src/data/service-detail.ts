@@ -240,11 +240,16 @@ const AI_DEV: ServiceDetailData = {
         kind: 'image',
         // AI/DEV 用クラウドダイアグラム (Figma Group 1227 線画 + Group 1230 マスク)
         // 3 つの「ただ◯◯ではなく…」キャッチコピーは SVG 内に焼き込み済みのため overlays 不要
-        src: '/images/sections/service/detail/concept-standard-ai.svg',
+        // PC は PC 用レイアウト版 (Group 1287 / 688×672)、SP は従来の SP 版 (354×346) を出し分け。
+        // クローバー円の相対位置は両版で同一・アスペクト比もほぼ同一のため mask は流用。
+        src: '/images/sections/service/detail/concept-standard-ai-pc.svg',
         alt: 'アリガトサン・スタンダード（AI/DEV）を表すクラウド型の概念図。3つの主バブル + 2つのサテライト円、各バブル内に「ただ◯◯ではなく…」のキャッチコピー',
-        width: 354,
-        height: 346,
-        // 線画 (354×346) とマスク (354×346) は同寸
+        width: 688,
+        height: 672,
+        spSrc: '/images/sections/service/detail/concept-standard-ai.svg',
+        spWidth: 354,
+        spHeight: 346,
+        // マスク (354×346) は PC/SP 共通で流用
         mask: {
           src: '/images/sections/service/detail/concept-standard-ai-mask.svg',
           size: '100% 100%',

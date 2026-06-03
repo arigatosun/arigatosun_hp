@@ -12,6 +12,10 @@ type GlowImageProps = {
   alt: string;
   width: number;
   height: number;
+  /** SP 専用画像。指定時は PC=src / SP=spSrc を CSS で出し分ける（アスペクトはほぼ同一前提）。 */
+  spSrc?: string;
+  spWidth?: number;
+  spHeight?: number;
   /** グローを形の内側だけにクリップするマスク。null ならクリップなし */
   mask?: ServiceConceptMask | null;
   /** 画像の上に重ねるテキストオーバーレイ */
@@ -64,6 +68,9 @@ export default function GlowImage({
   alt,
   width,
   height,
+  spSrc,
+  spWidth,
+  spHeight,
   mask = null,
   overlays = [],
   compactSp = false,
@@ -97,14 +104,28 @@ export default function GlowImage({
       }
     >
       {src ? (
-        <Image
-          src={src}
-          alt={alt}
-          width={width}
-          height={height}
-          className={styles.image}
-          sizes="(max-width: 1023px) 92vw, 44vw"
-        />
+        <>
+          <Image
+            src={src}
+            alt={alt}
+            width={width}
+            height={height}
+            className={`${styles.image} ${spSrc ? styles.imagePc : ''}`}
+            sizes="(max-width: 1023px) 92vw, 44vw"
+          />
+          {spSrc && (
+            // SP 専用画像（PC では非表示）。PC=src / SP=spSrc の出し分け。
+            <Image
+              src={spSrc}
+              alt=""
+              aria-hidden="true"
+              width={spWidth ?? width}
+              height={spHeight ?? height}
+              className={`${styles.image} ${styles.imageSp}`}
+              sizes="92vw"
+            />
+          )}
+        </>
       ) : (
         <div className={styles.placeholder} role="img" aria-label={alt} />
       )}

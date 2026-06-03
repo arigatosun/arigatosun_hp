@@ -100,6 +100,13 @@ export type ServiceConceptVisual =
       alt: string;
       width: number;
       height: number;
+      /**
+       * SP 専用の画像（指定時、PC は src / SP は spSrc を出し分ける）。
+       * 図のレイアウトが PC と SP で別組みのケース用（例: AI スタンダードの 3 円図）。
+       */
+      spSrc?: string;
+      spWidth?: number;
+      spHeight?: number;
       /** グローを形の内側にクリップするマスク。null ならクリップなし */
       mask: ServiceConceptMask | null;
       /** 画像の上に重ねるテキストオーバーレイ（AI/DEV アリガトサン・スタンダードの3標準等） */
