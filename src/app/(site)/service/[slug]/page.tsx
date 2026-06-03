@@ -108,6 +108,7 @@ export default async function ServiceDetailPage({ params }: PageParams) {
           subtitle={concept.subtitle}
           body={concept.body}
           bodyTracking={concept.bodyTracking}
+          bodyBreakAbove1512={concept.bodyBreakAbove1512}
           variant={concept.visual.kind === 'phases' ? 'phases' : 'default'}
           // PROCESS 系（steps / phases）セクションは PC で左カラムを sticky 固定にする
           // （AI ページの進め方 = steps と同じ挙動を IP の phases にも適用）

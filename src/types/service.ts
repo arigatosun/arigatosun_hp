@@ -150,6 +150,11 @@ export type ServiceConcept = {
   body: string[];
   /** 本文の字間（Figma 実測 px・16px 基準） */
   bodyTracking: number;
+  /**
+   * 本文の改行を「幅 1513px 以上のときだけ」表示する（= 1512px 以下は改行なしで流す）。
+   * MacBook(1512) 含む 1512px 以下では流し、それより大きい画面のみ元の改行を出す。
+   */
+  bodyBreakAbove1512?: boolean;
   visual: ServiceConceptVisual;
 };
 

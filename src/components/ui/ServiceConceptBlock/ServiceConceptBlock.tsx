@@ -18,6 +18,11 @@ type ServiceConceptBlockProps = {
    * SP では sticky 無効 (縦積みのため意味なし)。
    */
   stickyText?: boolean;
+  /**
+   * 本文の改行を「幅 1513px 以上のときだけ」表示する（= 1512px 以下は改行なしで流す）。
+   * MacBook(1512) を含む 1512px 以下では本文を流し、それより大きい画面でのみ元の改行を出すケース用。
+   */
+  bodyBreakAbove1512?: boolean;
   /** 右側のビジュアル（GlowImage or ServiceScopePills） */
   children: ReactNode;
 };
@@ -31,8 +36,15 @@ export default function ServiceConceptBlock({
   bodyTracking,
   variant = 'default',
   stickyText = false,
+  bodyBreakAbove1512 = false,
   children,
 }: ServiceConceptBlockProps) {
+  // bodyBreakAbove1512: 改行は 1513px 以上でのみ表示（≤1512 は流す）。
+  // 通常: セグメント間は常時改行(素 br)、セグメント内 \n は SP 限定改行。
+  const segmentBreakClass = bodyBreakAbove1512 ? styles.brWideOnly : undefined;
+  const innerBreakClass = bodyBreakAbove1512
+    ? styles.brWideOnly
+    : styles.spOnlyBr;
   const blockClass = [
     styles.block,
     variant === 'phases' ? styles.variantPhases : '',
@@ -64,12 +76,12 @@ export default function ServiceConceptBlock({
         >
           {body.map((segment, i) => (
             <Fragment key={i}>
-              {i > 0 && <br />}
-              {/* セグメント内の `\n` は SP 専用改行として扱う (PC は非表示) */}
+              {i > 0 && <br className={segmentBreakClass} />}
+              {/* セグメント内の `\n` は SP 専用改行 (通常) / 1513px以上のみ改行 (bodyBreakAbove1512) */}
               {segment.split('\n').map((sub, j, arr) => (
                 <Fragment key={j}>
                   {sub}
-                  {j < arr.length - 1 && <br className={styles.spOnlyBr} />}
+                  {j < arr.length - 1 && <br className={innerBreakClass} />}
                 </Fragment>
               ))}
             </Fragment>

@@ -229,13 +229,13 @@ const AI_DEV: ServiceDetailData = {
       // Figma SP (2837:55068 / x=40 y=3436 w=310 h=240): 2 段落構成
       //   段落 1: 私たちは、言われたものを…ではありません。
       //   段落 2: 要望の奥にある本質を…理想は現実に近づきます。
-      //   (段落 2 の内部はコンテナ幅に応じて auto-wrap)
-      // 配列要素間は PC でも表示される素 <br>。PC(MacBook含む)では改行せず流したいので
-      // 1 要素 + \n にまとめ、\n は ServiceConceptBlock 側で SP 限定改行(.spOnlyBr)扱いに。
+      // 改行は \n で保持。bodyBreakAbove1512=true により、1512px 以下（MacBook 含む / SP 含む）は
+      // 改行せず流し、1513px 以上の大きい画面でのみ元の改行を表示する。
       body: [
         '私たちは、言われたものをそのまま作るだけの開発会社ではありません。\n要望の奥にある本質を見極め、何を作るべきか、どこまで作るべきかを再定義する。そして、机上の仕様書ではなく、まず動くものをつくり、見えたものを起点に正解を更新していく。そうして初めて、理想は現実に近づきます。',
       ],
       bodyTracking: 4.48,
+      bodyBreakAbove1512: true,
       visual: {
         kind: 'image',
         // AI/DEV 用クラウドダイアグラム (Figma Group 1227 線画 + Group 1230 マスク)
@@ -257,11 +257,12 @@ const AI_DEV: ServiceDetailData = {
       id: 'process',
       title: '進め方',
       subtitle: 'PROCESS',
-      // PC(MacBook含む)では改行せず流す。1 要素 + \n（\n は SP 限定改行 .spOnlyBr）。
+      // 改行は \n で保持。bodyBreakAbove1512=true で 1512px 以下は流し、1513px 以上のみ元の改行を表示。
       body: [
         'プロジェクトの数だけ、最適解へのルートは存在します。\nだから私たちは、最初から固定されたフローへ当てはめません。\n課題の核心に応じて、順番も、検証も、必要な実装も柔軟に再定義します。',
       ],
       bodyTracking: 4,
+      bodyBreakAbove1512: true,
       visual: {
         kind: 'steps',
         items: [
