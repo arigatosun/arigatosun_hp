@@ -47,11 +47,15 @@ export default function CompanyProfilePin() {
     mm.add('(min-width: 1px)', () => {
       // カードの自然位置の「中心」を写真の「中心」に合わせる margin を当てる。
       // → ピン終了時に y=0 でカードが中央に居て、通常フローと連続する（解除でズレない）。
+      // 見えるカード（#company-profile セクション）を基準に整列する。cardMover 直下の
+      // セクションは負 margin で上にずれているため、cardMover ではなくセクションを測る。
+      const visibleCard =
+        (card.querySelector('#company-profile') as HTMLElement | null) ?? card;
       const alignCard = () => {
         card.style.marginTop = '0px';
         gsap.set(card, { y: 0 });
         const ir = image.getBoundingClientRect();
-        const cr = card.getBoundingClientRect();
+        const cr = visibleCard.getBoundingClientRect();
         const delta = ir.top + ir.height / 2 - (cr.top + cr.height / 2);
         card.style.marginTop = `${delta}px`;
       };
