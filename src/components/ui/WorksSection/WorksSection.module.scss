@@ -252,10 +252,15 @@
 .itemRight {
   // 元 57%（Figma: 画像エリア877 / セクション幅1537）。PC で画像が大きいため縮小。
   // itemRight は行の右端に接しているため width を縮めると「右端固定・左から縮小」になる。
-  // 画像左端をヘッダー中央ロゴ（太陽マーク）の左端付近に合わせるため 52.5%。
-  width: 52.5%;
+  // 画像左端をヘッダー中央ロゴ（太陽マーク）の「中心」に合わせるため 50.5%
+  //（中心 x ≒ 画面中央なので、全PC幅で left ≒ viewport/2 となる）。右端は赤線(1360)で固定。
+  width: 50.5%;
   flex-shrink: 0;
   @include fluid(margin-top, -22, -44, 390, 1920);
+  // 画像の右端を NEWS セクションの content 右端（padding-right 200）に合わせる。
+  // WORKS の padding-right は 183 で NEWS(200)より 17px 狭いぶん画像が右に出るため、
+  // その差分だけ画像を右から詰める（左端＝太陽マーク整合は維持／画像が少し小さくなる）。
+  @include fluid(padding-right, 0, 17, 390, 1920);
 
   @include max(1023px) {
     // Figma SP: 画像はテキストの「上」に配置
@@ -263,6 +268,7 @@
     width: 100%;
     margin-top: 0;
     padding-top: 0;
+    padding-right: 0; // SP は全幅・右端整列の対象外
   }
 }
 
