@@ -14,7 +14,9 @@
 
   @include sp {
     margin-top: 120px;
-    @include fluid(margin-bottom, 96, 300);
+    // SP は演出なし（元の状態）。フッター手前の余白は CompanyProfileSection の
+    // footer-gap に任せるため、ピン用に足した margin-bottom は付けない。
+    margin-bottom: 0;
   }
 }
 
@@ -36,12 +38,16 @@
   }
 }
 
-// 会社概要カードのラッパー。ピン中はここを translateY して下からせり上げる。
+// 会社概要カードのラッパー。ピン中（PC）はここを translateY して下からせり上げる。
 .cardMover {
   position: relative;
   z-index: 2;
-  will-change: transform;
-  // 中の会社概要セクションの負 margin と margin collapse すると整列計算がズレるため、
-  // BFC を作って相殺を防ぐ（JS の margin で正しく中央に合わせるため）。
-  display: flow-root;
+
+  // ピン演出は PC 限定。SP は通常スクロール（元の状態）で、section の負 margin を
+  // そのまま重ねたいので、transform 用の最適化と BFC 化は PC のみに付ける。
+  @include pc {
+    will-change: transform;
+    // section の負 margin と margin collapse すると整列計算がズレるため BFC を作る。
+    display: flow-root;
+  }
 }

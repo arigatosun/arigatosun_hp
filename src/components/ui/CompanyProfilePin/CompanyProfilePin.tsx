@@ -42,9 +42,9 @@ export default function CompanyProfilePin() {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     const mm = gsap.matchMedia();
-    // 全ビューポート対象（'all' は gsap.matchMedia でコールバックが走らないことが
-    // あるため、常に true の '(min-width: 1px)' を使う）。
-    mm.add('(min-width: 1px)', () => {
+    // ピン演出は PC 限定（≥1024px）。SP（≤1023px）はスクロールジャックが成立しない
+    // ため演出を行わず、写真＋会社概要は通常スクロール（元の状態）にする。
+    mm.add('(min-width: 1024px)', () => {
       // カードの自然位置の「中心」を写真の「中心」に合わせる margin を当てる。
       // → ピン終了時に y=0 でカードが中央に居て、通常フローと連続する（解除でズレない）。
       // 見えるカード（#company-profile セクション）を基準に整列する。cardMover 直下の
