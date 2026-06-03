@@ -79,12 +79,18 @@
   color: var(--color-white);
   font-family: 'Noto Sans JP', var(--font-jp);
   font-weight: var(--font-weight-regular);
-  @include fluid(font-size, 12, 16);
+  // PC で一回り小さく（元 max16 → 14）。SP は @include sp で従来維持。
+  @include fluid(font-size, 12, 14);
   line-height: 1.5;
-  @include fluid(letter-spacing, 1.56, 2.08);
+  @include fluid(letter-spacing, 1.56, 1.82);
   opacity: 0.5;
   text-align: center;
   white-space: nowrap;
+
+  @include sp {
+    @include fluid(font-size, 12, 16);
+    @include fluid(letter-spacing, 1.56, 2.08);
+  }
 }
 
 // 下段 英語タイトル
@@ -94,12 +100,18 @@
   color: var(--color-white);
   font-family: var(--font-en);
   font-weight: var(--font-weight-light);
-  @include fluid(font-size, 16, 32);
+  // PC で一回り小さく（元 max32 → 28）。SP は @include sp で従来維持。
+  @include fluid(font-size, 16, 28);
   line-height: 1.2;
-  @include fluid(letter-spacing, 2.08, 4.16);
+  @include fluid(letter-spacing, 2.08, 3.64);
   text-align: center;
   white-space: nowrap;
   transition: color var(--transition-base);
+
+  @include sp {
+    @include fluid(font-size, 16, 32);
+    @include fluid(letter-spacing, 2.08, 4.16);
+  }
 
   .card:hover & {
     color: var(--color-primary);
