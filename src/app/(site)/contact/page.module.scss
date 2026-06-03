@@ -151,10 +151,10 @@
     @include fluid(letter-spacing, 2.4, 4.32, 390, 1200);
   }
 
-  // 各項目ラベルの右に赤い必須マーク（＊）を付与
-  &::after {
+  // 各項目ラベルの左（文字の前）に赤い必須マーク（＊）を付与
+  &::before {
     content: '＊';
-    margin-left: 0.25em;
+    margin-right: 0.25em;
     color: var(--color-primary);
   }
 }
