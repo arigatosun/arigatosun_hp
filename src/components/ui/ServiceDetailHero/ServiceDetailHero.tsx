@@ -45,7 +45,7 @@ export default function ServiceDetailHero({
               }`}
               aria-current={active ? 'page' : undefined}
             >
-              ・{item.label} &gt;
+              <span className={styles.sideNavLabel}>・{item.label} &gt;</span>
             </Link>
           );
         })}
@@ -58,7 +58,7 @@ export default function ServiceDetailHero({
           </svg>
         </span>
         <Link href="/works" className={styles.sideNavItem}>
-          ・WORKS &gt;
+          <span className={styles.sideNavLabel}>・WORKS &gt;</span>
         </Link>
       </nav>
 

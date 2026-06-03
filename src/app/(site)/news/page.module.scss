@@ -41,6 +41,10 @@
   flex-shrink: 0;
   align-self: flex-start; // flex container 内で sticky を効かせるために必須
   position: sticky;
+  // 記事が少なくページが短い時、フッターの赤アーチ(maskOverlay)がサイドバー下部の
+  // CONTACT リンクに重なってクリックを奪う。z-index でアーチ(z:0〜1)より上に出して
+  // リンクをクリック可能にする（Header z:100 より下なので干渉しない）。
+  z-index: 2;
   @include fluid(top, 136, 240, 390, 1920);
   @include fluid(width, 160, 240, 390, 1920);
 
@@ -114,18 +118,18 @@
   }
 }
 
-// 赤マーカー帯（TOP ページ ServiceSection のメニューと同方式）。
-// Mozaic GEO は文字実体が行ボックス中心より約0.094em下に来るため帯も同じだけ下げる。
-// 非アクティブ＝帯幅0／アクティブ・hover＝右寄せで展開。
+// 赤マーカー帯（TOP ページ NewsSection のカテゴリと同方式・同 display=inline）。
+// inline 描画で背景枠＝フォントboxとなり全幅で位置が揃う。offset 0.094em は全マーカー共通
+// （Mozaic GEO の文字下寄り分。MacBook で中央に揃う）。
 .category span,
 .categoryActive span {
-  display: inline-block;
+  display: inline;
   background-image: linear-gradient(
     var(--color-primary),
     var(--color-primary)
   );
   background-repeat: no-repeat;
-  background-position: right calc(50% + 0.073em);
+  background-position: right calc(50% + 0.094em);
   background-size: 0 0.85em;
   // hover/active で赤帯を即座に表示（アニメーションなし） — SERVICE/About/Works と統一
 }
@@ -163,7 +167,8 @@
 }
 
 .contactLink {
-  display: inline-block;
+  // inline で描画（NEWS と同じ背景枠＝フォントbox）。赤帯位置を全幅で NEWS に追従。
+  display: inline;
   font-family: var(--font-en);
   font-weight: var(--font-weight-light);
   @include fluid(font-size, 14, 20, 390, 1920);
@@ -177,7 +182,7 @@
     var(--color-primary)
   );
   background-repeat: no-repeat;
-  background-position: right calc(50% + 0.073em);
+  background-position: right calc(50% + 0.094em);
   background-size: 0 0.85em;
 
   &:hover {
