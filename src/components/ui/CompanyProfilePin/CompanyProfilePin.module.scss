@@ -10,11 +10,11 @@
   // ピン時に写真がラッパー上端＝中心計算が正しく効くようにする。
   @include fluid(margin-top, 80, 255);
   // 写真セクションとフッターの間に余白を入れる（ピン化で詰まったため）。
-  @include fluid(margin-bottom, 220, 400);
+  @include fluid(margin-bottom, 160, 300);
 
   @include sp {
     margin-top: 120px;
-    @include fluid(margin-bottom, 128, 400);
+    @include fluid(margin-bottom, 96, 300);
   }
 }
 
