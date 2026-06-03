@@ -97,11 +97,19 @@
     var(--color-primary)
   );
   background-repeat: no-repeat;
-  // 赤帯を文字に対し縦中央に重ねる。TOP ニュース(inline span)と同じ「帯中心=baseline上0.32em」
-  // に合わせた値。この要素は display:inline-flex(背景枠=line-height24px)のため、inline の NEWS と
-  // 同じ見た目にするには 0.107em（NEWS の 0.094em とは display 差の分だけ異なる）。
-  background-position: right calc(50% + 0.107em);
+  // 赤帯中心を baseline 上 0.32em（TOP ニュースと同じ）に固定。
+  // この要素は line-height が固定px(PC24/SP18)で、inline-flex の baseline が box中心から
+  // 固定距離(PC=8px / SP=7px)に来る。そのため単純な em オフセットだと font-size 可変で
+  // 縦位置がレスポンシブにズレる（fluid font 16〜20 で asEm が 0.29〜0.35 に振れる）。
+  // px+em の calc にして「offset = baselineの box中心からの距離(px) − 0.32em」とし、
+  // asEm を全幅で 0.32 に固定する。
+  background-position: right calc(50% + 8px - 0.32em);
   background-size: 0 0.85em;
+
+  // SP は line-height 18px → baseline は box中心から 7px（PC の 8px と別値）
+  @include sp {
+    background-position: right calc(50% + 7px - 0.32em);
+  }
 
   // hover/active で赤帯を即座に表示（アニメーションなし） — SERVICE/NEWS/About と統一
   &:hover {
