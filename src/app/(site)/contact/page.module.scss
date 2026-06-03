@@ -150,6 +150,13 @@
     @include fluid(line-height, 26, 32, 390, 1200);
     @include fluid(letter-spacing, 2.4, 4.32, 390, 1200);
   }
+
+  // 各項目ラベルの右に赤い必須マーク（＊）を付与
+  &::after {
+    content: '＊';
+    margin-left: 0.25em;
+    color: var(--color-primary);
+  }
 }
 
 // ── 入力欄（input / textarea 共通の基底） ──
