@@ -1,0 +1,15 @@
+@use '@/styles/fluid' as *;
+@use '@/styles/breakpoints' as *;
+
+// NEWS セクションの padding-right と同じ fluid(20,200) で画面右端から内側に配置。
+// → NEWS の content 右端＝両画像が揃うべき縦ラインに正確に一致する（全PC幅）。
+.line {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  @include fluid(right, 20, 200, 390, 1920);
+  background: red;
+  z-index: 99999;
+  pointer-events: none;
+}
