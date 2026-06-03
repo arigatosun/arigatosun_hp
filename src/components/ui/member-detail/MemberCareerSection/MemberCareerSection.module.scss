@@ -2,6 +2,20 @@
 @use '@/styles/breakpoints' as *;
 
 // レスポンシブ方針（member 詳細 / 2026-05）: PC(≥1024) は 1920 基準、SP(≤1023) は 1200 据え置き。
+
+// PC/SP で改行が異なる経歴の出し分け（{ pc, sp } 指定時のみ使用）
+.pcOnly {
+  @include sp {
+    display: none;
+  }
+}
+
+.spOnly {
+  @include pc {
+    display: none;
+  }
+}
+
 .title {
   margin: 0;
   @include fluid(margin-bottom, 8, 16, 390, 1920);

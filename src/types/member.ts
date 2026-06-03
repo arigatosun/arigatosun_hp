@@ -16,6 +16,9 @@ export type MemberProject = {
 // { pc, sp } 形式で渡すと、ビューポートごとに別の段落構成で出し分ける。
 export type MemberIntro = string[] | { pc: string[]; sp: string[] };
 
+// 経歴本文。改行（\n）が PC と SP で異なる場合は { pc, sp } で出し分ける。
+export type MemberCareer = string | { pc: string; sp: string };
+
 export type Member = {
   slug: string;
   name: string;
@@ -28,7 +31,8 @@ export type Member = {
   hidden?: boolean;
   catchphrase: string;
   description: string;
-  career: string;
+  // string（PC/SP 共通）または { pc, sp }（ビューポート別の改行）
+  career: MemberCareer;
   social?: MemberSocial;
   projects?: MemberProject[];
   // Phase 5: ABOUT/MEMBER 詳細ページ Figma 準拠 拡張フィールド
