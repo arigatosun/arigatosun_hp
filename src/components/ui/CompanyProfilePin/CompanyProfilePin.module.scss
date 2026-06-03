@@ -41,4 +41,7 @@
   position: relative;
   z-index: 2;
   will-change: transform;
+  // 中の会社概要セクションの負 margin と margin collapse すると整列計算がズレるため、
+  // BFC を作って相殺を防ぐ（JS の margin で正しく中央に合わせるため）。
+  display: flow-root;
 }
