@@ -14,24 +14,13 @@ const allMembers: Member[] = [
     photo: '/images/team/shuto-nakamura.webp',
     photoColor: '/images/team/shuto-nakamura-color.webp',
     catchphrase: '「できない理由」をゼロにする。',
-    description:
-      'ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。',
-    career:
-      'ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。ここに簡易的な説明文が入ります。',
-    social: {
-      instagram: 'https://www.instagram.com/',
-      x: 'https://x.com/',
-    },
-    projects: [
-      { title: 'Project 1', slug: 'project-1' },
-      { title: 'Project 2', slug: 'project-2' },
-      { title: 'Project 3', slug: 'project-3' },
-      { title: 'Project 4', slug: 'project-4' },
-      { title: 'Project 5', slug: 'project-5' },
-    ],
-    // Phase 5: Figma 準拠 ABOUT/MEMBER 詳細ページ用
-    roleJp: '代表社員',
-    quote: '関わる人へ想像以上の価値を提供し続け、唯一無二の存在であれ。',
+    description: '関わる人へ想像以上の価値を提供し続け、唯一無二の存在であれ。',
+    // Figma(3467:94895) は理念のみで 経歴・SNS・プロジェクトを持たないため非表示
+    career: '',
+    projects: [],
+    // Figma 3467:94895 準拠
+    roleJp: '代表社員 (CEO)',
+    quote: '「関わる人へ想像以上の価値を提供し続け、唯一無二の存在であれ。」',
     introParagraphs: [
       '世は大AI時代。',
       '人が当たり前に価値を出してきたものが、次々と代替されていく。',
