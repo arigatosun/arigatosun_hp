@@ -84,7 +84,10 @@
   font-weight: var(--font-weight-light);
   // Figma PC: font-size 20 / line-height 24 / letter-spacing 2.6
   // Figma SP: font-size 16 / line-height 18 / letter-spacing 2.08
-  @include fluid(font-size, 16, 20);
+  // フォントサイズ範囲を NEWS カテゴリと同一(14〜20 / 390-1920)にし、各幅で font-size を揃える。
+  // 赤帯の縦位置はフォントサイズ依存(pxスナップ)なので、同サイズにすることで /works も全幅で
+  // NEWS と一致＝中央に乗る（中間幅で文字がやや小さくなるがはみ出しも軽減）。
+  @include fluid(font-size, 14, 20, 390, 1920);
   line-height: 24px;
   @include fluid(letter-spacing, 2.08, 2.6);
   // Figma: 各項目は折り返さない（whitespace-nowrap）
