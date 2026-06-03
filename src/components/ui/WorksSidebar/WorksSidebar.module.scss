@@ -104,9 +104,8 @@
     var(--color-primary)
   );
   background-repeat: no-repeat;
-  // inline 描画で全マーカー共通。0.106em = Mozaic GEO の文字下寄り(0.094em) + バランス補正(0.012em)。
-  // フォントの px スナップで狭い幅ほど帯が上に来るのを、全幅で中央へ寄せる妥協値（サイト共通）。
-  background-position: right calc(50% + 0.106em);
+  // inline 描画で全マーカー共通。0.094em = Mozaic GEO の文字下寄り分。MacBook で中央に揃う。
+  background-position: right calc(50% + 0.094em);
   background-size: 0 0.85em;
 
   // hover/active で赤帯を即座に表示（アニメーションなし） — SERVICE/NEWS/About と統一
