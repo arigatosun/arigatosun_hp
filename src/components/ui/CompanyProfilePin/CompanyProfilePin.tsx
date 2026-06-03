@@ -81,8 +81,9 @@ export default function CompanyProfilePin() {
         { y: RISE_PX },
         { y: 0, ease: 'none', duration: RISE_PX }
       );
-      // 溜め: 中央(0)で静止
-      tl.to(card, { y: 0, duration: HOLD_PX });
+      // 溜め: 中央(0)で静止。y:0→0 は no-op で消えるため、ダミーで時間だけ進める
+      // （この間 card の y は 0 のまま＝中央で静止）。
+      tl.to({}, { duration: HOLD_PX });
 
       return () => {
         tl.scrollTrigger?.kill();
