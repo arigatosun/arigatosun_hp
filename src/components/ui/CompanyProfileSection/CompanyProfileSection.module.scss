@@ -134,8 +134,9 @@
   display: flex;
   align-items: flex-start;
   @include fluid(gap, 24, 62);
+  // 左右の余白を対称に（中間幅でも右余白が消えないように左と同値）。
   @include fluid(padding-left, 20, 80);
-  @include fluid(padding-right, 20, 100);
+  @include fluid(padding-right, 20, 80);
   @include fluid(padding-bottom, 32, 100);
 
   @include sp {
@@ -181,10 +182,10 @@
 }
 
 // ── 情報テーブル ──
-// flex:1 だと viewport により画像との比率が崩れるため fluid 固定
+// 画像（固定 fluid 幅）の残り幅を埋める（flex:1）。こうすると map + gap + table + 左右
+// padding が常にカード幅に収まり、中間幅でも右の余白が詰まらない（左右対称を保てる）。
 .table {
-  flex-shrink: 0;
-  @include fluid(width, 280, 758, 320, 1920);
+  flex: 1;
   min-width: 0;
   display: flex;
   flex-direction: column;
