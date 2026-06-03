@@ -219,6 +219,11 @@
   @include fluid(padding-top, 26, 52, 390, 1920);
   @include fluid(padding-bottom, 26, 52, 390, 1920);
 
+  // PC: テキスト塊（タイトル+日付）を画像と上下中央で揃える（SP は縦積み stretch のまま）。
+  @include pc {
+    align-items: center;
+  }
+
   &:hover .articleTitle {
     color: var(--color-text-secondary);
   }
@@ -266,7 +271,8 @@
 
 .articleMeta {
   margin: 0;
-  @include fluid(margin-top, 16, 30, 390, 1920);
+  // タイトル→日付の余白（要望により従来 fluid(16,30) の半分に）。
+  @include fluid(margin-top, 8, 15, 390, 1920);
   display: flex;
   align-items: baseline;
   @include fluid(gap, 12, 24, 390, 1920);
@@ -310,7 +316,7 @@
 .articleThumbnail {
   position: relative;
   flex-shrink: 0;
-  align-self: center; // 記事行の縦中央に配置（テキストは上揃えのまま）
+  align-self: center; // 記事行の縦中央に配置（PC ではテキストも中央揃え）
   @include fluid(width, 140, 266, 390, 1920);
   aspect-ratio: 266 / 150;
   overflow: hidden;

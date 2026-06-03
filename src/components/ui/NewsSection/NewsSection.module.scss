@@ -236,6 +236,11 @@
   align-items: flex-start;
   @include fluid(gap, 16, 40, 390, 1920); // Figma: タイトル↔サムネイル 40px
 
+  // PC: テキスト塊（タイトル+日付）を画像と上下中央で揃える（SP は縦積みのまま）。
+  @include pc {
+    align-items: center;
+  }
+
   // ホバー: タイトルがサンアイコンと同じグレーに変わる
   &:hover {
     .articleTitle {
@@ -273,7 +278,8 @@
 }
 
 .articleMeta {
-  @include fluid(margin-top, 16, 24, 390, 1920); // Figma: タイトル下端→日付 24px
+  // タイトル→日付の余白（要望により従来 fluid(16,24) の半分に）。
+  @include fluid(margin-top, 8, 12, 390, 1920);
   display: flex;
   align-items: baseline;
   @include fluid(gap, 12, 32, 390, 1920);
