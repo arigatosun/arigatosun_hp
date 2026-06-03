@@ -13,6 +13,7 @@ interface MemberInfoHeaderProps {
 const SNS_LINKS: Array<{ key: keyof MemberSocial; label: string }> = [
   { key: 'instagram', label: 'INSTAGRAM' },
   { key: 'x', label: 'X' },
+  { key: 'facebook', label: 'FACEBOOK' },
 ];
 
 export default function MemberInfoHeader({
