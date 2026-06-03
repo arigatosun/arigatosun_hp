@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import SectionTitle from '@/components/ui/SectionTitle';
-import ConfirmModal from './_components/ConfirmModal';
 import styles from './page.module.scss';
 
 type FormField = 'company' | 'name' | 'nameKana' | 'email' | 'phone' | 'message';
@@ -65,8 +64,6 @@ export default function ContactPage() {
   const [agreed, setAgreed] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitErrorMessage, setSubmitErrorMessage] = useState('');
-  // 確認モーダル表示中フラグ。SEND MESSAGE 押下 → モーダル表示 → 「送信する」で実送信
-  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
   // ── スパム対策（formData とは分離。バリデーション対象に含めない） ──
   // ハニーポット: 人間は触れない隠しフィールド。値が入っていればボット。
@@ -101,8 +98,8 @@ export default function ContactPage() {
   };
 
   // フォーム送信ボタン押下時の処理。
-  // バリデーション通過後、即送信ではなく確認モーダルを開く。
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  // バリデーション通過後、確認を挟まず直接送信する（確認モーダルは廃止）。
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!agreed || isSubmitting) return;
 
@@ -122,14 +119,7 @@ export default function ContactPage() {
       return;
     }
 
-    // バリデーション通過 → 確認モーダルを開く（実送信はモーダル内ボタン押下後）
-    setSubmitErrorMessage('');
-    setIsConfirmOpen(true);
-  };
-
-  // 確認モーダル内「送信する」ボタンの処理。実際の API 呼び出し。
-  const handleConfirmSend = async () => {
-    if (isSubmitting) return;
+    // バリデーション通過 → そのまま送信
     setIsSubmitting(true);
     setSubmitErrorMessage('');
 
@@ -150,7 +140,6 @@ export default function ContactPage() {
         return;
       }
 
-      // 成功時は遷移するのでモーダルはアンマウントされる
       router.push('/contact/thanks');
     } catch {
       setSubmitErrorMessage(
@@ -159,13 +148,6 @@ export default function ContactPage() {
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  // 確認モーダル「修正する」ボタンの処理。送信中は閉じない（誤操作防止）。
-  const handleConfirmCancel = () => {
-    if (isSubmitting) return;
-    setIsConfirmOpen(false);
-    setSubmitErrorMessage('');
   };
 
   // フィールド毎のエラー表示制御 + a11y 属性
@@ -393,8 +375,13 @@ export default function ContactPage() {
           </label>
         </div>
 
-        {/* 送信ボタン（ページ全体の中央）。バリデーション通過後は確認モーダルが開く */}
+        {/* 送信ボタン（ページ全体の中央）。バリデーション通過後はそのまま送信 */}
         <div className={styles.submitWrap}>
+          {submitErrorMessage && (
+            <p className={styles.submitError} role="alert">
+              {submitErrorMessage}
+            </p>
+          )}
           <button
             type="submit"
             className={styles.submitButton}
@@ -404,15 +391,6 @@ export default function ContactPage() {
           </button>
         </div>
       </form>
-
-      <ConfirmModal
-        isOpen={isConfirmOpen}
-        formData={formData}
-        isSubmitting={isSubmitting}
-        errorMessage={submitErrorMessage}
-        onCancel={handleConfirmCancel}
-        onConfirm={handleConfirmSend}
-      />
     </div>
   );
 }
