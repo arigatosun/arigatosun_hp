@@ -31,9 +31,9 @@ const allMembers: Member[] = [
       '目の前の人が「まだやれる」と思える瞬間を増やし、その挑戦が次の誰かの希望になる。',
       'そんなありがとうの循環を、社会に広げていきます。',
     ],
-    // Figma は FACEBOOK のみ。リンク先URLは未確定のため暫定
+    // Figma は FACEBOOK のみ
     social: {
-      facebook: 'https://www.facebook.com/',
+      facebook: 'https://www.facebook.com/xxore.happy.xx',
     },
   },
   {
