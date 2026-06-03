@@ -351,6 +351,8 @@ input.fieldInput {
 // ── 送信ボタン（ページ全体の中央） ──
 .submitWrap {
   display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
   @include fluid(margin-top, 32, 48, 390, 1920); // Figma: privacy 下端 1337 → button 1385 ＝ 48
   @include fluid(padding-left, 20, 200, 390, 1920);
@@ -362,6 +364,18 @@ input.fieldInput {
     @include fluid(padding-right, 32, 40, 320, 390);
     @include fluid(margin-top, 32, 40, 320, 390);
   }
+}
+
+// 送信失敗時のエラー（送信ボタンの上に中央表示）
+.submitError {
+  margin: 0;
+  @include fluid(margin-bottom, 12, 16, 390, 1920);
+  text-align: center;
+  color: var(--color-primary);
+  font-family: var(--font-jp);
+  font-weight: var(--font-weight-regular);
+  @include fluid(font-size, 13, 14, 390, 1920);
+  @include fluid(line-height, 20, 22, 390, 1920);
 }
 
 // WORKS の WorksPagination .button と同方式：
