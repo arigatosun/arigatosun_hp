@@ -28,9 +28,10 @@
   @include fluid(letter-spacing, 1.92, 3.84, 390, 1920);
 
   @include sp {
-    // Figma SP(390) 実測: 14 / lh30 / ls2.52（本文幅310 → 1行 約18〜19文字）
+    // Figma SP(390): 14 / lh30。字間は本文幅310で19文字が1行に収まるよう 2.52→2.2 に微調整
+    // （2.52 だと「だからこそ私は、人間として証明したい。」の「い。」が溢れて孤立するため）
     @include fluid(font-size, 14, 16, 390, 1200);
     @include fluid(line-height, 30, 32, 390, 1200);
-    @include fluid(letter-spacing, 2.52, 3.84, 390, 1200);
+    @include fluid(letter-spacing, 2.2, 3.84, 390, 1200);
   }
 }
