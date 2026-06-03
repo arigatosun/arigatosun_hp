@@ -219,7 +219,9 @@ export default function ContactPage() {
               <br className={styles.brPcOnly} />
               「もしも」の話でも構いません。
               <br />
-              2～3営業日以内に担当者よりメールでご返信いたしますので、
+              2～3営業日以内に担当者より
+              <br className={styles.brMidOnly} />
+              メールでご返信いたしますので、
               <br />
               お気軽にご相談ください。
             </p>
