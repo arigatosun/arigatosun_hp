@@ -43,14 +43,13 @@ const allMembers: Member[] = [
     photo: '/images/team/koushi-tsuchiga.webp',
     photoColor: '/images/team/koushi-tsuchiga-color.webp',
     catchphrase: '組織の力を最大化する。',
-    description: '洗練の頂を探し求める。',
+    description: '攻めと守りの両面から、会社の前進を支える。',
     // Figma(3483:100682) は理念のみで 経歴・SNS・プロジェクトを持たないため非表示
     career: '',
     projects: [],
     // Figma 3483:100682 準拠
     roleJp: 'EXECUTIVE OFFICER',
-    // 注: Figma 上の引用が髙橋と同一（コピペ残りの可能性）。正式な引用が来たら差し替え
-    quote: '洗練の頂を探し求める。',
+    quote: '攻めと守りの両面から、会社の前進を支える。',
     introParagraphs: [
       '開発を軸にしながら、経理、資金管理、契約周り、コンサルティングまで、会社運営に関わる領域を横断して担当しています。',
       '自分の役割は、目の前の作業をこなすことだけではありません。',
