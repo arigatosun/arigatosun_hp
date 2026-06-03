@@ -230,7 +230,7 @@ const allMembers: Member[] = [
   },
   {
     slug: 'hyouga-hiromori',
-    name: 'HYOUGA HIROMORI',
+    name: 'HYOGA HIROMORI',
     role: 'CCO / KUSOMEGANE',
     photo: '/images/team/hyouga-hiromori.webp',
     photoColor: '/images/team/hyouga-hiromori-color.webp',
