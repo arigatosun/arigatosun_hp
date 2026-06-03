@@ -83,6 +83,17 @@
   }
 }
 
+// 幅 1513px 以上のときだけ改行する <br> クラス。
+// 1512px 以下（MacBook 含む / SP 含む）では非表示＝本文を流す。
+// 大きいモニターでのみ Figma 元の改行を出すケース用 (bodyBreakAbove1512)。
+.brWideOnly {
+  display: none;
+
+  @media (min-width: 1513px) {
+    display: inline;
+  }
+}
+
 // ── variant: phases (ECOSYSTEM PROCESS) ──
 // Figma Group 1146: text 700 + gap 195 + visual 585 = 1480
 // STANDARD/CREATOR_FIRST (visual 666-667) と違って visual が狭く gap が広い
