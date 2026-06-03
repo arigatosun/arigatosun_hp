@@ -41,6 +41,10 @@
   flex-shrink: 0;
   align-self: flex-start; // flex container 内で sticky を効かせるために必須
   position: sticky;
+  // 記事が少なくページが短い時、フッターの赤アーチ(maskOverlay)がサイドバー下部の
+  // CONTACT リンクに重なってクリックを奪う。z-index でアーチ(z:0〜1)より上に出して
+  // リンクをクリック可能にする（Header z:100 より下なので干渉しない）。
+  z-index: 2;
   @include fluid(top, 136, 240, 390, 1920);
   @include fluid(width, 160, 240, 390, 1920);
 
