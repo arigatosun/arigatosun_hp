@@ -47,8 +47,9 @@
   @include fluid(padding-right, 20, 200, 390, 1920);
 
   @include sp {
-    @include fluid(padding-left, 20, 200, 390, 1200);
-    @include fluid(padding-right, 20, 200, 390, 1200);
+    // 詳細ページ本文の左余白(detailRow padding-inline=40)に合わせる
+    @include fluid(padding-left, 40, 200, 390, 1200);
+    @include fluid(padding-right, 40, 200, 390, 1200);
   }
 }
 
