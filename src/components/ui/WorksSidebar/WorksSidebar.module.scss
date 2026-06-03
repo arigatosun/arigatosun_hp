@@ -68,12 +68,13 @@
 }
 
 .item {
-  display: flex;
+  display: block;
 }
 
 .link {
-  display: inline-flex;
-  align-items: baseline;
+  // inline で描画（NEWS と同じ背景枠＝フォントbox）。line-height:24px は行ピッチ用に維持され、
+  // inline 要素の背景は font box に乗るので赤帯位置が NEWS と全幅で一致（レスポンシブ追従）。
+  display: inline;
   text-decoration: none;
   color: var(--color-text-secondary);
   font-family: var(--font-en);
@@ -97,19 +98,9 @@
     var(--color-primary)
   );
   background-repeat: no-repeat;
-  // 赤帯中心を baseline 上 0.32em（TOP ニュースと同じ）に固定。
-  // この要素は line-height が固定px(PC24/SP18)で、inline-flex の baseline が box中心から
-  // 固定距離(PC=8px / SP=7px)に来る。そのため単純な em オフセットだと font-size 可変で
-  // 縦位置がレスポンシブにズレる（fluid font 16〜20 で asEm が 0.29〜0.35 に振れる）。
-  // px+em の calc にして「offset = baselineの box中心からの距離(px) − 0.32em」とし、
-  // asEm を全幅で 0.32 に固定する。
-  background-position: right calc(50% + 8px - 0.32em);
+  // inline 描画なので NEWS と同じ 0.094em で全幅一致（display 差の補正は不要になった）。
+  background-position: right calc(50% + 0.094em);
   background-size: 0 0.85em;
-
-  // SP は line-height 18px → baseline は box中心から 7px（PC の 8px と別値）
-  @include sp {
-    background-position: right calc(50% + 7px - 0.32em);
-  }
 
   // hover/active で赤帯を即座に表示（アニメーションなし） — SERVICE/NEWS/About と統一
   &:hover {
@@ -119,7 +110,8 @@
 }
 
 .label {
-  display: inline-block;
+  // inline（plain）にして親 .link の inline 背景枠を font box に保つ（NEWS 追従のため）
+  display: inline;
 }
 
 // active 状態: 白文字 + 赤マーカー帯（ベタ塗りブロックではなく、文字より背の低い帯）
