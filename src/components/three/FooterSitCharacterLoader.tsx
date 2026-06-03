@@ -6,33 +6,55 @@ import type { FooterSitCharacterProps } from './FooterSitCharacter';
 
 const FooterSitCharacter = dynamic(() => import('./FooterSitCharacter'), { ssr: false });
 
-// SP(≤1023px) ではキャラを 60% に縮小する。
-// CSS で Canvas ごと transform:scale すると、サイズと位置が transform-origin で連動し
-// 足元の位置が破綻する（Canvas 内のキャラ足元ピクセルを正確に origin にできない）。
-// そのため設計が意図した「3D 側のサイズ・位置制御」に従い、charScale / charPosition を差し替える。
+// ── SP のキャラサイズを viewport 幅でクランプ ──
+// CSS で Canvas ごと transform:scale すると、サイズと位置が transform-origin で連動して
+// 足元位置が破綻する。そのため設計が意図した「3D 側のサイズ・位置制御」(charScale/charPosition)で行う。
 //
-// 算出（3D 定数より）:
-//   - PC: charScale 1.0 / charPosition [1.6, -1.1, 0]
-//   - 足元 world Y = charPos.y + (足元 localY ≈ -0.3) × scale。PC は -1.1 + (-0.3) = -1.4（アーチ頂点）。
-//   - SP: scale 0.6。足元を world Y -1.4 に保つには charPos.y = -1.4 - (-0.3 × 0.6) = -1.22。
-//   - 水平中心 world X 0.81（canvas 248px ＝ 画面中央）を保つには charPos.x = 0.81 - (-0.79 × 0.6) = 1.284。
-const SP_CHAR_SCALE = 0.6;
-const SP_CHAR_POSITION: [number, number, number] = [1.284, -1.22, 0];
+// サイズ: 390px で 0.6 → 1023px で 1.0 へ線形クランプ。1024px 以上(PC)は等倍 1.0。
+//   → SP/PC 境界(1023↔1024)が both ≈1.0 で連続し、1012px 付近で急に小さくならない。
+// 位置: どの scale でも足元(world Y -1.4 = canvas 336px)と水平中心(world X 0.81 = canvas 248px)を
+//   保つよう charPosition を算出（CSS の Canvas 位置は不変）。3D 定数より:
+//     - 足元 world Y = charPos.y + (足元 localY ≈ -0.3) × scale = -1.4  → charPos.y = -1.4 + 0.3 × scale
+//     - 中心 world X = charPos.x + (mesh offset ≈ -0.79) × scale = 0.81 → charPos.x = 0.81 + 0.79 × scale
+//   （scale=1 で [1.6,-1.1]=PC既定 / scale=0.6 で [1.284,-1.22] と一致）
+const SP_MIN_VW = 390;
+const SP_MAX_VW = 1023;
+const MIN_SCALE = 0.6;
+
+function computeScale(vw: number): number {
+  if (vw >= 1024) return 1;
+  const t = Math.min(1, Math.max(0, (vw - SP_MIN_VW) / (SP_MAX_VW - SP_MIN_VW)));
+  const s = MIN_SCALE + (1 - MIN_SCALE) * t;
+  // 0.05 刻みに量子化。scale 変化時に key で再マウントして IK の rest を取り直すため
+  // （刻みは目視で分からないレベル。連続再マウントを抑える）。
+  return Math.round(s * 20) / 20;
+}
 
 export default function FooterSitCharacterLoader(props: FooterSitCharacterProps = {}) {
-  const [isSp, setIsSp] = useState(false);
+  const [scale, setScale] = useState(() =>
+    typeof window !== 'undefined' ? computeScale(window.innerWidth) : 1,
+  );
 
   useEffect(() => {
-    const mq = window.matchMedia('(max-width: 1023px)');
-    const update = () => setIsSp(mq.matches);
+    const update = () => setScale(computeScale(window.innerWidth));
     update();
-    mq.addEventListener('change', update);
-    return () => mq.removeEventListener('change', update);
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
   }, []);
 
-  const spProps = isSp
-    ? { charScale: SP_CHAR_SCALE, charPosition: SP_CHAR_POSITION }
-    : {};
+  const charPosition: [number, number, number] = [
+    0.81 + 0.79 * scale,
+    -1.4 + 0.3 * scale,
+    0,
+  ];
 
-  return <FooterSitCharacter {...props} {...spProps} />;
+  // key=scale: サイズが変わったら再マウントして Sit ポーズの rest を取り直す（腕IKのズレ防止）。
+  return (
+    <FooterSitCharacter
+      key={scale.toFixed(2)}
+      {...props}
+      charScale={scale}
+      charPosition={charPosition}
+    />
+  );
 }
