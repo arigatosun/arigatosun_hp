@@ -6,10 +6,14 @@
 
 .pinWrap {
   position: relative;
+  // 上のメンバーセクションとの余白。写真自身ではなくラッパー側に持たせることで、
+  // ピン時に写真がラッパー上端＝中心計算が正しく効くようにする。
+  @include fluid(margin-top, 80, 255);
   // 写真セクションとフッターの間に余白を入れる（ピン化で詰まったため）。
   @include fluid(margin-bottom, 220, 400);
 
   @include sp {
+    margin-top: 120px;
     @include fluid(margin-bottom, 128, 400);
   }
 }
@@ -23,12 +27,10 @@
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  @include fluid(margin-top, 80, 255);
+  // margin-top は pinWrap 側に移動（ピン時の中心計算を正しくするため）。
   @include fluid(height, 360, 1080);
 
   @include sp {
-    // Figma SP: メンバー row5 bottom y=4490 → 写真 top y=4610 = 120
-    margin-top: 120px;
     // Figma SP: Rectangle 346 高さ 300px
     height: 300px;
   }
