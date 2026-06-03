@@ -97,15 +97,11 @@
     var(--color-primary)
   );
   background-repeat: no-repeat;
-  // 大文字の視覚中心は行ボックス中央より 0.094em 下にあるが、
-  // NEWS と統一してテキストが帯内で 1px 下に見えるよう 0.044em に詰める
-  background-position: right calc(50% + 0.044em);
+  // 赤帯を文字に対し縦中央に重ねる。TOP ニュース(inline span)と同じ「帯中心=baseline上0.32em」
+  // に合わせた値。この要素は display:inline-flex(背景枠=line-height24px)のため、inline の NEWS と
+  // 同じ見た目にするには 0.107em（NEWS の 0.094em とは display 差の分だけ異なる）。
+  background-position: right calc(50% + 0.107em);
   background-size: 0 0.85em;
-
-  // SP では帯を 0.5px 下げ、テキストが帯内で 0.5px 上に見えるよう微調整
-  @include sp {
-    background-position: right calc(50% + 0.044em + 0.5px);
-  }
 
   // hover/active で赤帯を即座に表示（アニメーションなし） — SERVICE/NEWS/About と統一
   &:hover {
