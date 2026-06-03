@@ -34,13 +34,7 @@ export const COMPANY_INFO_ROWS: CompanyInfoRow[] = [
     cells: [
       { label: '設立', value: '2024/05', valueFont: 'en' },
       { label: '代表者', value: '吉川 遼／廣森 氷河／中村 修人' },
-      // PC: 2 行「９名（正社員）」「＋外部パートナー」/ SP: 1 行で連結（空白なし）
-      {
-        label: '従業員数',
-        value: '９名（正社員）＋外部パートナー',
-        valueSegments: ['９名（正社員）', '＋外部パートナー'],
-        breakOn: 'pc',
-      },
+      // 従業員数は非表示（要望により削除）。
     ],
   },
 ];
