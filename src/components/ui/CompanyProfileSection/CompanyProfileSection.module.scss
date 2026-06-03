@@ -28,10 +28,11 @@
   @include fluid(padding-left, 40, 200);
   @include fluid(padding-right, 40, 200);
 
-  // 中間幅 PC (1024-1279): 会社情報テーブル (設立 / 代表者 / 従業員数) が
-  // 1 行で収まるよう左右 padding を 40px まで縮めて白カードを広げる。
-  // 1280px 以上は Figma 1920 デザイン準拠の fluid 値に戻る。
-  @media (min-width: 1024px) and (max-width: 1279px) {
+  // 中間幅 (1024-1399): 白カードを広げて窮屈さを解消する。
+  //   1024-1279 → 縦積み（地図上・情報下）。広いカードで情報テーブルがゆったり全幅に。
+  //   1280-1399 → 横並び。広いカードで地図＋テーブルがゆったり収まる。
+  // 1400px 以上は Figma 1920 デザイン準拠の fluid 値に戻る（MacBook 1512 など）。
+  @media (min-width: 1024px) and (max-width: 1399px) {
     padding-left: 40px;
     padding-right: 40px;
   }
@@ -139,8 +140,13 @@
   @include fluid(padding-right, 20, 80);
   @include fluid(padding-bottom, 32, 100);
 
-  @include sp {
+  // 1280px 未満は縦積み（地図を上・会社情報を下の全幅）。テーブルが全幅を使え
+  // 窮屈な折返しが解消する。横並び（≥1280）の左右 padding/gap はそのまま流用。
+  @media (max-width: 1279px) {
     flex-direction: column;
+  }
+
+  @include sp {
     // Figma SP: 画像 bottom y=5235 → テーブル先頭 (会社名) y=5267 = 32
     gap: 32px;
     // Figma SP: 画像 x=40 → 画像幅 310 → card 左端 28 から 12px inset
@@ -158,7 +164,8 @@
   @include fluid(width, 200, 520, 320, 1920);
   aspect-ratio: 1 / 1;
 
-  @include sp {
+  // 縦積み時（≤1279）は地図を全幅（最大 520）に。横並び用の固定 fluid 幅を上書き。
+  @media (max-width: 1279px) {
     width: 100%;
     max-width: 520px;
   }
@@ -194,9 +201,12 @@
   @include fluid(gap, 24, 50, 320, 1920);
   margin: 0;
 
-  @include sp {
+  // 縦積み時（≤1279）は全幅。
+  @media (max-width: 1279px) {
     width: 100%;
-    flex: 1;
+  }
+
+  @include sp {
     // Figma SP: テーブル x=48 (画像 x=40 より +8 内側)
     padding-left: 8px;
     padding-right: 8px;

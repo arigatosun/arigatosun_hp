@@ -42,9 +42,9 @@ export default function CompanyProfilePin() {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     const mm = gsap.matchMedia();
-    // ピン演出は PC 限定（≥1024px）。SP（≤1023px）はスクロールジャックが成立しない
-    // ため演出を行わず、写真＋会社概要は通常スクロール（元の状態）にする。
-    mm.add('(min-width: 1024px)', () => {
+    // ピン演出は広い PC 限定（≥1280px）。1279px 以下では会社概要を縦積みに切り替える
+    // ため（カードが縦長になりピン中央寄せが成立しない）、演出せず通常スクロールにする。
+    mm.add('(min-width: 1280px)', () => {
       // カードの自然位置の「中心」を写真の「中心」に合わせる margin を当てる。
       // → ピン終了時に y=0 でカードが中央に居て、通常フローと連続する（解除でズレない）。
       // 見えるカード（#company-profile セクション）を基準に整列する。cardMover 直下の
