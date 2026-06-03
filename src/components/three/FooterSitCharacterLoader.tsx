@@ -50,11 +50,30 @@ export default function FooterSitCharacterLoader(props: FooterSitCharacterProps 
 
   // key=scale: サイズが変わったら再マウントして Sit ポーズの rest を取り直す（腕IKのズレ防止）。
   return (
-    <FooterSitCharacter
-      key={scale.toFixed(2)}
-      {...props}
-      charScale={scale}
-      charPosition={charPosition}
-    />
+    <>
+      <FooterSitCharacter
+        key={scale.toFixed(2)}
+        {...props}
+        charScale={scale}
+        charPosition={charPosition}
+      />
+      {/* TODO(一時): scale 追従確認用オーバーレイ。確認後に外す。 */}
+      <div
+        style={{
+          position: 'fixed',
+          left: 4,
+          bottom: 4,
+          zIndex: 99999,
+          background: 'rgba(0,0,0,0.75)',
+          color: '#fff',
+          font: '12px monospace',
+          padding: '2px 6px',
+          pointerEvents: 'none',
+          borderRadius: 4,
+        }}
+      >
+        w={typeof window !== 'undefined' ? window.innerWidth : '?'} / scale={scale}
+      </div>
+    </>
   );
 }
