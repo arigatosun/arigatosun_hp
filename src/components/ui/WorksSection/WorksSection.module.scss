@@ -256,6 +256,10 @@
   width: 52.5%;
   flex-shrink: 0;
   @include fluid(margin-top, -22, -44, 390, 1920);
+  // 画像の右端を NEWS セクションの content 右端（padding-right 200）に合わせる。
+  // WORKS の padding-right は 183 で NEWS(200)より 17px 狭いぶん画像が右に出るため、
+  // その差分だけ画像を右から詰める（左端＝太陽マーク整合は維持／画像が少し小さくなる）。
+  @include fluid(padding-right, 0, 17, 390, 1920);
 
   @include max(1023px) {
     // Figma SP: 画像はテキストの「上」に配置
@@ -263,6 +267,7 @@
     width: 100%;
     margin-top: 0;
     padding-top: 0;
+    padding-right: 0; // SP は全幅・右端整列の対象外
   }
 }
 
