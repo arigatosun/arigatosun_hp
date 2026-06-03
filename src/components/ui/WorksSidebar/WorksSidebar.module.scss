@@ -13,6 +13,9 @@
   //   .page padding-top(80) + .section padding-top(fluid 45〜120) ＝ fluid(125, 200)
   align-self: flex-start;
   position: sticky;
+  // ページが短い時、フッターの赤アーチがサイドバー下部の NEWS リンクに重なって
+  // クリックを奪う。z-index でアーチより上に出してクリック可能にする（Header z:100 より下）。
+  z-index: 2;
   @include fluid(top, 125, 200);
 
   @include max(1023px) {
@@ -68,19 +71,23 @@
 }
 
 .item {
-  display: flex;
+  display: block;
 }
 
 .link {
-  display: inline-flex;
-  align-items: baseline;
+  // inline で描画（NEWS と同じ背景枠＝フォントbox）。line-height:24px は行ピッチ用に維持され、
+  // inline 要素の背景は font box に乗るので赤帯位置が NEWS と全幅で一致（レスポンシブ追従）。
+  display: inline;
   text-decoration: none;
   color: var(--color-text-secondary);
   font-family: var(--font-en);
   font-weight: var(--font-weight-light);
   // Figma PC: font-size 20 / line-height 24 / letter-spacing 2.6
   // Figma SP: font-size 16 / line-height 18 / letter-spacing 2.08
-  @include fluid(font-size, 16, 20);
+  // フォントサイズ範囲を NEWS カテゴリと同一(14〜20 / 390-1920)にし、各幅で font-size を揃える。
+  // 赤帯の縦位置はフォントサイズ依存(pxスナップ)なので、同サイズにすることで /works も全幅で
+  // NEWS と一致＝中央に乗る（中間幅で文字がやや小さくなるがはみ出しも軽減）。
+  @include fluid(font-size, 14, 20, 390, 1920);
   line-height: 24px;
   @include fluid(letter-spacing, 2.08, 2.6);
   // Figma: 各項目は折り返さない（whitespace-nowrap）
@@ -97,10 +104,8 @@
     var(--color-primary)
   );
   background-repeat: no-repeat;
-  // 赤帯を文字に対し縦中央に重ねる。TOP ニュース(inline span)と同じ「帯中心=baseline上0.32em」
-  // に合わせた値。この要素は display:inline-flex(背景枠=line-height24px)のため、inline の NEWS と
-  // 同じ見た目にするには 0.107em（NEWS の 0.094em とは display 差の分だけ異なる）。
-  background-position: right calc(50% + 0.107em);
+  // inline 描画で全マーカー共通。0.094em = Mozaic GEO の文字下寄り分。MacBook で中央に揃う。
+  background-position: right calc(50% + 0.094em);
   background-size: 0 0.85em;
 
   // hover/active で赤帯を即座に表示（アニメーションなし） — SERVICE/NEWS/About と統一
@@ -111,7 +116,8 @@
 }
 
 .label {
-  display: inline-block;
+  // inline（plain）にして親 .link の inline 背景枠を font box に保つ（NEWS 追従のため）
+  display: inline;
 }
 
 // active 状態: 白文字 + 赤マーカー帯（ベタ塗りブロックではなく、文字より背の低い帯）
