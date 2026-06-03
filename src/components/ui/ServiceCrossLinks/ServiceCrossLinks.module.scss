@@ -106,15 +106,11 @@
   @include fluid(letter-spacing, 2.08, 3.25);
   text-align: center;
   white-space: nowrap;
-  transition: color var(--transition-base);
 
   @include sp {
     @include fluid(font-size, 16, 32);
     @include fluid(letter-spacing, 2.08, 4.16);
   }
 
-  // ホバー色は赤(primary)ではなくサイト標準のグレーに
-  .card:hover & {
-    color: var(--color-text-secondary);
-  }
+  // ホバーしても色は変えず白のまま（カード側のオーバーレイのみで反応させる）。
 }
