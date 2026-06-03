@@ -174,7 +174,7 @@ const allMembers: Member[] = [
     },
     // Figma ノードには INSTAGRAM のみ表示のため X は外す
     social: {
-      instagram: 'https://www.instagram.com/',
+      instagram: 'https://www.instagram.com/nishimoto_yugo',
     },
     // この Figma ノードに「関わったプロジェクト」が無いため空にして非表示化
     projects: [],
