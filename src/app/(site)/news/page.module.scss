@@ -125,7 +125,7 @@
     var(--color-primary)
   );
   background-repeat: no-repeat;
-  background-position: right calc(50% + 0.044em);
+  background-position: right calc(50% + 0.094em);
   background-size: 0 0.85em;
   // hover/active で赤帯を即座に表示（アニメーションなし） — SERVICE/About/Works と統一
 }
@@ -177,7 +177,7 @@
     var(--color-primary)
   );
   background-repeat: no-repeat;
-  background-position: right calc(50% + 0.044em);
+  background-position: right calc(50% + 0.094em);
   background-size: 0 0.85em;
 
   &:hover {
