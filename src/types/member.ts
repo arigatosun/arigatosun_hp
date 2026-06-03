@@ -4,6 +4,7 @@
 export type MemberSocial = {
   instagram?: string;
   x?: string;
+  facebook?: string;
 };
 
 export type MemberProject = {
