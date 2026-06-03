@@ -58,6 +58,9 @@ export default function CompanyProfilePin() {
         const cr = visibleCard.getBoundingClientRect();
         const delta = ir.top + ir.height / 2 - (cr.top + cr.height / 2);
         card.style.marginTop = `${delta}px`;
+        // 整列のため一瞬 y=0（中央＝高い位置）にしたので、開始位置（下）へ戻す。
+        // これでピン前から常に「下にいる」状態になり、高い位置→下がる動きが出ない。
+        gsap.set(card, { y: RISE_PX });
       };
       alignCard();
 
