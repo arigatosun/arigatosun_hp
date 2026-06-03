@@ -76,10 +76,9 @@ export default async function MemberDetailPage({ params }: Props) {
     member.introParagraphs && member.introParagraphs.length > 0
       ? member.introParagraphs
       : [PLACEHOLDER_INTRO_PARAGRAPH];
-  const projects =
-    member.projects && member.projects.length > 0
-      ? member.projects
-      : PLACEHOLDER_PROJECTS;
+  // projects 未設定（undefined）はダミーのプレースホルダーを表示。
+  // 実データ反映済みで「掲載なし」を意図する場合は空配列 [] を渡すと欄ごと非表示になる。
+  const projects = member.projects ?? PLACEHOLDER_PROJECTS;
 
   return (
     <div className={styles.page}>
@@ -114,9 +113,11 @@ export default async function MemberDetailPage({ params }: Props) {
             </div>
           )}
 
-          <div className={styles.projectsBlock}>
-            <MemberProjectGrid projects={projects} />
-          </div>
+          {projects.length > 0 && (
+            <div className={styles.projectsBlock}>
+              <MemberProjectGrid projects={projects} />
+            </div>
+          )}
         </div>
       </div>
 

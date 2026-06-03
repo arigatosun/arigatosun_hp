@@ -32,6 +32,13 @@
   padding-left: 0;
   padding-right: 0;
   overflow: hidden;
+  // 詳細ページ専用。.section の padding-top(260) は /about の「事業構成→メンバー」用で
+  // 詳細ページには大きすぎるため、約半分に詰める（ユーザー指示）。
+  @include fluid(padding-top, 60, 165, 320, 1920);
+
+  @include sp {
+    padding-top: 60px; // SP も about の 80 から約半分に
+  }
 }
 
 // slider variant のタイトル専用 wrap（.section から外した padding を再付与）

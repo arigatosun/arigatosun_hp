@@ -15,8 +15,9 @@
   @include fluid(letter-spacing, 1.92, 3.84, 390, 1920);
 
   @include sp {
+    // Figma SP(390) 実測: 14 / lh30 / ls2.52（本文幅310 → 1行 約18〜19文字）
     @include fluid(font-size, 14, 16, 390, 1200);
-    @include fluid(line-height, 22, 32, 390, 1200);
-    @include fluid(letter-spacing, 1.92, 3.84, 390, 1200);
+    @include fluid(line-height, 30, 32, 390, 1200);
+    @include fluid(letter-spacing, 2.52, 3.84, 390, 1200);
   }
 }

@@ -37,9 +37,10 @@
   @include fluid(letter-spacing, 0.91, 1.82, 390, 1920);
 
   @include sp {
-    @include fluid(font-size, 12, 14, 390, 1200);
-    @include fluid(line-height, 18, 24, 390, 1200);
-    @include fluid(letter-spacing, 0.91, 1.82, 390, 1200);
+    // Figma SP(390) 実測: 14 / lh24 / ls2.08
+    @include fluid(font-size, 14, 14, 390, 1200);
+    @include fluid(line-height, 24, 24, 390, 1200);
+    @include fluid(letter-spacing, 2.08, 1.82, 390, 1200);
   }
 }
 
@@ -54,14 +55,15 @@
   @include fluid(letter-spacing, 1.82, 3.64, 390, 1920);
 
   @include sp {
-    @include fluid(margin-top, 8, 16, 390, 1200);
-    @include fluid(font-size, 16, 28, 390, 1200);
-    @include fluid(line-height, 22, 40, 390, 1200);
-    @include fluid(letter-spacing, 1.82, 3.64, 390, 1200);
+    // Figma SP(390) 実測: 20 / lh40 / ls2.6 / role↓name 4
+    @include fluid(margin-top, 4, 16, 390, 1200);
+    @include fluid(font-size, 20, 28, 390, 1200);
+    @include fluid(line-height, 40, 40, 390, 1200);
+    @include fluid(letter-spacing, 2.6, 3.64, 390, 1200);
   }
 }
 
-// 短い区切り線（Figma: w=52, name 下端から 57px）
+// 短い区切り線（Figma: w=52, name 下端から 57px / SP(390): name↓divider 25）
 .divider {
   @include fluid(margin-top, 28, 57, 390, 1920);
   @include fluid(width, 26, 52, 390, 1920);
@@ -69,8 +71,8 @@
   background-color: var(--color-black);
 
   @include sp {
-    @include fluid(margin-top, 28, 57, 390, 1200);
-    @include fluid(width, 26, 52, 390, 1200);
+    @include fluid(margin-top, 25, 57, 390, 1200);
+    @include fluid(width, 52, 52, 390, 1200);
   }
 }
 
@@ -83,6 +85,11 @@
   @include fluid(gap, 12, 20, 390, 1920);
 
   @include sp {
+    // Figma SP: 画像の右・上端に揃える。基準は .detailRow(position: relative)。
+    // top / right は .detailRow の padding-top / padding-inline と一致させる。
+    position: absolute;
+    @include fluid(top, 100, 200, 390, 1200);
+    @include fluid(right, 40, 200, 390, 1200);
     @include fluid(gap, 12, 20, 390, 1200);
   }
 }

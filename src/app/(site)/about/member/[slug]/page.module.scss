@@ -27,10 +27,11 @@
   @include sp {
     flex-direction: column;
     align-items: stretch;
-    // SP は縦積み。gap/padding は現状(1200)カーブに固定
-    @include fluid(gap, 40, 100, 390, 1200);
-    @include fluid(padding-inline, 20, 200, 390, 1200);
-    @include fluid(padding-top, 56, 200, 390, 1200);
+    position: relative; // SP: SNS を画像の右・上端に absolute 配置するための基準
+    // SP は縦積み。Figma SP(390) 実測: 左右余白40 / 画像top180(=header80+100) / 画像↓role 32
+    @include fluid(gap, 32, 100, 390, 1200);
+    @include fluid(padding-inline, 40, 200, 390, 1200);
+    @include fluid(padding-top, 100, 200, 390, 1200);
   }
 }
 
@@ -39,7 +40,7 @@
 
   @include sp {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start; // Figma SP: 画像は左寄せ（x=40 = 左余白）
   }
 }
 
@@ -68,21 +69,21 @@
   }
 }
 
-// Figma: quote 下端(505) → body 上端(529) = 24px
+// Figma: quote 下端(505) → body 上端(529) = 24px / SP(390): quote↓body = 20
 .introBlock {
   @include fluid(margin-top, 16, 24, 390, 1920);
 
   @include sp {
-    @include fluid(margin-top, 16, 24, 390, 1200);
+    @include fluid(margin-top, 20, 24, 390, 1200);
   }
 }
 
-// Figma: body 下端(881) → 経歴 上端(953) = 72px
+// Figma: body 下端(881) → 経歴 上端(953) = 72px / SP(390): body↓経歴 = 54
 .careerBlock {
   @include fluid(margin-top, 40, 72, 390, 1920);
 
   @include sp {
-    @include fluid(margin-top, 40, 72, 390, 1200);
+    @include fluid(margin-top, 54, 72, 390, 1200);
   }
 }
 

@@ -12,8 +12,16 @@
   @include fluid(letter-spacing, 1.3, 2.6, 390, 1920);
 
   @include sp {
-    @include fluid(font-size, 14, 20, 390, 1200);
-    @include fluid(line-height, 22, 32, 390, 1200);
-    @include fluid(letter-spacing, 1.3, 2.6, 390, 1200);
+    // Figma SP(390) 実測: 18 / lh36 / ls4.32
+    @include fluid(font-size, 18, 20, 390, 1200);
+    @include fluid(line-height, 36, 32, 390, 1200);
+    @include fluid(letter-spacing, 4.32, 2.6, 390, 1200);
+  }
+}
+
+// セグメント間の改行は SP のみ表示（PC は 1 行表示を維持）
+.spBr {
+  @include pc {
+    display: none;
   }
 }

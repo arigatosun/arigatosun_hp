@@ -12,8 +12,9 @@
   @include fluid(height, 147, 293, 390, 1920);
 
   @include sp {
-    @include fluid(width, 147, 293, 390, 1200);
-    @include fluid(height, 147, 293, 390, 1200);
+    // Figma SP(390) 実測: 180×180（左寄せ）
+    @include fluid(width, 180, 293, 390, 1200);
+    @include fluid(height, 180, 293, 390, 1200);
   }
 }
 

@@ -13,15 +13,18 @@
   @include fluid(letter-spacing, 1.04, 2.08, 390, 1920);
 
   @include sp {
-    @include fluid(margin-bottom, 8, 16, 390, 1200);
+    // Figma SP(390) 実測: 14 / lh24 / ls1.82 / 経歴↓本文 12
+    @include fluid(margin-bottom, 12, 16, 390, 1200);
     @include fluid(font-size, 14, 16, 390, 1200);
-    @include fluid(line-height, 22, 32, 390, 1200);
-    @include fluid(letter-spacing, 1.04, 2.08, 390, 1200);
+    @include fluid(line-height, 24, 32, 390, 1200);
+    @include fluid(letter-spacing, 1.82, 2.08, 390, 1200);
   }
 }
 
 .body {
   margin: 0;
+  // 経歴は改行（\n）で年表的に複数行を表示する。pre-line で改行のみ反映（連続空白は1つに圧縮）
+  white-space: pre-line;
   color: var(--color-black);
   font-family: var(--font-jp);
   font-weight: var(--font-weight-regular);
@@ -30,8 +33,9 @@
   @include fluid(letter-spacing, 1.92, 3.84, 390, 1920);
 
   @include sp {
+    // Figma SP(390) 実測: 14 / lh30 / ls1.12
     @include fluid(font-size, 14, 16, 390, 1200);
-    @include fluid(line-height, 22, 32, 390, 1200);
-    @include fluid(letter-spacing, 1.92, 3.84, 390, 1200);
+    @include fluid(line-height, 30, 32, 390, 1200);
+    @include fluid(letter-spacing, 1.12, 3.84, 390, 1200);
   }
 }
