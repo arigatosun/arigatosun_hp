@@ -25,7 +25,7 @@ export type CompanyInfoRow = {
 export const COMPANY_INFO_ROWS: CompanyInfoRow[] = [
   {
     cells: [
-      { label: '会社名', value: '合同会社アリガトサン' },
+      { label: '会社名', value: '株式会社アリガトサン' },
       // 数字は半角（Figma 準拠）。SP は cellValue 幅で空白位置に自然改行され 2 行になる。
       { label: '所在地', value: '兵庫県尼崎市東難波町4丁目6−26 ZEROビル 802号' },
     ],
