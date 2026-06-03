@@ -458,6 +458,9 @@
 .backWrap {
   display: flex;
   justify-content: center;
+  // フッター(margin-top:-51px)がボタン下部に重なってクリックを奪うため、前面に出す。
+  position: relative;
+  z-index: 1;
   @include fluid(margin-top, 60, 140, 390, 1920);
 
   @include sp {

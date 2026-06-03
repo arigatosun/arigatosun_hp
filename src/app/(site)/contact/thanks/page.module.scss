@@ -76,6 +76,9 @@
 .buttonWrap {
   display: flex;
   justify-content: center;
+  // フッター(margin-top:-51px)がボタン下部に重なってクリックを奪うため、前面に出す。
+  position: relative;
+  z-index: 1;
   @include fluid(margin-top, 80, 180, 390, 1920); // Figma: 545 → 725 ＝ 180
 
   // Figma SP(390): 本文下端 494 → ボタン top 574 ＝ 80
