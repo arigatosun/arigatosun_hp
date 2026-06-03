@@ -25,13 +25,20 @@
 }
 
 // ── 上部: アイキャッチ（左）＋ 記事情報（右）──
+// 記事全体: ヒーローヘッダー → 区切り線 → 本文 を縦に積む
 .article {
+  display: block;
+}
+
+// ヒーローヘッダー: 画像（左）＋ タイトル/日付/シェア（右）を上下中央で並べる
+.heroHeader {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   @include fluid(gap, 40, 120, 390, 1920);
 
   @include sp {
     flex-direction: column;
+    align-items: stretch;
     @include fluid(gap, 24, 40);
   }
 }
@@ -60,7 +67,8 @@
   background: var(--color-white);
 }
 
-.rightColumn {
+// ヘッダーのテキスト塊（タイトル/日付/シェア）。画像と上下中央で揃う。
+.heading {
   flex: 1;
   min-width: 0;
 }
@@ -84,7 +92,8 @@
 
 .meta {
   margin: 0;
-  @include fluid(margin-top, 20, 40, 390, 1920);
+  // タイトル→日付の余白（要望により従来 fluid(20,40) の半分に）。
+  @include fluid(margin-top, 10, 20, 390, 1920);
   display: flex;
   align-items: baseline;
   @include fluid(gap, 12, 24, 390, 1920);

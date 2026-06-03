@@ -150,41 +150,43 @@ export default async function NewsDetailPage({ params }: Props) {
       <JsonLd data={articleJsonLd} />
       <div className={styles.inner}>
         <div className={styles.article}>
-          {/* 左: アイキャッチ画像 */}
-          <div className={styles.eyecatch}>
-            {entry.thumbnail_url ? (
-              <Image
-                src={entry.thumbnail_url}
-                alt=""
-                fill
-                className={styles.eyecatchImg}
-                sizes="(max-width: 1023px) 100vw, 640px"
-                priority
-              />
-            ) : (
-              <span className={styles.eyecatchPlaceholder} aria-hidden="true" />
-            )}
+          {/* ヒーローヘッダー: 画像（左）＋ タイトル/日付/シェア（右・上下中央） */}
+          <div className={styles.heroHeader}>
+            <div className={styles.eyecatch}>
+              {entry.thumbnail_url ? (
+                <Image
+                  src={entry.thumbnail_url}
+                  alt=""
+                  fill
+                  className={styles.eyecatchImg}
+                  sizes="(max-width: 1023px) 100vw, 640px"
+                  priority
+                />
+              ) : (
+                <span className={styles.eyecatchPlaceholder} aria-hidden="true" />
+              )}
+            </div>
+
+            <div className={styles.heading}>
+              <h1 className={styles.title}>{entry.title}</h1>
+              <p className={styles.meta}>
+                <span className={styles.date}>{formatNewsDate(entry.published_at)}</span>
+                <span className={styles.category}>#{entry.category?.label ?? ''}</span>
+              </p>
+              <div className={styles.share}>{renderShareButtons(shareUrl, entry.title)}</div>
+            </div>
           </div>
 
-          {/* 右: タイトル・日付・シェア・本文 */}
-          <div className={styles.rightColumn}>
-            <h1 className={styles.title}>{entry.title}</h1>
-            <p className={styles.meta}>
-              <span className={styles.date}>{formatNewsDate(entry.published_at)}</span>
-              <span className={styles.category}>#{entry.category?.label ?? ''}</span>
-            </p>
-            <div className={styles.share}>{renderShareButtons(shareUrl, entry.title)}</div>
-            <span className={styles.headerDivider} aria-hidden="true" />
+          <span className={styles.headerDivider} aria-hidden="true" />
 
-            {/* TipTap が生成した HTML を出力。コンテンツは認証済み管理者が作成した信頼コンテンツ。 */}
-            <div
-              className={styles.body}
-              dangerouslySetInnerHTML={{ __html: contentHtml }}
-            />
+          {/* TipTap が生成した HTML を出力。コンテンツは認証済み管理者が作成した信頼コンテンツ。 */}
+          <div
+            className={styles.body}
+            dangerouslySetInnerHTML={{ __html: contentHtml }}
+          />
 
-            <span className={styles.bottomDividerSp} aria-hidden="true" />
-            <div className={styles.shareBottomSp}>{renderShareButtons(shareUrl, entry.title)}</div>
-          </div>
+          <span className={styles.bottomDividerSp} aria-hidden="true" />
+          <div className={styles.shareBottomSp}>{renderShareButtons(shareUrl, entry.title)}</div>
         </div>
 
         <div className={styles.backWrap}>
