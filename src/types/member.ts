@@ -29,6 +29,7 @@ export type Member = {
   projects?: MemberProject[];
   // Phase 5: ABOUT/MEMBER 詳細ページ Figma 準拠 拡張フィールド
   roleJp?: string;
-  quote?: string;
+  // string[] を渡すとセグメント間に「SPのみ改行」を入れる（PC は 1 行表示）
+  quote?: string | string[];
   introParagraphs?: string[];
 };

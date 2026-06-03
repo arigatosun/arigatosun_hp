@@ -18,3 +18,10 @@
     @include fluid(letter-spacing, 4.32, 2.6, 390, 1200);
   }
 }
+
+// セグメント間の改行は SP のみ表示（PC は 1 行表示を維持）
+.spBr {
+  @include pc {
+    display: none;
+  }
+}
