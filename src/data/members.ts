@@ -38,7 +38,7 @@ const allMembers: Member[] = [
   },
   {
     slug: 'koushi-tsuchiga',
-    name: 'KOUSHI TSUCHIGA',
+    name: 'KOSHI TSUCHIGA',
     role: 'EXECUTIVE OFFICER',
     photo: '/images/team/koushi-tsuchiga.webp',
     photoColor: '/images/team/koushi-tsuchiga-color.webp',
