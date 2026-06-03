@@ -31,24 +31,39 @@ export default function CompanyProfilePin() {
     // 全ビューポート対象。'(min-width: 1px)' は常に true（'all' は gsap.matchMedia で
     // コールバックが走らないことがあるため、確実にマッチするクエリを使う）。
     mm.add('(min-width: 1px)', () => {
-      // 会社概要カードの中心が画面中央に来たら、カード自体を本当にピン固定
-      // （position:fixed）して HOLD_PX ぶん静止＝「カチッ」と止まる。transform 補正
-      // ではなく実ピンなのでブルブル震えない。pinSpacing:true なのでスペーサーで
-      // 高さが確保され、解除時もジャンプせず、フッターが先に上がる問題も起きない。
-      //
-      // 写真は縦長のまま自然スクロールし、その上をカードがせり上がる（写真側のピンは
-      // pinSpacing:false で高さが詰まりフッターが先行する不具合の原因になるため使わない）。
+      const overlap =
+        image.getBoundingClientRect().bottom - card.getBoundingClientRect().top;
+      const getRise = () =>
+        Math.max(image.offsetHeight / 2 + card.offsetHeight / 2 - overlap, 0);
+
+      // ① 写真ピン: 写真中心が画面中央に来たら、カードの溜め終わりまで固定（＝写真が
+      // 中央で止まる）。pinSpacing:false で写真を固定したまま会社概要が上を流れる。
+      const imagePin = ScrollTrigger.create({
+        trigger: image,
+        start: 'center center',
+        end: () => `+=${getRise() + HOLD_PX}`,
+        pin: image,
+        pinSpacing: false,
+        anticipatePin: 1,
+        invalidateOnRefresh: true,
+      });
+
+      // ② カードの溜め: カード中心が画面中央でカード自体を実ピン固定（カチッと静止）。
+      // 写真ピンと同じ pinSpacing:false に揃え、スペーサー干渉によるフッター先行を避ける。
       const cardPin = ScrollTrigger.create({
         trigger: card,
         start: 'center center',
         end: () => `+=${HOLD_PX}`,
         pin: card,
-        pinSpacing: true,
+        pinSpacing: false,
         anticipatePin: 1,
         invalidateOnRefresh: true,
       });
 
-      return () => cardPin.kill();
+      return () => {
+        imagePin.kill();
+        cardPin.kill();
+      };
     });
 
     return () => mm.revert();
