@@ -180,25 +180,5 @@
   }
 }
 
-// ── 会社写真エリア（Figma Rectangle 346: 1920×1080 ZERO ビル外観モノクロ写真） ──
-// Figma 配置: y=3761（メンバーカード bottom 3506 から gap 255）, h=1080
-// → 会社概要セクションは margin-top -350 でこのグレー帯の下端 350px に
-//   白カードが overlap する形（Figma Rectangle 347 配置）
-.companyImageArea {
-  width: 100vw;
-  margin-left: calc(50% - 50vw);
-  background-color: var(--color-placeholder);
-  background-image: url('/images/sections/about/company-image.jpg');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  @include fluid(margin-top, 80, 255);
-  @include fluid(height, 360, 1080);
-
-  @include sp {
-    // Figma SP: メンバー row5 bottom y=4490 → 写真 top y=4610 = 120
-    margin-top: 120px;
-    // Figma SP: Rectangle 346 高さ 300px
-    height: 300px;
-  }
-}
+// ── 会社写真エリア + 会社概要は CompanyProfilePin コンポーネントに移設 ──
+// （スクロールピン演出のためラップ。写真エリアのスタイルは CompanyProfilePin.module.scss）

@@ -5,7 +5,7 @@ import styles from './page.module.scss';
 import PrinciplesSection from '@/components/ui/PrinciplesSection';
 import BusinessStructureSection from '@/components/ui/BusinessStructureSection';
 import MemberSection from '@/components/ui/MemberSection';
-import CompanyProfileSection from '@/components/ui/CompanyProfileSection';
+import CompanyProfilePin from '@/components/ui/CompanyProfilePin';
 import SectionTitle from '@/components/ui/SectionTitle';
 
 export default function AboutPage() {
@@ -101,11 +101,8 @@ export default function AboutPage() {
       {/* メンバーセクション */}
       <MemberSection />
 
-      {/* 会社写真エリア（Figma Rectangle 346: 1920×1080 のグレー帯 / 後で実画像差し替え） */}
-      <div className={styles.companyImageArea} aria-hidden="true" />
-
-      {/* 会社概要セクション */}
-      <CompanyProfileSection />
+      {/* 会社写真エリア + 会社概要（スクロールピン演出付き） */}
+      <CompanyProfilePin />
     </div>
   );
 }
