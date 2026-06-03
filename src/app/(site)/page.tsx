@@ -9,7 +9,7 @@ import NewsSection from '@/components/ui/NewsSection';
 import LogoSlider from '@/components/ui/LogoSlider';
 import MessageSection from '@/components/ui/MessageSection';
 import GlobalCanvasLoader from '@/components/three/GlobalCanvasLoader';
-import FooterCharacterLoader from '@/components/three/FooterCharacterLoader';
+import HeroResponsiveCharacter from '@/components/three/HeroResponsiveCharacter';
 import { getAllWorks } from '@/data/works';
 
 export default async function Home() {
@@ -75,7 +75,8 @@ export default async function Home() {
                   さらに下に降ろし、見下ろし気味だった視点を正面〜やや下からの見え方に補正。
                   キャラ自体の回転は変えていない。 */}
               <div className={styles.heroCharacterCanvas}>
-                <FooterCharacterLoader
+                {/* SP は 390:70% → 1023:100% に可変（3D charScale で縮小し位置を保つ）。PC は等倍。 */}
+                <HeroResponsiveCharacter
                   glbPath="/models/arigatokunn_wave_meshopt.glb?v=opt1"
                   meshopt
                   charPosition={[-20.93, -0.75, 0]}

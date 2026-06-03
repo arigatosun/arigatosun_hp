@@ -117,6 +117,11 @@
   @include fluid(height, 330, 492);
   transform: translate(-50%, -50%);
   pointer-events: none;
+
+  // SP: キャラを少し上に。390 で -20px → 1023 で 0（PC と連続・段差なし）。
+  @include sp {
+    @include fluid(margin-top, -20, 0, 390, 1023);
+  }
 }
 
 .heroLabels {
