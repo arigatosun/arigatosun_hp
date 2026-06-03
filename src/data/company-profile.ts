@@ -25,7 +25,7 @@ export type CompanyInfoRow = {
 export const COMPANY_INFO_ROWS: CompanyInfoRow[] = [
   {
     cells: [
-      { label: '会社名', value: '合同会社アリガトサン' },
+      { label: '会社名', value: '株式会社アリガトサン' },
       // 数字は半角（Figma 準拠）。SP は cellValue 幅で空白位置に自然改行され 2 行になる。
       { label: '所在地', value: '兵庫県尼崎市東難波町4丁目6−26 ZEROビル 802号' },
     ],
@@ -34,13 +34,7 @@ export const COMPANY_INFO_ROWS: CompanyInfoRow[] = [
     cells: [
       { label: '設立', value: '2024/05', valueFont: 'en' },
       { label: '代表者', value: '吉川 遼／廣森 氷河／中村 修人' },
-      // PC: 2 行「９名（正社員）」「＋外部パートナー」/ SP: 1 行で連結（空白なし）
-      {
-        label: '従業員数',
-        value: '９名（正社員）＋外部パートナー',
-        valueSegments: ['９名（正社員）', '＋外部パートナー'],
-        breakOn: 'pc',
-      },
+      // 従業員数は非表示（要望により削除）。
     ],
   },
 ];
