@@ -83,9 +83,13 @@
   font-family: var(--font-jp);
   font-weight: var(--font-weight-regular);
   color: var(--color-black);
-  @include fluid(font-size, 14, 16, 390, 1920);
-  @include fluid(line-height, 28, 36, 390, 1920);
-  @include fluid(letter-spacing, 1.6, 2.56, 390, 1920);
+  // 中間幅(PC域)で各文を必ず1行に収めるため、font / line-height / letter-spacing を
+  // テキスト枠(.intro 幅 = fluid(280, 560))に比例させて縮小する。
+  // 「文の自然幅 / 枠幅」比が全幅で一定になり、文の途中で折り返さない（＝「。」以外で改行しない）。
+  // max 値（=1920）と SP（@include sp で上書き）は従来と完全に同一。
+  @include fluid(font-size, 8, 16, 390, 1920);
+  @include fluid(line-height, 18, 36, 390, 1920);
+  @include fluid(letter-spacing, 1.28, 2.56, 390, 1920);
 
   // Figma SP(390): PC のみの <br>（2→3 行 / 4→5 行の間）を非表示にし、
   // 残り 4 つの <br> で Figma SP の改行位置（3 ブロック構造）を再現
