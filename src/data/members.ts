@@ -176,7 +176,7 @@ const allMembers: Member[] = [
       ],
     },
     career:
-      '2019年大阪芸術大学 デザイン学科を卒業後、デザイン会社に入社。\n2024年に独立し、デザイン事務所「nini design」設立。\n2025年、合同会社アリガトサンに正式参画。\nその他、音楽スタジオ「BEAT AND A WORKS」の立ち上げ・運営、アーティスト活動も行う。',
+      '2019年大阪芸術大学 デザイン学科を卒業後、デザイン会社に入社。\n2024年に独立し、デザイン事務所「nini design」設立。\n2025年、合同会社アリガトサンに正式参画。\nその他、音楽スタジオ「BEAT AND A WORKS」の立ち上げ・運営、\nアーティスト活動も行う。',
     // Figma ノードには INSTAGRAM のみ表示のため X は外す
     social: {
       instagram: 'https://www.instagram.com/',
