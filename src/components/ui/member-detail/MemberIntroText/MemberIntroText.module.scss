@@ -8,6 +8,19 @@
   font-weight: var(--font-weight-regular);
 }
 
+// PC/SP で改行が異なる本文の出し分け（{ pc, sp } 指定時のみ使用）
+.pcOnly {
+  @include sp {
+    display: none;
+  }
+}
+
+.spOnly {
+  @include pc {
+    display: none;
+  }
+}
+
 .paragraph {
   margin: 0;
   @include fluid(font-size, 14, 16, 390, 1920);

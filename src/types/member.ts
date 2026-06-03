@@ -12,6 +12,13 @@ export type MemberProject = {
   thumbnail?: string;
 };
 
+// 本文の段落配列。PC と SP で改行（段落区切り）が異なる場合は
+// { pc, sp } 形式で渡すと、ビューポートごとに別の段落構成で出し分ける。
+export type MemberIntro = string[] | { pc: string[]; sp: string[] };
+
+// 経歴本文。改行（\n）が PC と SP で異なる場合は { pc, sp } で出し分ける。
+export type MemberCareer = string | { pc: string; sp: string };
+
 export type Member = {
   slug: string;
   name: string;
@@ -24,12 +31,14 @@ export type Member = {
   hidden?: boolean;
   catchphrase: string;
   description: string;
-  career: string;
+  // string（PC/SP 共通）または { pc, sp }（ビューポート別の改行）
+  career: MemberCareer;
   social?: MemberSocial;
   projects?: MemberProject[];
   // Phase 5: ABOUT/MEMBER 詳細ページ Figma 準拠 拡張フィールド
   roleJp?: string;
   // string[] を渡すとセグメント間に「SPのみ改行」を入れる（PC は 1 行表示）
   quote?: string | string[];
-  introParagraphs?: string[];
+  // string[]（PC/SP 共通）または { pc, sp }（ビューポート別の改行）
+  introParagraphs?: MemberIntro;
 };

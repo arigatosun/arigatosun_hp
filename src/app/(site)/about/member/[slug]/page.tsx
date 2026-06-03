@@ -72,10 +72,15 @@ export default async function MemberDetailPage({ params }: Props) {
   const roleJp = member.roleJp ?? ROLE_JP_DEFAULTS[member.role] ?? '社員';
   // データ未設定でも Figma の標準レイアウト（quote → body → 経歴 → projects）を必ず描画する
   const quote = member.quote ?? PLACEHOLDER_QUOTE;
-  const introParagraphs =
-    member.introParagraphs && member.introParagraphs.length > 0
-      ? member.introParagraphs
-      : [PLACEHOLDER_INTRO_PARAGRAPH];
+  // introParagraphs は string[]（共通）/ { pc, sp }（ビューポート別）/ 未設定 のいずれか
+  const hasIntro =
+    member.introParagraphs != null &&
+    (Array.isArray(member.introParagraphs)
+      ? member.introParagraphs.length > 0
+      : true);
+  const introParagraphs = hasIntro
+    ? member.introParagraphs!
+    : [PLACEHOLDER_INTRO_PARAGRAPH];
   // projects 未設定（undefined）はダミーのプレースホルダーを表示。
   // 実データ反映済みで「掲載なし」を意図する場合は空配列 [] を渡すと欄ごと非表示になる。
   const projects = member.projects ?? PLACEHOLDER_PROJECTS;
