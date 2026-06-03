@@ -114,18 +114,18 @@
   }
 }
 
-// 赤マーカー帯（TOP ページ ServiceSection のメニューと同方式）。
-// Mozaic GEO は文字実体が行ボックス中心より約0.094em下に来るため帯も同じだけ下げる。
-// 非アクティブ＝帯幅0／アクティブ・hover＝右寄せで展開。
+// 赤マーカー帯（TOP ページ NewsSection のカテゴリと同方式・同 display=inline）。
+// TOP ニュースと同じ inline 描画にすることで、背景枠＝フォント全体boxとなり、
+// 帯と文字の位置関係が NEWS と全幅で一致（レスポンシブ追従）。offset は NEWS と同じ 0.094em。
 .category span,
 .categoryActive span {
-  display: inline-block;
+  display: inline;
   background-image: linear-gradient(
     var(--color-primary),
     var(--color-primary)
   );
   background-repeat: no-repeat;
-  background-position: right calc(50% + 0.073em);
+  background-position: right calc(50% + 0.094em);
   background-size: 0 0.85em;
   // hover/active で赤帯を即座に表示（アニメーションなし） — SERVICE/About/Works と統一
 }
@@ -163,7 +163,8 @@
 }
 
 .contactLink {
-  display: inline-block;
+  // inline で描画（NEWS と同じ背景枠＝フォントbox）。赤帯位置を全幅で NEWS に追従。
+  display: inline;
   font-family: var(--font-en);
   font-weight: var(--font-weight-light);
   @include fluid(font-size, 14, 20, 390, 1920);
@@ -177,7 +178,7 @@
     var(--color-primary)
   );
   background-repeat: no-repeat;
-  background-position: right calc(50% + 0.073em);
+  background-position: right calc(50% + 0.094em);
   background-size: 0 0.85em;
 
   &:hover {
