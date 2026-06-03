@@ -44,6 +44,14 @@
   overflow: hidden;
   background: var(--color-white);
 
+  // PC: 本文スクロール中は画像を固定（sticky）。本文（.article 下端）が終わると自然に解除。
+  // top は固定ヘッダー（実測 ~112px）を避けた位置。
+  @include pc {
+    position: sticky;
+    top: 120px;
+    align-self: flex-start; // sticky を効かせるため伸長させない（flex-start を明示）
+  }
+
   @include sp {
     width: 100%;
   }
