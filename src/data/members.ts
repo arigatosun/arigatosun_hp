@@ -278,12 +278,23 @@ const allMembers: Member[] = [
 // public API: hidden を除外した一覧。MemberSection / detail page など外部はこれを使う。
 export const members: Member[] = allMembers.filter((m) => !m.hidden);
 
+// 詳細ページの内容が「記入完了」しているか（= 本文 introParagraphs が入っているか）。
+// 完了したメンバーだけカードをクリックで遷移可能にし、詳細ページも生成する。
+// 未記入のメンバーは一覧には出るがクリック無効・詳細URLは 404。
+export function isMemberDetailReady(member: Member): boolean {
+  const intro = member.introParagraphs;
+  if (!intro) return false;
+  if (Array.isArray(intro)) return intro.length > 0;
+  return intro.pc.length > 0 || intro.sp.length > 0;
+}
+
 export function getMemberBySlug(slug: string): Member | undefined {
-  // hidden member は undefined を返して詳細 URL を 404 にする
-  return members.find((m) => m.slug === slug);
+  // hidden / 未記入(本文なし) のメンバーは undefined を返して詳細 URL を 404 にする
+  const member = members.find((m) => m.slug === slug);
+  return member && isMemberDetailReady(member) ? member : undefined;
 }
 
 export function getAllMemberSlugs(): string[] {
-  // 静的ページ生成対象から hidden を除外
-  return members.map((m) => m.slug);
+  // 静的ページ生成対象は hidden を除外し、かつ記入完了したメンバーのみ
+  return members.filter(isMemberDetailReady).map((m) => m.slug);
 }

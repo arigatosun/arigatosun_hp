@@ -3,7 +3,7 @@
 import { useRef, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { members } from '@/data/members';
+import { members, isMemberDetailReady } from '@/data/members';
 import { useMediaQuery } from '@/lib/useMediaQuery';
 import SectionHeader from '@/components/ui/SectionHeader';
 import styles from './MemberSection.module.scss';
@@ -13,12 +13,12 @@ type MemberSectionProps = {
 };
 
 export default function MemberSection({ variant = 'grid' }: MemberSectionProps) {
-  const cardRefs = useRef<(HTMLAnchorElement | null)[]>([]);
+  const cardRefs = useRef<(HTMLElement | null)[]>([]);
 
   // SP/PC判定（768px以上でマウスインタラクション有効）
   const isPC = useMediaQuery('(min-width: 768px)');
 
-  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLAnchorElement>, index: number) => {
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLElement>, index: number) => {
     const card = cardRefs.current[index];
     if (!card) return;
 
@@ -39,13 +39,13 @@ export default function MemberSection({ variant = 'grid' }: MemberSectionProps) 
     card.style.setProperty('--glow-y', `${glowY}%`);
   }, []);
 
-  const handleMouseEnter = useCallback((_e: React.MouseEvent<HTMLAnchorElement>, index: number) => {
+  const handleMouseEnter = useCallback((_e: React.MouseEvent<HTMLElement>, index: number) => {
     const card = cardRefs.current[index];
     if (!card) return;
     card.classList.add(styles.cardHovered);
   }, []);
 
-  const handleMouseLeave = useCallback((_e: React.MouseEvent<HTMLAnchorElement>, index: number) => {
+  const handleMouseLeave = useCallback((_e: React.MouseEvent<HTMLElement>, index: number) => {
     const card = cardRefs.current[index];
     if (!card) return;
     card.classList.remove(styles.cardHovered);
@@ -56,46 +56,80 @@ export default function MemberSection({ variant = 'grid' }: MemberSectionProps) 
   }, []);
 
   // カード1枚をレンダリングする共通関数
-  const renderCard = (member: typeof members[number], index: number) => (
-    <Link
-      key={`${member.slug}-${index}`}
-      href={`/about/member/${member.slug}`}
-      ref={(el) => { cardRefs.current[index] = el; }}
-      className={`${styles.card} ${variant === 'slider' ? styles.cardSlider : ''}`}
-      onMouseMove={isPC ? (e) => handleMouseMove(e, index) : undefined}
-      onMouseEnter={isPC ? (e) => handleMouseEnter(e, index) : undefined}
-      onMouseLeave={isPC ? (e) => handleMouseLeave(e, index) : undefined}
-    >
-      <div className={styles.cardPhotoWrap}>
-        {member.photo ? (
-          <Image
-            src={member.photo}
-            alt={`${member.name} の写真`}
-            width={231}
-            height={231}
-            className={styles.cardPhoto}
-            sizes="(max-width: 767px) 50vw, (max-width: 1023px) 33vw, 16vw"
-          />
-        ) : (
-          <div className={styles.cardPhotoFallback} />
-        )}
-        {/* カラー版を上に重ねて hover でフェード表示（モノクロ → カラー） */}
-        {member.photoColor && (
-          <Image
-            src={member.photoColor}
-            alt=""
-            aria-hidden="true"
-            width={231}
-            height={231}
-            className={styles.cardPhotoColor}
-            sizes="(max-width: 767px) 50vw, (max-width: 1023px) 33vw, 16vw"
-          />
-        )}
+  const renderCard = (member: typeof members[number], index: number) => {
+    // 記入完了（本文あり）のメンバーだけクリックで遷移可能。未記入はクリック無効。
+    const ready = isMemberDetailReady(member);
+
+    const className = `${styles.card} ${
+      variant === 'slider' ? styles.cardSlider : ''
+    } ${ready ? '' : styles.cardDisabled}`;
+
+    const inner = (
+      <>
+        <div className={styles.cardPhotoWrap}>
+          {member.photo ? (
+            <Image
+              src={member.photo}
+              alt={`${member.name} の写真`}
+              width={231}
+              height={231}
+              className={styles.cardPhoto}
+              sizes="(max-width: 767px) 50vw, (max-width: 1023px) 33vw, 16vw"
+            />
+          ) : (
+            <div className={styles.cardPhotoFallback} />
+          )}
+          {/* カラー版を上に重ねて hover でフェード表示（モノクロ → カラー） */}
+          {member.photoColor && (
+            <Image
+              src={member.photoColor}
+              alt=""
+              aria-hidden="true"
+              width={231}
+              height={231}
+              className={styles.cardPhotoColor}
+              sizes="(max-width: 767px) 50vw, (max-width: 1023px) 33vw, 16vw"
+            />
+          )}
+        </div>
+        <p className={styles.cardRole}>{member.role}</p>
+        <p className={styles.cardName}>{member.name}</p>
+      </>
+    );
+
+    // 記入完了 → Link で遷移可能（ホバー演出あり）
+    if (ready) {
+      return (
+        <Link
+          key={`${member.slug}-${index}`}
+          href={`/about/member/${member.slug}`}
+          ref={(el) => {
+            cardRefs.current[index] = el;
+          }}
+          className={className}
+          onMouseMove={isPC ? (e) => handleMouseMove(e, index) : undefined}
+          onMouseEnter={isPC ? (e) => handleMouseEnter(e, index) : undefined}
+          onMouseLeave={isPC ? (e) => handleMouseLeave(e, index) : undefined}
+        >
+          {inner}
+        </Link>
+      );
+    }
+
+    // 未記入 → 非リンクの div（クリック無効・ホバー演出なし）
+    return (
+      <div
+        key={`${member.slug}-${index}`}
+        ref={(el) => {
+          cardRefs.current[index] = el;
+        }}
+        className={className}
+        aria-disabled="true"
+      >
+        {inner}
       </div>
-      <p className={styles.cardRole}>{member.role}</p>
-      <p className={styles.cardName}>{member.name}</p>
-    </Link>
-  );
+    );
+  };
 
   return (
     <section
