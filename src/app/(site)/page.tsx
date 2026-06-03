@@ -10,7 +10,6 @@ import LogoSlider from '@/components/ui/LogoSlider';
 import MessageSection from '@/components/ui/MessageSection';
 import GlobalCanvasLoader from '@/components/three/GlobalCanvasLoader';
 import HeroResponsiveCharacter from '@/components/three/HeroResponsiveCharacter';
-import DebugRightLine from '@/components/ui/DebugRightLine';
 import { getAllWorks } from '@/data/works';
 
 export default async function Home() {
@@ -163,9 +162,6 @@ export default async function Home() {
 
       {/* ── メッセージセクション ── */}
       <MessageSection />
-
-      {/* デバッグ用ガイド線（?debug=1 のときだけ表示・確認後に削除予定） */}
-      <DebugRightLine />
     </div>
   );
 }
