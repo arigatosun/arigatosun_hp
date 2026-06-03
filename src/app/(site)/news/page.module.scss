@@ -115,8 +115,8 @@
 }
 
 // 赤マーカー帯（TOP ページ NewsSection のカテゴリと同方式・同 display=inline）。
-// TOP ニュースと同じ inline 描画にすることで、背景枠＝フォント全体boxとなり、
-// 帯と文字の位置関係が NEWS と全幅で一致（レスポンシブ追従）。offset は NEWS と同じ 0.094em。
+// inline 描画で背景枠＝フォントboxとなり全幅で位置が揃う。offset 0.106em は全マーカー共通
+// （Mozaic GEO 0.094em下 + バランス補正 0.012em。狭い幅でも中央寄りにする妥協値）。
 .category span,
 .categoryActive span {
   display: inline;
@@ -125,7 +125,7 @@
     var(--color-primary)
   );
   background-repeat: no-repeat;
-  background-position: right calc(50% + 0.094em);
+  background-position: right calc(50% + 0.106em);
   background-size: 0 0.85em;
   // hover/active で赤帯を即座に表示（アニメーションなし） — SERVICE/About/Works と統一
 }
@@ -178,7 +178,7 @@
     var(--color-primary)
   );
   background-repeat: no-repeat;
-  background-position: right calc(50% + 0.094em);
+  background-position: right calc(50% + 0.106em);
   background-size: 0 0.85em;
 
   &:hover {
@@ -304,7 +304,7 @@
     var(--color-white)
   );
   background-repeat: no-repeat;
-  background-position: right calc(50% + 0.094em);
+  background-position: right calc(50% + 0.106em);
   background-size: 100% 0.65em;
 }
 

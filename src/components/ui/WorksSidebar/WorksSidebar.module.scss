@@ -98,8 +98,9 @@
     var(--color-primary)
   );
   background-repeat: no-repeat;
-  // inline 描画なので NEWS と同じ 0.094em で全幅一致（display 差の補正は不要になった）。
-  background-position: right calc(50% + 0.094em);
+  // inline 描画で全マーカー共通。0.106em = Mozaic GEO の文字下寄り(0.094em) + バランス補正(0.012em)。
+  // フォントの px スナップで狭い幅ほど帯が上に来るのを、全幅で中央へ寄せる妥協値（サイト共通）。
+  background-position: right calc(50% + 0.106em);
   background-size: 0 0.85em;
 
   // hover/active で赤帯を即座に表示（アニメーションなし） — SERVICE/NEWS/About と統一
