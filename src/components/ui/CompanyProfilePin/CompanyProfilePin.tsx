@@ -9,9 +9,25 @@ import styles from './CompanyProfilePin.module.scss';
 gsap.registerPlugin(ScrollTrigger);
 
 // ── チューニング用定数（実機で微調整する） ──
-// カードが中央に来た後、解除までに写真を固定し続ける追加スクロール量（「少し溜め」）。
-const HOLD_PX = 140;
+// 会社概要カードが「下から中央までせり上がる」スクロール量。
+const RISE_PX = 760;
+// 中央に来た後、解除までに静止する「溜め」のスクロール量。
+const HOLD_PX = 160;
 
+/**
+ * /about 最下部のスクロール演出。
+ *
+ * 写真（ZEROビル）＋会社概要カードを 1 つのラッパーごと pin で固定（pinSpacing:true）。
+ * 固定中に会社概要カードだけを transform で下から中央へせり上げ、中央で HOLD_PX ぶん
+ * 静止（カチッ）させてから解除し、フッターへ流す。
+ *
+ * - pinSpacing:true なのでスペーサーで高さが確保され、フッターが先に上がる不具合が出ない。
+ * - 固定ラッパー内のカードを transform で動かすため、ネイティブスクロールとのズレ（ブレ）
+ *   が出ず、溜めはカチッと静止する。
+ * - カードの自然位置の中心を写真の中心に合わせておくので、解除時に transform=0＝中央の
+ *   ままで通常フローへ連続し、ジャンプ・隙間が出ない。
+ * - prefers-reduced-motion 時は演出なし（通常スクロール）。
+ */
 export default function CompanyProfilePin() {
   const pinRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
@@ -23,46 +39,52 @@ export default function CompanyProfilePin() {
     const card = cardRef.current;
     if (!pin || !image || !card) return;
 
-    // モーション抑制設定では演出なし（通常スクロールのまま）。
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     const mm = gsap.matchMedia();
-
-    // 全ビューポート対象。'(min-width: 1px)' は常に true（'all' は gsap.matchMedia で
-    // コールバックが走らないことがあるため、確実にマッチするクエリを使う）。
+    // 全ビューポート対象（'all' は gsap.matchMedia でコールバックが走らないことが
+    // あるため、常に true の '(min-width: 1px)' を使う）。
     mm.add('(min-width: 1px)', () => {
-      const overlap =
-        image.getBoundingClientRect().bottom - card.getBoundingClientRect().top;
-      const getRise = () =>
-        Math.max(image.offsetHeight / 2 + card.offsetHeight / 2 - overlap, 0);
+      // カードの自然位置の「中心」を写真の「中心」に合わせる margin を当てる。
+      // → ピン終了時に y=0 でカードが中央に居て、通常フローと連続する（解除でズレない）。
+      const alignCard = () => {
+        card.style.marginTop = '0px';
+        gsap.set(card, { y: 0 });
+        const ir = image.getBoundingClientRect();
+        const cr = card.getBoundingClientRect();
+        const delta = ir.top + ir.height / 2 - (cr.top + cr.height / 2);
+        card.style.marginTop = `${delta}px`;
+      };
+      alignCard();
 
-      // ① 写真ピン: 写真中心が画面中央に来たら、カードの溜め終わりまで固定（＝写真が
-      // 中央で止まる）。pinSpacing:false で写真を固定したまま会社概要が上を流れる。
-      const imagePin = ScrollTrigger.create({
-        trigger: image,
-        start: 'center center',
-        end: () => `+=${getRise() + HOLD_PX}`,
-        pin: image,
-        pinSpacing: false,
-        anticipatePin: 1,
-        invalidateOnRefresh: true,
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: image,
+          // 写真の中心が画面中央に来たら固定開始。
+          start: 'center center',
+          end: `+=${RISE_PX + HOLD_PX}`,
+          pin, // ラッパー（写真＋カード）ごと固定
+          pinSpacing: true,
+          scrub: true,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+          onRefresh: alignCard,
+        },
       });
-
-      // ② カードの溜め: カード中心が画面中央でカード自体を実ピン固定（カチッと静止）。
-      // 写真ピンと同じ pinSpacing:false に揃え、スペーサー干渉によるフッター先行を避ける。
-      const cardPin = ScrollTrigger.create({
-        trigger: card,
-        start: 'center center',
-        end: () => `+=${HOLD_PX}`,
-        pin: card,
-        pinSpacing: false,
-        anticipatePin: 1,
-        invalidateOnRefresh: true,
-      });
+      // せり上がり: 下(+RISE_PX) → 中央(0)
+      tl.fromTo(
+        card,
+        { y: RISE_PX },
+        { y: 0, ease: 'none', duration: RISE_PX }
+      );
+      // 溜め: 中央(0)で静止
+      tl.to(card, { y: 0, duration: HOLD_PX });
 
       return () => {
-        imagePin.kill();
-        cardPin.kill();
+        tl.scrollTrigger?.kill();
+        tl.kill();
+        gsap.set(card, { y: 0 });
+        card.style.marginTop = '';
       };
     });
 
