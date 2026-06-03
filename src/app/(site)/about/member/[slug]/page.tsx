@@ -113,9 +113,11 @@ export default async function MemberDetailPage({ params }: Props) {
             </div>
           )}
 
-          <div className={styles.projectsBlock}>
-            <MemberProjectGrid projects={projects} />
-          </div>
+          {projects.length > 0 && (
+            <div className={styles.projectsBlock}>
+              <MemberProjectGrid projects={projects} />
+            </div>
+          )}
         </div>
       </div>
 
