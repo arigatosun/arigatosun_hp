@@ -58,8 +58,9 @@ export default function WorksSection({ works }: WorksSectionProps) {
       {/* 実績一覧 */}
       <div className={styles.itemsList}>
         {works.slice(0, 3).map((work, index) => (
-          <div
+          <Link
             key={work.id}
+            href={`/works/${work.id}`}
             className={`${styles.item} ${index > 0 ? styles.itemSpaced : ''}`}
           >
             {/* 左側: テキスト情報 */}
@@ -118,13 +119,13 @@ export default function WorksSection({ works }: WorksSectionProps) {
                   height={work.imageHeight}
                   className={styles.workImage}
                 />
-                {/* VIEW MORE > ボタン */}
-                <Link href="/works" className={styles.viewMore}>
+                {/* VIEW MORE（アイテム全体が詳細リンクなので、入れ子<a>回避で span 表示のみ） */}
+                <span className={styles.viewMore}>
                   <span className={styles.viewMoreText}>VIEW MORE &gt;</span>
-                </Link>
+                </span>
               </div>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
 
