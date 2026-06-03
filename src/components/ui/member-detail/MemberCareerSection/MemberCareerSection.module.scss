@@ -13,10 +13,11 @@
   @include fluid(letter-spacing, 1.04, 2.08, 390, 1920);
 
   @include sp {
-    @include fluid(margin-bottom, 8, 16, 390, 1200);
+    // Figma SP(390) 実測: 14 / lh24 / ls1.82 / 経歴↓本文 12
+    @include fluid(margin-bottom, 12, 16, 390, 1200);
     @include fluid(font-size, 14, 16, 390, 1200);
-    @include fluid(line-height, 22, 32, 390, 1200);
-    @include fluid(letter-spacing, 1.04, 2.08, 390, 1200);
+    @include fluid(line-height, 24, 32, 390, 1200);
+    @include fluid(letter-spacing, 1.82, 2.08, 390, 1200);
   }
 }
 
@@ -32,8 +33,9 @@
   @include fluid(letter-spacing, 1.92, 3.84, 390, 1920);
 
   @include sp {
+    // Figma SP(390) 実測: 14 / lh30 / ls1.12
     @include fluid(font-size, 14, 16, 390, 1200);
-    @include fluid(line-height, 22, 32, 390, 1200);
-    @include fluid(letter-spacing, 1.92, 3.84, 390, 1200);
+    @include fluid(line-height, 30, 32, 390, 1200);
+    @include fluid(letter-spacing, 1.12, 3.84, 390, 1200);
   }
 }
