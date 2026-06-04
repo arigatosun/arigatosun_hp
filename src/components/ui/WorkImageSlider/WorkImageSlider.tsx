@@ -7,11 +7,14 @@ import styles from './WorkImageSlider.module.scss';
 type WorkImageSliderProps = {
   images: string[];
   alt: string;
+  /** スライダー枠のアスペクト比（既定はアーカイブ用 '1520 / 480'）。縦長スライダーで上書き。 */
+  aspectRatio?: string;
 };
 
 export default function WorkImageSlider({
   images,
   alt,
+  aspectRatio,
 }: WorkImageSliderProps) {
   const [index, setIndex] = useState(0);
   const count = images.length;
@@ -21,7 +24,10 @@ export default function WorkImageSlider({
 
   return (
     <div className={styles.band}>
-      <div className={styles.frame}>
+      <div
+        className={styles.frame}
+        style={aspectRatio ? { aspectRatio } : undefined}
+      >
         <Image
           src={images[index]}
           alt={alt}

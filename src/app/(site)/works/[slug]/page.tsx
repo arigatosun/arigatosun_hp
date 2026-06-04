@@ -142,6 +142,8 @@ export default async function WorkDetailPage({ params }: PageParams) {
               spH={block.spH}
               spFullBleed={block.spFullBleed}
               spCaption={block.spCaption}
+              spSlider={block.spSlider}
+              spSliderAspect={block.spSliderAspect}
             />
           );
         } else if (block.type === 'caption') {

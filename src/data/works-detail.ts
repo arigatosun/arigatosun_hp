@@ -777,7 +777,7 @@ const MENTE_DETAIL: WorkDetailContent = {
         '管理画面では、公開後の運用や改善も見据え、美容師側・運営側が情報を管理しやすい設計を目指しました。',
       ],
     },
-    // アプリ画面。Figma Group 1288 / arigatosun_web_works-08 (1520×824)
+    // アプリ画面。PC は3画面まとめ (1520×824)、SP は3枚を ‹ › スライダーで切替
     {
       type: 'mockupCard',
       gap: 60,
@@ -785,6 +785,12 @@ const MENTE_DETAIL: WorkDetailContent = {
       w: 1520,
       h: 824,
       spFullBleed: true,
+      spSlider: [
+        `${MENTE}/app-sp-1-detail.png`,
+        `${MENTE}/app-sp-2-filter.png`,
+        `${MENTE}/app-sp-3-time.png`,
+      ],
+      spSliderAspect: '620 / 1140',
     },
     {
       type: 'textSection',
