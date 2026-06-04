@@ -18,6 +18,20 @@ const WORKS_DATA: readonly WorkItem[] = [
     imageHeight: 518,
   },
   {
+    id: 'mente',
+    client: 'Men’te',
+    title:
+      '諦めきれなかった構想が、サービスとして動き出す。| 構想整理から要件定義・開発・改善まで、一気通貫の立ち上げ支援',
+    details: [
+      { label: 'D / B：', value: '構想整理・要件定義・UI/UX・アプリ開発・ロゴ/VI' },
+    ],
+    term: '2025.12 ~ 2026.4',
+    // 一覧カード専用画像（920×520）。カード規格ちょうどなのでトリミング不要。
+    image: '/images/works/mente/card.png',
+    imageWidth: 920,
+    imageHeight: 520,
+  },
+  {
     id: 'logo-archive',
     client: 'VARIOUS CLIENTS',
     title: '独自の核を構築する。| ロゴ・VIのプロジェクトアーカイブ。',
@@ -38,20 +52,6 @@ const WORKS_DATA: readonly WorkItem[] = [
     ],
     term: 'NEST BIWAKO : 2024.7 ~ 2024.9 / NEST AMANO HASHIDATE : 2026.2',
     image: '/images/sections/works/nest.png',
-    imageWidth: 920,
-    imageHeight: 520,
-  },
-  {
-    id: 'mente',
-    client: 'Men’te',
-    title:
-      '諦めきれなかった構想が、サービスとして動き出す。| 構想整理から要件定義・開発・改善まで、一気通貫の立ち上げ支援',
-    details: [
-      { label: 'D / B：', value: '構想整理・要件定義・UI/UX・アプリ開発・ロゴ/VI' },
-    ],
-    term: '2025.12 ~ 2026.4',
-    // 一覧カード専用画像（920×520）。カード規格ちょうどなのでトリミング不要。
-    image: '/images/works/mente/card.png',
     imageWidth: 920,
     imageHeight: 520,
   },
