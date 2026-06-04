@@ -38,7 +38,8 @@
   color: var(--color-text-secondary);
   font-family: var(--font-en);
   font-weight: var(--font-weight-light);
-  @include fluid(font-size, 13, 17);
+  // 1512px で大きく感じるため、PC中間域(1512)→Figma max(1920)で縮小（1920は維持）
+  @include fluid(font-size, 14.5, 17, 1512, 1920);
   @include fluid(line-height, 24, 44);
   @include fluid(letter-spacing, 1.8, 3.4);
 
@@ -64,7 +65,8 @@
 .clientName {
   font-family: 'Noto Sans JP', var(--font-jp);
   font-weight: var(--font-weight-regular);
-  @include fluid(font-size, 12, 15);
+  // 1512px で大きく感じるため、PC中間域(1512)→Figma max(1920)で縮小（1920は維持）
+  @include fluid(font-size, 13.5, 15, 1512, 1920);
   @include fluid(letter-spacing, 1.5, 2.6);
 
   // Figma SP は ・CLIENT ラベル含め一律 16px / letter-spacing 2.08
@@ -81,7 +83,8 @@
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
   font-weight: var(--font-weight-regular);
-  @include fluid(font-size, 14, 18);
+  // 1512px で大きく感じるため、PC中間域(1512)→Figma max(1920)で縮小（1920は維持）
+  @include fluid(font-size, 15.5, 18, 1512, 1920);
   @include fluid(line-height, 28, 36);
   @include fluid(letter-spacing, 1.2, 2.34);
 
@@ -123,7 +126,8 @@
   color: var(--color-white);
   font-family: var(--font-en);
   font-weight: var(--font-weight-light);
-  @include fluid(font-size, 14, 24);
+  // 1512px で大きく感じるため、PC中間域(1512)→Figma max(1920)で縮小（1920は維持）
+  @include fluid(font-size, 18.4, 24, 1512, 1920);
   // 赤帯を VIEW MORE のテキストにぴったり沿わせる（Figma node 1601:118774 帯幅187 ≒ テキスト188）。
   // line-height・padding・letter-spacing はフォントサイズに追従させたいので unitless / em 指定。
   // 縦: 大文字基準で redAbove:大文字:redBelow ≒ 6:39:3 / 横: 左右 padding なし。
