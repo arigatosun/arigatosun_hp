@@ -750,13 +750,16 @@ const MENTE_DETAIL: WorkDetailContent = {
       level: 'main',
       heading: '■ロゴデザイン',
     },
-    // ロゴデザイン。Figma arigatosun_web_works-06 (1520×651) + 画像内右下オーバーレイ
+    // ロゴデザイン。PC は横長 (1520×651)、SP は縦長専用画像 (780×968 = 390×484@2x) に切替
     {
       type: 'mockupCard',
       gap: 60,
       src: `${MENTE}/logo-design.png`,
       w: 1520,
       h: 651,
+      spSrc: `${MENTE}/logo-design-sp.png`,
+      spW: 390,
+      spH: 484,
       spFullBleed: true,
       spCaption: '＜ロゴデザイン(一部抜粋)＞',
     },
