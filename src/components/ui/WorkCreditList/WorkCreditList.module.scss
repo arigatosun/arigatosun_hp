@@ -33,14 +33,20 @@
   @include fluid(margin-top, 4, 8);
 }
 
-// 内容行 — 英字は Mozaic GEO、日本語は Noto Sans JP（font-primary）。
-// 細見え解消のためウェイトは Light(300) → Regular(400) に統一（サイズ・字間は据え置き）。
+// 内容行のベース = 英語: Mozaic GEO / Light(300)（Figma 3545:112083 準拠）。
 .line {
   margin: 0;
   color: var(--color-text-secondary);
-  font-family: var(--font-primary);
-  font-weight: var(--font-weight-regular);
+  font-family: var(--font-en);
+  font-weight: var(--font-weight-light);
   @include fluid(font-size, 13, 17);
   @include fluid(line-height, 30, 44);
   @include fluid(letter-spacing, 1.7, 3.4);
+}
+
+// 日本語のみ: Noto Sans JP。太さは現状維持(Regular)、サイズだけ少し小さく（大きく見える対策）。
+.line .jp {
+  font-family: 'Noto Sans JP', var(--font-jp);
+  font-weight: var(--font-weight-regular);
+  font-size: 0.9em;
 }

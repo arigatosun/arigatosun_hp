@@ -84,7 +84,9 @@ export default function WorkDetailHero({ hero }: WorkDetailHeroProps) {
   return (
     <>
       <div
-        className={`${styles.hero} ${styles.heroPc}`}
+        className={`${styles.hero} ${styles.heroPc} ${
+          hero.flatPhoto ? styles.heroFlat : ''
+        }`}
         style={{ aspectRatio: `${pcW} / ${pcH}` }}
       >
         {band !== 'none' && <div className={styles.band} aria-hidden="true" />}
@@ -95,7 +97,7 @@ export default function WorkDetailHero({ hero }: WorkDetailHeroProps) {
       <div
         className={`${styles.hero} ${styles.heroSp} ${
           hero.spFlatPhoto ? styles.heroSpFlat : ''
-        }`}
+        } ${hero.flatPhoto ? styles.heroFlat : ''}`}
         style={{
           aspectRatio: `${SP_VIEWPORT_W} / ${spH}`,
           marginTop: hero.spOffsetTop ? `${hero.spOffsetTop}px` : undefined,

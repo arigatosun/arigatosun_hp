@@ -105,15 +105,19 @@ export default function WorkMockupCard({
     <div
       className={`${styles.wrap} ${spFullBleed ? styles.wrapFullBleed : ''}`}
     >
-      {/* PC: 既存の画像カード */}
+      {/* PC: 画像カード。src 未指定時はサイズ確保のプレースホルダー（画像は後追い） */}
       <div className={styles.cardPc} style={{ aspectRatio: `${w} / ${h}` }}>
-        <Image
-          src={src}
-          alt=""
-          fill
-          sizes="(max-width: 1023px) 92vw, 1520px"
-          className={styles.image}
-        />
+        {src ? (
+          <Image
+            src={src}
+            alt=""
+            fill
+            sizes="(max-width: 1023px) 92vw, 1520px"
+            className={styles.image}
+          />
+        ) : (
+          <div className={styles.placeholder} aria-hidden="true" />
+        )}
         {spCaption && (
           <span className={styles.spCaption}>{spCaption}</span>
         )}
@@ -129,13 +133,17 @@ export default function WorkMockupCard({
           className={styles.cardSpDefault}
           style={{ aspectRatio: `${spRatioW} / ${spRatioH}` }}
         >
-          <Image
-            src={spImageSrc}
-            alt=""
-            fill
-            sizes="100vw"
-            className={styles.image}
-          />
+          {spImageSrc ? (
+            <Image
+              src={spImageSrc}
+              alt=""
+              fill
+              sizes="100vw"
+              className={styles.image}
+            />
+          ) : (
+            <div className={styles.placeholder} aria-hidden="true" />
+          )}
           {spCaption && (
             <span className={styles.spCaption}>{spCaption}</span>
           )}

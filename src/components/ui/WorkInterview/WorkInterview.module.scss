@@ -1,0 +1,132 @@
+// Figma フレーム 1920px 準拠
+@use '@/styles/fluid' as * with (
+  $fluid-max-viewport: 1920
+);
+@use '@/styles/breakpoints' as *;
+
+// クライアントの声: 左に写真 / 右に見出し + Q&A。テキスト左端は Figma SP x=40 / PC x=200。
+.interview {
+  @include fluid(padding-left, 40, 200);
+  @include fluid(padding-right, 40, 200);
+}
+
+.row {
+  display: flex;
+  align-items: flex-start;
+  // Figma: 写真右端 880 → 右カラム左端 960 = 80px
+  @include fluid(gap, 32, 80);
+
+  @include sp {
+    flex-direction: column;
+    // 写真 → 見出しの縦積み余白
+    @include fluid(gap, 24, 40);
+  }
+}
+
+// 左カラム: 見出し + 写真。1520 幅基準で 680/1520 ≒ 44.7%（右は flex:1）。
+.left {
+  flex: 0 0 44.7%;
+
+  // PC: 右の Q&A を読み切るまで「見出し + 写真」をまとめて上部に固定（sticky）。
+  // 親 .row の末尾で自然解放。top はヘッダー分を確保。SP は縦積みのため無効。
+  @include pc {
+    position: sticky;
+    align-self: flex-start;
+    @include fluid(top, 100, 160);
+  }
+
+  @include sp {
+    flex: none;
+    width: 100%;
+  }
+}
+
+// セクション見出し（■クライアントの声）。WorkTextSection main 見出しと同体裁。
+.title {
+  margin: 0;
+  // 見出し → 写真 (Figma 実測 80px)
+  @include fluid(margin-bottom, 33, 80);
+  color: var(--color-black);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  font-weight: var(--font-weight-regular);
+  @include fluid(font-size, 18, 24);
+  @include fluid(line-height, 36, 56);
+  @include fluid(letter-spacing, 4, 6.96);
+}
+
+// 写真 (Figma 680×419)。画像は後日差し替え、未指定はプレースホルダー。
+.photo {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.photoImg {
+  object-fit: cover;
+}
+
+.photoPlaceholder {
+  position: absolute;
+  inset: 0;
+  background: var(--color-placeholder);
+}
+
+.column {
+  flex: 1 1 0;
+  min-width: 0;
+
+  // PC: 左の (見出し line-height + 見出し→写真 gap) 分だけ下げ、右見出しを写真上端に揃える。
+  // = fluid(36,56) + fluid(33,80) = fluid(69,136)
+  @include pc {
+    @include fluid(margin-top, 69, 136);
+  }
+}
+
+// 見出し (Figma: 24px / lh 48 / ls 6.96 / Noto Sans JP)
+.heading {
+  margin: 0;
+  color: var(--color-black);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  font-weight: var(--font-weight-regular);
+  @include fluid(font-size, 16, 24);
+  @include fluid(line-height, 32, 48);
+  letter-spacing: 0.29em; // 6.96 / 24
+
+  @include sp {
+    // SP は写真の下。見出し上の余白は row の gap で確保するため margin なし
+  }
+}
+
+.qaList {
+  // 見出し下端 → Q 1 問目 (Figma 実測 40px)
+  @include fluid(margin-top, 24, 40);
+  margin-bottom: 0;
+}
+
+// 質問 (Figma: 18px / lh 36 / ls 3.6)
+.question {
+  color: var(--color-black);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  font-weight: var(--font-weight-regular);
+  @include fluid(font-size, 14, 18);
+  @include fluid(line-height, 28, 36);
+  letter-spacing: 0.2em; // 3.6 / 18
+
+  // 2 問目以降は前の回答との間に空行 2 行分（Figma 実測 72px = 36×2）
+  &:not(:first-child) {
+    @include fluid(margin-top, 48, 72);
+  }
+}
+
+// 回答 (Figma: 16px / lh 36 / ls 2.08)
+.answer {
+  margin: 0;
+  // 質問 → 回答は空行 1 行分（Figma 実測 36px）
+  @include fluid(margin-top, 24, 36);
+  color: var(--color-black);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  font-weight: var(--font-weight-regular);
+  @include fluid(font-size, 14, 16);
+  @include fluid(line-height, 28, 36);
+  letter-spacing: 0.13em; // 2.08 / 16
+}

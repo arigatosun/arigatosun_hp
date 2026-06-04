@@ -85,6 +85,13 @@
   object-fit: cover;
 }
 
+// 画像が後追いの間、寸法だけ確保するプレースホルダー
+.placeholder {
+  position: absolute;
+  inset: 0;
+  background: var(--color-placeholder);
+}
+
 // ── SP variant 用カード（プレースホルダー描画）──────────────
 .cardSp {
   display: none;

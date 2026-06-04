@@ -14,6 +14,7 @@ import WorkMockupCard from '@/components/ui/WorkMockupCard';
 import WorkCaption from '@/components/ui/WorkCaption';
 import WorkDivider from '@/components/ui/WorkDivider';
 import WorkCreditList from '@/components/ui/WorkCreditList';
+import WorkInterview from '@/components/ui/WorkInterview';
 import WorkRelatedSection from '@/components/ui/WorkRelatedSection';
 import WorkArchive from '@/components/ui/WorkArchive';
 import styles from './page.module.scss';
@@ -148,6 +149,15 @@ export default async function WorkDetailPage({ params }: PageParams) {
           node = <WorkDivider />;
         } else if (block.type === 'creditList') {
           node = <WorkCreditList groups={block.groups} />;
+        } else if (block.type === 'interview') {
+          node = (
+            <WorkInterview
+              title={block.title}
+              photo={block.photo}
+              heading={block.heading}
+              qa={block.qa}
+            />
+          );
         } else if (block.type === 'relatedWorks') {
           node = <WorkRelatedSection works={relatedWorks} />;
         }
