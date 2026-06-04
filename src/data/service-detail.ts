@@ -109,18 +109,18 @@ const DESIGN_BRANDING: ServiceDetailData = {
       bodyTracking: 4,
       visual: {
         kind: 'image',
-        // PC は PC 用レイアウト版 (Group 1290 / 666×651)、SP は従来の SP 版 (351×351) を出し分け。
+        // PC は PC 用レイアウト版 (Group 1297 / 652×651)、SP は従来の SP 版 (351×351) を出し分け。
         // バブル配置が PC/SP で別組み（横長 vs 正方）のため、マスクも PC/SP で別物を使う。
         src: '/images/sections/service/detail/concept-flow-pc.svg',
         alt: '制作フローを表すネットワーク図。デザイン・ブランディングを中心に各スキルが連携する様子',
-        width: 666,
+        width: 652,
         height: 651,
         spSrc: '/images/sections/service/detail/concept-flow.svg',
         spWidth: 351,
         spHeight: 351,
-        // PC マスク: 新 PC 画像のバブル群から起こした塗りシルエット (666×651)
+        // PC マスク: PC 画像 (Group 1297) と同寸ペアの正式マスク (Group 1296 / 652×651)
         mask: {
-          src: '/images/sections/service/detail/concept-flow-pc-mask.png',
+          src: '/images/sections/service/detail/concept-flow-pc-mask.svg',
           size: '100% 100%',
           position: '50% 50%',
         },
