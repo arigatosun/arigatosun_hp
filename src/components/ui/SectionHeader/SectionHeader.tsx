@@ -55,7 +55,17 @@ export default function SectionHeader({
         />
       )}
       <div className={styles.headerText}>
-        <Tag className={styles.headerTitle}>{title}</Tag>
+        <Tag
+          className={[
+            styles.headerTitle,
+            // 複数行タイトル(\n 含む。例: CREATOR FIRST)は Figma leading に合わせ行間を広げる
+            title.includes('\n') ? styles.headerTitleMultiline : '',
+          ]
+            .filter(Boolean)
+            .join(' ')}
+        >
+          {title}
+        </Tag>
         {subtitle && <p className={styles.headerSub}>{subtitle}</p>}
       </div>
     </div>
