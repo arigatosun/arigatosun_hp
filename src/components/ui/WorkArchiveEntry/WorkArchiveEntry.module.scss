@@ -95,6 +95,13 @@
   @include fluid(font-size, 14, 16);
   @include fluid(line-height, 28, 32);
   @include fluid(letter-spacing, 2.52, 1.92);
+
+  // PC中間域(1512)で各 1 文を 1 行に収めるため 1512→Figma max(1920)で縮小。
+  // SP(≤1023) は上の原状 fluid のまま維持し、PC のみ上書きする。
+  @include pc {
+    @include fluid(font-size, 14.7, 16, 1512, 1920);
+    @include fluid(letter-spacing, 1.7, 1.92, 1512, 1920);
+  }
 }
 
 // <CREDIT> 4 行ブロック（Mozaic GEO Light・グレー）
