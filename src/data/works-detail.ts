@@ -619,8 +619,10 @@ const NEST_DETAIL: WorkDetailContent = {
 };
 
 // ── パターンA: Men’te アプリ開発支援 詳細ページ ──
-// Figma 3545:103333 (1920×14393)。画像は後日差し替えのため src は空文字
-// （= 各カードは寸法を保ったグレープレースホルダーで描画）。配置先 public/images/works/mente/。
+// Figma 3545:103333 (1920×14393)。画像は public/images/works/mente/ に順次配置。
+// 未受領の枠は src を空文字にして寸法を保ったグレープレースホルダーで描画する。
+const MENTE = '/images/works/mente';
+
 const MENTE_DETAIL: WorkDetailContent = {
   slug: 'work-4',
   pattern: 'detail',
@@ -629,7 +631,7 @@ const MENTE_DETAIL: WorkDetailContent = {
     width: 1920,
     height: 820,
     band: 'none',
-    photos: [{ x: 0, y: 0, width: 1920, height: 820 }],
+    photos: [{ src: `${MENTE}/hero.png`, x: 0, y: 0, width: 1920, height: 820 }],
     // SP: 専用デザイン未提供のため暫定プレースホルダー（画像/レイアウトは後日）
     spOffsetTop: 42.5,
     spWidth: 390,
@@ -685,8 +687,8 @@ const MENTE_DETAIL: WorkDetailContent = {
         '開発中は、仕様の確認や進捗共有を細かく実施。今どこを作っているのか、次に何を決める必要があるのかを見える状態にしながら進行しました。',
       ],
     },
-    // 図版（before/after 等）。Figma arigatosun_web_works-04 (1520×823)
-    { type: 'mockupCard', gap: 60, src: '', w: 1520, h: 823 },
+    // 図版「ゼロベースから使われるアプリへ具現化」。Figma arigatosun_web_works-04 (1520×823)
+    { type: 'mockupCard', gap: 60, src: `${MENTE}/diagram-flow.png`, w: 1520, h: 823 },
     {
       type: 'textSection',
       gap: 240,
@@ -694,10 +696,10 @@ const MENTE_DETAIL: WorkDetailContent = {
       level: 'main',
       heading: '■サービスとして動かすための、画面・機能・管理導線を実装。',
     },
-    // Figma arigatosun_web_works-03 (1520×824)
-    { type: 'mockupCard', gap: 60, src: '', w: 1520, h: 824 },
-    // Figma arigatosun_web_works-02 (1520×773)
-    { type: 'mockupCard', gap: 60, src: '', w: 1520, h: 773 },
+    // 図版「双方に迷わず伝わる体験を設計」。Figma arigatosun_web_works-03 (1520×824)
+    { type: 'mockupCard', gap: 60, src: `${MENTE}/diagram-experience.png`, w: 1520, h: 824 },
+    // 図版「選びやすい×選ばれやすいを予約体験の中心でつなぐ」。Figma arigatosun_web_works-02 (1520×773)
+    { type: 'mockupCard', gap: 60, src: `${MENTE}/diagram-booking.png`, w: 1520, h: 773 },
     {
       type: 'paragraph',
       gap: 80,
@@ -733,11 +735,11 @@ const MENTE_DETAIL: WorkDetailContent = {
       level: 'main',
       heading: '■ロゴデザイン',
     },
-    // Figma arigatosun_web_works-06 (1520×651) + 画像内右下オーバーレイ
+    // ロゴデザイン。Figma arigatosun_web_works-06 (1520×651) + 画像内右下オーバーレイ
     {
       type: 'mockupCard',
       gap: 60,
-      src: '',
+      src: `${MENTE}/logo-design.png`,
       w: 1520,
       h: 651,
       spCaption: '＜ロゴデザイン(一部抜粋)＞',
@@ -756,8 +758,8 @@ const MENTE_DETAIL: WorkDetailContent = {
         '管理画面では、公開後の運用や改善も見据え、美容師側・運営側が情報を管理しやすい設計を目指しました。',
       ],
     },
-    // Figma Group 1288 / arigatosun_web_works-08 (1520×824) アプリ画面
-    { type: 'mockupCard', gap: 60, src: '', w: 1520, h: 824 },
+    // アプリ画面。Figma Group 1288 / arigatosun_web_works-08 (1520×824)
+    { type: 'mockupCard', gap: 60, src: `${MENTE}/app-screens.png`, w: 1520, h: 824 },
     {
       type: 'textSection',
       gap: 80,
@@ -784,8 +786,8 @@ const MENTE_DETAIL: WorkDetailContent = {
     {
       type: 'interview',
       gap: 80,
-      // Figma cv_1 (680×419)。写真は後日差し替え
-      photo: { w: 680, h: 419 },
+      // Figma cv_1 (680×419)
+      photo: { w: 680, h: 419, src: `${MENTE}/interview.png` },
       heading: ['開発だけをする会社ではなく、', '一緒に整理しながら共に進んでくれる会社。'],
       // a は Figma 3031:44841 の明示改行（<p>区切り）に合わせたセグメント配列
       qa: [
