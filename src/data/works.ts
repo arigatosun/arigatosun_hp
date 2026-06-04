@@ -6,7 +6,7 @@ import type { WorkItem } from '@/types/work';
 // 静的データ（暫定ソース。WordPress 連携時に置き換え）
 const WORKS_DATA: readonly WorkItem[] = [
   {
-    id: 'work-1',
+    id: 'choritz',
     client: '頂立輸入代行会社',
     title: '数値では測れない想いや姿勢を、ブランドの核心へ宿す。| 社名からVIまで、一気通貫のブランド構築',
     details: [
@@ -18,7 +18,7 @@ const WORKS_DATA: readonly WorkItem[] = [
     imageHeight: 518,
   },
   {
-    id: 'work-2',
+    id: 'logo-archive',
     client: 'VARIOUS CLIENTS',
     title: '独自の核を構築する。| ロゴ・VIのプロジェクトアーカイブ。',
     details: [
@@ -30,7 +30,7 @@ const WORKS_DATA: readonly WorkItem[] = [
     imageHeight: 520,
   },
   {
-    id: 'work-3',
+    id: 'nest',
     client: 'NEST',
     title: 'デジタルでは生まれない温もりと偶然性を、シンボルとして可視化する。| 拡張を見据えたロゴ・VI設計',
     details: [
@@ -42,7 +42,7 @@ const WORKS_DATA: readonly WorkItem[] = [
     imageHeight: 520,
   },
   {
-    id: 'work-4',
+    id: 'mente',
     client: 'Men’te',
     title:
       '諦めきれなかった構想が、サービスとして動き出す。| 構想整理から要件定義・開発・改善まで、一気通貫の立ち上げ支援',

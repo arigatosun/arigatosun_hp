@@ -12,7 +12,7 @@ const CHORITZ = '/images/works/choritz';
 //   (hero-sp-collage.png 780×1080 = 390×540 @2x) を 1 枚で全面描画。
 //   ロゴと帯がすでに画像に含まれているため spLogo:false、border-radius 無効化。
 const CHORITZ_DETAIL: WorkDetailContent = {
-  slug: 'work-1',
+  slug: 'choritz',
   pattern: 'detail',
   hero: {
     spWidth: 390,
@@ -313,7 +313,7 @@ const CHORITZ_DETAIL: WorkDetailContent = {
 const ARCHIVE = '/images/works/archive';
 
 const IGC_ARCHIVE: WorkDetailContent = {
-  slug: 'work-2',
+  slug: 'logo-archive',
   pattern: 'archive',
   lead: {
     heading: '独自の核を構築する、ロゴ・VIのプロジェクトアーカイブ。',
@@ -460,7 +460,7 @@ const IGC_ARCHIVE: WorkDetailContent = {
 const NEST = '/images/works/nest';
 
 const NEST_DETAIL: WorkDetailContent = {
-  slug: 'work-3',
+  slug: 'nest',
   pattern: 'detail',
   hero: {
     // PC: Figma フレーム 2497:85745 実測 1920×820 (既存 1 枚画像コラージュ)
@@ -617,7 +617,7 @@ const NEST_DETAIL: WorkDetailContent = {
 const MENTE = '/images/works/mente';
 
 const MENTE_DETAIL: WorkDetailContent = {
-  slug: 'work-4',
+  slug: 'mente',
   pattern: 'detail',
   hero: {
     // PC: Figma 1920×820（ロゴ + スマホモックアップ。画像後日）
@@ -875,15 +875,15 @@ const MENTE_DETAIL: WorkDetailContent = {
 
 /**
  * slug から詳細ページデータを取得する。
- * work-2 はパターンB（アーカイブ）、work-3 は NEST 詳細、work-4 は Men’te 詳細、
+ * logo-archive はパターンB（アーカイブ）、nest は NEST 詳細、mente は Men’te 詳細、
  * それ以外は CHORITZ 詳細を返す。
  * 「順番は後で変わる」前提のため、この分岐の差し替えだけで割当を変更できる。
  */
 export async function getWorkDetailBySlug(
   slug: string,
 ): Promise<WorkDetailContent | undefined> {
-  if (slug === 'work-2') return { ...IGC_ARCHIVE, slug };
-  if (slug === 'work-3') return { ...NEST_DETAIL, slug };
-  if (slug === 'work-4') return { ...MENTE_DETAIL, slug };
+  if (slug === 'logo-archive') return { ...IGC_ARCHIVE, slug };
+  if (slug === 'nest') return { ...NEST_DETAIL, slug };
+  if (slug === 'mente') return { ...MENTE_DETAIL, slug };
   return { ...CHORITZ_DETAIL, slug };
 }

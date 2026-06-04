@@ -56,6 +56,11 @@ const nextConfig: NextConfig = {
       { source: '/top', destination: '/', permanent: true },
       // 旧インタビュー（/testimonials）は新サイトに該当ページが無いためトップへ
       { source: '/testimonials', destination: '/', permanent: true },
+      // Works スラッグを連番→内容ベースに変更。旧URL（公開済み）を新URLへ恒久リダイレクト
+      { source: '/works/work-1', destination: '/works/choritz', permanent: true },
+      { source: '/works/work-2', destination: '/works/logo-archive', permanent: true },
+      { source: '/works/work-3', destination: '/works/nest', permanent: true },
+      { source: '/works/work-4', destination: '/works/mente', permanent: true },
     ];
   },
 };
