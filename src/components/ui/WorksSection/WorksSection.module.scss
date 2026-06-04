@@ -143,6 +143,12 @@
   @include fluid(line-height, 22, 40, 390, 1920); // Figma: 40px
   @include fluid(letter-spacing, 1.6, 3.2, 390, 1920); // Figma: 3.2px
 
+  // PC: タイトル枠を Figma の 560px に合わせて折り返す（flex:1 だと約650pxで広く、
+  // 改行位置がずれるため）。フォントと同比でスケールさせ各行の文字数を Figma と一致させる。
+  @include pc {
+    @include fluid(max-width, 326, 560, 390, 1920);
+  }
+
   @include sp {
     // Figma SP: 16px / line-height 28 / letter-spacing 2.56
     @include fluid(margin-top, 16, 40);
