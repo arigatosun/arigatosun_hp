@@ -59,6 +59,14 @@
   position: relative;
   width: 100%;
   overflow: hidden;
+
+  // SP: セクション左右 padding を突き破って画面幅いっぱい（full-bleed）に表示。
+  // body は overflow-x:hidden のため 100vw でも横スクロールは出ない。
+  @include sp {
+    width: 100vw;
+    margin-left: 50%;
+    transform: translateX(-50%);
+  }
 }
 
 .photoImg {
