@@ -95,13 +95,15 @@
 }
 
 // ── variant: phases (ECOSYSTEM PROCESS) ──
-// Figma Group 1146: text 700 + gap 195 + visual 585 = 1480
-// STANDARD/CREATOR_FIRST (visual 666-667) と違って visual が狭く gap が広い
+// PHASE 図は本文2行を保ったまま少し大きく見せたいので、概念図と同じ列幅(43.88%)を使う。
+// zoom 基準幅(585px)は維持し、列が広がる分だけ zoom 縮小率が上がって図全体が拡大する。
+// 列が広がるぶん gap は default(32-142) に詰めて行が溢れないようにする。
 .variantPhases {
-  @include fluid(gap, 48, 195);
+  @include fluid(gap, 32, 142);
 
   .visual {
-    width: 38.49%; // 585/1520
+    width: 43.88%;
+    // zoom 基準 585px を超えないようキャップ（1920 で等倍・それ未満は縮小）。
     max-width: 585px;
     // PHASE 列を 1920 設計幅(585px)で組み実列幅へ zoom 縮小する基準コンテナ。
     // ServicePhaseSteps .root が 100cqw(= この列幅) を参照して zoom を算出する。
