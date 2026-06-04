@@ -41,17 +41,21 @@ const WORKS_DATA: readonly WorkItem[] = [
     imageWidth: 920,
     imageHeight: 520,
   },
-  // work-4 以降は今後の実装枠（プレースホルダ）。実データができ次第コメントを外す。
-  // {
-  //   id: 'work-4',
-  //   client: '全日本漬物協同組合連合会',
-  //   title: '...',
-  //   details: [{ label: 'D / B：', value: 'キャラクターデザイン、ポータルサイト設計・デザイン' }],
-  //   term: '2026.3 - 2026.4（ポータルサイトのみでの算出）',
-  //   image: '/images/sections/works/choritz.png',
-  //   imageWidth: 920,
-  //   imageHeight: 518,
-  // },
+  {
+    id: 'work-4',
+    client: 'Men’te',
+    title:
+      '諦めきれなかった構想が、サービスとして動き出す。| 構想整理から要件定義・開発・改善まで、一気通貫の立ち上げ支援',
+    details: [
+      { label: 'D / B：', value: '構想整理・要件定義・UI/UX・アプリ開発・ロゴ/VI' },
+    ],
+    term: '2025.12 ~ 2026.4',
+    // 画像は後日差し替え。空文字の間は WorksCard がプレースホルダー背景を表示。
+    image: '',
+    imageWidth: 920,
+    imageHeight: 518,
+  },
+  // work-5 以降は今後の実装枠（プレースホルダ）。実データができ次第コメントを外す。
   /*
   {
     id: 'work-5',

@@ -182,6 +182,15 @@ export type WorkContentBlock = { gap: number; spGap?: number } & (
       groups: { label: string; lines: string[] }[];
     }
   | {
+      type: 'interview'; // クライアントの声: 左に写真 / 右に見出し + Q&A
+      /** 左カラムの写真。src 未指定時はサイズ確保のプレースホルダー（グレー枠）。 */
+      photo: { w: number; h: number; src?: string };
+      /** 右カラム見出し。配列 = 明示改行（要素間に <br>）。 */
+      heading: string[];
+      /** Q&A の繰り返し。q = 質問（18px）/ a = 回答（16px）。 */
+      qa: { q: string; a: string }[];
+    }
+  | {
       type: 'relatedWorks'; // 他実績へのリンクカード群
     }
 );

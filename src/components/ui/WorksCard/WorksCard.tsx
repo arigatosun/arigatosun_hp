@@ -33,14 +33,17 @@ export default function WorksCard({
   return (
     <Link href={href} className={styles.card}>
       <div className={styles.imageWrap}>
-        <Image
-          src={image}
-          alt={client}
-          width={imageWidth}
-          height={imageHeight}
-          className={styles.image}
-          sizes="(max-width: 1023px) 90vw, 30vw"
-        />
+        {/* image 未指定（画像後追いの新規実績）は imageWrap のプレースホルダー背景のまま */}
+        {image && (
+          <Image
+            src={image}
+            alt={client}
+            width={imageWidth}
+            height={imageHeight}
+            className={styles.image}
+            sizes="(max-width: 1023px) 90vw, 30vw"
+          />
+        )}
       </div>
 
       <p className={styles.client}>
