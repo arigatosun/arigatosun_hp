@@ -103,6 +103,11 @@
   .visual {
     width: 38.49%; // 585/1520
     max-width: 585px;
+    // PHASE 列を 1920 設計幅(585px)で組み実列幅へ zoom 縮小する基準コンテナ。
+    // ServicePhaseSteps .root が 100cqw(= この列幅) を参照して zoom を算出する。
+    @include pc {
+      container-type: inline-size;
+    }
 
     @include max(1023px) {
       width: 100%;

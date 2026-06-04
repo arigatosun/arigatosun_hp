@@ -16,6 +16,21 @@
   position: relative;
   display: flex;
   width: 100%;
+
+  // PC: 1920 設計幅(585px = Figma visual 幅)で組み、実際の列幅(100cqw)に合わせて
+  // zoom 縮小する。これにより列幅が狭い画面でも本文が常に 2 行(=1920 の見た目)に収まり、
+  // 3 行化で下フェーズとの余白が詰まる問題を防ぐ（テキスト・図ごと等倍縮小）。
+  // 親 .variantPhases .visual に container-type:inline-size を設定済み。
+  @include pc {
+    // zoom 非対応ブラウザ(旧 Firefox 等)では width:585px のはみ出しを避けるためガード。
+    // 非対応時は width:100% のまま（従来挙動）にフォールバック。
+    @supports (zoom: 1) {
+      width: 585px;
+      // 文字列補間で Sass の除算評価を回避し、CSS calc をそのまま出力。
+      // length / length = 無単位 → zoom 用の比率になる。
+      zoom: #{'calc(100cqw / 585px)'};
+    }
+  }
 }
 
 .indicator {
