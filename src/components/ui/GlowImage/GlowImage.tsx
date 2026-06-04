@@ -113,8 +113,9 @@ export default function GlowImage({
           ...(spWidth && spHeight
             ? { '--gi-aspect-sp': `${spWidth} / ${spHeight}` }
             : {}),
-          // SP の頭打ち幅。.compactSp の SP ルールでのみ参照する（PC は無視＝全幅のまま）
-          ...(compactSp ? { '--compact-max': `${width}px` } : {}),
+          // SP の頭打ち幅。.compactSp の SP ルールでのみ参照する（PC は無視＝全幅のまま）。
+          // SP 別寸画像がある場合は SP のネイティブ幅(spWidth)を頭打ちにする（PC幅だと SP が拡大してしまう）。
+          ...(compactSp ? { '--compact-max': `${spWidth ?? width}px` } : {}),
         } as CSSProperties
       }
     >
