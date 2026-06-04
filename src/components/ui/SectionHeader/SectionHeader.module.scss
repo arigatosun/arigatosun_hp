@@ -132,6 +132,12 @@
     }
   }
 
+  // 複数行タイトル(CREATOR FIRST 等)のみ Figma leading 48px(28px基準 ≒ 1.714)で行間確保。
+  // 単一行タイトルは line-height:1 のまま（タイトル↔サブのギャップを変えない）。
+  .headerTitleMultiline {
+    line-height: calc(48 / 28);
+  }
+
   .headerSub {
     @include fluid(letter-spacing, 1.56, 2.08);
     // Figma SP: 12px / lh 19.2 (Figma leading 表記)
