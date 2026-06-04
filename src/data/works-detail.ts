@@ -170,7 +170,8 @@ const CHORITZ_DETAIL: WorkDetailContent = {
       gap: 80,
       cardHeight: 840,
       // Figma 書き出しの合成画像を 1 枚でそのまま使用（PC=Group 1254 / SP=Group 1260）。
-      // 配置もぼかしも画像に焼き込み済みのため、CSS 側で blur は付けない。
+      // 背景・余白・ぼかしは画像に焼き込み済みのため、カード装飾なし(bare)＋CSS blur なしで全幅表示。
+      bare: true,
       images: [`${CHORITZ}/prop-grid.png`],
       imageRatio: { w: 3040, h: 1680 },
       spImages: [`${CHORITZ}/prop-grid-sp.png`],

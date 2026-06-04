@@ -9,6 +9,8 @@ type WorkImageGridProps = {
   cardHeight: number;
   /** true の時、各サムネにブラーを適用（機密の提案資料用） */
   blur?: boolean;
+  /** true の時、グレーカード装飾を外し画像を全幅表示（自己完結型の合成画像用） */
+  bare?: boolean;
   spImages?: string[];
   spImageRatio?: { w: number; h: number };
   spCardHeight?: number;
@@ -22,6 +24,7 @@ export default function WorkImageGrid({
   caption,
   cardHeight,
   blur = false,
+  bare = false,
   spImages,
   spImageRatio,
   spCardHeight,
@@ -44,7 +47,7 @@ export default function WorkImageGrid({
 
   return (
     <div className={styles.wrap}>
-      <div className={styles.card} style={cardStyle}>
+      <div className={`${styles.card} ${bare ? styles.bare : ''}`} style={cardStyle}>
         <div
           className={`${styles.grid} ${images.length === 1 ? styles.gridSingle : ''} ${blur ? styles.blurred : ''} ${hasSpVariant ? styles.pcOnly : ''}`}
         >

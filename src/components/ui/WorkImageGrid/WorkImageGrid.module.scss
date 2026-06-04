@@ -50,6 +50,23 @@
   display: block;
 }
 
+// 自己完結型の合成画像用：グレーカード装飾（背景・内側余白・min-height）を外し、
+// 画像を枠いっぱいに表示する（背景・スライド余白は画像側に焼き込み済み）。
+.card.bare {
+  background: transparent;
+  min-height: 0;
+  padding: 0;
+
+  @include sp {
+    min-height: 0;
+  }
+
+  // キャプションは画像直下に。画像が下余白を内包するため上余白は小さめ。
+  .caption {
+    @include fluid(padding-top, 8, 16);
+  }
+}
+
 // SP 専用差し替えがある時の出し分け
 .pcOnly {
   @include sp {

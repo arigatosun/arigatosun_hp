@@ -127,6 +127,11 @@ export type WorkContentBlock = { gap: number; spGap?: number } & (
       images: string[];
       imageRatio: { w: number; h: number };
       caption: string;
+      /**
+       * true の時、グレーカード装飾（背景・内側余白・min-height）を外し、
+       * 画像を全幅でそのまま表示する。背景や余白を内包した「自己完結型の合成画像」用。
+       */
+      bare?: boolean;
       /** true の時、各サムネにブラーを適用（機密の提案資料用）。省略時は no-blur */
       blur?: boolean;
       /** SP 専用の画像差し替え（Figma SP が PC と別構成のケース用）。指定時 SP のみ描画される */
