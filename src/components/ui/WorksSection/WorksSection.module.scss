@@ -143,6 +143,12 @@
   @include fluid(line-height, 22, 40, 390, 1920); // Figma: 40px
   @include fluid(letter-spacing, 1.6, 3.2, 390, 1920); // Figma: 3.2px
 
+  // PC: タイトル枠を Figma の本文ボックス(560px)に合わせて自然折り返しさせる。
+  // flex:1 だと約650pxで広く、1行に入る文字数がFigmaより多く改行位置がずれるため。
+  @include pc {
+    @include fluid(max-width, 455, 580, 390, 1920);
+  }
+
   @include sp {
     // Figma SP: 16px / line-height 28 / letter-spacing 2.56
     @include fluid(margin-top, 16, 40);
@@ -164,12 +170,6 @@
 
 .afterSeparator {
   @include fluid(letter-spacing, 1.4, 3.2, 390, 1920);
-
-  // PC: `|` 以降（説明文）を必ず次行から開始させ、Figma の改行構成に合わせる。
-  // 行内の追加改行は title の \n で指定（折り返し幅依存をやめ全幅で一致させる）。
-  @include pc {
-    display: block;
-  }
 
   @include sp {
     @include fluid(letter-spacing, 1.4, 3.2);
