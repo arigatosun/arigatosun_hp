@@ -13,6 +13,9 @@ type ServiceCalloutsProps = {
     alt: string;
     width: number;
     height: number;
+    spSrc?: string;
+    spWidth?: number;
+    spHeight?: number;
     mask: ServiceConceptMask | null;
   };
 };
@@ -42,6 +45,9 @@ export default function ServiceCallouts({ items, image }: ServiceCalloutsProps) 
             alt={image.alt}
             width={image.width}
             height={image.height}
+            spSrc={image.spSrc}
+            spWidth={image.spWidth}
+            spHeight={image.spHeight}
             mask={image.mask}
           />
         </div>
