@@ -169,17 +169,19 @@ const CHORITZ_DETAIL: WorkDetailContent = {
       type: 'imageGrid',
       gap: 80,
       cardHeight: 840,
-      // PC: 4×4 グリッドを 1 枚に焼き込んだ画像 (Group 1254)。画像内に弱ブラー済みなのでコード側 blur は不要。
-      images: [`${CHORITZ}/prop-grid.png`],
-      imageRatio: { w: 1990, h: 860 },
-      // Figma SP (3098:24658 内 2822:51409): 15 枚の個別スライドを 4 列で配置。
-      // 各スライドは Figma 実測 81.43 × 45.8 (≒1.78 比) → 既存 prop-N.jpg (700×393) と一致。
-      // 個別画像なので blur はコード側で適用（spBlur）。
+      // PC/SP とも Figma (Group 719 / 3545:112079) の 15 枚を 4 列グリッドで配置（右下 1 枠は空き）。
+      // 画像は Figma 書き出しをそのまま使用（読み順=行→列）。Figma の foreground blur に合わせてコード側 blur を適用。
+      images: Array.from(
+        { length: 15 },
+        (_, i) => `${CHORITZ}/prop-${i + 1}.jpg`,
+      ),
+      imageRatio: { w: 16, h: 9 },
+      blur: true,
       spImages: Array.from(
         { length: 15 },
         (_, i) => `${CHORITZ}/prop-${i + 1}.jpg`,
       ),
-      spImageRatio: { w: 81, h: 46 },
+      spImageRatio: { w: 16, h: 9 },
       spGridCols: 4,
       spBlur: true,
       // Figma SP (3098:24658 内 2822:51407): カード高さ 286px
