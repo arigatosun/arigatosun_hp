@@ -682,7 +682,14 @@ const MENTE_DETAIL: WorkDetailContent = {
       ],
     },
     // 図版「ゼロベースから使われるアプリへ具現化」。Figma arigatosun_web_works-04 (1520×823)
-    { type: 'mockupCard', gap: 60, src: `${MENTE}/diagram-flow.png`, w: 1520, h: 823 },
+    {
+      type: 'mockupCard',
+      gap: 60,
+      src: `${MENTE}/diagram-flow.png`,
+      w: 1520,
+      h: 823,
+      spFullBleed: true,
+    },
     {
       type: 'textSection',
       gap: 240,
@@ -691,9 +698,23 @@ const MENTE_DETAIL: WorkDetailContent = {
       heading: '■サービスとして動かすための、画面・機能・管理導線を実装。',
     },
     // 図版「双方に迷わず伝わる体験を設計」。Figma arigatosun_web_works-03 (1520×824)
-    { type: 'mockupCard', gap: 60, src: `${MENTE}/diagram-experience.png`, w: 1520, h: 824 },
+    {
+      type: 'mockupCard',
+      gap: 60,
+      src: `${MENTE}/diagram-experience.png`,
+      w: 1520,
+      h: 824,
+      spFullBleed: true,
+    },
     // 図版「選びやすい×選ばれやすいを予約体験の中心でつなぐ」。Figma arigatosun_web_works-02 (1520×773)
-    { type: 'mockupCard', gap: 60, src: `${MENTE}/diagram-booking.png`, w: 1520, h: 773 },
+    {
+      type: 'mockupCard',
+      gap: 60,
+      src: `${MENTE}/diagram-booking.png`,
+      w: 1520,
+      h: 773,
+      spFullBleed: true,
+    },
     {
       type: 'paragraph',
       gap: 80,
@@ -736,6 +757,7 @@ const MENTE_DETAIL: WorkDetailContent = {
       src: `${MENTE}/logo-design.png`,
       w: 1520,
       h: 651,
+      spFullBleed: true,
       spCaption: '＜ロゴデザイン(一部抜粋)＞',
     },
     {
@@ -753,7 +775,14 @@ const MENTE_DETAIL: WorkDetailContent = {
       ],
     },
     // アプリ画面。Figma Group 1288 / arigatosun_web_works-08 (1520×824)
-    { type: 'mockupCard', gap: 60, src: `${MENTE}/app-screens.png`, w: 1520, h: 824 },
+    {
+      type: 'mockupCard',
+      gap: 60,
+      src: `${MENTE}/app-screens.png`,
+      w: 1520,
+      h: 824,
+      spFullBleed: true,
+    },
     {
       type: 'textSection',
       gap: 80,
