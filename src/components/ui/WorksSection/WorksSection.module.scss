@@ -146,7 +146,7 @@
   // PC: タイトル枠を Figma の本文ボックス(560px@1920)にフォント同比でスケールさせ、
   // 各行の文字数を Figma と一致させて自然折り返しする（28 × font-size 相当）。
   @include pc {
-    @include fluid(max-width, 336, 560, 390, 1920);
+    @include fluid(max-width, 420, 560, 390, 1920);
   }
 
   @include sp {
