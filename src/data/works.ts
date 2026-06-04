@@ -20,8 +20,9 @@ const WORKS_DATA: readonly WorkItem[] = [
   {
     id: 'mente',
     client: 'Men’te',
+    // TOP実績は `|` 以降が次行（.afterSeparator block）、さらに \n で Figma 通りの行分割。
     title:
-      '諦めきれなかった構想が、サービスとして動き出す。| 構想整理から要件定義・開発・改善まで、一気通貫の立ち上げ支援',
+      '諦めきれなかった構想が、サービスとして動き出す。| 構想整理から要件定義・開発・改善まで、一気通貫の\n立ち上げ支援',
     details: [
       { label: 'D / B：', value: '構想整理・要件定義・UI/UX・アプリ開発・ロゴ/VI' },
     ],
