@@ -16,8 +16,13 @@ type GlowImageProps = {
   spSrc?: string;
   spWidth?: number;
   spHeight?: number;
-  /** グローを形の内側だけにクリップするマスク。null ならクリップなし */
+  /** グローを形の内側だけにクリップするマスク（PC / 既定）。null ならクリップなし */
   mask?: ServiceConceptMask | null;
+  /**
+   * SP 専用マスク。PC=mask / SP=spMask を CSS で出し分ける（PC/SP で図のレイアウトが
+   * 別組みでマスク形状が異なるケース用）。未指定なら mask を SP でも流用する。
+   */
+  spMask?: ServiceConceptMask | null;
   /** 画像の上に重ねるテキストオーバーレイ */
   overlays?: ServiceImageOverlay[];
   /** SP で全幅(+44px)拡大をやめ、ネイティブ width で頭打ち＋中央寄せにする */
@@ -72,23 +77,27 @@ export default function GlowImage({
   spWidth,
   spHeight,
   mask = null,
+  spMask = null,
   overlays = [],
   compactSp = false,
   glowOverrides,
 }: GlowImageProps) {
-  // マスク画像（形のシルエット）でグロー層をクリップする
-  const clipStyle: CSSProperties | undefined = mask
-    ? {
-        maskImage: `url(${mask.src})`,
-        WebkitMaskImage: `url(${mask.src})`,
-        maskSize: mask.size,
-        WebkitMaskSize: mask.size,
-        maskPosition: mask.position,
-        WebkitMaskPosition: mask.position,
-        maskRepeat: 'no-repeat',
-        WebkitMaskRepeat: 'no-repeat',
-      }
-    : undefined;
+  // マスク画像（形のシルエット）でグロー層をクリップする。
+  // PC=mask / SP=spMask を SCSS 側の @include sp で出し分けるため、ここでは
+  // CSS 変数として値だけを注入する（mask-image 自体の適用は .glowClip の SCSS）。
+  // spMask 未指定時は SP も PC マスクにフォールバック（SCSS の var フォールバック）。
+  const clipVars: Record<string, string> = {};
+  if (mask) {
+    clipVars['--gi-mask'] = `url(${mask.src})`;
+    clipVars['--gi-mask-size'] = mask.size;
+    clipVars['--gi-mask-pos'] = mask.position;
+  }
+  if (spMask) {
+    clipVars['--gi-mask-sp'] = `url(${spMask.src})`;
+    clipVars['--gi-mask-sp-size'] = spMask.size;
+    clipVars['--gi-mask-sp-pos'] = spMask.position;
+  }
+  const clipStyle = clipVars as CSSProperties;
 
   const slimeProps = { ...SLIME_GLOW_STANDARD, ...glowOverrides };
 
@@ -97,7 +106,13 @@ export default function GlowImage({
       className={`${styles.wrap} ${compactSp ? styles.compactSp : ''}`}
       style={
         {
-          aspectRatio: `${width} / ${height}`,
+          // aspect-ratio は PC=width/height。SP で別寸の画像(spWidth/spHeight)を出し分ける
+          // 場合は SP 側で別アスペクトに切替（SCSS の @include sp）。これが無いと SP 画像が
+          // PC アスペクトの枠にレターボックスされ、マスクとの間にズレが出る。
+          '--gi-aspect': `${width} / ${height}`,
+          ...(spWidth && spHeight
+            ? { '--gi-aspect-sp': `${spWidth} / ${spHeight}` }
+            : {}),
           // SP の頭打ち幅。.compactSp の SP ルールでのみ参照する（PC は無視＝全幅のまま）
           ...(compactSp ? { '--compact-max': `${width}px` } : {}),
         } as CSSProperties

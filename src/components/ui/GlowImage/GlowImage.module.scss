@@ -6,6 +6,8 @@
 .wrap {
   position: relative;
   width: 100%;
+  // aspect-ratio は GlowImage が CSS 変数で注入（PC=--gi-aspect）。
+  aspect-ratio: var(--gi-aspect);
 
   // Figma SP: 線画ビジュアル（STANDARD/FLOW 等）は x=16〜20 と本文(x=40)より
   // 22〜24px 外側に張り出して大きく見せる。.page が overflow-x:clip するため
@@ -17,6 +19,8 @@
   @include sp {
     width: calc(100% + 44px);
     margin-inline: -22px;
+    // SP 別寸画像がある場合は SP アスペクトに切替（無ければ PC アスペクトを流用）。
+    aspect-ratio: var(--gi-aspect-sp, var(--gi-aspect));
   }
 }
 
@@ -62,12 +66,34 @@
 
 // グローのクリップ層。mask 指定時、内側のグローを形の中だけに切り抜く。
 // イラスト枠に固定されており、中のグローだけがカーソル追従で動く。
+// mask 値は GlowImage が src に応じて CSS 変数(--gi-mask*)で inline 注入する。
+// 未指定時は none = クリップなし（従来 clipStyle undefined と同等）。
 .glowClip {
   position: absolute;
   inset: 0;
   // 画像 (z=2) より下、ただしオーバーレイ (z=3 想定) よりは下
   z-index: 1;
   pointer-events: none;
+
+  // PC / 既定マスク
+  mask-image: var(--gi-mask, none);
+  -webkit-mask-image: var(--gi-mask, none);
+  mask-size: var(--gi-mask-size, auto);
+  -webkit-mask-size: var(--gi-mask-size, auto);
+  mask-position: var(--gi-mask-pos, center);
+  -webkit-mask-position: var(--gi-mask-pos, center);
+  mask-repeat: no-repeat;
+  -webkit-mask-repeat: no-repeat;
+
+  // SP 専用マスク（spMask 指定時のみ切替。未指定なら PC マスクにフォールバック）
+  @include sp {
+    mask-image: var(--gi-mask-sp, var(--gi-mask, none));
+    -webkit-mask-image: var(--gi-mask-sp, var(--gi-mask, none));
+    mask-size: var(--gi-mask-sp-size, var(--gi-mask-size, auto));
+    -webkit-mask-size: var(--gi-mask-sp-size, var(--gi-mask-size, auto));
+    mask-position: var(--gi-mask-sp-pos, var(--gi-mask-pos, center));
+    -webkit-mask-position: var(--gi-mask-sp-pos, var(--gi-mask-pos, center));
+  }
 }
 
 // ── テキストオーバーレイ層（AI/DEV アリガトサン・スタンダードの3標準等） ──
