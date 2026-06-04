@@ -626,12 +626,11 @@ const MENTE_DETAIL: WorkDetailContent = {
     band: 'none',
     flatPhoto: true,
     photos: [{ src: `${MENTE}/hero.png`, x: 0, y: 0, width: 1920, height: 820 }],
-    // SP: PC ヒーロー画像を流用。ロゴが中央に来るよう object-position を調整
+    // SP: 専用ヒーロー画像（780×1116 = 390×558 @2x）。縦枠ちょうどなのでクロップ不要
     spOffsetTop: 42.5,
     spWidth: 390,
-    spHeight: 520,
-    spPhotoPosition: '12% center',
-    spPhotos: [{ src: `${MENTE}/hero.png`, x: 0, y: 0, width: 390, height: 520 }],
+    spHeight: 558,
+    spPhotos: [{ src: `${MENTE}/hero-sp.png`, x: 0, y: 0, width: 390, height: 558 }],
   },
   blocks: [
     {
