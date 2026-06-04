@@ -111,7 +111,18 @@ export default function ServiceDetailHero({
       {description.length > 0 && (
         <div className={styles.description}>
           {description.map((line, i) => (
-            <p key={i}>{line}</p>
+            // 各段落内の `\n` は PC 専用改行（PC で右に伸びすぎる行を IP 同様に折る）。
+            // SP では pcOnlyBr が非表示になり自然に流れる。
+            <p key={i}>
+              {line.split('\n').map((seg, j, arr) => (
+                <Fragment key={j}>
+                  {seg}
+                  {j < arr.length - 1 && (
+                    <br className={styles.pcOnlyBr} />
+                  )}
+                </Fragment>
+              ))}
+            </p>
           ))}
         </div>
       )}
