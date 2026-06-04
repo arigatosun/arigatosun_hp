@@ -52,3 +52,12 @@
     display: none;
   }
 }
+
+// PC 専用改行 (SP では非表示)
+.pcOnlyBr {
+  display: none;
+
+  @include pc {
+    display: inline;
+  }
+}

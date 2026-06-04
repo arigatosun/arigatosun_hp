@@ -21,7 +21,13 @@ export default function WorkLeadBlock({
         {body.map((line, index) => (
           <Fragment key={index}>
             {index > 0 && <br />}
-            {line}
+            {/* 文中の <br> トークンは PC のみ改行（SP は Figma 2段落構成を維持） */}
+            {line.split('<br>').map((segment, segmentIndex) => (
+              <Fragment key={segmentIndex}>
+                {segmentIndex > 0 && <br className={styles.pcBreak} />}
+                {segment}
+              </Fragment>
+            ))}
           </Fragment>
         ))}
       </p>
