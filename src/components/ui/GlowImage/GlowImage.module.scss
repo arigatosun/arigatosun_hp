@@ -9,6 +9,13 @@
   // aspect-ratio は GlowImage が CSS 変数で注入（PC=--gi-aspect）。
   aspect-ratio: var(--gi-aspect);
 
+  // PC: 概念図を列幅(43.88%)より一回り小さく中央寄せして、各ページの図のサイズ感を
+  // 揃える（ECOSYSTEM PROCESS の PHASE 列 38.49% と同等＝ 38.49/43.88 ≒ 0.877）。
+  @include pc {
+    max-width: 87.7%;
+    margin-inline: auto;
+  }
+
   // Figma SP: 線画ビジュアル（STANDARD/FLOW 等）は x=16〜20 と本文(x=40)より
   // 22〜24px 外側に張り出して大きく見せる。.page が overflow-x:clip するため
   // 横スクロールは出ない。
