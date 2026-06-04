@@ -50,12 +50,10 @@ const WORKS_DATA: readonly WorkItem[] = [
       { label: 'D / B：', value: '構想整理・要件定義・UI/UX・アプリ開発・ロゴ/VI' },
     ],
     term: '2025.12 ~ 2026.4',
-    // 一覧カードは詳細ヒーロー画像を流用（カード枠で cover 表示）。
-    // 横長画像のため左端合わせ（中央クロップだと左の Men’te ロゴが切れる）。
-    image: '/images/works/mente/hero.png',
-    imageWidth: 1920,
-    imageHeight: 820,
-    imagePosition: 'left center',
+    // 一覧カード専用画像（920×520）。カード規格ちょうどなのでトリミング不要。
+    image: '/images/works/mente/card.png',
+    imageWidth: 920,
+    imageHeight: 520,
   },
   // work-5 以降は今後の実装枠（プレースホルダ）。実データができ次第コメントを外す。
   /*
