@@ -141,10 +141,14 @@ export type ServiceConceptVisual =
       image?: {
         src: string;
         alt: string;
-        /** Figma 実寸の線画サイズ */
+        /** Figma 実寸の線画サイズ（PC） */
         width: number;
         height: number;
-        /** グローを形の内側にクリップするマスク */
+        /** SP 専用画像（指定時 PC=src / SP=spSrc を出し分け）。図が PC/SP で別組みのケース用 */
+        spSrc?: string;
+        spWidth?: number;
+        spHeight?: number;
+        /** グローを形の内側にクリップするマスク（PC/SP 共通で流用） */
         mask: ServiceConceptMask | null;
       };
     }

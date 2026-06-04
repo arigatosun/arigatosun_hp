@@ -457,12 +457,16 @@ const IP_CREATIVE: ServiceDetailData = {
         kind: 'callouts',
         // 3 つの callout テキストは SVG に焼き込み済みのため overlay は出さない
         items: [],
-        // Figma Group 1239 (350×341, 線画) + Group 1240 (350×341, マスク)
+        // PC は PC 用レイアウト版 (Group 12841 / 688×672)、SP は従来の SP 版 (350×341) を出し分け。
+        // クローバー円の相対位置・アスペクト比は両版でほぼ同一のため mask は流用（AI STANDARD と同手法）。
         image: {
-          src: '/images/sections/service/detail/concept-standard-ip.svg',
+          src: '/images/sections/service/detail/concept-standard-ip-pc.svg',
           alt: 'アリガトサン・スタンダード（IP/CREATIVE）を表す 3 つの大バブル + 衛星円の概念図',
-          width: 350,
-          height: 341,
+          width: 688,
+          height: 672,
+          spSrc: '/images/sections/service/detail/concept-standard-ip.svg',
+          spWidth: 350,
+          spHeight: 341,
           mask: {
             src: '/images/sections/service/detail/concept-standard-ip-mask.svg',
             size: '100% 100%',
