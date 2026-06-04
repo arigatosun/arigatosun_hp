@@ -626,11 +626,11 @@ const MENTE_DETAIL: WorkDetailContent = {
     band: 'none',
     flatPhoto: true,
     photos: [{ src: `${MENTE}/hero.png`, x: 0, y: 0, width: 1920, height: 820 }],
-    // SP: PC ヒーロー画像を流用し左寄せ cover で表示（中央クロップだと左の Men’te ロゴが切れる）
+    // SP: PC ヒーロー画像を流用。ロゴが中央に来るよう object-position を調整
     spOffsetTop: 42.5,
     spWidth: 390,
     spHeight: 520,
-    spPhotoLeft: true,
+    spPhotoPosition: '12% center',
     spPhotos: [{ src: `${MENTE}/hero.png`, x: 0, y: 0, width: 390, height: 520 }],
   },
   blocks: [
