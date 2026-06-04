@@ -170,20 +170,18 @@ const CHORITZ_DETAIL: WorkDetailContent = {
       gap: 80,
       cardHeight: 840,
       // PC/SP とも Figma (Group 719 / 3545:112079) の 15 枚を 4 列グリッドで配置（右下 1 枠は空き）。
-      // 画像は Figma 書き出しをそのまま使用（読み順=行→列）。Figma の foreground blur に合わせてコード側 blur を適用。
+      // 画像は Figma 書き出しをそのまま使用（読み順=行→列）。CSS ブラーは付けず Figma 同様くっきり表示。
       images: Array.from(
         { length: 15 },
         (_, i) => `${CHORITZ}/prop-${i + 1}.jpg`,
       ),
       imageRatio: { w: 16, h: 9 },
-      blur: true,
       spImages: Array.from(
         { length: 15 },
         (_, i) => `${CHORITZ}/prop-${i + 1}.jpg`,
       ),
       spImageRatio: { w: 16, h: 9 },
       spGridCols: 4,
-      spBlur: true,
       // Figma SP (3098:24658 内 2822:51407): カード高さ 286px
       spCardHeight: 286,
       caption: '＜ロゴデザイン初回提案書(一部抜粋)＞',
