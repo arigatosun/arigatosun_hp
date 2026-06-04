@@ -20,3 +20,30 @@
   @include fluid(line-height, 30, 36);
   @include fluid(letter-spacing, 2.52, 3.84);
 }
+
+// 文中改行。PC のみ改行し、SP は連続表示（自然 wrap）を維持する。
+.pcBreak {
+  display: none;
+
+  @include pc {
+    display: inline;
+  }
+}
+
+// PC 中間域(1024〜1512)のみ改行。MacBook 幅で長文の改行位置を整えるため。
+.brMid {
+  display: none;
+
+  @media (min-width: 1024px) and (max-width: 1512px) {
+    display: inline;
+  }
+}
+
+// 中間域以外(SP 〜1023 / 全幅 1513〜)で改行。全幅は Figma 1920 デザイン準拠。
+.brWide {
+  display: inline;
+
+  @media (min-width: 1024px) and (max-width: 1512px) {
+    display: none;
+  }
+}
