@@ -109,13 +109,23 @@ const DESIGN_BRANDING: ServiceDetailData = {
       bodyTracking: 4,
       visual: {
         kind: 'image',
-        // Group 1282 (351×351) で線画を差し替え。旧 Group 1224 (355×351) からサイズ更新。
-        src: '/images/sections/service/detail/concept-flow.svg',
+        // PC は PC 用レイアウト版 (Group 1297 / 652×651)、SP は従来の SP 版 (351×351) を出し分け。
+        // バブル配置が PC/SP で別組み（横長 vs 正方）のため、マスクも PC/SP で別物を使う。
+        src: '/images/sections/service/detail/concept-flow-pc.svg',
         alt: '制作フローを表すネットワーク図。デザイン・ブランディングを中心に各スキルが連携する様子',
-        width: 351,
-        height: 351,
-        // マスク (350×350) は新線画 (351×351) とほぼ同寸。1px 差は size 100% 100% で吸収
+        width: 652,
+        height: 651,
+        spSrc: '/images/sections/service/detail/concept-flow.svg',
+        spWidth: 351,
+        spHeight: 351,
+        // PC マスク: PC 画像 (Group 1297) と同寸ペアの正式マスク (Group 1296 / 652×651)
         mask: {
+          src: '/images/sections/service/detail/concept-flow-pc-mask.svg',
+          size: '100% 100%',
+          position: '50% 50%',
+        },
+        // SP マスク: 従来の SP 版 (350×350) を流用
+        spMask: {
           src: '/images/sections/service/detail/concept-flow-mask.svg',
           size: '100% 100%',
           position: '50% 50%',

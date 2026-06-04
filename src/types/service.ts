@@ -107,8 +107,13 @@ export type ServiceConceptVisual =
       spSrc?: string;
       spWidth?: number;
       spHeight?: number;
-      /** グローを形の内側にクリップするマスク。null ならクリップなし */
+      /** グローを形の内側にクリップするマスク（PC / 既定）。null ならクリップなし */
       mask: ServiceConceptMask | null;
+      /**
+       * SP 専用マスク。PC と SP で図のレイアウトが別組みでマスク形状が異なるケース用
+       * （例: 制作フローのバブル網図）。未指定なら PC マスクを SP でも流用する。
+       */
+      spMask?: ServiceConceptMask | null;
       /** 画像の上に重ねるテキストオーバーレイ（AI/DEV アリガトサン・スタンダードの3標準等） */
       overlays?: ServiceImageOverlay[];
       /**
