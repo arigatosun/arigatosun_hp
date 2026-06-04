@@ -67,8 +67,8 @@
 }
 
 .qaList {
-  // 見出し → 1 問目の余白 (Figma: 見出し下端 → Q 1 問目)
-  @include fluid(margin-top, 28, 48);
+  // 見出し下端 → Q 1 問目 (Figma 実測 40px)
+  @include fluid(margin-top, 24, 40);
   margin-bottom: 0;
 }
 
@@ -81,17 +81,17 @@
   @include fluid(line-height, 28, 36);
   letter-spacing: 0.2em; // 3.6 / 18
 
-  // 2 問目以降は前の回答との間に 2 行分相当の余白を空ける
+  // 2 問目以降は前の回答との間に空行 2 行分（Figma 実測 72px = 36×2）
   &:not(:first-child) {
-    @include fluid(margin-top, 40, 72);
+    @include fluid(margin-top, 48, 72);
   }
 }
 
 // 回答 (Figma: 16px / lh 36 / ls 2.08)
 .answer {
   margin: 0;
-  // 質問 → 回答は 1 行分相当
-  @include fluid(margin-top, 20, 36);
+  // 質問 → 回答は空行 1 行分（Figma 実測 36px）
+  @include fluid(margin-top, 24, 36);
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
   font-weight: var(--font-weight-regular);

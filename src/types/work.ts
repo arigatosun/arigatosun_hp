@@ -187,8 +187,8 @@ export type WorkContentBlock = { gap: number; spGap?: number } & (
       photo: { w: number; h: number; src?: string };
       /** 右カラム見出し。配列 = 明示改行（要素間に <br>）。 */
       heading: string[];
-      /** Q&A の繰り返し。q = 質問（18px）/ a = 回答（16px）。 */
-      qa: { q: string; a: string }[];
+      /** Q&A の繰り返し。q = 質問（18px）/ a = 回答（16px）。a は Figma の明示改行ごとのセグメント配列。 */
+      qa: { q: string; a: string[] }[];
     }
   | {
       type: 'relatedWorks'; // 他実績へのリンクカード群

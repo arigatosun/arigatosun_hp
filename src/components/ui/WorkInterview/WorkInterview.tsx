@@ -7,8 +7,8 @@ type WorkInterviewProps = {
   photo: { w: number; h: number; src?: string };
   /** 右カラム見出し。配列 = 明示改行（要素間に <br>）。 */
   heading: string[];
-  /** Q&A の繰り返し。 */
-  qa: { q: string; a: string }[];
+  /** Q&A の繰り返し。a は Figma の明示改行ごとのセグメント配列。 */
+  qa: { q: string; a: string[] }[];
 };
 
 /**
@@ -55,7 +55,14 @@ export default function WorkInterview({
             {qa.map((item, index) => (
               <Fragment key={index}>
                 <dt className={styles.question}>{item.q}</dt>
-                <dd className={styles.answer}>{item.a}</dd>
+                <dd className={styles.answer}>
+                  {item.a.map((line, lineIndex) => (
+                    <Fragment key={lineIndex}>
+                      {lineIndex > 0 && <br />}
+                      {line}
+                    </Fragment>
+                  ))}
+                </dd>
               </Fragment>
             ))}
           </dl>
