@@ -36,9 +36,15 @@
   font-family: 'Noto Sans JP', var(--font-jp);
   font-weight: var(--font-weight-regular);
   // Figma SP (2812:49934): 14px / lh 30 / ls 2.52 / PC: 16 / 36 / 3.84
-  @include fluid(font-size, 14, 16);
+  // 長文が 1512px で1行に収まらない問題に対応：PC中間域(1024〜1512)は 14.5px に縮小し、
+  // 1920px は Figma 値 16px を維持（SP は下の sp で従来どおり）。
+  @include fluid(font-size, 14.5, 16, 1512, 1920);
   @include fluid(line-height, 30, 36);
   @include fluid(letter-spacing, 2.52, 3.84);
+
+  @include sp {
+    @include fluid(font-size, 14, 16);
+  }
 }
 
 // ＜＞見出し（sub）は本文との間隔が ■見出しより詰まる（Figma 実測）
