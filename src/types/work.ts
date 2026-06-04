@@ -192,7 +192,9 @@ export type WorkContentBlock = { gap: number; spGap?: number } & (
       groups: { label: string; lines: string[] }[];
     }
   | {
-      type: 'interview'; // クライアントの声: 左に写真 / 右に見出し + Q&A
+      type: 'interview'; // クライアントの声: 左に「見出し + 写真」(sticky) / 右に見出し + Q&A
+      /** セクション見出し（■クライアントの声）。写真とまとめて左カラムで固定する。 */
+      title: string;
       /** 左カラムの写真。src 未指定時はサイズ確保のプレースホルダー（グレー枠）。 */
       photo: { w: number; h: number; src?: string };
       /** 右カラム見出し。配列 = 明示改行（要素間に <br>）。 */

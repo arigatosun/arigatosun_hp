@@ -23,15 +23,12 @@
   }
 }
 
-// 写真 (Figma 680×419)。画像は後日差し替え、未指定はプレースホルダー。
-.photo {
-  position: relative;
-  // 1520 幅基準で 680/1520 ≒ 44.7%。右カラムは flex:1 で残りを占める。
+// 左カラム: 見出し + 写真。1520 幅基準で 680/1520 ≒ 44.7%（右は flex:1）。
+.left {
   flex: 0 0 44.7%;
-  overflow: hidden;
 
-  // PC: 右の Q&A を読み切るまで写真を上部に固定（sticky）。親 .row の末尾で自然解放。
-  // top はヘッダー分を確保（ServiceConceptBlock と同方式）。SP は縦積みのため無効。
+  // PC: 右の Q&A を読み切るまで「見出し + 写真」をまとめて上部に固定（sticky）。
+  // 親 .row の末尾で自然解放。top はヘッダー分を確保。SP は縦積みのため無効。
   @include pc {
     position: sticky;
     align-self: flex-start;
@@ -42,6 +39,26 @@
     flex: none;
     width: 100%;
   }
+}
+
+// セクション見出し（■クライアントの声）。WorkTextSection main 見出しと同体裁。
+.title {
+  margin: 0;
+  // 見出し → 写真 (Figma 実測 80px)
+  @include fluid(margin-bottom, 33, 80);
+  color: var(--color-black);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  font-weight: var(--font-weight-regular);
+  @include fluid(font-size, 18, 24);
+  @include fluid(line-height, 36, 56);
+  @include fluid(letter-spacing, 4, 6.96);
+}
+
+// 写真 (Figma 680×419)。画像は後日差し替え、未指定はプレースホルダー。
+.photo {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
 }
 
 .photoImg {
@@ -57,6 +74,12 @@
 .column {
   flex: 1 1 0;
   min-width: 0;
+
+  // PC: 左の (見出し line-height + 見出し→写真 gap) 分だけ下げ、右見出しを写真上端に揃える。
+  // = fluid(36,56) + fluid(33,80) = fluid(69,136)
+  @include pc {
+    @include fluid(margin-top, 69, 136);
+  }
 }
 
 // 見出し (Figma: 24px / lh 48 / ls 6.96 / Noto Sans JP)

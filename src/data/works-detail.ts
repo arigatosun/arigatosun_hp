@@ -778,15 +778,11 @@ const MENTE_DETAIL: WorkDetailContent = {
     },
     { type: 'divider', gap: 200 },
     {
-      type: 'textSection',
+      type: 'interview',
       gap: 200,
       spGap: 60,
-      level: 'main',
-      heading: '■クライアントの声',
-    },
-    {
-      type: 'interview',
-      gap: 80,
+      // 見出しは写真とまとめて sticky 固定するため interview 内に持たせる
+      title: '■クライアントの声',
       // Figma cv_1 (680×419)
       photo: { w: 680, h: 419, src: `${MENTE}/interview.png` },
       heading: ['開発だけをする会社ではなく、', '一緒に整理しながら共に進んでくれる会社。'],

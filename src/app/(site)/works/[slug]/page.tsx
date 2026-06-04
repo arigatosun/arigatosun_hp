@@ -152,6 +152,7 @@ export default async function WorkDetailPage({ params }: PageParams) {
         } else if (block.type === 'interview') {
           node = (
             <WorkInterview
+              title={block.title}
               photo={block.photo}
               heading={block.heading}
               qa={block.qa}
