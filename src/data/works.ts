@@ -51,9 +51,11 @@ const WORKS_DATA: readonly WorkItem[] = [
     ],
     term: '2025.12 ~ 2026.4',
     // 一覧カードは詳細ヒーロー画像を流用（カード枠で cover 表示）。
+    // 横長画像のため左端合わせ（中央クロップだと左の Men’te ロゴが切れる）。
     image: '/images/works/mente/hero.png',
     imageWidth: 1920,
     imageHeight: 820,
+    imagePosition: 'left center',
   },
   // work-5 以降は今後の実装枠（プレースホルダ）。実データができ次第コメントを外す。
   /*

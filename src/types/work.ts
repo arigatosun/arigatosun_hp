@@ -20,6 +20,11 @@ export type WorkItem = {
    * true: Figma SP の 2 段落表示 (pipe 非表示) / false (既定): pipe を " | " として可視表示。
    */
   spBreakAtPipe?: boolean;
+  /**
+   * カード画像の object-position（cover 時のトリミング基準）。
+   * 横長画像を流用するカードで 'left' 等を指定。既定は中央。
+   */
+  imagePosition?: string;
 };
 
 // ── 詳細ページ（/works/[slug]）用 ──

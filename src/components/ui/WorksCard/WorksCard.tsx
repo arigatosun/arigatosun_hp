@@ -14,6 +14,8 @@ type WorksCardProps = {
    * 既定: false (PC/SP とも " | " を可視表示)
    */
   spBreakAtPipe?: boolean;
+  /** カード画像の object-position（cover トリミング基準）。横長画像流用時に 'left' 等。 */
+  imagePosition?: string;
 };
 
 export default function WorksCard({
@@ -24,6 +26,7 @@ export default function WorksCard({
   imageHeight,
   href = '/works',
   spBreakAtPipe = false,
+  imagePosition,
 }: WorksCardProps) {
   // works.ts の title は LP 用の \n と | 区切りを含む。/works カードは自然折り返しで表示するため
   // \n を除去。spBreakAtPipe=true のカード (work-2) は SP で | を改行に変換、それ以外は " | " を可視表示。
@@ -42,6 +45,7 @@ export default function WorksCard({
             height={imageHeight}
             className={styles.image}
             sizes="(max-width: 1023px) 90vw, 30vw"
+            style={imagePosition ? { objectPosition: imagePosition } : undefined}
           />
         )}
       </div>
