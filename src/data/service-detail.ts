@@ -491,11 +491,15 @@ const IP_CREATIVE: ServiceDetailData = {
       bodyTracking: 3.84,
       visual: {
         kind: 'image',
-        // 線画 + 9 ラベル一体型 SVG (Figma Group 1233) — テキストは path として焼き込み済み
-        src: '/images/sections/service/detail/concept-creator-first-ip.svg',
+        // PC は PC 用レイアウト版 (Group 1301 / 669×669)、SP は従来の SP 版 (351×351) を出し分け。
+        // 9 要素の相対位置・アスペクト比は両版で同一のため mask は流用（新 PC 画像へ重ねて一致を確認）。
+        src: '/images/sections/service/detail/concept-creator-first-ip-pc.svg',
         alt: 'CREATOR FIRST のギルド型組織図。中央「作者」を内周「プロデュース／ディレクション」が囲み、外周にコラボレーション・コンテンツ企画制作・アプリゲーム開発・グッズ管理・EC・3D デザイン等が並ぶ',
-        width: 351,
-        height: 351,
+        width: 669,
+        height: 669,
+        spSrc: '/images/sections/service/detail/concept-creator-first-ip.svg',
+        spWidth: 351,
+        spHeight: 351,
         // SP で全幅拡大せず、上の「アリガトサン・スタンダード」図(≈350)とサイズ感を揃える
         compactSp: true,
         // 赤グローはマスク (Figma Group 1234 = クローバー + 4 隅バブル) の内側だけに表示
