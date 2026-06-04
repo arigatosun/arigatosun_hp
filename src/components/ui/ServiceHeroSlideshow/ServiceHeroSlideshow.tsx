@@ -88,6 +88,9 @@ export default function ServiceHeroSlideshow({
             type="button"
             className={`${styles.arrow} ${styles.arrowPrev}`}
             onClick={prev}
+            // マウスクリックでフォーカスを取らせない（押下後に赤いフォーカス輪郭が残るのを防ぐ）。
+            // キーボード Tab でのフォーカスは従来通り効く。
+            onMouseDown={(e) => e.preventDefault()}
             aria-label="前の画像"
           >
             <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -104,6 +107,9 @@ export default function ServiceHeroSlideshow({
             type="button"
             className={`${styles.arrow} ${styles.arrowNext}`}
             onClick={next}
+            // マウスクリックでフォーカスを取らせない（押下後に赤いフォーカス輪郭が残るのを防ぐ）。
+            // キーボード Tab でのフォーカスは従来通り効く。
+            onMouseDown={(e) => e.preventDefault()}
             aria-label="次の画像"
           >
             <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
