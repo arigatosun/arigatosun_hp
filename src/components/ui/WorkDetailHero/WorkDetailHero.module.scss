@@ -72,6 +72,11 @@
   border-radius: 0;
 }
 
+// SP ヒーロー画像を左寄せで cover（横長 PC 画像を SP 縦枠に流用する時）
+.spLeft .photoImg {
+  object-position: left center;
+}
+
 .photoImg {
   object-fit: cover;
 }

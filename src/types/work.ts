@@ -79,6 +79,11 @@ export type WorkHero = {
    */
   flatPhoto?: boolean;
   /**
+   * SP ヒーロー画像を左寄せ(object-position: left)で cover 表示する。
+   * 横長の PC 画像を SP 縦枠に流用する時、中央クロップで切れる左側（ロゴ等）を残す。
+   */
+  spPhotoLeft?: boolean;
+  /**
    * SP のヘッダーとヒーロー上端の追加ギャップ (px)。
    * Figma SP の白余白に合わせて調整。既定 0。
    */

@@ -97,7 +97,9 @@ export default function WorkDetailHero({ hero }: WorkDetailHeroProps) {
       <div
         className={`${styles.hero} ${styles.heroSp} ${
           hero.spFlatPhoto ? styles.heroSpFlat : ''
-        } ${hero.flatPhoto ? styles.heroFlat : ''}`}
+        } ${hero.flatPhoto ? styles.heroFlat : ''} ${
+          hero.spPhotoLeft ? styles.spLeft : ''
+        }`}
         style={{
           aspectRatio: `${SP_VIEWPORT_W} / ${spH}`,
           marginTop: hero.spOffsetTop ? `${hero.spOffsetTop}px` : undefined,

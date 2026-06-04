@@ -626,11 +626,12 @@ const MENTE_DETAIL: WorkDetailContent = {
     band: 'none',
     flatPhoto: true,
     photos: [{ src: `${MENTE}/hero.png`, x: 0, y: 0, width: 1920, height: 820 }],
-    // SP: 専用デザイン未提供のため暫定プレースホルダー（画像/レイアウトは後日）
+    // SP: PC ヒーロー画像を流用し左寄せ cover で表示（中央クロップだと左の Men’te ロゴが切れる）
     spOffsetTop: 42.5,
     spWidth: 390,
     spHeight: 520,
-    spPhotos: [{ x: 0, y: 0, width: 390, height: 520 }],
+    spPhotoLeft: true,
+    spPhotos: [{ src: `${MENTE}/hero.png`, x: 0, y: 0, width: 390, height: 520 }],
   },
   blocks: [
     {
