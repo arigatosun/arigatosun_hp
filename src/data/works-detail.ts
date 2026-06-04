@@ -631,6 +631,7 @@ const MENTE_DETAIL: WorkDetailContent = {
     width: 1920,
     height: 820,
     band: 'none',
+    flatPhoto: true,
     photos: [{ src: `${MENTE}/hero.png`, x: 0, y: 0, width: 1920, height: 820 }],
     // SP: 専用デザイン未提供のため暫定プレースホルダー（画像/レイアウトは後日）
     spOffsetTop: 42.5,

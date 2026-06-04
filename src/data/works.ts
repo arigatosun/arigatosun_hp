@@ -50,10 +50,10 @@ const WORKS_DATA: readonly WorkItem[] = [
       { label: 'D / B：', value: '構想整理・要件定義・UI/UX・アプリ開発・ロゴ/VI' },
     ],
     term: '2025.12 ~ 2026.4',
-    // 画像は後日差し替え。空文字の間は WorksCard がプレースホルダー背景を表示。
-    image: '',
-    imageWidth: 920,
-    imageHeight: 518,
+    // 一覧カードは詳細ヒーロー画像を流用（カード枠で cover 表示）。
+    image: '/images/works/mente/hero.png',
+    imageWidth: 1920,
+    imageHeight: 820,
   },
   // work-5 以降は今後の実装枠（プレースホルダ）。実データができ次第コメントを外す。
   /*

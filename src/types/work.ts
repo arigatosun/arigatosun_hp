@@ -69,6 +69,11 @@ export type WorkHero = {
    */
   spFlatPhoto?: boolean;
   /**
+   * PC / SP 両方のフォトコーナー border-radius を無効化する（角丸なし）。
+   * 端まで角丸なしで見せたいヒーロー (例: Men’te) で true。
+   */
+  flatPhoto?: boolean;
+  /**
    * SP のヘッダーとヒーロー上端の追加ギャップ (px)。
    * Figma SP の白余白に合わせて調整。既定 0。
    */

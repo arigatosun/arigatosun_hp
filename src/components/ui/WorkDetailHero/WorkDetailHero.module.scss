@@ -67,6 +67,11 @@
   border-radius: 0;
 }
 
+// PC / SP 両方で角丸を打ち消す (flatPhoto)
+.heroFlat .photo {
+  border-radius: 0;
+}
+
 .photoImg {
   object-fit: cover;
 }
