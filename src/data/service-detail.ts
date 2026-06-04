@@ -59,12 +59,16 @@ const DESIGN_BRANDING: ServiceDetailData = {
       bodyTracking: 3.84,
       visual: {
         kind: 'image',
-        // Figma Group 1030 (351×240) — 線画 SVG。Group 1226 (350×240) はマスク
-        src: '/images/sections/service/detail/concept-standard.svg',
+        // PC は PC 用レイアウト版 (Group 1289 / 681×466)、SP は従来の SP 版 (351×240) を出し分け。
+        // 雲のクローバー輪郭は両版で相対位置・アスペクト比が同一 (実測 bbox y:0〜0.767 で一致) のため mask は流用。
+        src: '/images/sections/service/detail/concept-standard-pc.svg',
         alt: 'アリガトサン・スタンダードを表すクラウド型の概念図。意匠・設計・課題解決・価値拡張・独自性の5要素で構成される',
-        width: 351,
-        height: 240,
-        // マスクは線画とほぼ同寸 (350×240 vs 351×240) — 1px 差は size 100% 100% で吸収
+        width: 681,
+        height: 466,
+        spSrc: '/images/sections/service/detail/concept-standard.svg',
+        spWidth: 351,
+        spHeight: 240,
+        // マスク (350×240) は PC/SP 共通で流用 (線画とほぼ同寸・size 100% 100% で吸収)
         mask: {
           src: '/images/sections/service/detail/concept-standard-mask.svg',
           size: '100% 100%',
