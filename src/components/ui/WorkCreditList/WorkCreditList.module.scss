@@ -33,12 +33,12 @@
   @include fluid(margin-top, 4, 8);
 }
 
-// 内容行 — TOP WORKS カード（.client）と同じ太さに統一。
-// font-en（日本語は OS 標準ゴシックへフォールバック）＋ Regular で、Noto Sans JP Light より細見えを解消。
+// 内容行 — 英字は Mozaic GEO、日本語は Noto Sans JP（font-primary）。
+// 細見え解消のためウェイトは Light(300) → Regular(400) に統一（サイズ・字間は据え置き）。
 .line {
   margin: 0;
   color: var(--color-text-secondary);
-  font-family: var(--font-en);
+  font-family: var(--font-primary);
   font-weight: var(--font-weight-regular);
   @include fluid(font-size, 13, 17);
   @include fluid(line-height, 30, 44);
