@@ -184,15 +184,14 @@ const CHORITZ_DETAIL: WorkDetailContent = {
       type: 'imageGrid',
       gap: 80,
       cardHeight: 690,
-      images: Array.from(
-        { length: 8 },
-        (_, i) => `${CHORITZ}/guide-${i + 1}.jpg`,
-      ),
-      imageRatio: { w: 299, h: 211 },
-      // Figma SP (3098:24658 内 2822:51425): カード高さ 213px、4 列グリッド。
-      // 画像は PC と同じ guide-N.jpg を流用、列数だけ SP で 4 に切替。
+      // Figma 書き出しの合成画像 (Group 1306) を 1 枚でそのまま使用。
+      // 背景・余白は画像に焼き込み済みのため、カード装飾なし(bare)で全幅表示。PC/SP 共通。
+      bare: true,
+      images: [`${CHORITZ}/guide-grid.png`],
+      imageRatio: { w: 3040, h: 1380 },
+      spImages: [`${CHORITZ}/guide-grid.png`],
+      spImageRatio: { w: 3040, h: 1380 },
       spCardHeight: 213,
-      spGridCols: 4,
       caption: '＜ロゴデザイン簡易ガイドライン(一部抜粋)＞',
     },
     {
