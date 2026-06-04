@@ -12,7 +12,7 @@ const CHORITZ = '/images/works/choritz';
 //   (hero-sp-collage.png 780×1080 = 390×540 @2x) を 1 枚で全面描画。
 //   ロゴと帯がすでに画像に含まれているため spLogo:false、border-radius 無効化。
 const CHORITZ_DETAIL: WorkDetailContent = {
-  slug: 'work-1',
+  slug: 'choritz',
   pattern: 'detail',
   hero: {
     spWidth: 390,
@@ -55,7 +55,7 @@ const CHORITZ_DETAIL: WorkDetailContent = {
       heading: '数値では測れない想いや姿勢を、ブランドの核心へ宿す。',
       subheading: '社名からVIまで、一気通貫のブランド構築',
       body: [
-        '自社プロジェクト「KUSOMEGANE」でのやり取りをきっかけに朱さんからWebサイト制作のご相談をいただいたことが、このプロジェクトのはじまりでした。',
+        '自社プロジェクト「KUSOMEGANE」でのやり取りをきっかけに朱さんからWebサイト制作のご相談をいただいたことが、<br>このプロジェクトのはじまりでした。',
       ],
     },
     {
@@ -113,7 +113,7 @@ const CHORITZ_DETAIL: WorkDetailContent = {
       // Figma SP (2822:51218): 2 段落構成 (旧 3 段落の 2/3 を結合)
       body: [
         '朱さんのお名前を企業・サービス名として活用する案として作成しました。',
-        '輸入からOEMにおいて上流から関わり、最後(Z)まで責任を持って伴走する姿勢をイメージとして伝えることを意図しています。また日本企業らしい「企業感＝信頼感」を重視し、堅実で安心して任せられる印象につながるネーミングです。',
+        '輸入からOEMにおいて上流から関わり、最後(Z)まで責任を持って伴走する姿勢をイメージとして伝えることを意図しています。<br>また日本企業らしい「企業感＝信頼感」を重視し、堅実で安心して任せられる印象につながるネーミングです。',
       ],
     },
     {
@@ -169,19 +169,13 @@ const CHORITZ_DETAIL: WorkDetailContent = {
       type: 'imageGrid',
       gap: 80,
       cardHeight: 840,
-      // PC: 4×4 グリッドを 1 枚に焼き込んだ画像 (Group 1254)。画像内に弱ブラー済みなのでコード側 blur は不要。
+      // Figma 書き出しの合成画像を 1 枚でそのまま使用（PC=Group 1254 / SP=Group 1260）。
+      // 背景・余白・ぼかしは画像に焼き込み済みのため、カード装飾なし(bare)＋CSS blur なしで全幅表示。
+      bare: true,
       images: [`${CHORITZ}/prop-grid.png`],
-      imageRatio: { w: 1990, h: 860 },
-      // Figma SP (3098:24658 内 2822:51409): 15 枚の個別スライドを 4 列で配置。
-      // 各スライドは Figma 実測 81.43 × 45.8 (≒1.78 比) → 既存 prop-N.jpg (700×393) と一致。
-      // 個別画像なので blur はコード側で適用（spBlur）。
-      spImages: Array.from(
-        { length: 15 },
-        (_, i) => `${CHORITZ}/prop-${i + 1}.jpg`,
-      ),
-      spImageRatio: { w: 81, h: 46 },
-      spGridCols: 4,
-      spBlur: true,
+      imageRatio: { w: 3040, h: 1680 },
+      spImages: [`${CHORITZ}/prop-grid-sp.png`],
+      spImageRatio: { w: 782, h: 572 },
       // Figma SP (3098:24658 内 2822:51407): カード高さ 286px
       spCardHeight: 286,
       caption: '＜ロゴデザイン初回提案書(一部抜粋)＞',
@@ -190,15 +184,14 @@ const CHORITZ_DETAIL: WorkDetailContent = {
       type: 'imageGrid',
       gap: 80,
       cardHeight: 690,
-      images: Array.from(
-        { length: 8 },
-        (_, i) => `${CHORITZ}/guide-${i + 1}.jpg`,
-      ),
-      imageRatio: { w: 299, h: 211 },
-      // Figma SP (3098:24658 内 2822:51425): カード高さ 213px、4 列グリッド。
-      // 画像は PC と同じ guide-N.jpg を流用、列数だけ SP で 4 に切替。
+      // Figma 書き出しの合成画像 (Group 1306) を 1 枚でそのまま使用。
+      // 背景・余白は画像に焼き込み済みのため、カード装飾なし(bare)で全幅表示。PC/SP 共通。
+      bare: true,
+      images: [`${CHORITZ}/guide-grid.png`],
+      imageRatio: { w: 3040, h: 1380 },
+      spImages: [`${CHORITZ}/guide-grid.png`],
+      spImageRatio: { w: 3040, h: 1380 },
       spCardHeight: 213,
-      spGridCols: 4,
       caption: '＜ロゴデザイン簡易ガイドライン(一部抜粋)＞',
     },
     {
@@ -320,7 +313,7 @@ const CHORITZ_DETAIL: WorkDetailContent = {
 const ARCHIVE = '/images/works/archive';
 
 const IGC_ARCHIVE: WorkDetailContent = {
-  slug: 'work-2',
+  slug: 'logo-archive',
   pattern: 'archive',
   lead: {
     heading: '独自の核を構築する、ロゴ・VIのプロジェクトアーカイブ。',
@@ -467,7 +460,7 @@ const IGC_ARCHIVE: WorkDetailContent = {
 const NEST = '/images/works/nest';
 
 const NEST_DETAIL: WorkDetailContent = {
-  slug: 'work-3',
+  slug: 'nest',
   pattern: 'detail',
   hero: {
     // PC: Figma フレーム 2497:85745 実測 1920×820 (既存 1 枚画像コラージュ)
@@ -624,7 +617,7 @@ const NEST_DETAIL: WorkDetailContent = {
 const MENTE = '/images/works/mente';
 
 const MENTE_DETAIL: WorkDetailContent = {
-  slug: 'work-4',
+  slug: 'mente',
   pattern: 'detail',
   hero: {
     // PC: Figma 1920×820（ロゴ + スマホモックアップ。画像後日）
@@ -882,15 +875,15 @@ const MENTE_DETAIL: WorkDetailContent = {
 
 /**
  * slug から詳細ページデータを取得する。
- * work-2 はパターンB（アーカイブ）、work-3 は NEST 詳細、work-4 は Men’te 詳細、
+ * logo-archive はパターンB（アーカイブ）、nest は NEST 詳細、mente は Men’te 詳細、
  * それ以外は CHORITZ 詳細を返す。
  * 「順番は後で変わる」前提のため、この分岐の差し替えだけで割当を変更できる。
  */
 export async function getWorkDetailBySlug(
   slug: string,
 ): Promise<WorkDetailContent | undefined> {
-  if (slug === 'work-2') return { ...IGC_ARCHIVE, slug };
-  if (slug === 'work-3') return { ...NEST_DETAIL, slug };
-  if (slug === 'work-4') return { ...MENTE_DETAIL, slug };
+  if (slug === 'logo-archive') return { ...IGC_ARCHIVE, slug };
+  if (slug === 'nest') return { ...NEST_DETAIL, slug };
+  if (slug === 'mente') return { ...MENTE_DETAIL, slug };
   return { ...CHORITZ_DETAIL, slug };
 }

@@ -122,6 +122,7 @@ export default async function WorkDetailPage({ params }: PageParams) {
               caption={block.caption}
               cardHeight={block.cardHeight}
               blur={block.blur}
+              bare={block.bare}
               spImages={block.spImages}
               spImageRatio={block.spImageRatio}
               spCardHeight={block.spCardHeight}

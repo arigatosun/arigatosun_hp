@@ -50,6 +50,38 @@
   display: block;
 }
 
+// 自己完結型の合成画像用：グレーカード装飾（背景・内側余白・min-height）を外し、
+// 画像を枠いっぱいに表示する（背景・スライド余白は画像側に焼き込み済み）。
+.card.bare {
+  position: relative;
+  background: transparent;
+  min-height: 0;
+  padding: 0;
+
+  @include sp {
+    min-height: 0;
+  }
+
+  // キャプションは画像の右下に重ねて表示（NEST の WorkMockupCard .spCaption と同手法）。
+  // 合成画像の右下は空き枠＋余白なので、その上に重なる。
+  .caption {
+    position: absolute;
+    right: 24px;
+    bottom: 0;
+    margin: 0;
+    padding-top: 0;
+    line-height: 56px;
+    white-space: nowrap;
+    pointer-events: none;
+
+    @include sp {
+      right: 20px;
+      bottom: 8px;
+      line-height: 22.4px;
+    }
+  }
+}
+
 // SP 専用差し替えがある時の出し分け
 .pcOnly {
   @include sp {
