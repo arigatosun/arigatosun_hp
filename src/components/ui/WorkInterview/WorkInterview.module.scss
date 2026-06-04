@@ -30,6 +30,14 @@
   flex: 0 0 44.7%;
   overflow: hidden;
 
+  // PC: 右の Q&A を読み切るまで写真を上部に固定（sticky）。親 .row の末尾で自然解放。
+  // top はヘッダー分を確保（ServiceConceptBlock と同方式）。SP は縦積みのため無効。
+  @include pc {
+    position: sticky;
+    align-self: flex-start;
+    @include fluid(top, 100, 160);
+  }
+
   @include sp {
     flex: none;
     width: 100%;
