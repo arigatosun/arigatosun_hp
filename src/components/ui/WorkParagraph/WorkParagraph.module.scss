@@ -20,3 +20,12 @@
   @include fluid(line-height, 30, 36);
   @include fluid(letter-spacing, 2.52, 3.84);
 }
+
+// 文中改行。PC のみ改行し、SP は連続表示（自然 wrap）を維持する。
+.pcBreak {
+  display: none;
+
+  @include pc {
+    display: inline;
+  }
+}
