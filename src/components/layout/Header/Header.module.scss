@@ -351,12 +351,17 @@
   width: 100%;
 }
 
-// 親行（mobileNavLink と同じ見た目 + 行全体で +/- を右に寄せる）
+// 親行: ラベル(Link=ページ遷移) を左、開閉トグル(button=▼) を右に配置。
 .spAccordionHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
+}
+
+// ラベル（タップで /about・/service へ遷移）。見た目は mobileNavLink と同じ。
+.spAccordionLabel {
+  flex: 1 1 auto;
   color: var(--color-black);
   font-family: var(--font-en);
   @include fluid(font-size, 15, 17, 320, 390);
@@ -374,13 +379,31 @@
   }
 }
 
+// 開閉トグル（タップでサブメニュー開閉）。タップ領域を確保しつつ右端・行高は維持。
+.spAccordionToggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 8px;
+  margin: -8px -8px -8px 0;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  color: var(--color-black);
+  transition: color var(--transition-base);
+
+  &:hover {
+    color: var(--color-primary);
+  }
+}
+
 // +/- アイコン（開いたら縦棒を消して - にする）
 .spAccordionIcon {
   position: relative;
   width: 12px;
   height: 12px;
   flex-shrink: 0;
-  margin-left: 12px;
 
   &::before,
   &::after {
