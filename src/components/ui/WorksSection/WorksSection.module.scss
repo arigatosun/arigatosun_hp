@@ -170,11 +170,18 @@
     @include fluid(font-size, 16, 20);
     @include fluid(line-height, 28, 40);
     @include fluid(letter-spacing, 2.56, 3.2);
+  }
 
-    // SP では mente の \n 強制改行（<br>）を無効化し、他項目と同じ横幅依存の
-    // 自然折り返しにする。PC は Figma 厳密改行を維持するため <br>/lastLine はそのまま。
+  // mente の <br>（"|" 直後 / "立ち上げ支援" 前）は設計クランプ(=1920px)に達した時だけ
+  // 表示して Figma 厳密改行に一致させる。それ未満（MacBook / SP）は非表示にし、他項目と同じ
+  // 横幅依存の自然折り返しにする。
+  br {
+    display: none;
+  }
+
+  @media (min-width: 1920px) {
     br {
-      display: none;
+      display: inline;
     }
   }
 }
@@ -197,23 +204,16 @@
   }
 }
 
-// "|" 直後のレスポンシブ改行。設計クランプ(=1920)に達した時だけ Figma 厳密一致で
-// 改行し、それ未満（MacBook 等）は非表示にして自然折り返しに委ねる。
-.pcMaxBreak {
-  display: none;
+// Figma の `|` 後 2 行目を圧縮する独自補正は廃止し、line-height 40px の均等送りに揃える。
+// 既定（MacBook / SP）は inline で前段（一気通貫の）から自然に流す。設計クランプ(=1920px)
+// だけ block で独立行にして Figma 厳密改行に一致させる。
+// inline 時に「立ち上げ支援」が語割れしないよう nowrap で 1 語として扱う。
+.lastLine {
+  display: inline;
+  white-space: nowrap;
 
   @media (min-width: 1920px) {
-    display: inline;
-  }
-}
-
-// Figma の `|` 後 2 行目を圧縮する独自補正は廃止し、line-height 40px の均等送りに揃える。
-.lastLine {
-  display: block;
-
-  // SP では block 強制改行をやめて inline 化し、他項目と同じ自然折り返しに揃える。
-  @include sp {
-    display: inline;
+    display: block;
   }
 }
 
