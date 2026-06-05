@@ -197,36 +197,23 @@ export default function ServiceSection() {
         end: 'bottom top',
         invalidateOnRefresh: true,
         onUpdate: () => {
-          // カード群が leftContent を縦方向にどれだけ覆っているか（重なり区間をマージして合算）
+          // カードは下から上へ昇るので、leftContent の「最上部(=サービス見出し)」が最後に覆われる。
+          // その最上部ラインをカードがまたいで覆った時 = 文字全体が覆われた時、として消す。
+          // （合計カバー率だと下半分だけで閾値に達し「サービス見出しが見えたまま消える」＝早すぎたため）
+          // 覆われていない間は必ず表示するので空白も出ない。二値即時のためグラデにもならない。
           const contentRect = leftContentEl.getBoundingClientRect();
+          const topLine = contentRect.top + 1; // サービス見出しの最上部ライン
           const cards = Array.from(track.children) as HTMLElement[];
-          const intervals: Array<[number, number]> = [];
+          let topCovered = false;
           for (const card of cards) {
             const r = card.getBoundingClientRect();
-            const t = Math.max(r.top, contentRect.top);
-            const b = Math.min(r.bottom, contentRect.bottom);
-            if (b > t) intervals.push([t, b]);
-          }
-          intervals.sort((a, b) => a[0] - b[0]);
-          let cov = 0;
-          let curStart = -Infinity;
-          let curEnd = -Infinity;
-          for (const [s, e] of intervals) {
-            if (s > curEnd) {
-              if (curEnd > curStart) cov += curEnd - curStart;
-              curStart = s;
-              curEnd = e;
-            } else if (e > curEnd) {
-              curEnd = e;
+            // カードがこのラインを縦方向にまたいでいる（=サービス見出しを覆っている）か
+            if (r.top <= topLine && r.bottom >= topLine) {
+              topCovered = true;
+              break;
             }
           }
-          if (curEnd > curStart) cov += curEnd - curStart;
-          const ratio = contentRect.height > 0 ? cov / contentRect.height : 0;
-
-          // 「実際に覆われている間だけ」即時非表示（二値・グラデにしない）。latch はしない:
-          // latch すると、カードが退いた位置でも文字が消えたまま＝空白になるバグになるため、
-          // 覆われていない時は必ず文字を表示して空白を出さない。
-          section.style.setProperty('--left-hidden', ratio >= 0.6 ? '1' : '0');
+          section.style.setProperty('--left-hidden', topCovered ? '1' : '0');
         },
       });
 
