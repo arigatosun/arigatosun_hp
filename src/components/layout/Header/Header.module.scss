@@ -343,6 +343,101 @@
   }
 }
 
+// ── SP アコーディオン（ABOUT / SERVICE をタップで開閉） ──
+.spAccordion {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+}
+
+// 親行（mobileNavLink と同じ見た目 + 行全体で +/- を右に寄せる）
+.spAccordionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  color: var(--color-black);
+  font-family: var(--font-en);
+  @include fluid(font-size, 15, 17, 320, 390);
+  font-weight: var(--font-weight-light);
+  line-height: normal;
+  letter-spacing: 0.12em;
+  transition: color var(--transition-base);
+
+  &:hover {
+    color: var(--color-primary);
+  }
+
+  &.active {
+    color: var(--color-primary);
+  }
+}
+
+// +/- アイコン（開いたら縦棒を消して - にする）
+.spAccordionIcon {
+  position: relative;
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+  margin-left: 12px;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    background-color: currentColor;
+    transition:
+      opacity var(--transition-base),
+      transform var(--transition-base);
+  }
+
+  // 横棒（常時）
+  &::before {
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 1.5px;
+    transform: translateY(-50%);
+  }
+
+  // 縦棒（閉じている時だけ＝ + ）
+  &::after {
+    left: 50%;
+    top: 0;
+    width: 1.5px;
+    height: 100%;
+    transform: translateX(-50%);
+  }
+}
+
+// 開いた状態 → 縦棒を消して「-」に
+.spAccordionIconOpen::after {
+  opacity: 0;
+  transform: translateX(-50%) scaleY(0);
+}
+
+// 開閉パネル（grid-template-rows 0fr→1fr で高さを滑らかにアニメ）
+.spAccordionPanel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition:
+    grid-template-rows var(--transition-base),
+    padding-top var(--transition-base);
+
+  // grid アイテム（サブリスト）を閉じている間クリップする
+  > * {
+    overflow: hidden;
+    min-height: 0;
+  }
+}
+
+.spAccordionPanelOpen {
+  grid-template-rows: 1fr;
+  // 開いた時だけ親行とサブリストの間隔を確保（閉じている時は隙間ゼロ）
+  @include fluid(padding-top, 16, 20, 320, 390);
+}
+
 // ── CREATIVE PROJECTS ──
 .creativeSection {
   display: flex;
