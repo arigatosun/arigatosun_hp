@@ -25,7 +25,9 @@ export default function GlobalCanvas() {
   const walkScale = isSp ? 0.35 : 0.45;
   // SP は両キャラを 70px (camera zoom 150 → +0.467 world unit) 上にオフセット
   const SP_OFFSET_Y = 0.467;
-  const logoBaseY = isSp ? -1.5 + SP_OFFSET_Y : -1.5;
+  // SP のロゴ帯キャラはさらに 15px 上へ（15 / zoom150 = +0.1 world unit）。
+  const LOGO_WALKER_SP_UP = 0.1;
+  const logoBaseY = isSp ? -1.5 + SP_OFFSET_Y + LOGO_WALKER_SP_UP : -1.5;
 
   return (
     <Canvas
