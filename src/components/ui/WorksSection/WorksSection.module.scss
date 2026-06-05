@@ -249,10 +249,9 @@
 .detailRow {
   display: flex;
   align-items: baseline;
-
-  @include max(1023px) {
-    flex-wrap: wrap;
-  }
+  // ラベルは左固定・値は右隣の残り幅で内部折り返し（折返し行は値頭にぶら下げ揃え）。
+  // 以前の SP flex-wrap は値を丸ごと次行へ落としていたため廃止し、Figma の
+  // ハンギングインデント（D/B: 値 / TERM: 値）に合わせる。
 }
 
 .detailLabel {
@@ -274,6 +273,10 @@
 }
 
 .detailValue {
+  // ラベル右の残り幅を占有し、その列内で折り返す（min-width:0 で flex 内折返しを許可）。
+  // → 折り返し行は値の頭に揃い、Figma のハンギングインデントになる。
+  flex: 1 1 auto;
+  min-width: 0;
   color: var(--color-text-secondary);
   font-family: 'Noto Sans JP', var(--font-jp);
   @include fluid(font-size, 13, 16, 390, 1920);
