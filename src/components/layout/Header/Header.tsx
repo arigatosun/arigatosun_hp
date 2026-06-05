@@ -6,16 +6,32 @@ import Link from 'next/link';
 import Image from 'next/image';
 import styles from './Header.module.scss';
 
-const leftNav = [
-  { href: '/about', label: 'ABOUT' },
-  { href: '/service', label: 'SERVICE', hasDropdown: true },
-  { href: '/works', label: 'WORKS' },
+type DropdownItem = { href: string; label: string };
+type NavItem = {
+  href: string;
+  label: string;
+  hasDropdown?: boolean;
+  dropdown?: DropdownItem[];
+};
+
+// ABOUT 配下のサブ項目。PHILOSOPHY はページ最上部のため ABOUT 本体と同じ /about へ。
+// MEMBER / COMPANY PROFILE は各セクションへのアンカー（既存 section id に対応）。
+const aboutDropdown: DropdownItem[] = [
+  { href: '/about', label: 'PHILOSOPHY' },
+  { href: '/about#member', label: 'MEMBER' },
+  { href: '/about#company-profile', label: 'COMPANY PROFILE' },
 ];
 
-const serviceDropdown = [
+const serviceDropdown: DropdownItem[] = [
   { href: '/service/ai-dev', label: 'AI / DEVELOPMENT' },
   { href: '/service/design-branding', label: 'DESIGN / BRANDING' },
   { href: '/service/ip-creative', label: 'IP / CREATIVE' },
+];
+
+const leftNav: NavItem[] = [
+  { href: '/about', label: 'ABOUT', hasDropdown: true, dropdown: aboutDropdown },
+  { href: '/service', label: 'SERVICE', hasDropdown: true, dropdown: serviceDropdown },
+  { href: '/works', label: 'WORKS' },
 ];
 
 const rightNav = [
@@ -47,9 +63,14 @@ const creativeProjects = [
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  // SP メニューのアコーディオン開閉状態（キーごと・複数同時に開ける）。
+  const [openMenus, setOpenMenus] = useState<Record<string, boolean>>({});
   const pathname = usePathname();
 
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + '/');
+
+  const toggleMenu = (key: string) =>
+    setOpenMenus((prev) => ({ ...prev, [key]: !prev[key] }));
 
   return (
     <header className={styles.header}>
@@ -67,9 +88,9 @@ export default function Header() {
               >
                 {item.label}
               </Link>
-              {item.hasDropdown && (
+              {item.hasDropdown && item.dropdown && (
                 <ul className={styles.dropdown}>
-                  {serviceDropdown.map((sub) => (
+                  {item.dropdown.map((sub) => (
                     <li key={sub.href}>
                       <Link href={sub.href} className={styles.dropdownLink}>
                         <span className={styles.dropdownLinkLabel}>
@@ -167,35 +188,71 @@ export default function Header() {
         <div className={styles.menuInner}>
           {/* メインナビ */}
           <nav className={styles.primaryNav}>
-            <Link
-              href="/about"
-              className={`${styles.mobileNavLink} ${isActive('/about') ? styles.active : ''}`}
-              onClick={() => setIsMenuOpen(false)}
-            >
-              ABOUT
-            </Link>
-
-            <div className={styles.serviceGroup}>
-              <Link
-                href="/service"
-                className={`${styles.mobileNavLink} ${isActive('/service') ? styles.active : ''}`}
-                onClick={() => setIsMenuOpen(false)}
+            {/* ABOUT: タップで開閉するアコーディオン（デフォルト閉じ＝コンパクト）。
+                /about トップは PHILOSOPHY(=/about) で到達できる。 */}
+            <div className={styles.spAccordion}>
+              <button
+                type="button"
+                className={`${styles.spAccordionHeader} ${isActive('/about') ? styles.active : ''}`}
+                onClick={() => toggleMenu('about')}
+                aria-expanded={!!openMenus.about}
               >
-                SERVICE
-              </Link>
-              <ul className={styles.serviceSubList}>
-                {serviceDropdown.map((sub) => (
-                  <li key={sub.href}>
-                    <Link
-                      href={sub.href}
-                      className={styles.serviceSubLink}
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      ・{sub.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
+                <span>ABOUT</span>
+                <span
+                  className={`${styles.spAccordionIcon} ${openMenus.about ? styles.spAccordionIconOpen : ''}`}
+                  aria-hidden="true"
+                />
+              </button>
+              <div
+                className={`${styles.spAccordionPanel} ${openMenus.about ? styles.spAccordionPanelOpen : ''}`}
+              >
+                <ul className={styles.serviceSubList}>
+                  {aboutDropdown.map((sub) => (
+                    <li key={sub.href}>
+                      <Link
+                        href={sub.href}
+                        className={styles.serviceSubLink}
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        ・{sub.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            {/* SERVICE: タップで開閉するアコーディオン（デフォルト閉じ）。 */}
+            <div className={styles.spAccordion}>
+              <button
+                type="button"
+                className={`${styles.spAccordionHeader} ${isActive('/service') ? styles.active : ''}`}
+                onClick={() => toggleMenu('service')}
+                aria-expanded={!!openMenus.service}
+              >
+                <span>SERVICE</span>
+                <span
+                  className={`${styles.spAccordionIcon} ${openMenus.service ? styles.spAccordionIconOpen : ''}`}
+                  aria-hidden="true"
+                />
+              </button>
+              <div
+                className={`${styles.spAccordionPanel} ${openMenus.service ? styles.spAccordionPanelOpen : ''}`}
+              >
+                <ul className={styles.serviceSubList}>
+                  {serviceDropdown.map((sub) => (
+                    <li key={sub.href}>
+                      <Link
+                        href={sub.href}
+                        className={styles.serviceSubLink}
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        ・{sub.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
 
             <Link
