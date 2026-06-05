@@ -7,8 +7,6 @@ import styles from './WorksSection.module.scss';
 import Button from '@/components/ui/Button';
 import SectionTitle from '@/components/ui/SectionTitle';
 import type { WorkItem } from '@/types/work';
-import FooterCharacterLoader from '@/components/three/FooterCharacterLoader';
-import DeferMount from '@/components/ui/DeferMount';
 
 type WorksSectionProps = {
   works: readonly WorkItem[];
@@ -139,28 +137,8 @@ export default function WorksSection({ works }: WorksSectionProps) {
         ))}
       </div>
 
-      {/* 下部: キャラクター + テキスト + ボタン */}
+      {/* 下部: テキスト + ボタン（3D 座りキャラは非表示） */}
       <div className={styles.footer}>
-        {/* 3Dキャラクター（ありがとくん・座り・Clay rough マテリアル）
-            WorksSection 底部 (News セクション直前)。
-              - glbPath: arigatokunn_sit_clay.glb (Armature.002 + Sit.001 アニメを Bake 済)
-              - IK constraint を Visual Keying で各 deform bone に焼き込み済 → Web で座り姿勢が出る
-              - charScale 5.0: 旧 3.0 から大きく（手振りと比べて少し大きめのサイズ感）
-              - charPosition X = -scale * armature_x = -5.0 * (-2.70) = +13.50 で中央寄せ
-              - loopMode='repeat': Sit はループ前提
-            位置確認したい時は `debug` prop を付ければ視覚化される。 */}
-        <DeferMount className={styles.footerCharacter}>
-          <FooterCharacterLoader
-            glbPath="/models/arigatokunn_sit_clay_meshopt.glb?v=opt1"
-            meshopt
-            charPosition={[13.50, -0.75, 0]}
-            charScale={5.0}
-            charRotationY={-0.3}
-            loopMode="repeat"
-            matte
-          />
-        </DeferMount>
-
         <div className={styles.footerText}>
           <p className={styles.footerServices}>
             AI / DEVELOPMENT / APPLICATION / DESIGN / UI / UX / BRANDING / WEB DESIGN / VI / IP / MARKETING / 3D / PHOTOGRAPHY / MOVIE etc...
