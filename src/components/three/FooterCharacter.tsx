@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
+import { Suspense, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { useAnimations, useGLTF } from '@react-three/drei';
 import { clone as skeletonClone } from 'three/examples/jsm/utils/SkeletonUtils.js';
@@ -158,6 +158,17 @@ export type FooterCharacterProps = {
   matte?: boolean;
 };
 
+// Suspense の内側（＝ WaveModel が解決してマウント済み）で 1 フレーム後に
+// onReady を呼ぶ。Canvas を「モデル描画後にフェードイン」させるための合図。
+function ReadySignal({ onReady }: { onReady: () => void }) {
+  useEffect(() => {
+    // モデル mount 済み → 次フレームで初回描画される。そのタイミングで開始。
+    const id = requestAnimationFrame(() => onReady());
+    return () => cancelAnimationFrame(id);
+  }, [onReady]);
+  return null;
+}
+
 // WorksSectionフッター・TOP Hero 用の3Dキャラクター（独立Canvas）
 // props で位置・スケール・カメラを上書きできるので、配置箇所ごとに別値を渡す。
 export default function FooterCharacter({
@@ -174,6 +185,12 @@ export default function FooterCharacter({
   meshopt = true, // 既定モデル(DEFAULT_GLB_PATH)が meshopt 圧縮版のため既定 true
   matte = false,
 }: FooterCharacterProps = {}) {
+  // モデル準備完了まで Canvas を透明にし、準備後に opacity 0→1 で滑らかに出す。
+  // Suspense fallback={null} のままハードに出現すると「一瞬消えてから出る」ように
+  // 見える（特に再訪問でオープニングが無い時）ため、フェードインで違和感を消す。
+  const [ready, setReady] = useState(false);
+  const handleReady = useCallback(() => setReady(true), []);
+
   return (
     <Canvas
       orthographic={orthographic}
@@ -183,15 +200,17 @@ export default function FooterCharacter({
           : { position: cameraPosition, fov: cameraFov }
       }
       gl={{ antialias: true, alpha: true }}
-      style={
-        debug
+      style={{
+        ...(debug
           ? {
               background: 'rgba(255, 200, 200, 0.25)', // 薄ピンク
               border: '2px dashed red',
-              boxSizing: 'border-box',
+              boxSizing: 'border-box' as const,
             }
-          : { background: 'transparent' }
-      }
+          : { background: 'transparent' }),
+        opacity: ready ? 1 : 0,
+        transition: 'opacity 0.45s ease-out',
+      }}
     >
       {/* Phase 18: 粘土マテリアル（Metallic=0 / Roughness 高め）が沈まないよう、
           ambient 1.0→1.5、directional 1.5→1.8 に強化＋斜め前方からの fill 追加 */}
@@ -225,6 +244,7 @@ export default function FooterCharacter({
           meshopt={meshopt}
           matte={matte}
         />
+        <ReadySignal onReady={handleReady} />
       </Suspense>
     </Canvas>
   );

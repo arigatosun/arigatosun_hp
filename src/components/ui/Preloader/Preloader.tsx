@@ -3,6 +3,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { gsap } from 'gsap';
+import { PRELOADER_SESSION_KEY as SESSION_KEY } from './sessionKey';
 import styles from './Preloader.module.scss';
 
 // SSR では window が無いので useLayoutEffect が警告を出す。
@@ -10,9 +11,6 @@ import styles from './Preloader.module.scss';
 // 環境に応じて layout/effect を出し分ける。
 const useIsomorphicLayoutEffect =
   typeof window !== 'undefined' ? useLayoutEffect : useEffect;
-
-// セッション中に一度表示したら再表示しないためのキー（タブ単位）。
-const SESSION_KEY = 'arigatosun:preloaded';
 
 /**
  * サイト初回表示時のオープニング（プリローダー）。Figma: OPENING (3106:43726)。
@@ -190,6 +188,7 @@ export default function Preloader() {
     <div
       ref={rootRef}
       className={styles.preloader}
+      data-preloader
       role="progressbar"
       aria-label="サイトを読み込み中"
       aria-valuemin={0}
