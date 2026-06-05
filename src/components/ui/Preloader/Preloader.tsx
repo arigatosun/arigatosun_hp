@@ -4,6 +4,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { gsap } from 'gsap';
 import { PRELOADER_SESSION_KEY as SESSION_KEY } from './sessionKey';
+import { isHeroReady, onHeroReady } from '@/lib/openingSync';
 import styles from './Preloader.module.scss';
 
 // SSR では window が無いので useLayoutEffect が警告を出す。
@@ -71,6 +72,7 @@ export default function Preloader() {
     let minTimer = 0;
     let maxTimer = 0;
     let finished = false;
+    let offHeroReady: (() => void) | null = null;
 
     const ctx = gsap.context(() => {
       const sun = sunRef.current;
@@ -153,8 +155,15 @@ export default function Preloader() {
         onUpdate: () => setProgress(Math.round(counter.v)),
       });
 
-      // 読み込み完了 + 最低表示時間を満たしたら finish。
-      const ready = () => {
+      // 完了条件は「window load 済」かつ「ヒーロー3Dの初回描画完了」の両方。
+      // どちらかが揃っていなくても MAX_VISIBLE_MS のフェイルセーフで必ず終了する
+      // （回線が遅い等で 3D が間に合わない時にオープニングが固まらないように）。
+      let windowLoaded = document.readyState === 'complete';
+      let heroDone = isHeroReady();
+      let scheduled = false;
+      const tryFinish = () => {
+        if (scheduled || !windowLoaded || !heroDone) return;
+        scheduled = true;
         const wait = Math.max(
           0,
           MIN_VISIBLE_MS - (performance.now() - startedAt)
@@ -162,18 +171,25 @@ export default function Preloader() {
         minTimer = window.setTimeout(finish, wait);
       };
 
-      if (document.readyState === 'complete') {
-        ready();
-      } else {
-        onLoad = ready;
+      if (!windowLoaded) {
+        onLoad = () => {
+          windowLoaded = true;
+          tryFinish();
+        };
         window.addEventListener('load', onLoad, { once: true });
       }
-      // フェイルセーフ（rAF に依存しない setTimeout）。
+      offHeroReady = onHeroReady(() => {
+        heroDone = true;
+        tryFinish();
+      });
+      tryFinish(); // 両方すでに揃っている場合に即スケジュール
+      // フェイルセーフ（rAF / 3D 完了に依存しない setTimeout）。
       maxTimer = window.setTimeout(finish, MAX_VISIBLE_MS);
     }, rootRef);
 
     return () => {
       if (onLoad) window.removeEventListener('load', onLoad);
+      if (offHeroReady) offHeroReady();
       window.clearTimeout(minTimer);
       window.clearTimeout(maxTimer);
       gsap.ticker.lagSmoothing(500, 33); // GSAP デフォルトに復元

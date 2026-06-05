@@ -23,10 +23,21 @@ const SP_MAX_WIDTH = 1023;
  * これにより、SP で約 5.7MB の GLB と Three.js 関連の JS ~1.5MB が
  * 初期 LCP / TTI を阻害しないように後回しになる。
  */
-export default function FooterCharacterLoader(props: FooterCharacterProps = {}) {
+export default function FooterCharacterLoader({
+  // priority=true: SP の idle 遅延をスキップして即マウントする。
+  // Hero はオープニング中に 3D を先読みしたい（画面はオープニングで覆われており LCP に影響
+  // しない）ため true で渡す。footer/works 等の FV 外用途は従来どおり SP 遅延を維持。
+  priority = false,
+  ...props
+}: FooterCharacterProps & { priority?: boolean } = {}) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    // priority 指定時は SP でも即マウント（オープニング中の 3D 先読み用）。
+    if (priority) {
+      setMounted(true);
+      return;
+    }
     // SSR では window がないので effect 内で参照する
     const isSP = window.innerWidth <= SP_MAX_WIDTH;
     if (!isSP) {
@@ -72,7 +83,7 @@ export default function FooterCharacterLoader(props: FooterCharacterProps = {}) 
       }
       if (timeoutHandle != null) window.clearTimeout(timeoutHandle);
     };
-  }, []);
+  }, [priority]);
 
   if (!mounted) return null;
   return <FooterCharacter {...props} />;
