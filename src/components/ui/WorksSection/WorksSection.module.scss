@@ -143,10 +143,14 @@
   @include fluid(line-height, 22, 40, 390, 1920); // Figma: 40px
   @include fluid(letter-spacing, 1.6, 3.2, 390, 1920); // Figma: 3.2px
 
-  // PC: タイトル枠を Figma の本文ボックス(560px@1920)にフォント同比でスケールさせ、
-  // 各行の文字数を Figma と一致させて自然折り返しする（28 × font-size 相当）。
+  // PC: Figma 実寸に固定して折り返しを完全一致させる（font 20 / lh 40 / ls 3.2 / box 560 / 上 40）。
+  // fluid だと閲覧幅で文字数が変わり Figma と改行がずれるため、PC は固定値にする。
   @include pc {
-    @include fluid(max-width, 420, 560, 390, 1920);
+    margin-top: 40px;
+    font-size: 20px;
+    line-height: 40px;
+    letter-spacing: 3.2px;
+    max-width: 560px;
   }
 
   @include sp {
