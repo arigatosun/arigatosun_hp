@@ -74,6 +74,14 @@ type WalkingCharacterProps = {
    */
   walkAnimSpeed?: number;
   /**
+   * SP 等カーソルが無い環境で、対象セクション内のカラー reveal マスク
+   * （LogoSlider の [data-logo-reveal]）を、このキャラの位置で点灯させる。
+   *   - 毎フレーム、キャラの投影スクリーン座標を reveal の --mx/--my に書き込み、
+   *     表示中は opacity 1 にして「キャラが通った所だけカラー」になるスポットを作る。
+   *   - PC ではカーソル追従に任せるため false。
+   */
+  driveReveal?: boolean;
+  /**
    * カーソル位置に応じてキャラの Y 軸回転を補間し、見つめる挙動を有効化。
    * グローバル mousemove を購読するだけなので pointer-events は不要。
    *   - maxAngle: 最大回転角（ラジアン）。例: 0.5 ≈ ±28°
@@ -159,6 +167,7 @@ export default function WalkingCharacter({
   approachMarginPx = 100,
   offscreenMargin = 3,
   walkAnimSpeed = 1,
+  driveReveal = false,
   lookAtCursor = false,
   reactOnClick = false,
 }: WalkingCharacterProps) {
@@ -168,6 +177,8 @@ export default function WalkingCharacter({
   const hasStarted = useRef(!triggerOnVisible);
   const waitTimerRef = useRef<number | null>(null);
   const sectionElRef = useRef<HTMLElement | null>(null);
+  // driveReveal 時に操作する LogoSlider のカラー reveal 要素（[data-logo-reveal]）。
+  const revealElRef = useRef<HTMLElement | null>(null);
   // depth-walk モード時の経過時間（ms）。0→durationMs で進む。
   const depthElapsedRef = useRef(0);
   // カーソル位置（NDC: -1..1）と直近のクリック座標（px）
@@ -527,6 +538,24 @@ export default function WalkingCharacter({
       const charScreenY = sp ? sp.y : sectionCenterY;
       const isVisible = inApproachZone && charScreenY > -EXIT_CULL_MARGIN_PX;
       group.current.visible = isVisible;
+
+      // SP 等カーソルが無い環境: キャラの位置でカラー reveal を点灯（通った所がスポット）。
+      if (driveReveal) {
+        if (!revealElRef.current) {
+          revealElRef.current = section.querySelector('[data-logo-reveal]');
+        }
+        const revealEl = revealElRef.current;
+        if (revealEl) {
+          if (isVisible && sp) {
+            const rr = revealEl.getBoundingClientRect();
+            revealEl.style.setProperty('--mx', `${Math.round(sp.x - rr.left)}px`);
+            revealEl.style.setProperty('--my', `${Math.round(sp.y - rr.top)}px`);
+            revealEl.style.opacity = '1';
+          } else {
+            revealEl.style.opacity = '0';
+          }
+        }
+      }
 
       if (!isVisible) return;
     }

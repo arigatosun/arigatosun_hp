@@ -69,6 +69,9 @@ export default function GlobalCanvas() {
           walkAnimSpeed={0.8}
           sectionSelector='[data-section="logo-slider"]'
           triggerOnVisible
+          // SP はカーソルが無いので、歩くキャラの位置でロゴ帯のカラー reveal を点灯。
+          // PC は従来通りカーソル追従に任せる。
+          driveReveal={isSp}
           approachMarginPx={2800}
           // 右に抜けてから再度左から入るまでの待ち時間（default 6000ms）。
           // 右に抜けたら待ちなしで即左から再登場させる。
