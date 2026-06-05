@@ -72,17 +72,20 @@ export default function CompanyProfilePin() {
           end: `+=${RISE_PX + HOLD_PX}`,
           pin, // ラッパー（写真＋カード）ごと固定
           pinSpacing: true,
-          scrub: true,
+          // scrub を数値化してスクロールに少し遅れて追従させる（慣性=ぬるっと）。
+          // true だとスクロール 1:1 直結でビタッと止まる。1 は約1秒かけて追従。
+          scrub: 1,
           anticipatePin: 1,
           invalidateOnRefresh: true,
           onRefresh: alignCard,
         },
       });
-      // せり上がり: 下(+RISE_PX) → 中央(0)
+      // せり上がり: 下(+RISE_PX) → 中央(0)。
+      // 中央に向かって減速しながら到達させ（power2.out）、止まる瞬間を柔らかくする。
       tl.fromTo(
         card,
         { y: RISE_PX },
-        { y: 0, ease: 'none', duration: RISE_PX }
+        { y: 0, ease: 'power2.out', duration: RISE_PX }
       );
       // 溜め: 中央(0)で静止。y:0→0 は no-op で消えるため、ダミーで時間だけ進める
       // （この間 card の y は 0 のまま＝中央で静止）。
