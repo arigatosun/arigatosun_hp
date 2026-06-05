@@ -313,6 +313,8 @@ const allMembers: Member[] = [
       'アリガトサンを象徴するマスコットキャラクター。妥協なき愛と感謝の光で、関わるすべての人を照らす存在。',
     career:
       'アリガトサンと共に世界へ羽ばたく、唯一無二の存在。',
+    // 詳細ページはプロフィールではなくチャットUI（デモ）を表示。カードもクリック可能になる。
+    chatBot: true,
   },
 ];
 
@@ -323,6 +325,8 @@ export const members: Member[] = allMembers.filter((m) => !m.hidden);
 // 完了したメンバーだけカードをクリックで遷移可能にし、詳細ページも生成する。
 // 未記入のメンバーは一覧には出るがクリック無効・詳細URLは 404。
 export function isMemberDetailReady(member: Member): boolean {
+  // チャットUI（アリガトくん）も「遷移可能」として扱う
+  if (member.chatBot) return true;
   const intro = member.introParagraphs;
   if (!intro) return false;
   if (Array.isArray(intro)) return intro.length > 0;

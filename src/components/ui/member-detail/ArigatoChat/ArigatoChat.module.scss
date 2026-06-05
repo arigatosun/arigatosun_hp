@@ -1,0 +1,318 @@
+@use '@/styles/fluid' as *;
+@use '@/styles/breakpoints' as *;
+
+.root {
+  @include fluid(padding-inline, 20, 200, 390, 1920);
+  @include fluid(padding-top, 40, 120, 390, 1920);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  @include sp {
+    @include fluid(padding-inline, 20, 200, 390, 1200);
+    @include fluid(padding-top, 40, 120, 390, 1200);
+  }
+}
+
+// ── ヘッダー（アリガトくんのアバター + 名前） ──
+.header {
+  width: 100%;
+  max-width: 760px;
+  display: flex;
+  align-items: center;
+  @include fluid(gap, 16, 24, 390, 1920);
+  @include fluid(margin-bottom, 24, 40, 390, 1920);
+
+  @include sp {
+    @include fluid(gap, 16, 24, 390, 1200);
+    @include fluid(margin-bottom, 24, 40, 390, 1200);
+  }
+}
+
+.avatar {
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--border-radius-full);
+  background: var(--color-primary);
+  @include fluid(width, 64, 96, 390, 1920);
+  @include fluid(height, 64, 96, 390, 1920);
+
+  @include sp {
+    @include fluid(width, 64, 96, 390, 1200);
+    @include fluid(height, 64, 96, 390, 1200);
+  }
+}
+
+.avatarImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.headerText {
+  display: flex;
+  flex-direction: column;
+}
+
+.role {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-family: var(--font-en);
+  font-weight: var(--font-weight-light);
+  @include fluid(font-size, 12, 14, 390, 1920);
+  @include fluid(letter-spacing, 1.04, 2.08, 390, 1920);
+}
+
+.name {
+  margin: 0;
+  @include fluid(margin-top, 2, 4, 390, 1920);
+  color: var(--color-black);
+  font-family: var(--font-primary);
+  font-weight: var(--font-weight-bold);
+  @include fluid(font-size, 20, 28, 390, 1920);
+  @include fluid(letter-spacing, 1, 2, 390, 1920);
+
+  @include sp {
+    @include fluid(font-size, 20, 28, 390, 1200);
+  }
+}
+
+.status {
+  margin: 0;
+  @include fluid(margin-top, 4, 6, 390, 1920);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-text-secondary);
+  font-family: var(--font-jp);
+  @include fluid(font-size, 12, 14, 390, 1920);
+}
+
+.statusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--border-radius-full);
+  background: #3bbf6e; // オンライン風の緑（装飾用）
+}
+
+// ── チャットウィンドウ ──
+.window {
+  width: 100%;
+  max-width: 760px;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-white);
+  border: 1px solid var(--color-placeholder);
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+}
+
+.messages {
+  @include fluid(height, 380, 480, 390, 1920);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  @include fluid(gap, 14, 18, 390, 1920);
+  @include fluid(padding, 16, 28, 390, 1920);
+  background: var(--color-bg);
+
+  @include sp {
+    @include fluid(height, 380, 480, 390, 1200);
+    @include fluid(gap, 14, 18, 390, 1200);
+    @include fluid(padding, 16, 28, 390, 1200);
+  }
+}
+
+.row {
+  display: flex;
+  align-items: flex-end;
+  @include fluid(gap, 8, 10, 390, 1920);
+  max-width: 86%;
+}
+
+.rowBot {
+  align-self: flex-start;
+}
+
+.rowUser {
+  align-self: flex-end;
+  flex-direction: row-reverse;
+}
+
+.bubbleAvatar {
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--border-radius-full);
+  background: var(--color-primary);
+  @include fluid(width, 32, 40, 390, 1920);
+  @include fluid(height, 32, 40, 390, 1920);
+}
+
+.bubbleAvatarImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.bubble {
+  @include fluid(padding-block, 10, 14, 390, 1920);
+  @include fluid(padding-inline, 14, 18, 390, 1920);
+  border-radius: var(--border-radius-lg);
+  font-family: var(--font-jp);
+  @include fluid(font-size, 13, 15, 390, 1920);
+  @include fluid(line-height, 22, 26, 390, 1920);
+
+  @include sp {
+    @include fluid(font-size, 13, 15, 390, 1200);
+    @include fluid(line-height, 22, 26, 390, 1200);
+  }
+}
+
+.bubbleBot {
+  background: var(--color-white);
+  color: var(--color-black);
+  border: 1px solid var(--color-placeholder);
+  border-bottom-left-radius: var(--border-radius-sm);
+}
+
+.bubbleUser {
+  background: var(--color-primary);
+  color: var(--color-white);
+  border-bottom-right-radius: var(--border-radius-sm);
+}
+
+.bubbleLine {
+  margin: 0;
+
+  & + & {
+    @include fluid(margin-top, 4, 6, 390, 1920);
+  }
+}
+
+.bubbleLink {
+  display: inline-block;
+  @include fluid(margin-top, 8, 10, 390, 1920);
+  color: var(--color-primary);
+  font-weight: var(--font-weight-bold);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: opacity var(--transition-base);
+
+  &:hover {
+    opacity: 0.7;
+  }
+}
+
+// ── クイック返信チップ ──
+.quickReplies {
+  display: flex;
+  flex-wrap: wrap;
+  @include fluid(gap, 8, 10, 390, 1920);
+  @include fluid(padding, 12, 16, 390, 1920);
+  border-top: 1px solid var(--color-placeholder);
+  background: var(--color-white);
+
+  @include sp {
+    @include fluid(gap, 8, 10, 390, 1200);
+    @include fluid(padding, 12, 16, 390, 1200);
+  }
+}
+
+.chip {
+  @include fluid(padding-block, 8, 10, 390, 1920);
+  @include fluid(padding-inline, 14, 18, 390, 1920);
+  border: 1px solid var(--color-primary);
+  border-radius: var(--border-radius-full);
+  background: var(--color-white);
+  color: var(--color-primary);
+  font-family: var(--font-jp);
+  @include fluid(font-size, 12, 14, 390, 1920);
+  cursor: pointer;
+  transition:
+    background var(--transition-base),
+    color var(--transition-base);
+
+  &:hover {
+    background: var(--color-primary);
+    color: var(--color-white);
+  }
+
+  @include sp {
+    @include fluid(font-size, 12, 14, 390, 1200);
+  }
+}
+
+// ── 入力欄 ──
+.inputRow {
+  display: flex;
+  @include fluid(gap, 8, 12, 390, 1920);
+  @include fluid(padding, 12, 16, 390, 1920);
+  border-top: 1px solid var(--color-placeholder);
+  background: var(--color-white);
+
+  @include sp {
+    @include fluid(gap, 8, 12, 390, 1200);
+    @include fluid(padding, 12, 16, 390, 1200);
+  }
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  @include fluid(padding-block, 10, 12, 390, 1920);
+  @include fluid(padding-inline, 14, 16, 390, 1920);
+  border: 1px solid var(--color-placeholder);
+  border-radius: var(--border-radius-full);
+  background: var(--color-bg);
+  color: var(--color-black);
+  font-family: var(--font-jp);
+  @include fluid(font-size, 13, 15, 390, 1920);
+
+  &::placeholder {
+    color: var(--color-text-secondary);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: var(--color-primary);
+  }
+
+  @include sp {
+    @include fluid(font-size, 13, 15, 390, 1200);
+  }
+}
+
+.sendButton {
+  flex-shrink: 0;
+  @include fluid(padding-block, 10, 12, 390, 1920);
+  @include fluid(padding-inline, 18, 24, 390, 1920);
+  border: none;
+  border-radius: var(--border-radius-full);
+  background: var(--color-primary);
+  color: var(--color-white);
+  font-family: var(--font-jp);
+  font-weight: var(--font-weight-bold);
+  @include fluid(font-size, 13, 15, 390, 1920);
+  cursor: pointer;
+  transition: background var(--transition-base);
+
+  &:hover {
+    background: var(--color-primary-dark);
+  }
+
+  @include sp {
+    @include fluid(font-size, 13, 15, 390, 1200);
+  }
+}
+
+.note {
+  width: 100%;
+  max-width: 760px;
+  @include fluid(margin-top, 12, 16, 390, 1920);
+  color: var(--color-text-secondary);
+  font-family: var(--font-jp);
+  @include fluid(font-size, 11, 12, 390, 1920);
+  line-height: 1.6;
+}

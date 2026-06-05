@@ -42,4 +42,7 @@ export type Member = {
   quote?: string | string[];
   // string[]（PC/SP 共通）または { pc, sp }（ビューポート別の改行）
   introParagraphs?: MemberIntro;
+  // true の場合、詳細ページは通常のプロフィールではなくチャットUI（アリガトくん）を表示。
+  // カードもクリック可能になる。
+  chatBot?: boolean;
 };
