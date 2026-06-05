@@ -548,8 +548,11 @@ export default function WalkingCharacter({
         if (revealEl) {
           if (isVisible && sp) {
             const rr = revealEl.getBoundingClientRect();
+            // 横はキャラに追従（通った真上のロゴが光る）。
+            // 縦はキャラの体（ロゴ帯より下）ではなくロゴ帯の中央に固定し、
+            // スポットが必ずロゴに当たるようにする。
             revealEl.style.setProperty('--mx', `${Math.round(sp.x - rr.left)}px`);
-            revealEl.style.setProperty('--my', `${Math.round(sp.y - rr.top)}px`);
+            revealEl.style.setProperty('--my', `${Math.round(rr.height / 2)}px`);
             revealEl.style.opacity = '1';
           } else {
             revealEl.style.opacity = '0';
