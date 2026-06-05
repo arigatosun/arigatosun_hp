@@ -6,16 +6,32 @@ import Link from 'next/link';
 import Image from 'next/image';
 import styles from './Header.module.scss';
 
-const leftNav = [
-  { href: '/about', label: 'ABOUT' },
-  { href: '/service', label: 'SERVICE', hasDropdown: true },
-  { href: '/works', label: 'WORKS' },
+type DropdownItem = { href: string; label: string };
+type NavItem = {
+  href: string;
+  label: string;
+  hasDropdown?: boolean;
+  dropdown?: DropdownItem[];
+};
+
+// ABOUT 配下のサブ項目。PHILOSOPHY はページ最上部のため ABOUT 本体と同じ /about へ。
+// MEMBER / COMPANY PROFILE は各セクションへのアンカー（既存 section id に対応）。
+const aboutDropdown: DropdownItem[] = [
+  { href: '/about', label: 'PHILOSOPHY' },
+  { href: '/about#member', label: 'MEMBER' },
+  { href: '/about#company-profile', label: 'COMPANY PROFILE' },
 ];
 
-const serviceDropdown = [
+const serviceDropdown: DropdownItem[] = [
   { href: '/service/ai-dev', label: 'AI / DEVELOPMENT' },
   { href: '/service/design-branding', label: 'DESIGN / BRANDING' },
   { href: '/service/ip-creative', label: 'IP / CREATIVE' },
+];
+
+const leftNav: NavItem[] = [
+  { href: '/about', label: 'ABOUT', hasDropdown: true, dropdown: aboutDropdown },
+  { href: '/service', label: 'SERVICE', hasDropdown: true, dropdown: serviceDropdown },
+  { href: '/works', label: 'WORKS' },
 ];
 
 const rightNav = [
@@ -67,9 +83,9 @@ export default function Header() {
               >
                 {item.label}
               </Link>
-              {item.hasDropdown && (
+              {item.hasDropdown && item.dropdown && (
                 <ul className={styles.dropdown}>
-                  {serviceDropdown.map((sub) => (
+                  {item.dropdown.map((sub) => (
                     <li key={sub.href}>
                       <Link href={sub.href} className={styles.dropdownLink}>
                         <span className={styles.dropdownLinkLabel}>
@@ -167,13 +183,30 @@ export default function Header() {
         <div className={styles.menuInner}>
           {/* メインナビ */}
           <nav className={styles.primaryNav}>
-            <Link
-              href="/about"
-              className={`${styles.mobileNavLink} ${isActive('/about') ? styles.active : ''}`}
-              onClick={() => setIsMenuOpen(false)}
-            >
-              ABOUT
-            </Link>
+            {/* ABOUT も SERVICE と同様にサブ項目（各セクションへのアンカー）を展開。
+                グループ/サブリストのスタイルは serviceGroup 系を共用。 */}
+            <div className={styles.serviceGroup}>
+              <Link
+                href="/about"
+                className={`${styles.mobileNavLink} ${isActive('/about') ? styles.active : ''}`}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                ABOUT
+              </Link>
+              <ul className={styles.serviceSubList}>
+                {aboutDropdown.map((sub) => (
+                  <li key={sub.href}>
+                    <Link
+                      href={sub.href}
+                      className={styles.serviceSubLink}
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      ・{sub.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
             <div className={styles.serviceGroup}>
               <Link
