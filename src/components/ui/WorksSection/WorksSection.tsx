@@ -92,6 +92,11 @@ export default function WorksSection({ works }: WorksSectionProps) {
                     {i < arr.length - 1 && (
                       <span className={styles.separatorWrap}><span className={styles.separator}>|</span></span>
                     )}
+                    {/* "|" 直後を >=1920px だけ強制改行（Figma 厳密一致）。1920px 未満は
+                        display:none で自然折り返しに任せる（.pcMaxBreak / works.ts のフラグ）。 */}
+                    {i < arr.length - 1 && work.breakAfterPipeAtMax && (
+                      <br className={styles.pcMaxBreak} />
+                    )}
                   </span>
                 ))}
               </h3>
