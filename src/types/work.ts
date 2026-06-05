@@ -79,6 +79,11 @@ export type WorkHero = {
    */
   flatPhoto?: boolean;
   /**
+   * SP ヒーロー画像の object-position（cover トリミング基準）。
+   * 横長の PC 画像を SP 縦枠に流用する時、ロゴ等が中央に来るよう調整する（例: '12% center'）。
+   */
+  spPhotoPosition?: string;
+  /**
    * SP のヘッダーとヒーロー上端の追加ギャップ (px)。
    * Figma SP の白余白に合わせて調整。既定 0。
    */
@@ -178,6 +183,12 @@ export type WorkContentBlock = { gap: number; spGap?: number } & (
       /** SP 専用 w / h (aspect-ratio に使用)。省略時は w / h を流用 */
       spW?: number;
       spH?: number;
+      /**
+       * SP 専用の画像スライダー。指定時、SP は単一画像ではなく ‹ › で切り替わるスライダーを表示する。
+       * spSliderAspect はスライダー枠のアスペクト比（例: '620 / 1140'）。
+       */
+      spSlider?: string[];
+      spSliderAspect?: string;
       /** SP で 28px の左右 padding を解除して画面端まで広げる (pair プレースホルダーと同じ full-bleed 挙動) */
       spFullBleed?: boolean;
       /** SP のみ画像内右下にオーバーレイ表示するキャプション (PC では別途 caption ブロックを使う想定) */

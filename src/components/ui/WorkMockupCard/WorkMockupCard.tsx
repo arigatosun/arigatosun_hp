@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import WorkImageSlider from '@/components/ui/WorkImageSlider';
 import styles from './WorkMockupCard.module.scss';
 
 type SpVariant = 'pairStacked' | 'pairSplit2' | 'variations11' | 'placeholder';
@@ -16,6 +17,8 @@ type WorkMockupCardProps = {
   spH?: number;
   spFullBleed?: boolean;
   spCaption?: string;
+  spSlider?: string[];
+  spSliderAspect?: string;
 };
 
 /**
@@ -97,6 +100,8 @@ export default function WorkMockupCard({
   spH,
   spFullBleed = false,
   spCaption,
+  spSlider,
+  spSliderAspect,
 }: WorkMockupCardProps) {
   const spImageSrc = spSrc ?? src;
   const spRatioW = spW ?? w;
@@ -123,8 +128,12 @@ export default function WorkMockupCard({
         )}
       </div>
 
-      {/* SP: sp が指定された場合は variant プレースホルダー、未指定は SP 画像（spSrc or src）カード */}
-      {sp ? (
+      {/* SP: spSlider 指定時は ‹ › スライダー、sp 指定時は variant プレースホルダー、それ以外は単一画像 */}
+      {spSlider && spSlider.length > 0 ? (
+        <div className={styles.cardSpSlider}>
+          <WorkImageSlider images={spSlider} alt="" aspectRatio={spSliderAspect} />
+        </div>
+      ) : sp ? (
         <div className={styles.cardSp}>
           <SpPlaceholder variant={sp.variant} aspectRatio={sp.spAspectRatio} />
         </div>

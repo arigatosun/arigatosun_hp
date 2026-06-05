@@ -18,9 +18,11 @@ type CollageProps = {
   frameW: number;
   frameH: number;
   variant: 'pc' | 'sp';
+  /** cover トリミング基準（object-position）。指定時のみ各画像に適用。 */
+  objectPosition?: string;
 };
 
-function Collage({ photos, frameW, frameH, variant }: CollageProps) {
+function Collage({ photos, frameW, frameH, variant, objectPosition }: CollageProps) {
   return (
     <div className={styles.collage}>
       {photos.map((photo, index) => {
@@ -47,6 +49,7 @@ function Collage({ photos, frameW, frameH, variant }: CollageProps) {
                 fill
                 sizes={`(max-width: 1023px) ${Math.min(100, widthVw + 20)}vw, ${widthVw}vw`}
                 className={styles.photoImg}
+                style={objectPosition ? { objectPosition } : undefined}
               />
             ) : (
               <div className={styles.placeholder} aria-hidden="true" />
@@ -111,6 +114,7 @@ export default function WorkDetailHero({ hero }: WorkDetailHeroProps) {
             frameW={spW}
             frameH={spH}
             variant={hero.spPhotos ? 'pc' : 'sp'}
+            objectPosition={hero.spPhotoPosition}
           />
         </div>
         {hero.spLogo === false ? null : Logo}

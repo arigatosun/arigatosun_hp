@@ -627,11 +627,11 @@ const MENTE_DETAIL: WorkDetailContent = {
     band: 'none',
     flatPhoto: true,
     photos: [{ src: `${MENTE}/hero.png`, x: 0, y: 0, width: 1920, height: 820 }],
-    // SP: 専用デザイン未提供のため暫定プレースホルダー（画像/レイアウトは後日）
+    // SP: 専用ヒーロー画像（780×1116 = 390×558 @2x）。縦枠ちょうどなのでクロップ不要
     spOffsetTop: 42.5,
     spWidth: 390,
-    spHeight: 520,
-    spPhotos: [{ x: 0, y: 0, width: 390, height: 520 }],
+    spHeight: 558,
+    spPhotos: [{ src: `${MENTE}/hero-sp.png`, x: 0, y: 0, width: 390, height: 558 }],
   },
   blocks: [
     {
@@ -683,7 +683,14 @@ const MENTE_DETAIL: WorkDetailContent = {
       ],
     },
     // 図版「ゼロベースから使われるアプリへ具現化」。Figma arigatosun_web_works-04 (1520×823)
-    { type: 'mockupCard', gap: 60, src: `${MENTE}/diagram-flow.png`, w: 1520, h: 823 },
+    {
+      type: 'mockupCard',
+      gap: 60,
+      src: `${MENTE}/diagram-flow.png`,
+      w: 1520,
+      h: 823,
+      spFullBleed: true,
+    },
     {
       type: 'textSection',
       gap: 240,
@@ -692,9 +699,23 @@ const MENTE_DETAIL: WorkDetailContent = {
       heading: '■サービスとして動かすための、画面・機能・管理導線を実装。',
     },
     // 図版「双方に迷わず伝わる体験を設計」。Figma arigatosun_web_works-03 (1520×824)
-    { type: 'mockupCard', gap: 60, src: `${MENTE}/diagram-experience.png`, w: 1520, h: 824 },
+    {
+      type: 'mockupCard',
+      gap: 60,
+      src: `${MENTE}/diagram-experience.png`,
+      w: 1520,
+      h: 824,
+      spFullBleed: true,
+    },
     // 図版「選びやすい×選ばれやすいを予約体験の中心でつなぐ」。Figma arigatosun_web_works-02 (1520×773)
-    { type: 'mockupCard', gap: 60, src: `${MENTE}/diagram-booking.png`, w: 1520, h: 773 },
+    {
+      type: 'mockupCard',
+      gap: 60,
+      src: `${MENTE}/diagram-booking.png`,
+      w: 1520,
+      h: 773,
+      spFullBleed: true,
+    },
     {
       type: 'paragraph',
       gap: 80,
@@ -730,13 +751,17 @@ const MENTE_DETAIL: WorkDetailContent = {
       level: 'main',
       heading: '■ロゴデザイン',
     },
-    // ロゴデザイン。Figma arigatosun_web_works-06 (1520×651) + 画像内右下オーバーレイ
+    // ロゴデザイン。PC は横長 (1520×651)、SP は縦長専用画像 (780×968 = 390×484@2x) に切替
     {
       type: 'mockupCard',
       gap: 60,
       src: `${MENTE}/logo-design.png`,
       w: 1520,
       h: 651,
+      spSrc: `${MENTE}/logo-design-sp.png`,
+      spW: 390,
+      spH: 484,
+      spFullBleed: true,
       spCaption: '＜ロゴデザイン(一部抜粋)＞',
     },
     {
@@ -753,8 +778,21 @@ const MENTE_DETAIL: WorkDetailContent = {
         '管理画面では、公開後の運用や改善も見据え、美容師側・運営側が情報を管理しやすい設計を目指しました。',
       ],
     },
-    // アプリ画面。Figma Group 1288 / arigatosun_web_works-08 (1520×824)
-    { type: 'mockupCard', gap: 60, src: `${MENTE}/app-screens.png`, w: 1520, h: 824 },
+    // アプリ画面。PC は3画面まとめ (1520×824)、SP は3枚を ‹ › スライダーで切替
+    {
+      type: 'mockupCard',
+      gap: 60,
+      src: `${MENTE}/app-screens.png`,
+      w: 1520,
+      h: 824,
+      spFullBleed: true,
+      spSlider: [
+        `${MENTE}/app-sp-1-detail.png`,
+        `${MENTE}/app-sp-2-filter.png`,
+        `${MENTE}/app-sp-3-time.png`,
+      ],
+      spSliderAspect: '620 / 1140',
+    },
     {
       type: 'textSection',
       gap: 80,

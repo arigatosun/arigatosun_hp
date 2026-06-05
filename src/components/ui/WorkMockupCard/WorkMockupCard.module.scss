@@ -92,6 +92,16 @@
   background: var(--color-placeholder);
 }
 
+// ── SP スライダー（spSlider 指定時のみ・SP で ‹ › 切替表示）──────
+.cardSpSlider {
+  display: none;
+
+  @include sp {
+    display: block;
+    width: 100%;
+  }
+}
+
 // ── SP variant 用カード（プレースホルダー描画）──────────────
 .cardSp {
   display: none;
