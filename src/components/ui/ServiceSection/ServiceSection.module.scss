@@ -277,14 +277,13 @@
   padding-top: 30px;
 
   @include sp {
-    // Figma SP @390: カード x=20 / w=350 → page 端から 20px padding
+    // /service ページのカードと同じ幅にする（Figma SP @390: カード x=20 / w=350 → 左右 20px）。
     // PC 用の margin-left:-38 / padding-top:30 は SP では完全リセット
     overflow: hidden;
     margin-left: 0;
     padding-top: 0;
-    // About と中間幅で左右余白を揃える: 補間範囲 390→1920 / 40→200(左)・40→80(右)
-    @include fluid(padding-left, 40, 200, 390, 1920);
-    @include fluid(padding-right, 40, 80, 390, 1920);
+    @include fluid(padding-left, 20, 200, 390, 1920);
+    @include fluid(padding-right, 20, 80, 390, 1920);
     // 縦版「文字にかぶさる」: カードを sticky 文字(.left z-index:1)より前面に置き、
     // スクロールで上の文字を覆い隠す。
     position: relative;

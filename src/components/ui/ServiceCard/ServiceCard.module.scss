@@ -268,13 +268,12 @@
   letter-spacing: 0.1727vw; // Figma 3.315px
 
   @include sp {
-    // Figma SP @390: 24px / letter-spacing 3.12
-    // 「DESIGN / BRANDING」等が container 幅 (≈294px) で 2 行折返しになるため
-    // SP は強制 1 行表示にする
+    // /service ページのカードに合わせる（SP: 20px / letter-spacing 2.6）。
+    // 「DESIGN / BRANDING」等が 2 行折返ししないよう SP は 1 行表示。
     @include fluid(margin-top, 12, 20);
-    @include fluid(font-size, 24, 26);
+    @include fluid(font-size, 20, 20);
     line-height: 1.2;
-    @include fluid(letter-spacing, 3.12, 3.315);
+    @include fluid(letter-spacing, 2.6, 2.6);
     white-space: nowrap;
   }
 }
@@ -293,10 +292,10 @@
   white-space: pre-line;
 
   @include sp {
-    // Figma SP: 12px / line-height 24 / letter-spacing 1.56
+    // /service ページのカードに合わせる（SP: 14px / line-height 20 / letter-spacing 1.82）。
     @include fluid(margin-top, 12, 16);
-    @include fluid(font-size, 12, 14);
-    @include fluid(line-height, 22, 26);
-    @include fluid(letter-spacing, 1.56, 1.82);
+    @include fluid(font-size, 14, 14);
+    @include fluid(line-height, 20, 20);
+    @include fluid(letter-spacing, 1.82, 1.82);
   }
 }
