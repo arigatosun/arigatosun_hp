@@ -188,21 +188,29 @@ export default function Header() {
         <div className={styles.menuInner}>
           {/* メインナビ */}
           <nav className={styles.primaryNav}>
-            {/* ABOUT: タップで開閉するアコーディオン（デフォルト閉じ＝コンパクト）。
-                /about トップは PHILOSOPHY(=/about) で到達できる。 */}
+            {/* ABOUT: ラベル＝/about へ遷移 / ▼アイコン＝サブメニュー開閉。 */}
             <div className={styles.spAccordion}>
-              <button
-                type="button"
-                className={`${styles.spAccordionHeader} ${isActive('/about') ? styles.active : ''}`}
-                onClick={() => toggleMenu('about')}
-                aria-expanded={!!openMenus.about}
-              >
-                <span>ABOUT</span>
-                <span
-                  className={`${styles.spAccordionIcon} ${openMenus.about ? styles.spAccordionIconOpen : ''}`}
-                  aria-hidden="true"
-                />
-              </button>
+              <div className={styles.spAccordionHeader}>
+                <Link
+                  href="/about"
+                  className={`${styles.spAccordionLabel} ${isActive('/about') ? styles.active : ''}`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  ABOUT
+                </Link>
+                <button
+                  type="button"
+                  className={styles.spAccordionToggle}
+                  onClick={() => toggleMenu('about')}
+                  aria-expanded={!!openMenus.about}
+                  aria-label={openMenus.about ? 'ABOUT のサブメニューを閉じる' : 'ABOUT のサブメニューを開く'}
+                >
+                  <span
+                    className={`${styles.spAccordionIcon} ${openMenus.about ? styles.spAccordionIconOpen : ''}`}
+                    aria-hidden="true"
+                  />
+                </button>
+              </div>
               <div
                 className={`${styles.spAccordionPanel} ${openMenus.about ? styles.spAccordionPanelOpen : ''}`}
               >
@@ -222,20 +230,29 @@ export default function Header() {
               </div>
             </div>
 
-            {/* SERVICE: タップで開閉するアコーディオン（デフォルト閉じ）。 */}
+            {/* SERVICE: ラベル＝/service へ遷移 / ▼アイコン＝サブメニュー開閉。 */}
             <div className={styles.spAccordion}>
-              <button
-                type="button"
-                className={`${styles.spAccordionHeader} ${isActive('/service') ? styles.active : ''}`}
-                onClick={() => toggleMenu('service')}
-                aria-expanded={!!openMenus.service}
-              >
-                <span>SERVICE</span>
-                <span
-                  className={`${styles.spAccordionIcon} ${openMenus.service ? styles.spAccordionIconOpen : ''}`}
-                  aria-hidden="true"
-                />
-              </button>
+              <div className={styles.spAccordionHeader}>
+                <Link
+                  href="/service"
+                  className={`${styles.spAccordionLabel} ${isActive('/service') ? styles.active : ''}`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  SERVICE
+                </Link>
+                <button
+                  type="button"
+                  className={styles.spAccordionToggle}
+                  onClick={() => toggleMenu('service')}
+                  aria-expanded={!!openMenus.service}
+                  aria-label={openMenus.service ? 'SERVICE のサブメニューを閉じる' : 'SERVICE のサブメニューを開く'}
+                >
+                  <span
+                    className={`${styles.spAccordionIcon} ${openMenus.service ? styles.spAccordionIconOpen : ''}`}
+                    aria-hidden="true"
+                  />
+                </button>
+              </div>
               <div
                 className={`${styles.spAccordionPanel} ${openMenus.service ? styles.spAccordionPanelOpen : ''}`}
               >
