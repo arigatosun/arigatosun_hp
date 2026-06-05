@@ -143,6 +143,16 @@
   @include fluid(line-height, 22, 40, 390, 1920); // Figma: 40px
   @include fluid(letter-spacing, 1.6, 3.2, 390, 1920); // Figma: 3.2px
 
+  // PC: Figma 実寸に固定（font 20 / lh 40 / ls 3.2 / 上 40）。改行位置はデータ側の \n と
+  // WorksSection の <br>/lastLine 変換で明示制御しているため max-width は不要
+  // （以前の max-width:560 は 1 行目を「|」手前で切ってしまう原因だった）。
+  @include pc {
+    margin-top: 40px;
+    font-size: 20px;
+    line-height: 40px;
+    letter-spacing: 3.2px;
+  }
+
   @include sp {
     // Figma SP: 16px / line-height 28 / letter-spacing 2.56
     @include fluid(margin-top, 16, 40);

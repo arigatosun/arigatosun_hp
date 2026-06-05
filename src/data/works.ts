@@ -18,6 +18,24 @@ const WORKS_DATA: readonly WorkItem[] = [
     imageHeight: 518,
   },
   {
+    id: 'mente',
+    client: 'Men’te',
+    // Figma(3555:112339)の改行に厳密一致させる。閲覧幅依存の自然折り返しは razor-thin で
+    // 不安定なため、改行を明示制御する:
+    //   L1「…動き出す。|」/ L2「構想整理…一気通貫の」/ L3「立ち上げ支援」
+    // 「|」直後と「立ち上げ支援」前にそれぞれ \n を置き、WorksSection 側で <br>/ブロック行に変換。
+    title:
+      '諦めきれなかった構想が、サービスとして動き出す。|\n構想整理から要件定義・開発・改善まで、一気通貫の\n立ち上げ支援',
+    details: [
+      { label: 'D / B：', value: '構想整理・要件定義・UI/UX・アプリ開発・ロゴ/VI' },
+    ],
+    term: '2025.12 ~ 2026.4',
+    // 一覧カード専用画像（920×520）。カード規格ちょうどなのでトリミング不要。
+    image: '/images/works/mente/card.png',
+    imageWidth: 920,
+    imageHeight: 520,
+  },
+  {
     id: 'logo-archive',
     client: 'VARIOUS CLIENTS',
     title: '独自の核を構築する。| ロゴ・VIのプロジェクトアーカイブ。',
@@ -40,22 +58,6 @@ const WORKS_DATA: readonly WorkItem[] = [
     image: '/images/sections/works/nest.png',
     imageWidth: 920,
     imageHeight: 520,
-  },
-  {
-    id: 'mente',
-    client: 'Men’te',
-    title:
-      '諦めきれなかった構想が、サービスとして動き出す。| 構想整理から要件定義・開発・改善まで、一気通貫の立ち上げ支援',
-    details: [
-      { label: 'D / B：', value: '構想整理・要件定義・UI/UX・アプリ開発・ロゴ/VI' },
-    ],
-    term: '2025.12 ~ 2026.4',
-    // 一覧カードは詳細ヒーロー画像を流用（カード枠で cover 表示）。
-    // 横長画像のため左端合わせ（中央クロップだと左の Men’te ロゴが切れる）。
-    image: '/images/works/mente/hero.png',
-    imageWidth: 1920,
-    imageHeight: 820,
-    imagePosition: 'left center',
   },
   // work-5 以降は今後の実装枠（プレースホルダ）。実データができ次第コメントを外す。
   /*

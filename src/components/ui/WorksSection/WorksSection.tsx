@@ -79,11 +79,16 @@ export default function WorksSection({ works }: WorksSectionProps) {
               <h3 className={styles.itemTitle}>
                 {work.title.split('|').map((part, i, arr) => (
                   <span key={i} className={i > 0 ? styles.afterSeparator : undefined}>
-                    {part.split('\n').map((line, j, lines) => (
-                      <span key={j} className={i > 0 && j > 0 ? styles.lastLine : undefined}>
-                        {line}{j < lines.length - 1 && <br />}
-                      </span>
-                    ))}
+                    {part.split('\n').map((line, j, lines) => {
+                      // i>0 && j>0 のセグメントは display:block（lastLine）で行が分かれるため、
+                      // 末尾 <br> を足すと block 内に空行が生じる。block 行には <br> を付けない。
+                      const isBlockLine = i > 0 && j > 0;
+                      return (
+                        <span key={j} className={isBlockLine ? styles.lastLine : undefined}>
+                          {line}{j < lines.length - 1 && !isBlockLine && <br />}
+                        </span>
+                      );
+                    })}
                     {i < arr.length - 1 && (
                       <span className={styles.separatorWrap}><span className={styles.separator}>|</span></span>
                     )}
