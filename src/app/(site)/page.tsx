@@ -9,7 +9,6 @@ import NewsSection from '@/components/ui/NewsSection';
 import LogoSlider from '@/components/ui/LogoSlider';
 import MessageSection from '@/components/ui/MessageSection';
 import GlobalCanvasLoader from '@/components/three/GlobalCanvasLoader';
-import HeroResponsiveCharacter from '@/components/three/HeroResponsiveCharacter';
 import { getAllWorks } from '@/data/works';
 
 export default async function Home() {
@@ -62,31 +61,9 @@ export default async function Home() {
           </h1>
 
           <div className={styles.heroLabelsArea}>
-            <div className={styles.heroCharacter}>
-              {/* TOP Hero 用キャラ。位置調整：
-                  デフォルト -19.37 → -22.52（左に 3.15 world ≒ 40px シフト）。
-                  heroCharacter の transform: translate(20px, 0) で枠も右にシフト。
-                  charRotationY で body 向きを微調整して完全正面に。
-                  位置確認したい時は `debug` prop を付ければ視覚化される。
-                  cameraPosition Z=28 はデフォルト 14 の 2x。SCSS 側で Canvas を
-                  2x に拡張しているので、カメラを引いて見た目のキャラサイズを維持しつつ
-                  手振り等の動きが見切れないよう描画余白を確保している。
-                  cameraPosition Y=-5 は、キャラ本体 (armature root が world Y≒-1.79) より
-                  さらに下に降ろし、見下ろし気味だった視点を正面〜やや下からの見え方に補正。
-                  キャラ自体の回転は変えていない。 */}
-              <div className={styles.heroCharacterCanvas}>
-                {/* SP は 390:70% → 1023:100% に可変（3D charScale で縮小し位置を保つ）。PC は等倍。 */}
-                <HeroResponsiveCharacter
-                  glbPath="/models/arigatokunn_wave_meshopt.glb?v=opt1"
-                  meshopt
-                  charPosition={[-20.93, -0.75, 0]}
-                  charRotationY={0}
-                  cameraPosition={[2, -5, 28]}
-                  orthographic
-                  cameraZoom={15}
-                />
-              </div>
-            </div>
+            {/* Hero 手振り 3D キャラは非表示（SP/PC 両方）。レイアウト箱（.heroCharacter）は
+                スペーサーとして残し、heroLabels の右端整列（ロゴ「ン」基準）と area 高さを維持する。 */}
+            <div className={styles.heroCharacter} aria-hidden="true" />
             <ul className={styles.heroLabels}>
               <li>AI / DEVELOPMENT</li>
               <li>DESIGN / BRANDING</li>
