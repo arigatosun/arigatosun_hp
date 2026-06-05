@@ -343,22 +343,44 @@
 .spMotifs[data-exited='true'] .spMotifEntry:nth-of-type(8n + 7) { transition-duration: 0.9s;  transition-delay: 0.2s; }
 .spMotifs[data-exited='true'] .spMotifEntry:nth-of-type(8n)     { transition-duration: 0.7s;  transition-delay: 0.08s; }
 
-// ── SP: 継続モーションのみ無効化（負荷軽減）。入場・退場は有効 ──
-// 重い「継続描画」系（各モチーフの浮遊 float / scroll 視差 / マウス視差）だけを止める。
-// 入場（散開→集合）・退場（上方へ抜ける）はワンショットの transition なので維持する。
-// JS 側でも SP は mouse / parallax リスナーは張らず（--mx/--my/--py は 0）、入場/退場の
-// scroll 監視のみ有効。
+// ── SP: 「まとめて動かす」＋ GPU レイヤー化（負荷軽減）──
+// 17個の影フィルタ(ぼかし)を個別に再ラスタライズすると重いので、コンテナ(.spMotifs)を
+// 1枚の合成レイヤーに固定し、入場/退場はこのレイヤーごと平行移動＋フェードで行う。
+// → 影は一度だけ焼かれ、以後は GPU 合成（平行移動）だけで済むため大幅に軽くなる。
+// 個々のモチーフ(.spMotifEntry/.spMotif)は動かさず Figma 書き出し位置で静止させる。
+// 浮遊 float / scroll 視差 / マウス視差は引き続き無効（JS 側でも SP は張らない）。
 @include sp {
-  // 各モチーフの継続浮遊を停止（入場/退場の transform transition とは別物なので両立）。
+  // コンテナ＝合成レイヤー。入場前は画面下＋透明（中央寄せ translateX(-50%) は維持）。
+  .spMotifs {
+    transform: translateX(-50%) translateY(80vh);
+    opacity: 0;
+    transition: transform 1.05s cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 0.7s ease;
+    will-change: transform, opacity; // レイヤー昇格（影フィルタを一度だけ焼く）
+  }
+  // 入場: レイヤーごと定位置へ。
+  .spMotifs[data-entered='true'] {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+  // 退場: レイヤーごと上方へ抜ける（data-exited は data-entered より後段＝優先）。
+  .spMotifs[data-exited='true'] {
+    transform: translateX(-50%) translateY(-160vh);
+    transition-timing-function: cubic-bezier(0.55, 0, 0.85, 0.3);
+  }
+
+  // 個々のモチーフは一切動かさない（レイヤー内で静止）。base / entered / exited の
+  // 全状態で transform:none・opacity:1 に固定（具体度を合わせて後勝ちで上書き）。
   .spMotif {
     animation: none;
   }
-  // Figma 厳密一致: 演出用の微オフセット(--fx/--fy)を 0 にし、集合後は Figma SP の
-  // 書き出し位置（Group 933）に静止させる（入場はこの位置へ集まり、退場はここから抜ける）。
-  // nth-of-type(具体度 0,2,0) を上書きするため .spMotifs を冠して同具体度＋後勝ちにする。
-  .spMotifs .spMotifEntry {
-    --fx: 0;
-    --fy: 0;
+  .spMotifs .spMotifEntry,
+  .spMotifs[data-entered='true'] .spMotifEntry,
+  .spMotifs[data-exited='true'] .spMotifEntry {
+    transform: none;
+    opacity: 1;
+    transition: none;
+    will-change: auto;
   }
 }
 
