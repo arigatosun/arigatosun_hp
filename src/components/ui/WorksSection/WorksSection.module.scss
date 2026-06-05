@@ -290,6 +290,17 @@
   }
 }
 
+// TERM の値だけ Mozaic GEO に統一（ラベル「TERM：」と同じ字面に揃える）。
+// 既定の .detailValue は和文の汎用詳細値用に Noto Sans JP のまま。
+// font-primary は「Mozaic GEO Variable + 日本語フォールバック」なので、
+// 日付は Mozaic GEO、TERM に含まれる和文（例「（…算出）」）は崩れず表示される。
+// color / font-size(max16) / letter-spacing(max2.08) は .detailValue が既に Figma 値に一致。
+.termValue {
+  font-family: var(--font-primary);
+  font-weight: var(--font-weight-light); // Figma: 300
+  line-height: 1.125; // Figma: 18px / 16px = 112.5%
+}
+
 // ── 右側画像 ──
 .itemRight {
   // 元 57%（Figma: 画像エリア877 / セクション幅1537）。PC で画像が大きいため縮小。
