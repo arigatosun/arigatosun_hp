@@ -400,11 +400,11 @@
     justify-content: center;
     text-align: center;
     padding-right: 0;
-    @include fluid(gap, 16, 40);
-    // Figma SP: 並びは「VIEW WORKS ボタン → キャラ → テキスト」
+    // Figma SP(3602:96522): ボタン下端→テキスト上端 ≈ 45px
+    @include fluid(gap, 45, 40);
+    // Figma SP: 並びは「VIEW WORKS ボタン → テキスト」（座りキャラは撤去済み）
     .footerButton { order: 1; }
-    .footerCharacter { order: 2; }
-    .footerText { order: 3; }
+    .footerText { order: 2; }
   }
 }
 
@@ -446,6 +446,8 @@
 .footerText {
   display: flex;
   flex-direction: column;
+  // Figma(3602:96521) 準拠で右寄せ。塊（テキスト＋ボタン）の中央配置は .footer の
+  // justify-content: center で担保し、テキスト自体は右揃えにする。
   align-items: flex-end;
   @include fluid(width, 280, 593, 390, 1920);
   @include fluid(margin-left, 2, 4, 390, 1920);
@@ -469,6 +471,9 @@
   text-align: right;
   font-family: var(--font-en);
   // PC は一回り小さく（元 14 → 12）。SP は @include max(1023px) で 14 のまま維持。
+  // Figma(3602:96521) の 2 行構成（「…BRANDING /」で改行）は font 14px・幅 593 前提だが、
+  // PC は 12px・幅可変のため自然折り返しが「WEB DESIGN /」までいく。改行位置を Figma に
+  // 合わせるため .servicesPcBreak（PC のみ表示の <br>）で「BRANDING /」直後を明示改行する。
   @include fluid(font-size, 10, 12, 390, 1920);
   font-style: normal;
   font-weight: var(--font-weight-light);
@@ -476,12 +481,22 @@
   @include fluid(letter-spacing, 0.9, 1.56, 390, 1920);
 
   @include max(1023px) {
-    // Figma SP @390: 14px / line-height 21 / letter-spacing 1.82
-    // 4 行折返しになるよう SP も Figma の数値そのままを採用
+    // Figma SP(3602:96522): 10px / line-height 18 / letter-spacing 1.3 / 中央。
+    // 幅 310・10px で自然折り返しし、Figma の 3 行構成になる。
     text-align: center;
-    @include fluid(font-size, 14, 14);
-    @include fluid(line-height, 21, 21);
-    @include fluid(letter-spacing, 1.82, 1.82);
+    @include fluid(font-size, 10, 10);
+    @include fluid(line-height, 18, 18);
+    @include fluid(letter-spacing, 1.3, 1.3);
+  }
+}
+
+// サービス羅列の「BRANDING /」直後の改行。PC のみ表示し Figma(3602:96521) の 2 行構成に
+// 一致させる。SP は非表示にして従来の幅依存の自然折り返し（4 行）を維持する。
+.servicesPcBreak {
+  display: none;
+
+  @include pc {
+    display: inline;
   }
 }
 
@@ -498,13 +513,13 @@
   @include fluid(letter-spacing, 0.8, 1.56, 390, 1920);
 
   @include max(1023px) {
-    // Figma SP @390: 12px / line-height 15.75
-    // letter-spacing は Figma 1.56 だと 310 幅で 10px はみ出すため 1.2 に絞って 1 行に収める
+    // Figma SP(3602:96522): サービス羅列と同ブロック・10px / line-height 18 / letter-spacing 1.3。
+    // コピーライトはサービス3行の直下に続く（余分な上マージンは取らない）。
     text-align: center;
-    @include fluid(margin-top, 8, 12);
-    @include fluid(font-size, 12, 12);
-    @include fluid(line-height, 15.75, 15.75);
-    @include fluid(letter-spacing, 1.2, 1.56);
+    margin-top: 0;
+    @include fluid(font-size, 10, 10);
+    @include fluid(line-height, 18, 18);
+    @include fluid(letter-spacing, 1.3, 1.3);
   }
 }
 

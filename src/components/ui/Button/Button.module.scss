@@ -73,9 +73,11 @@
   @include sp {
     width: 100%;
     max-width: 320px;
-    // base の height/font/letter-spacing は SP にも効くため現状(1200)カーブに固定
-    @include fluid(height, 44, 60);
-    @include fluid(font-size, 14, 18);
-    @include fluid(letter-spacing, 1.2, 2.34);
+    // SP は Figma(3602:96522) のボタンに合わせ default と同寸へ引き上げる
+    //（高さ 56 / 文字 16 / letter-spacing 2.08 / radius 37.26）。SP の sm ボタン全体に適用。
+    @include fluid(height, 56, 64);
+    @include fluid(font-size, 16, 20);
+    @include fluid(letter-spacing, 2.08, 2.6);
+    border-radius: 37.26px;
   }
 }
