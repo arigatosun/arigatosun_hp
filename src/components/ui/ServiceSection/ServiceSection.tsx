@@ -191,16 +191,12 @@ export default function ServiceSection() {
       const leftContentEl = section.querySelector<HTMLElement>(`.${styles.leftContent}`);
       if (!leftContentEl) return;
 
-      let covered = false;
       const st = ScrollTrigger.create({
         trigger: section,
         start: 'top bottom',
         end: 'bottom top',
         invalidateOnRefresh: true,
-        onUpdate: (self) => {
-          // セクション先頭付近まで戻したら latch 解除（カードが退いた状態で文字を復帰）
-          if (self.progress <= 0.05) covered = false;
-
+        onUpdate: () => {
           // カード群が leftContent を縦方向にどれだけ覆っているか（重なり区間をマージして合算）
           const contentRect = leftContentEl.getBoundingClientRect();
           const cards = Array.from(track.children) as HTMLElement[];
@@ -227,10 +223,10 @@ export default function ServiceSection() {
           if (curEnd > curStart) cov += curEnd - curStart;
           const ratio = contentRect.height > 0 ? cov / contentRect.height : 0;
 
-          // 60% 以上覆われたら「覆われた」と確定（latch）。以降はカードが抜けても非表示を維持。
-          if (ratio >= 0.6) covered = true;
-          // 段階フェードせず 0/1 の二値で即時切替（グラデにしない）
-          section.style.setProperty('--left-hidden', covered ? '1' : '0');
+          // 「実際に覆われている間だけ」即時非表示（二値・グラデにしない）。latch はしない:
+          // latch すると、カードが退いた位置でも文字が消えたまま＝空白になるバグになるため、
+          // 覆われていない時は必ず文字を表示して空白を出さない。
+          section.style.setProperty('--left-hidden', ratio >= 0.6 ? '1' : '0');
         },
       });
 
