@@ -143,7 +143,11 @@
   // 見えてしまうのを防ぐ（entered=true で 1 にフェードイン）。
   transform: translate(var(--sx), var(--sy)) rotate(var(--sr)) scale(var(--ss));
   opacity: 0;
-  transition: transform 1.05s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.7s ease;
+  // ease-in-out（左右対称カーブ）にして、入場(下スクロール)と反転(上スクロール)を同じ
+  // 動き方にする。ease-out だと戻り始めだけ速く感じる非対称が出るため（SP と同じ対応）。
+  // 散開方向(--sx/--sy/--sr)・回転・スタッガー(nth の delay/duration)は不変なのでバラバラ感は維持。
+  transition: transform 1.05s cubic-bezier(0.45, 0, 0.55, 1),
+    opacity 0.7s cubic-bezier(0.45, 0, 0.55, 1);
   will-change: transform, opacity;
 }
 
