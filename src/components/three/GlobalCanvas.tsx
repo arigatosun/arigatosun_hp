@@ -63,13 +63,19 @@ export default function GlobalCanvas() {
         <WalkingCharacter
           glbPath={GLB_PATH}
           direction="left-to-right"
-          speed={1.0}
+          // 移動速度を 1.0 → 0.8 にして歩きを少しゆっくりに。
+          // walkAnimSpeed も同じ 0.8 にして足と地面の同期を保つ（足滑り防止）。
+          speed={0.8}
+          walkAnimSpeed={0.8}
           sectionSelector='[data-section="logo-slider"]'
           triggerOnVisible
           approachMarginPx={2800}
           // 右に抜けてから再度左から入るまでの待ち時間（default 6000ms）。
           // 右に抜けたら待ちなしで即左から再登場させる。
           waitMs={0}
+          // 画面外の助走距離を default 3 → 0.8 に短縮。画面外で歩く「見えない時間」を
+          // 減らし、登場と再登場を早める（speed を上げず足滑りを回避）。
+          offscreenMargin={0.8}
           baseY={logoBaseY}
           scale={walkScale}
           reactOnClick={{
