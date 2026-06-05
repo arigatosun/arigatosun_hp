@@ -140,8 +140,12 @@ export default function WorksSection({ works }: WorksSectionProps) {
       {/* 下部: テキスト + ボタン（3D 座りキャラは非表示） */}
       <div className={styles.footer}>
         <div className={styles.footerText}>
+          {/* Figma(3602:96521) の 2 行構成に合わせ「BRANDING /」直後で改行。
+              PC のみ <br>（.servicesPcBreak）で明示改行し、SP は非表示で自然折り返しに任せる。 */}
           <p className={styles.footerServices}>
-            AI / DEVELOPMENT / APPLICATION / DESIGN / UI / UX / BRANDING / WEB DESIGN / VI / IP / MARKETING / 3D / PHOTOGRAPHY / MOVIE etc...
+            AI / DEVELOPMENT / APPLICATION / DESIGN / UI / UX / BRANDING /{' '}
+            <br className={styles.servicesPcBreak} />
+            WEB DESIGN / VI / IP / MARKETING / 3D / PHOTOGRAPHY / MOVIE etc...
           </p>
           <p className={styles.footerCopyright}>
             &copy; 2026 ARIGATOSUN. ALL RIGHTS RESERVED.

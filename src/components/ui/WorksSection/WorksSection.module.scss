@@ -435,9 +435,9 @@
 .footerText {
   display: flex;
   flex-direction: column;
-  // 左の 3D キャラを撤去したため、右寄せ（flex-end）をやめて中央揃えにし、
-  // 「テキスト＋ボタン」の塊が見た目でも中央に来るようにする。
-  align-items: center;
+  // Figma(3602:96521) 準拠で右寄せ。塊（テキスト＋ボタン）の中央配置は .footer の
+  // justify-content: center で担保し、テキスト自体は右揃えにする。
+  align-items: flex-end;
   @include fluid(width, 280, 593, 390, 1920);
   @include fluid(margin-left, 2, 4, 390, 1920);
 
@@ -457,9 +457,12 @@
 // Figma: font 14 / line-height 21 / letter-spacing 1.82
 .footerServices {
   color: var(--color-text-secondary);
-  text-align: center;
+  text-align: right;
   font-family: var(--font-en);
   // PC は一回り小さく（元 14 → 12）。SP は @include max(1023px) で 14 のまま維持。
+  // Figma(3602:96521) の 2 行構成（「…BRANDING /」で改行）は font 14px・幅 593 前提だが、
+  // PC は 12px・幅可変のため自然折り返しが「WEB DESIGN /」までいく。改行位置を Figma に
+  // 合わせるため .servicesPcBreak（PC のみ表示の <br>）で「BRANDING /」直後を明示改行する。
   @include fluid(font-size, 10, 12, 390, 1920);
   font-style: normal;
   font-weight: var(--font-weight-light);
@@ -476,11 +479,21 @@
   }
 }
 
+// サービス羅列の「BRANDING /」直後の改行。PC のみ表示し Figma(3602:96521) の 2 行構成に
+// 一致させる。SP は非表示にして従来の幅依存の自然折り返し（4 行）を維持する。
+.servicesPcBreak {
+  display: none;
+
+  @include pc {
+    display: inline;
+  }
+}
+
 // Figma: font 12 / line-height 15.75 / letter-spacing 1.56、テキスト下から 12px
 .footerCopyright {
   @include fluid(margin-top, 8, 12, 390, 1920);
   color: var(--color-text-secondary);
-  text-align: center;
+  text-align: right;
   font-family: var(--font-en);
   @include fluid(font-size, 10, 12, 390, 1920);
   font-style: normal;
