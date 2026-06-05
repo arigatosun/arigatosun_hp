@@ -143,14 +143,14 @@
   @include fluid(line-height, 22, 40, 390, 1920); // Figma: 40px
   @include fluid(letter-spacing, 1.6, 3.2, 390, 1920); // Figma: 3.2px
 
-  // PC: Figma 実寸に固定して折り返しを完全一致させる（font 20 / lh 40 / ls 3.2 / box 560 / 上 40）。
-  // fluid だと閲覧幅で文字数が変わり Figma と改行がずれるため、PC は固定値にする。
+  // PC: Figma 実寸に固定（font 20 / lh 40 / ls 3.2 / 上 40）。改行位置はデータ側の \n と
+  // WorksSection の <br>/lastLine 変換で明示制御しているため max-width は不要
+  // （以前の max-width:560 は 1 行目を「|」手前で切ってしまう原因だった）。
   @include pc {
     margin-top: 40px;
     font-size: 20px;
     line-height: 40px;
     letter-spacing: 3.2px;
-    max-width: 560px;
   }
 
   @include sp {
