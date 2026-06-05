@@ -182,6 +182,31 @@ export default function ServiceSection() {
       tl.to({}, { duration: END_HOLD / SPAN });
     });
 
+    // SP(≤1023px): 縦版「文字にかぶさる」演出。
+    // 文字ブロック(.left)を position:sticky で画面上部に貼り付け、その上を不透明なカード
+    // (.right z-index 上)が縦スクロールで覆っていく（＝PC の横スクロールの縦版）。
+    // カード間ギャップから sticky 文字が覗かないよう、覆われる距離分かけて文字をフェードアウト。
+    // 覆い切った後はピンを使わず通常スクロールでカード→ボタン→次セクションへ続く。
+    mm.add('(max-width: 1023px)', () => {
+      const leftEl = section.querySelector<HTMLElement>(`.${styles.left}`);
+      if (!leftEl) return;
+
+      // セクション先頭から「文字ブロック高さ」分スクロールする間に opacity 1→0。
+      // end を過ぎた後は最後の値(=非表示)が保持されるため、カードが流れた後も文字は出ない。
+      const st = ScrollTrigger.create({
+        trigger: section,
+        start: 'top top',
+        end: () => `+=${Math.max(leftEl.offsetHeight, 1)}`,
+        scrub: true,
+        invalidateOnRefresh: true,
+        onUpdate: (self) => {
+          section.style.setProperty('--left-hidden', String(self.progress));
+        },
+      });
+
+      return () => st.kill();
+    });
+
     return () => mm.revert();
   }, [updateActiveMenu]);
 

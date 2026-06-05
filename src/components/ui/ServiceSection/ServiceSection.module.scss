@@ -94,6 +94,12 @@
     @include fluid(padding-top, 40, 60);
     // メニュー→カード1 のギャップ(32px)は .menuList margin-bottom で取るためここは 0
     padding-bottom: 0;
+    // 縦版「文字にかぶさる」演出: 文字を画面上部に貼り付け、上をカードが覆う。
+    // カード(.right)は z-index で前面・不透明なため文字を覆い隠す。
+    // 覆われる過程で opacity(--left-hidden) を 1→0 にフェード（JS 側で制御）。
+    position: sticky;
+    top: 0;
+    z-index: 1;
   }
 }
 
@@ -277,6 +283,10 @@
     // About と中間幅で左右余白を揃える: 補間範囲 390→1920 / 40→200(左)・40→80(右)
     @include fluid(padding-left, 40, 200, 390, 1920);
     @include fluid(padding-right, 40, 80, 390, 1920);
+    // 縦版「文字にかぶさる」: カードを sticky 文字(.left z-index:1)より前面に置き、
+    // スクロールで上の文字を覆い隠す。
+    position: relative;
+    z-index: 2;
   }
 }
 
