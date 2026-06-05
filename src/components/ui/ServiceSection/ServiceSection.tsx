@@ -182,6 +182,44 @@ export default function ServiceSection() {
       tl.to({}, { duration: END_HOLD / SPAN });
     });
 
+    // SP(≤1023px): 縦版「文字にかぶさる」演出。
+    // 文字ブロック(.left)を position:sticky で画面上部に貼り付け、その上を不透明なカード
+    // (.right z-index 上)が縦スクロールで覆っていく（＝PC の横スクロールの縦版）。
+    // 文字の消し方は PC と同じく「カードに覆われた瞬間に一気に非表示」（段階フェード＝グラデは行わない）。
+    // 一度覆われたら latch して、カードが上へ抜けても再表示しない（セクション先頭へ戻すと復帰）。
+    mm.add('(max-width: 1023px)', () => {
+      const leftContentEl = section.querySelector<HTMLElement>(`.${styles.leftContent}`);
+      if (!leftContentEl) return;
+
+      const st = ScrollTrigger.create({
+        trigger: section,
+        start: 'top bottom',
+        end: 'bottom top',
+        invalidateOnRefresh: true,
+        onUpdate: () => {
+          // カードは下から上へ昇るので、leftContent の「最上部(=サービス見出し)」が最後に覆われる。
+          // その最上部ラインをカードがまたいで覆った時 = 文字全体が覆われた時、として消す。
+          // （合計カバー率だと下半分だけで閾値に達し「サービス見出しが見えたまま消える」＝早すぎたため）
+          // 覆われていない間は必ず表示するので空白も出ない。二値即時のためグラデにもならない。
+          const contentRect = leftContentEl.getBoundingClientRect();
+          const topLine = contentRect.top + 1; // サービス見出しの最上部ライン
+          const cards = Array.from(track.children) as HTMLElement[];
+          let topCovered = false;
+          for (const card of cards) {
+            const r = card.getBoundingClientRect();
+            // カードがこのラインを縦方向にまたいでいる（=サービス見出しを覆っている）か
+            if (r.top <= topLine && r.bottom >= topLine) {
+              topCovered = true;
+              break;
+            }
+          }
+          section.style.setProperty('--left-hidden', topCovered ? '1' : '0');
+        },
+      });
+
+      return () => st.kill();
+    });
+
     return () => mm.revert();
   }, [updateActiveMenu]);
 
