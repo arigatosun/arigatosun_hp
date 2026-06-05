@@ -80,6 +80,15 @@
     margin: 0;
   }
 
+  // 文節（読点・節の区切り）単位の折返し制御。PC(600px)では各文が1行に収まるので
+  // 通常のインライン（display 既定）。SP では inline-block にして、折り返しを文節の
+  // 境目に限定し「を形に。」「す。」のような語尾の孤立を防ぐ。
+  .phrase {
+    @include sp {
+      display: inline-block;
+    }
+  }
+
   // Figma SP @390: ラベル下端 y=219 → 本文 top y=251 → 32px、font 14、line-height 28、ls 3.08
   @include sp {
     @include fluid(margin-top, 32, 32);
