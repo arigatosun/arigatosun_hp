@@ -364,8 +364,12 @@
     opacity: 1;
   }
   // 退場: レイヤーごと上方へ抜ける（data-exited は data-entered より後段＝優先）。
+  // 入場(+80vh/フェードイン)と対称に、-80vh＋フェードアウトにする。これで下→上に
+  // 戻る時は「-80vh→定位置＋フェードイン(ease-out)」＝入場の鏡写しとなり同じ滑らかさで戻る。
+  // opacity:0 を併用するので短い距離でも確実に消え、遠距離からの“カクッ”を防げる。
   .spMotifs[data-exited='true'] {
-    transform: translateX(-50%) translateY(-160vh);
+    transform: translateX(-50%) translateY(-80vh);
+    opacity: 0;
     transition-timing-function: cubic-bezier(0.55, 0, 0.85, 0.3);
   }
 
