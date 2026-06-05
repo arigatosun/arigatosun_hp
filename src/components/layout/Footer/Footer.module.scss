@@ -220,11 +220,15 @@
   transform: translateX(-17px);
   transition:
     background-color var(--transition-base),
-    color var(--transition-base);
+    color var(--transition-base),
+    box-shadow var(--transition-base);
 
+  // ホバー時は赤背景＋白文字。背景の赤アーチと同化するため、
+  // 黒のドロップシャドウを効かせてボタンを浮かせ輪郭を見せる。
   &:hover {
     background-color: var(--color-primary);
     color: var(--color-white);
+    box-shadow: 0 8px 24px 0 var(--color-black-rgba-30);
   }
 
   // Figma SP(390): 親 .contactArea の 40 padding 内でフル幅 = 310×56
