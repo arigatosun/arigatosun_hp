@@ -13,10 +13,6 @@ const SP_MOTIFS_OFFSET_FROM_ABOUT_TOP = 294;
 // （横方向は left:50% 中央寄せにしたため X オフセット相殺は不要になった）
 const SP_SVG_CONTENT_OFFSET_Y = 46.4;
 
-// デバッグ: SP モチーフの中心に連番(data-motif-idx, 0〜16)を一時表示する。
-// 「どのモチーフがズレているか」を特定するための確認用。確認後に false に戻して削除する。
-const DEBUG_MOTIF_NUMBERS = true;
-
 // SP（〜1023px）判定。SP では負荷軽減のためモーションを全無効化し、定位置で静止表示する。
 const isSpViewport = () =>
   typeof window !== 'undefined' &&
@@ -291,41 +287,6 @@ export default function ParallaxMotifs() {
       observer.disconnect();
     };
   }, []);
-
-  // デバッグ: 各 SP モチーフ(data-motif-idx 0〜16)の中心に連番を描画する。
-  // ズレているモチーフを特定するための一時表示。DEBUG_MOTIF_NUMBERS=false で消える。
-  useEffect(() => {
-    if (!DEBUG_MOTIF_NUMBERS) return;
-    const root = spImgRef.current;
-    if (!root) return;
-    const SVG_NS = 'http://www.w3.org/2000/svg';
-    const entries = root.querySelectorAll<SVGGElement>('[data-motif-idx]');
-    entries.forEach((g) => {
-      if (g.querySelector('[data-dbg-num]')) return; // 二重描画防止
-      const bbox = (() => {
-        try {
-          return g.getBBox();
-        } catch {
-          return null;
-        }
-      })();
-      if (!bbox || (!bbox.width && !bbox.height)) return; // 非表示(PC)時は skip
-      const t = document.createElementNS(SVG_NS, 'text');
-      t.setAttribute('data-dbg-num', '');
-      t.setAttribute('x', String(bbox.x + bbox.width / 2));
-      t.setAttribute('y', String(bbox.y + bbox.height / 2));
-      t.setAttribute('text-anchor', 'middle');
-      t.setAttribute('dominant-baseline', 'central');
-      t.setAttribute('font-size', '72');
-      t.setAttribute('font-weight', '700');
-      t.setAttribute('fill', '#ffffff');
-      t.setAttribute('stroke', '#000000');
-      t.setAttribute('stroke-width', '6');
-      t.setAttribute('paint-order', 'stroke');
-      t.textContent = g.getAttribute('data-motif-idx') ?? '';
-      g.appendChild(t);
-    });
-  }, [spInlineSvg, spReady, entered]);
 
   return (
     <div className={styles.container}>
