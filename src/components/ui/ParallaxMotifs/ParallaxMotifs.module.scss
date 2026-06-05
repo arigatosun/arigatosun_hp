@@ -358,6 +358,11 @@
   .spMotif {
     animation: none;
   }
+  // Figma 厳密一致: 演出用の微オフセット(--fx/--fy)・回転・スケールを打ち消し、
+  // SVG 書き出し位置（= Figma SP の Group 933 配置）そのままで静止させる。
+  .spMotifs[data-entered='true'] .spMotifEntry {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+  }
 }
 
 // アクセシビリティ: 視差・浮遊・入場アニメを無効化（即定位置）。
