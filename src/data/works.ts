@@ -29,7 +29,8 @@ const WORKS_DATA: readonly WorkItem[] = [
       '諦めきれなかった構想が、サービスとして動き出す。| 構想整理から要件定義・開発・改善まで、一気通貫の\n立ち上げ支援',
     breakAfterPipeAtMax: true,
     details: [
-      { label: 'D / B：', value: '構想整理・要件定義・UI/UX・アプリ開発・ロゴ/VI' },
+      { label: 'D / B：', value: 'ロゴデザイン、VI設計' },
+      { label: 'AI / D：', value: '要件定義、アプリ開発、UI/UX、リリース、運用改善' },
     ],
     term: '2025.12 ~ 2026.4',
     // 一覧カード専用画像（920×520）。カード規格ちょうどなのでトリミング不要。
