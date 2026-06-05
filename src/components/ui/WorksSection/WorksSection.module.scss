@@ -159,6 +159,12 @@
     @include fluid(font-size, 16, 20);
     @include fluid(line-height, 28, 40);
     @include fluid(letter-spacing, 2.56, 3.2);
+
+    // SP では mente の \n 強制改行（<br>）を無効化し、他項目と同じ横幅依存の
+    // 自然折り返しにする。PC は Figma 厳密改行を維持するため <br>/lastLine はそのまま。
+    br {
+      display: none;
+    }
   }
 }
 
@@ -183,6 +189,11 @@
 // Figma の `|` 後 2 行目を圧縮する独自補正は廃止し、line-height 40px の均等送りに揃える。
 .lastLine {
   display: block;
+
+  // SP では block 強制改行をやめて inline 化し、他項目と同じ自然折り返しに揃える。
+  @include sp {
+    display: inline;
+  }
 }
 
 // ── 横ライン装飾 ──
