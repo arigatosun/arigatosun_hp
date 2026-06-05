@@ -8,7 +8,6 @@ import WorksSection from '@/components/ui/WorksSection';
 import NewsSection from '@/components/ui/NewsSection';
 import LogoSlider from '@/components/ui/LogoSlider';
 import MessageSection from '@/components/ui/MessageSection';
-import GlobalCanvasLoader from '@/components/three/GlobalCanvasLoader';
 import HeroResponsiveCharacter from '@/components/three/HeroResponsiveCharacter';
 import { getAllWorks } from '@/data/works';
 
@@ -34,8 +33,6 @@ export default async function Home() {
         media="(min-width: 1024px)"
         fetchPriority="high"
       />
-      {/* サービスセクション歩行キャラ用3Dキャンバス */}
-      <GlobalCanvasLoader />
       {/* 赤モチーフ（ページレベルで配置、セクション間をまたいで表示） */}
       <ParallaxMotifs />
 
