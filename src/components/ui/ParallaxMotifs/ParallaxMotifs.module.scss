@@ -354,8 +354,10 @@
   .spMotifs {
     transform: translateX(-50%) translateY(80vh);
     opacity: 0;
-    transition: transform 1.05s cubic-bezier(0.22, 1, 0.36, 1),
-      opacity 0.7s ease;
+    // ease-in-out（左右対称カーブ）にして、入場(下スクロール)と戻り(上スクロール)を
+    // 同じ動き方にする。ease-out だと戻り始めだけ速く感じる非対称が出るため。
+    transition: transform 1.05s cubic-bezier(0.45, 0, 0.55, 1),
+      opacity 0.7s cubic-bezier(0.45, 0, 0.55, 1);
     will-change: transform, opacity; // レイヤー昇格（影フィルタを一度だけ焼く）
   }
   // 入場: レイヤーごと定位置へ。
