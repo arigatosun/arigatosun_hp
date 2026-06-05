@@ -63,9 +63,14 @@ const creativeProjects = [
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  // SP メニューのアコーディオン開閉状態（キーごと・複数同時に開ける）。
+  const [openMenus, setOpenMenus] = useState<Record<string, boolean>>({});
   const pathname = usePathname();
 
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + '/');
+
+  const toggleMenu = (key: string) =>
+    setOpenMenus((prev) => ({ ...prev, [key]: !prev[key] }));
 
   return (
     <header className={styles.header}>
@@ -183,52 +188,71 @@ export default function Header() {
         <div className={styles.menuInner}>
           {/* メインナビ */}
           <nav className={styles.primaryNav}>
-            {/* ABOUT も SERVICE と同様にサブ項目（各セクションへのアンカー）を展開。
-                グループ/サブリストのスタイルは serviceGroup 系を共用。 */}
-            <div className={styles.serviceGroup}>
-              <Link
-                href="/about"
-                className={`${styles.mobileNavLink} ${isActive('/about') ? styles.active : ''}`}
-                onClick={() => setIsMenuOpen(false)}
+            {/* ABOUT: タップで開閉するアコーディオン（デフォルト閉じ＝コンパクト）。
+                /about トップは PHILOSOPHY(=/about) で到達できる。 */}
+            <div className={styles.spAccordion}>
+              <button
+                type="button"
+                className={`${styles.spAccordionHeader} ${isActive('/about') ? styles.active : ''}`}
+                onClick={() => toggleMenu('about')}
+                aria-expanded={!!openMenus.about}
               >
-                ABOUT
-              </Link>
-              <ul className={styles.serviceSubList}>
-                {aboutDropdown.map((sub) => (
-                  <li key={sub.href}>
-                    <Link
-                      href={sub.href}
-                      className={styles.serviceSubLink}
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      ・{sub.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
+                <span>ABOUT</span>
+                <span
+                  className={`${styles.spAccordionIcon} ${openMenus.about ? styles.spAccordionIconOpen : ''}`}
+                  aria-hidden="true"
+                />
+              </button>
+              <div
+                className={`${styles.spAccordionPanel} ${openMenus.about ? styles.spAccordionPanelOpen : ''}`}
+              >
+                <ul className={styles.serviceSubList}>
+                  {aboutDropdown.map((sub) => (
+                    <li key={sub.href}>
+                      <Link
+                        href={sub.href}
+                        className={styles.serviceSubLink}
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        ・{sub.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
 
-            <div className={styles.serviceGroup}>
-              <Link
-                href="/service"
-                className={`${styles.mobileNavLink} ${isActive('/service') ? styles.active : ''}`}
-                onClick={() => setIsMenuOpen(false)}
+            {/* SERVICE: タップで開閉するアコーディオン（デフォルト閉じ）。 */}
+            <div className={styles.spAccordion}>
+              <button
+                type="button"
+                className={`${styles.spAccordionHeader} ${isActive('/service') ? styles.active : ''}`}
+                onClick={() => toggleMenu('service')}
+                aria-expanded={!!openMenus.service}
               >
-                SERVICE
-              </Link>
-              <ul className={styles.serviceSubList}>
-                {serviceDropdown.map((sub) => (
-                  <li key={sub.href}>
-                    <Link
-                      href={sub.href}
-                      className={styles.serviceSubLink}
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      ・{sub.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
+                <span>SERVICE</span>
+                <span
+                  className={`${styles.spAccordionIcon} ${openMenus.service ? styles.spAccordionIconOpen : ''}`}
+                  aria-hidden="true"
+                />
+              </button>
+              <div
+                className={`${styles.spAccordionPanel} ${openMenus.service ? styles.spAccordionPanelOpen : ''}`}
+              >
+                <ul className={styles.serviceSubList}>
+                  {serviceDropdown.map((sub) => (
+                    <li key={sub.href}>
+                      <Link
+                        href={sub.href}
+                        className={styles.serviceSubLink}
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        ・{sub.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
 
             <Link
