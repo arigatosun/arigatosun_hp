@@ -113,7 +113,7 @@ export default function WorksSection({ works }: WorksSectionProps) {
                 {work.term && (
                   <p className={styles.detailRow}>
                     <span className={styles.detailLabel}>TERM：</span>
-                    <span className={styles.detailValue}>{work.term}</span>
+                    <span className={`${styles.detailValue} ${styles.termValue}`}>{work.term}</span>
                   </p>
                 )}
               </div>
