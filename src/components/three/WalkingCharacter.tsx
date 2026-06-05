@@ -57,6 +57,23 @@ type WalkingCharacterProps = {
    */
   approachMarginPx?: number;
   /**
+   * 横走行モードで、画面端の外にどれだけ離れた位置から登場/退場させるかの
+   * 助走距離（world unit）。
+   *   - default: 3（画面端 +3 unit ≒ zoom150 で約 450px 外）
+   *   - 小さくすると画面外で歩いている「見えない時間」が減り、登場と
+   *     右に抜けてからの再登場が早くなる（speed を上げると足が滑るのを回避）
+   * depthWalk モードでは無視される。
+   */
+  offscreenMargin?: number;
+  /**
+   * 歩行アニメ（足の動き）の再生速度。歩行クリップの timeScale に掛かる。
+   *   - default: 1
+   *   - speed（移動速度）と同じ比率で下げると、足と地面の同期を保ったまま
+   *     自然にゆっくり歩く（speed だけ下げると足だけ速く見えるのを回避）
+   *   - クリック反応アニメには影響しない（歩行クリップのみ）
+   */
+  walkAnimSpeed?: number;
+  /**
    * カーソル位置に応じてキャラの Y 軸回転を補間し、見つめる挙動を有効化。
    * グローバル mousemove を購読するだけなので pointer-events は不要。
    *   - maxAngle: 最大回転角（ラジアン）。例: 0.5 ≈ ±28°
@@ -140,6 +157,8 @@ export default function WalkingCharacter({
   facingRotationY,
   depthWalk,
   approachMarginPx = 100,
+  offscreenMargin = 3,
+  walkAnimSpeed = 1,
   lookAtCursor = false,
   reactOnClick = false,
 }: WalkingCharacterProps) {
@@ -202,8 +221,12 @@ export default function WalkingCharacter({
   const clonedScene = useMemo(() => skeletonClone(scene) as THREE.Group, [scene]);
 
   const isLeftToRight = direction === 'left-to-right';
-  const startX = isLeftToRight ? -viewport.width / 2 - 3 : viewport.width / 2 + 3;
-  const endX = isLeftToRight ? viewport.width / 2 + 3 : -viewport.width / 2 - 3;
+  const startX = isLeftToRight
+    ? -viewport.width / 2 - offscreenMargin
+    : viewport.width / 2 + offscreenMargin;
+  const endX = isLeftToRight
+    ? viewport.width / 2 + offscreenMargin
+    : -viewport.width / 2 - offscreenMargin;
   // facingRotationY が渡されていればそれを採用、なければ進行方向を向く（従来挙動）
   const rotationY =
     facingRotationY ?? (isLeftToRight ? Math.PI * 0.5 : -Math.PI * 0.5);
@@ -297,6 +320,7 @@ export default function WalkingCharacter({
 
         const walkAction = mixer.clipAction(walkClean);
         walkAction.setLoop(THREE.LoopRepeat, Infinity);
+        walkAction.timeScale = walkAnimSpeed;
         walkAction.play();
         walkActionRef.current = walkAction;
 
@@ -335,6 +359,7 @@ export default function WalkingCharacter({
     const cleanClip = createCleanWalkClip(sourceClip);
     const action = mixer.clipAction(cleanClip);
     action.setLoop(THREE.LoopRepeat, Infinity);
+    action.timeScale = walkAnimSpeed;
     action.play();
 
     return () => {
@@ -342,7 +367,7 @@ export default function WalkingCharacter({
       mixer.uncacheRoot(clonedScene);
       mixerRef.current = null;
     };
-  }, [clonedScene, animations, clickClipNames, clickFadeMs]);
+  }, [clonedScene, animations, clickClipNames, clickFadeMs, walkAnimSpeed]);
 
   // セクション参照とスタート位置の初期化
   useEffect(() => {
@@ -465,15 +490,9 @@ export default function WalkingCharacter({
     const section = sectionElRef.current;
     if (section) {
       const rect = section.getBoundingClientRect();
-      // 下マージンを approachMarginPx に拡張 → セクション到達前から歩行開始可
-      const isVisible =
-        rect.bottom > -100 &&
-        rect.top < window.innerHeight + approachMarginPx;
-      group.current.visible = isVisible;
 
-      if (!isVisible) return;
-
-      // セクション中央とビューポート中央の差をpx→3D単位に変換してY軸追従
+      // セクション中央とビューポート中央の差をpx→3D単位に変換してY軸追従。
+      // 可視判定より先に位置を更新し、キャラの実スクリーン位置で cull する。
       const pixelToUnit = viewport.height / window.innerHeight;
       const sectionCenterY = rect.top + rect.height / 2;
       const viewportCenterY = window.innerHeight / 2;
@@ -482,8 +501,12 @@ export default function WalkingCharacter({
       // depth-walk モード時は補間後に Y も足し込むので一旦 baseY 寄りで仮置き
       group.current.position.y = sectionTrackedY;
 
-      // セクションが見えたら初回歩行開始
-      if (triggerOnVisible && !hasStarted.current) {
+      // 下からのアプローチ判定（セクションが画面下 approachMarginPx 以内に来たか）。
+      // approachMarginPx を大きく取ることで、セクション到達前から画面外で歩き始められる。
+      const inApproachZone = rect.top < window.innerHeight + approachMarginPx;
+
+      // アプローチゾーンに入ったら初回歩行開始
+      if (triggerOnVisible && !hasStarted.current && inApproachZone) {
         hasStarted.current = true;
         if (depthWalk) {
           depthElapsedRef.current = 0;
@@ -493,6 +516,19 @@ export default function WalkingCharacter({
         }
         isRunning.current = true;
       }
+
+      // 可視判定：セクション矩形ではなくキャラ本体の投影スクリーン位置で cull する。
+      // 矩形＋固定マージンで切ると、上にスクロールアウトする途中でキャラがまだ
+      // 画面内にいるのに「パキッ」と消える。キャラ中心が画面上端から
+      // EXIT_CULL_MARGIN_PX 以上外に出るまで描画を維持し、滑らかに流れ出させる。
+      // （下方向はアプローチ中の画面外プレ歩行を活かすため inApproachZone に委ねる）
+      const EXIT_CULL_MARGIN_PX = 250;
+      const sp = getVisualScreenPos();
+      const charScreenY = sp ? sp.y : sectionCenterY;
+      const isVisible = inApproachZone && charScreenY > -EXIT_CULL_MARGIN_PX;
+      group.current.visible = isVisible;
+
+      if (!isVisible) return;
     }
 
     // ─── 歩行/サイズアップの位置・スケール更新（running 時のみ） ───
