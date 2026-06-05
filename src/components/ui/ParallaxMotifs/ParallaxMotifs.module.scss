@@ -343,25 +343,22 @@
 .spMotifs[data-exited='true'] .spMotifEntry:nth-of-type(8n + 7) { transition-duration: 0.9s;  transition-delay: 0.2s; }
 .spMotifs[data-exited='true'] .spMotifEntry:nth-of-type(8n)     { transition-duration: 0.7s;  transition-delay: 0.08s; }
 
-// ── SP: モーション無効化（負荷軽減）──
-// スマホでは入場・浮遊・退場・パララックスをすべて止め、集合後の定位置で静止表示する
-// （表示位置・見た目は据え置き）。JS 側でも SP は entered=true を即時セットし、
-// mouse / parallax / scroll リスナーを張らないため --mx/--my/--py は 0 のまま。
+// ── SP: 継続モーションのみ無効化（負荷軽減）。入場・退場は有効 ──
+// 重い「継続描画」系（各モチーフの浮遊 float / scroll 視差 / マウス視差）だけを止める。
+// 入場（散開→集合）・退場（上方へ抜ける）はワンショットの transition なので維持する。
+// JS 側でも SP は mouse / parallax リスナーは張らず（--mx/--my/--py は 0）、入場/退場の
+// scroll 監視のみ有効。
 @include sp {
-  .spMotifs {
-    transition: none;
-  }
-  .spMotifEntry {
-    transition: none;
-    will-change: auto; // 常時レイヤー昇格を解除（静止なので不要・メモリ節約）
-  }
+  // 各モチーフの継続浮遊を停止（入場/退場の transform transition とは別物なので両立）。
   .spMotif {
     animation: none;
   }
-  // Figma 厳密一致: 演出用の微オフセット(--fx/--fy)・回転・スケールを打ち消し、
-  // SVG 書き出し位置（= Figma SP の Group 933 配置）そのままで静止させる。
-  .spMotifs[data-entered='true'] .spMotifEntry {
-    transform: translate(0, 0) rotate(0deg) scale(1);
+  // Figma 厳密一致: 演出用の微オフセット(--fx/--fy)を 0 にし、集合後は Figma SP の
+  // 書き出し位置（Group 933）に静止させる（入場はこの位置へ集まり、退場はここから抜ける）。
+  // nth-of-type(具体度 0,2,0) を上書きするため .spMotifs を冠して同具体度＋後勝ちにする。
+  .spMotifs .spMotifEntry {
+    --fx: 0;
+    --fy: 0;
   }
 }
 

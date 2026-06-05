@@ -13,7 +13,8 @@ const SP_MOTIFS_OFFSET_FROM_ABOUT_TOP = 294;
 // （横方向は left:50% 中央寄せにしたため X オフセット相殺は不要になった）
 const SP_SVG_CONTENT_OFFSET_Y = 46.4;
 
-// SP（〜1023px）判定。SP では負荷軽減のためモーションを全無効化し、定位置で静止表示する。
+// SP（〜1023px）判定。SP では負荷軽減のため「継続モーション（浮遊・スクロール/マウス視差）」を
+// 無効化する。入場・退場（ワンショットの transition）は PC 同様に有効。
 const isSpViewport = () =>
   typeof window !== 'undefined' &&
   window.matchMedia('(max-width: 1023px)').matches;
@@ -114,11 +115,8 @@ export default function ParallaxMotifs() {
   // body が scroll container になっている環境向けに、scroll listener は
   // window / document / body の3か所に貼り、加えて rAF で間引く。
   useEffect(() => {
-    // SP は静止モード（reduced-motion と同じ扱い）: 定位置に即着地させ、scroll 監視はしない。
-    if (
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
-      isSpViewport()
-    ) {
+    // 入場/退場は PC・SP 共通で有効（scroll 監視は軽量なワンショット判定）。
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       setEntered(true);
       return;
     }
@@ -165,7 +163,7 @@ export default function ParallaxMotifs() {
   // マウス追従: カーソル位置に応じてモチーフ全体をわずかにずらす（微視差）
   // PC は SVG、SP は spImg の両方に同じ CSS 変数（--mx / --my）を反映する。
   useEffect(() => {
-    // SP は静止モード: マウス追従の微視差を無効化（タッチ端末では不要かつ再描画負荷源）。
+    // SP はマウス追従の微視差を無効化（タッチ端末では不要かつ再描画負荷源）。入場/退場は別途有効。
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || isSpViewport())
       return;
     const svg = svgRef.current;
@@ -201,7 +199,7 @@ export default function ParallaxMotifs() {
   // その progress を CSS 変数 --py に反映してモチーフを「逆方向にゆっくり」ずらす。
   // PC・SP どちらも同じロジックで適用（CSS 側で transform に --py を組み込む）。
   useEffect(() => {
-    // SP は静止モード: scroll パララックス(--py)を無効化（毎フレームの filter 再描画を止める）。
+    // SP は scroll パララックス(--py)を無効化（毎フレームの filter 再描画を止める）。入場/退場は別途有効。
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || isSpViewport())
       return;
     const PARALLAX_AMP = 30; // 最大上下移動 (px) — 控えめ
