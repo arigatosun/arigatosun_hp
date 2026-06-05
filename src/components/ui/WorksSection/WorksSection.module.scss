@@ -70,6 +70,11 @@
   text-decoration: none;
   color: inherit;
 
+  // PC: 画像をテキストブロックの高さ中央に揃える（上端揃えから中央揃えへ）。
+  @include pc {
+    align-items: center;
+  }
+
   @include max(1023px) {
     flex-direction: column;
     gap: 0;
@@ -90,6 +95,12 @@
   flex: 1;
   min-width: 0;
   padding-top: 20px;
+
+  // PC: .item を中央揃えにしたため、上端揃え用の padding-top は中心をずらす要因になる。
+  // テキスト実体の中心と画像中心を一致させるため PC では 0 にする。
+  @include pc {
+    padding-top: 0;
+  }
 
   @include max(1023px) {
     // Figma SP @390: 画像下端 y=4713 → CLIENT行 y=4753 = 40px
@@ -159,11 +170,18 @@
     @include fluid(font-size, 16, 20);
     @include fluid(line-height, 28, 40);
     @include fluid(letter-spacing, 2.56, 3.2);
+  }
 
-    // SP では mente の \n 強制改行（<br>）を無効化し、他項目と同じ横幅依存の
-    // 自然折り返しにする。PC は Figma 厳密改行を維持するため <br>/lastLine はそのまま。
+  // mente の <br>（"|" 直後 / "立ち上げ支援" 前）は設計クランプ(=1920px)に達した時だけ
+  // 表示して Figma 厳密改行に一致させる。それ未満（MacBook / SP）は非表示にし、他項目と同じ
+  // 横幅依存の自然折り返しにする。
+  br {
+    display: none;
+  }
+
+  @media (min-width: 1920px) {
     br {
-      display: none;
+      display: inline;
     }
   }
 }
@@ -187,12 +205,15 @@
 }
 
 // Figma の `|` 後 2 行目を圧縮する独自補正は廃止し、line-height 40px の均等送りに揃える。
+// 既定（MacBook / SP）は inline で前段（一気通貫の）から自然に流す。設計クランプ(=1920px)
+// だけ block で独立行にして Figma 厳密改行に一致させる。
+// inline 時に「立ち上げ支援」が語割れしないよう nowrap で 1 語として扱う。
 .lastLine {
-  display: block;
+  display: inline;
+  white-space: nowrap;
 
-  // SP では block 強制改行をやめて inline 化し、他項目と同じ自然折り返しに揃える。
-  @include sp {
-    display: inline;
+  @media (min-width: 1920px) {
+    display: block;
   }
 }
 
@@ -277,7 +298,8 @@
   //（中心 x ≒ 画面中央なので、全PC幅で left ≒ viewport/2 となる）。右端は赤線(1360)で固定。
   width: 50.5%;
   flex-shrink: 0;
-  @include fluid(margin-top, -22, -44, 390, 1920);
+  // 旧: 上端揃え用に画像を負マージンで持ち上げていたが、PC は .item を中央揃え
+  // （align-items: center）にしたため不要になり解除。SP は従来通り margin-top: 0。
   // 画像の右端を NEWS セクションの content 右端（padding-right 200）に合わせる。
   // WORKS の padding-right は 183 で NEWS(200)より 17px 狭いぶん画像が右に出るため、
   // その差分だけ画像を右から詰める（左端＝太陽マーク整合は維持／画像が少し小さくなる）。

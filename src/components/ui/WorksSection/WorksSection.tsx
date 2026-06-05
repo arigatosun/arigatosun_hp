@@ -92,6 +92,11 @@ export default function WorksSection({ works }: WorksSectionProps) {
                     {i < arr.length - 1 && (
                       <span className={styles.separatorWrap}><span className={styles.separator}>|</span></span>
                     )}
+                    {/* "|" 直後の改行。表示制御は .itemTitle br（>=1920px のみ表示）に統一。
+                        1920px 未満は非表示で自然折り返しに任せる（works.ts のフラグで mente のみ挿入）。 */}
+                    {i < arr.length - 1 && work.breakAfterPipeAtMax && (
+                      <br />
+                    )}
                   </span>
                 ))}
               </h3>

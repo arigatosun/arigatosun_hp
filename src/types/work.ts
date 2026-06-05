@@ -21,6 +21,12 @@ export type WorkItem = {
    */
   spBreakAtPipe?: boolean;
   /**
+   * PC で title の "|" 直後を「>=1920px のときだけ」強制改行するか。
+   * true: 1920px で Figma 厳密一致（"|" が行末）／1920px 未満は自然折り返し（幅で変動）。
+   * 既定 (false): 全幅で自然折り返し。WorksSection 側でレスポンシブ <br> として描画。
+   */
+  breakAfterPipeAtMax?: boolean;
+  /**
    * カード画像の object-position（cover 時のトリミング基準）。
    * 横長画像を流用するカードで 'left' 等を指定。既定は中央。
    */
