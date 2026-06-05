@@ -185,22 +185,52 @@ export default function ServiceSection() {
     // SP(≤1023px): 縦版「文字にかぶさる」演出。
     // 文字ブロック(.left)を position:sticky で画面上部に貼り付け、その上を不透明なカード
     // (.right z-index 上)が縦スクロールで覆っていく（＝PC の横スクロールの縦版）。
-    // カード間ギャップから sticky 文字が覗かないよう、覆われる距離分かけて文字をフェードアウト。
-    // 覆い切った後はピンを使わず通常スクロールでカード→ボタン→次セクションへ続く。
+    // 文字の消し方は PC と同じく「カードに覆われた瞬間に一気に非表示」（段階フェード＝グラデは行わない）。
+    // 一度覆われたら latch して、カードが上へ抜けても再表示しない（セクション先頭へ戻すと復帰）。
     mm.add('(max-width: 1023px)', () => {
-      const leftEl = section.querySelector<HTMLElement>(`.${styles.left}`);
-      if (!leftEl) return;
+      const leftContentEl = section.querySelector<HTMLElement>(`.${styles.leftContent}`);
+      if (!leftContentEl) return;
 
-      // セクション先頭から「文字ブロック高さ」分スクロールする間に opacity 1→0。
-      // end を過ぎた後は最後の値(=非表示)が保持されるため、カードが流れた後も文字は出ない。
+      let covered = false;
       const st = ScrollTrigger.create({
         trigger: section,
-        start: 'top top',
-        end: () => `+=${Math.max(leftEl.offsetHeight, 1)}`,
-        scrub: true,
+        start: 'top bottom',
+        end: 'bottom top',
         invalidateOnRefresh: true,
         onUpdate: (self) => {
-          section.style.setProperty('--left-hidden', String(self.progress));
+          // セクション先頭付近まで戻したら latch 解除（カードが退いた状態で文字を復帰）
+          if (self.progress <= 0.05) covered = false;
+
+          // カード群が leftContent を縦方向にどれだけ覆っているか（重なり区間をマージして合算）
+          const contentRect = leftContentEl.getBoundingClientRect();
+          const cards = Array.from(track.children) as HTMLElement[];
+          const intervals: Array<[number, number]> = [];
+          for (const card of cards) {
+            const r = card.getBoundingClientRect();
+            const t = Math.max(r.top, contentRect.top);
+            const b = Math.min(r.bottom, contentRect.bottom);
+            if (b > t) intervals.push([t, b]);
+          }
+          intervals.sort((a, b) => a[0] - b[0]);
+          let cov = 0;
+          let curStart = -Infinity;
+          let curEnd = -Infinity;
+          for (const [s, e] of intervals) {
+            if (s > curEnd) {
+              if (curEnd > curStart) cov += curEnd - curStart;
+              curStart = s;
+              curEnd = e;
+            } else if (e > curEnd) {
+              curEnd = e;
+            }
+          }
+          if (curEnd > curStart) cov += curEnd - curStart;
+          const ratio = contentRect.height > 0 ? cov / contentRect.height : 0;
+
+          // 60% 以上覆われたら「覆われた」と確定（latch）。以降はカードが抜けても非表示を維持。
+          if (ratio >= 0.6) covered = true;
+          // 段階フェードせず 0/1 の二値で即時切替（グラデにしない）
+          section.style.setProperty('--left-hidden', covered ? '1' : '0');
         },
       });
 
