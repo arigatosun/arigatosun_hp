@@ -143,7 +143,11 @@
   // 見えてしまうのを防ぐ（entered=true で 1 にフェードイン）。
   transform: translate(var(--sx), var(--sy)) rotate(var(--sr)) scale(var(--ss));
   opacity: 0;
-  transition: transform 1.05s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.7s ease;
+  // ease-in-out（左右対称カーブ）にして、入場(下スクロール)と反転(上スクロール)を同じ
+  // 動き方にする。ease-out だと戻り始めだけ速く感じる非対称が出るため（SP と同じ対応）。
+  // 散開方向(--sx/--sy/--sr)・回転・スタッガー(nth の delay/duration)は不変なのでバラバラ感は維持。
+  transition: transform 1.05s cubic-bezier(0.45, 0, 0.55, 1),
+    opacity 0.7s cubic-bezier(0.45, 0, 0.55, 1);
   will-change: transform, opacity;
 }
 
@@ -197,43 +201,44 @@
 }
 
 // nth-of-type で「散開スタート位置(--sx/--sy/--sr/--ss)」「集合後の微オフセット(--fx/--fy)」
-// 「緩急(duration/delay)」を同時に散らす。散開は方向バラバラ（上下左右＋斜め）に飛ばし、
-// 回転 ±20〜46deg・スケール 0.55〜0.65 から原寸へ集まる。
+// 「緩急(duration/delay)」を同時に散らす。SP に合わせ、散開は全モチーフ「下(+vh)から」に
+// 統一し（横は小ジッター ±5〜10vw のみ）、深さ・回転・スタッガーでバラバラ感を出す。
+// 回転 ±20〜46deg・スケール 0.55〜0.65 から原寸へ、下から扇状に上がって集まる。
 .motifEntry:nth-of-type(8n + 1) {
   --fx: -60px; --fy: -20px;
-  --sx: -120vw; --sy: 110vh; --sr: -34deg; --ss: 0.6;
+  --sx: -8vw; --sy: 115vh; --sr: -34deg; --ss: 0.6;
   transition-delay: 0s; transition-duration: 0.95s;
 }
 .motifEntry:nth-of-type(8n + 2) {
   --fx: 50px; --fy: 30px;
-  --sx: 120vw; --sy: 110vh; --sr: 38deg; --ss: 0.62;
+  --sx: 6vw; --sy: 95vh; --sr: 38deg; --ss: 0.62;
   transition-delay: 0.10s; transition-duration: 1.15s;
 }
 .motifEntry:nth-of-type(8n + 3) {
   --fx: -40px; --fy: -50px;
-  --sx: -120vw; --sy: 110vh; --sr: 28deg; --ss: 0.58;
+  --sx: -5vw; --sy: 125vh; --sr: 28deg; --ss: 0.58;
   transition-delay: 0.04s; transition-duration: 1.0s;
 }
 .motifEntry:nth-of-type(8n + 4) {
   --fx: 70px; --fy: -30px;
-  --sx: 120vw; --sy: 110vh; --sr: -42deg; --ss: 0.64;
+  --sx: 10vw; --sy: 105vh; --sr: -42deg; --ss: 0.64;
   transition-delay: 0.13s; transition-duration: 1.15s;
 }
 .motifEntry:nth-of-type(8n + 5) {
   --fx: -50px; --fy: 60px;
-  --sx: -140vw; --sy: 25vh; --sr: 30deg; --ss: 0.6;
+  --sx: -10vw; --sy: 130vh; --sr: 30deg; --ss: 0.6;
   transition-delay: 0.07s; transition-duration: 1.05s;
 }
 .motifEntry:nth-of-type(8n + 6) {
   --fx: 60px; --fy: -50px;
-  --sx: 30vw; --sy: 130vh; --sr: -26deg; --ss: 0.58;
+  --sx: 5vw; --sy: 90vh; --sr: -26deg; --ss: 0.58;
   transition-delay: 0.02s; transition-duration: 0.9s;
 }
 // nth-of-type(8n + 7) は PC 17 個中 index 6（左の曲がった棒）と index 14（右の四角）の
 // 2 つだけに該当。この 2 本は about セクションより上の隙間に残って見えるため、
 // 画面の左右外へ逃がして常に画面外に置く（左右は個別 nth-of-type で振り分け）。
 .motifEntry:nth-of-type(8n + 7) {
-  --fy: 0px; --sy: 0px; --sr: 46deg; --ss: 0.64;
+  --fy: 0px; --sy: 110vh; --sr: 46deg; --ss: 0.64;
   transition-delay: 0.10s; transition-duration: 1.1s;
 }
 // index 6（左の曲がった棒）→ 画面左外へ逃がす
@@ -246,7 +251,7 @@
 }
 .motifEntry:nth-of-type(8n) {
   --fx: 40px; --fy: 50px;
-  --sx: 140vw; --sy: 25vh; --sr: -22deg; --ss: 0.6;
+  --sx: 8vw; --sy: 100vh; --sr: -22deg; --ss: 0.6;
   transition-delay: 0.05s; transition-duration: 1.0s;
 }
 
