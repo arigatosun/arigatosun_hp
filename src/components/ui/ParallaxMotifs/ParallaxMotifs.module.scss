@@ -343,6 +343,23 @@
 .spMotifs[data-exited='true'] .spMotifEntry:nth-of-type(8n + 7) { transition-duration: 0.9s;  transition-delay: 0.2s; }
 .spMotifs[data-exited='true'] .spMotifEntry:nth-of-type(8n)     { transition-duration: 0.7s;  transition-delay: 0.08s; }
 
+// ── SP: モーション無効化（負荷軽減）──
+// スマホでは入場・浮遊・退場・パララックスをすべて止め、集合後の定位置で静止表示する
+// （表示位置・見た目は据え置き）。JS 側でも SP は entered=true を即時セットし、
+// mouse / parallax / scroll リスナーを張らないため --mx/--my/--py は 0 のまま。
+@include sp {
+  .spMotifs {
+    transition: none;
+  }
+  .spMotifEntry {
+    transition: none;
+    will-change: auto; // 常時レイヤー昇格を解除（静止なので不要・メモリ節約）
+  }
+  .spMotif {
+    animation: none;
+  }
+}
+
 // アクセシビリティ: 視差・浮遊・入場アニメを無効化（即定位置）。
 // JS 側でも entered=true を強制セットしているが、CSS でも transition を切る。
 @media (prefers-reduced-motion: reduce) {
