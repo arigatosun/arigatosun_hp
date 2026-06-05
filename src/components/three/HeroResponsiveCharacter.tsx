@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import FooterCharacterLoader from './FooterCharacterLoader';
 import type { FooterCharacterProps } from './FooterCharacter';
+import { willOpeningPlay, markHeroReady } from '@/lib/openingSync';
 
 // ── Hero の 3D キャラを viewport 幅で可変サイズに ──
 // CSS で Canvas ごと縮小すると、見た目位置(3D投影で決まる)が transform-origin で連動して破綻する。
@@ -48,6 +49,15 @@ export default function HeroResponsiveCharacter(props: FooterCharacterProps) {
   ];
 
   return (
-    <FooterCharacterLoader {...props} charScale={charScale} charPosition={charPosition} />
+    <FooterCharacterLoader
+      {...props}
+      charScale={charScale}
+      charPosition={charPosition}
+      // オープニングが出る初回訪問は 3D を先読み（SP の idle 遅延をスキップ）。
+      // 再訪問/privacy（オープン無し）では従来どおり SP 遅延ロードを維持。
+      priority={willOpeningPlay()}
+      // 初回描画完了を Preloader へ通知し、オープニングを 3D 準備完了まで待たせる。
+      onReady={markHeroReady}
+    />
   );
 }

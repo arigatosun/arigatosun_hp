@@ -156,6 +156,8 @@ export type FooterCharacterProps = {
   /** マテリアルを matte 化（roughness=1 / metalness=0 / envMapIntensity=0）。
    *  白い顔が影っぽく沈むのを防ぐ。配置箇所ごとに opt-in（他インスタンスには波及しない）。 */
   matte?: boolean;
+  /** モデルの初回描画完了時に呼ばれる。Hero ではこれで Preloader へ準備完了を通知する。 */
+  onReady?: () => void;
 };
 
 // Suspense の内側（＝ WaveModel が解決してマウント済み）で 1 フレーム後に
@@ -184,12 +186,17 @@ export default function FooterCharacter({
   loopMode = 'pingpong',
   meshopt = true, // 既定モデル(DEFAULT_GLB_PATH)が meshopt 圧縮版のため既定 true
   matte = false,
+  onReady,
 }: FooterCharacterProps = {}) {
   // モデル準備完了まで Canvas を透明にし、準備後に opacity 0→1 で滑らかに出す。
   // Suspense fallback={null} のままハードに出現すると「一瞬消えてから出る」ように
   // 見える（特に再訪問でオープニングが無い時）ため、フェードインで違和感を消す。
   const [ready, setReady] = useState(false);
-  const handleReady = useCallback(() => setReady(true), []);
+  // 内蔵 ReadySignal（モデル初回描画）でフェードイン開始 + 外部 onReady 通知（Preloader 同期用）。
+  const handleReady = useCallback(() => {
+    setReady(true);
+    onReady?.();
+  }, [onReady]);
 
   return (
     <Canvas
