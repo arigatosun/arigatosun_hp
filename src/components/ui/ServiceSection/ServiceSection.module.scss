@@ -102,6 +102,10 @@
     position: sticky;
     @include fluid(top, 88, 101, 320, 390);
     z-index: 1;
+    // 実機 iOS(WebKit)対策: カード内の再生中動画(合成レイヤー)と重なるたびに
+    // この sticky 文字がレイヤー昇格⇄解除を繰り返し、再ラスタライズで文字が
+    // ブルブル震えて見える。常に独自レイヤーへ固定して昇格スラッシングを防ぐ。
+    will-change: transform;
   }
 }
 

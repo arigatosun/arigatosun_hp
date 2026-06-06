@@ -192,6 +192,11 @@ export default function ServiceSection() {
       const leftContentEl = section.querySelector<HTMLElement>(`.${styles.leftContent}`);
       if (!leftContentEl) return;
 
+      // 直近に書いた値のキャッシュ。実機 iOS(WebKit)ではスクロール毎フレームの
+      // インラインスタイル書き込みが sticky 文字のスタイル再計算を誘発し
+      // 震えの一因になるため、値が実際に変わる時だけ setProperty する。
+      let lastHidden: string | null = null;
+
       const st = ScrollTrigger.create({
         trigger: section,
         start: 'top bottom',
@@ -210,10 +215,11 @@ export default function ServiceSection() {
           const contentRect = leftContentEl.getBoundingClientRect();
           const topLine = contentRect.top + 1; // サービス見出しの最上部ライン
           const trackTop = track.getBoundingClientRect().top; // カード1枚目の上端
-          section.style.setProperty(
-            '--left-hidden',
-            trackTop <= topLine ? '1' : '0'
-          );
+          const hidden = trackTop <= topLine ? '1' : '0';
+          if (hidden !== lastHidden) {
+            lastHidden = hidden;
+            section.style.setProperty('--left-hidden', hidden);
+          }
         },
       });
 
