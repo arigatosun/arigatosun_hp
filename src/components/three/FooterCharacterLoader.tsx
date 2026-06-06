@@ -30,20 +30,14 @@ export default function FooterCharacterLoader({
   priority = false,
   ...props
 }: FooterCharacterProps & { priority?: boolean } = {}) {
-  const [mounted, setMounted] = useState(false);
+  // priority 指定時は SP でも即マウント（オープニング中の 3D 先読み用）なので、
+  // effect を待たず初期値で true にする（描画後の setState による再レンダーを避ける）。
+  const [mounted, setMounted] = useState(priority);
 
   useEffect(() => {
-    // priority 指定時は SP でも即マウント（オープニング中の 3D 先読み用）。
-    if (priority) {
-      setMounted(true);
-      return;
-    }
+    if (priority) return;
     // SSR では window がないので effect 内で参照する
     const isSP = window.innerWidth <= SP_MAX_WIDTH;
-    if (!isSP) {
-      setMounted(true);
-      return;
-    }
 
     let idleHandle: number | null = null;
     let timeoutHandle: number | null = null;
@@ -61,27 +55,31 @@ export default function FooterCharacterLoader({
       }
     };
 
-    if (document.readyState === 'complete') {
-      scheduleIdleMount();
-    } else {
-      const onLoad = () => scheduleIdleMount();
-      window.addEventListener('load', onLoad, { once: true });
-      return () => {
-        window.removeEventListener('load', onLoad);
-        if (idleHandle != null) {
-          const w = window as Window & { cancelIdleCallback?: (handle: number) => void };
-          w.cancelIdleCallback?.(idleHandle);
-        }
-        if (timeoutHandle != null) window.clearTimeout(timeoutHandle);
-      };
-    }
-
-    return () => {
+    const cleanup = () => {
       if (idleHandle != null) {
         const w = window as Window & { cancelIdleCallback?: (handle: number) => void };
         w.cancelIdleCallback?.(idleHandle);
       }
       if (timeoutHandle != null) window.clearTimeout(timeoutHandle);
+    };
+
+    if (!isSP) {
+      // PC は遅延なしでマウント。effect 内の同期 setState は再レンダーを
+      // カスケードさせる（react-hooks/set-state-in-effect）ため、次タスクに回す。
+      timeoutHandle = window.setTimeout(() => setMounted(true), 0);
+      return cleanup;
+    }
+
+    if (document.readyState === 'complete') {
+      scheduleIdleMount();
+      return cleanup;
+    }
+
+    const onLoad = () => scheduleIdleMount();
+    window.addEventListener('load', onLoad, { once: true });
+    return () => {
+      window.removeEventListener('load', onLoad);
+      cleanup();
     };
   }, [priority]);
 
