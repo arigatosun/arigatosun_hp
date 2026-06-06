@@ -24,6 +24,12 @@ export default function ScrollAnchorOnResize() {
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
+    // 実機スマホではスクロール中にブラウザのツールバーが伸縮して resize が発生し、
+    // そのたびに ScrollTrigger.refresh()（全トリガーの再計算）が走ってスクロール中の
+    // カクつき・sticky 要素の震えを増幅する。タッチデバイスでは「幅が変わらない resize
+    // （=ツールバー伸縮）」を無視する。横回転など幅が変わる resize は従来通り refresh される。
+    ScrollTrigger.config({ ignoreMobileResize: true });
+
     let anchorEl: HTMLElement | null = null;
     let anchorTop = 0;
 
