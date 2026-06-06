@@ -8,6 +8,10 @@ import '@/styles/globals.scss';
 // これにより /admin と公開側で異なるサフィックスが付き、相互に汚染しない。
 export const metadata: Metadata = {
   title: '株式会社アリガトサン | ARIGATOSUN',
+  // Google Search Console のサイト所有権確認用メタタグ
+  verification: {
+    google: '95-EgcB3zTpXdjgmNG4c-rRf4W6z5qk5dx3ioMVBrJ8',
+  },
 };
 
 // マーケ用ページの Header / Footer / <main> は app/(site)/layout.tsx で適用。
