@@ -33,6 +33,12 @@ type WalkingCharacterProps = {
   waitMs?: number;
   baseY?: number;
   scale?: number;
+  /**
+   * セクション縦追従(yOffset)の下限（world unit）。指定すると yOffset = max(yOffset, minYOffset)
+   * にクランプされ、キャラが baseY + minYOffset より下へは行かなくなる（上方向の追従は維持）。
+   * SP で歩行キャラが下側コンテンツ（RISE WITH THANKS 等）に被る低い位置へ来るのを防ぐ用途。
+   */
+  minYOffset?: number;
   sectionSelector: string;
   triggerOnVisible?: boolean;
   /**
@@ -152,6 +158,7 @@ export default function WalkingCharacter({
   waitMs = 6000,
   baseY = -3.5,
   scale = 0.8,
+  minYOffset,
   sectionSelector,
   triggerOnVisible = false,
   facingRotationY,
@@ -496,7 +503,11 @@ export default function WalkingCharacter({
       const pixelToUnit = viewport.height / window.innerHeight;
       const sectionCenterY = rect.top + rect.height / 2;
       const viewportCenterY = window.innerHeight / 2;
-      const yOffset = (viewportCenterY - sectionCenterY) * pixelToUnit;
+      const rawYOffset = (viewportCenterY - sectionCenterY) * pixelToUnit;
+      // 下限クランプ: minYOffset 指定時はこれ未満に下がらない（上方向の追従は維持）。
+      // SP でキャラが低い位置（RISE WITH THANKS 等）に被るのを防ぐ。
+      const yOffset =
+        minYOffset !== undefined ? Math.max(rawYOffset, minYOffset) : rawYOffset;
       const sectionTrackedY = baseY + yOffset;
       // depth-walk モード時は補間後に Y も足し込むので一旦 baseY 寄りで仮置き
       group.current.position.y = sectionTrackedY;

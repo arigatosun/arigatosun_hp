@@ -80,6 +80,10 @@ export default function GlobalCanvas() {
           offscreenMargin={0.8}
           baseY={logoBaseY}
           scale={walkScale}
+          // SP は縦追従の下限を 0 にクランプ（baseY より下に行かない）。
+          // セクションが画面下にある時に低い位置へ下がって RISE WITH THANKS に被るのを防ぎ、
+          // 上方向（スクロールで上がる）追従は維持する。
+          minYOffset={isSp ? 0 : undefined}
           reactOnClick={{
             hitRadius: 180,
             // 新 glb (arigatokunn_walk_click.glb) は 2 NLA track 入り：
