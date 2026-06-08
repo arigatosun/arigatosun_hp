@@ -351,17 +351,27 @@
   width: 100%;
 }
 
-// 親行: ラベル(Link=ページ遷移) を左、開閉トグル(button=▼) を右に配置。
+// 親行: ラベル(Link=ページ遷移) の直後にトグル(button=⊕)を置く（Figma 準拠）。
+// 右端の同一ラインに揃えず、テキスト幅に追従させる。
 .spAccordionHeader {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   width: 100%;
 }
 
-// ラベル（タップで /about・/service へ遷移）。見た目は mobileNavLink と同じ。
+// ラベル（タップで /about・/service へ遷移、SNS はタップで開閉）。見た目は mobileNavLink と同じ。
+// SNS は <button> で実装するため、button 既定の中央寄せ・枠・余白をリセットして
+// Link 版（ABOUT/SERVICE）と完全に同じ左揃え表示にする。
 .spAccordionLabel {
-  flex: 1 1 auto;
+  // テキスト幅ぶんだけ占有（伸ばさない）→ トグルが文字の直後に来る。
+  flex: 0 0 auto;
+  text-align: left;
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
   color: var(--color-black);
   font-family: var(--font-en);
   @include fluid(font-size, 15, 17, 320, 390);
@@ -380,6 +390,7 @@
 }
 
 // 開閉トグル（タップでサブメニュー開閉）。タップ領域を確保しつつ右端・行高は維持。
+// アイコンは常時黒（タップ/ホバーで赤くしない）。
 .spAccordionToggle {
   display: inline-flex;
   align-items: center;
@@ -391,53 +402,51 @@
   border: 0;
   cursor: pointer;
   color: var(--color-black);
-  transition: color var(--transition-base);
-
-  &:hover {
-    color: var(--color-primary);
-  }
 }
 
-// +/- アイコン（開いたら縦棒を消して - にする）
+// 丸囲みの +/− アイコン（Figma 3616:97347 準拠 = ⊕ / ⊖）。
+// 円は枠線、内側に短い +/− バー。開いたら縦棒を消して ⊖ にする。
 .spAccordionIcon {
   position: relative;
-  width: 12px;
-  height: 12px;
+  // box-sizing を明示し、内寸を奇数(13px)に保つ＝1px バーが整数ピクセルに乗り中心が崩れない。
+  box-sizing: border-box;
+  width: 15px;
+  height: 15px;
   flex-shrink: 0;
+  border: 1px solid currentColor;
+  border-radius: 50%;
 
   &::before,
   &::after {
     content: '';
     position: absolute;
+    top: 50%;
+    left: 50%;
     background-color: currentColor;
     transition:
       opacity var(--transition-base),
       transform var(--transition-base);
   }
 
-  // 横棒（常時）
+  // 横棒（常時）。円に対して中心に見えるよう Figma 比率で 9px に。
   &::before {
-    top: 50%;
-    left: 0;
-    width: 100%;
-    height: 1.5px;
-    transform: translateY(-50%);
+    width: 9px;
+    height: 1px;
+    transform: translate(-50%, -50%);
   }
 
-  // 縦棒（閉じている時だけ＝ + ）
+  // 縦棒（閉じている時だけ＝ ⊕ ）
   &::after {
-    left: 50%;
-    top: 0;
-    width: 1.5px;
-    height: 100%;
-    transform: translateX(-50%);
+    width: 1px;
+    height: 9px;
+    transform: translate(-50%, -50%);
   }
 }
 
-// 開いた状態 → 縦棒を消して「-」に
+// 開いた状態 → 縦棒を消して「⊖」に
 .spAccordionIconOpen::after {
   opacity: 0;
-  transform: translateX(-50%) scaleY(0);
+  transform: translate(-50%, -50%) scaleY(0);
 }
 
 // 開閉パネル（grid-template-rows 0fr→1fr で高さを滑らかにアニメ）
