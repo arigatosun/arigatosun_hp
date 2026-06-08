@@ -408,6 +408,8 @@
 // 円は枠線、内側に短い +/− バー。開いたら縦棒を消して ⊖ にする。
 .spAccordionIcon {
   position: relative;
+  // box-sizing を明示し、内寸を奇数(13px)に保つ＝1px バーが整数ピクセルに乗り中心が崩れない。
+  box-sizing: border-box;
   width: 15px;
   height: 15px;
   flex-shrink: 0;
@@ -426,9 +428,9 @@
       transform var(--transition-base);
   }
 
-  // 横棒（常時）
+  // 横棒（常時）。円に対して中心に見えるよう Figma 比率で 9px に。
   &::before {
-    width: 7px;
+    width: 9px;
     height: 1px;
     transform: translate(-50%, -50%);
   }
@@ -436,7 +438,7 @@
   // 縦棒（閉じている時だけ＝ ⊕ ）
   &::after {
     width: 1px;
-    height: 7px;
+    height: 9px;
     transform: translate(-50%, -50%);
   }
 }
