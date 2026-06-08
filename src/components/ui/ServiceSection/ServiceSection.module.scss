@@ -19,6 +19,10 @@
     // Figma SP @390: About ボタン下端 y=1998 → Service タイトル y=2239 = gap 241px
     // .left padding-top SP 40 を引いた 201px をここで取る
     @include fluid(margin-top, 201, 250);
+    // 実機 iOS(WebKit)の震え対策(3): PC 用の overflow-x: clip（横スクロールバー防止）は
+    // SP では不要（カードは縦積み・横はみ出しなし）で、sticky 子要素の合成を不安定化し
+    // 震えの一因になり得る。SP では clip を解除して sticky の挙動を安定させる。
+    overflow: visible;
   }
 }
 
@@ -100,12 +104,18 @@
     // 固定ヘッダー(SP 総高さ ≈101px)に潜って重ならないよう、top をヘッダー高さ分オフセットして
     // ヘッダー直下で固定する。
     position: sticky;
-    @include fluid(top, 88, 101, 320, 390);
+    // 実機 iOS(WebKit)の震え対策(2): top を fluid(clamp) で与えると小数px になり、
+    // sticky 要素がスクロール毎に sub-pixel 丸めし直されて文字が震える原因になる。
+    // 整数px に固定して sub-pixel 揺れを排除する（値はヘッダー総高さ ≈101px。
+    // ≥375 の iPhone でほぼ一致、320 では数px の余白になる程度）。
+    top: 101px;
     z-index: 1;
-    // 実機 iOS(WebKit)対策: カード内の再生中動画(合成レイヤー)と重なるたびに
-    // この sticky 文字がレイヤー昇格⇄解除を繰り返し、再ラスタライズで文字が
-    // ブルブル震えて見える。常に独自レイヤーへ固定して昇格スラッシングを防ぐ。
+    // 実機 iOS(WebKit)対策(1): カード内の再生中動画(合成レイヤー)と重なるたびに
+    // この sticky 文字がレイヤー昇格⇄解除を繰り返し、再ラスタライズで文字が震える。
+    // 常に独自レイヤーへ固定し、backface-visibility で再ラスタライズのちらつきも抑える。
     will-change: transform;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
   }
 }
 
