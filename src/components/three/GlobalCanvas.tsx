@@ -24,9 +24,9 @@ export default function GlobalCanvas() {
   // PC は上側2つの3D（Hero/WORKS）に合わせて縮小（0.6 → 0.45）。SP は 0.35 を維持。
   const walkScale = isSp ? 0.35 : 0.45;
   // SP は歩行キャラを上にオフセット（camera zoom 150 → 1 world unit ≒ 150px）。
-  // モバイルの一部サイズで MessageSection「RISE WITH THANKS」と被っていたため、
-  // 従来の 0.467(≒70px) から 0.85(≒127px) に引き上げ、全体的に少し上を歩かせる。
-  const SP_OFFSET_Y = 0.85;
+  // ロゴ帯セクションへの縦追従はそのまま（クランプ等はしない）。被り対策として
+  // 元の 0.467(≒70px) から 0.6(≒90px) へ少しだけ引き上げ、全体を少し上を歩かせる。
+  const SP_OFFSET_Y = 0.6;
   const logoBaseY = isSp ? -1.5 + SP_OFFSET_Y : -1.5;
 
   return (
@@ -80,10 +80,6 @@ export default function GlobalCanvas() {
           offscreenMargin={0.8}
           baseY={logoBaseY}
           scale={walkScale}
-          // SP は縦追従の下限を 0 にクランプ（baseY より下に行かない）。
-          // セクションが画面下にある時に低い位置へ下がって RISE WITH THANKS に被るのを防ぎ、
-          // 上方向（スクロールで上がる）追従は維持する。
-          minYOffset={isSp ? 0 : undefined}
           reactOnClick={{
             hitRadius: 180,
             // 新 glb (arigatokunn_walk_click.glb) は 2 NLA track 入り：
