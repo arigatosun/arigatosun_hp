@@ -23,8 +23,10 @@ export default function GlobalCanvas() {
   }, []);
   // PC は上側2つの3D（Hero/WORKS）に合わせて縮小（0.6 → 0.45）。SP は 0.35 を維持。
   const walkScale = isSp ? 0.35 : 0.45;
-  // SP は両キャラを 70px (camera zoom 150 → +0.467 world unit) 上にオフセット
-  const SP_OFFSET_Y = 0.467;
+  // SP は歩行キャラを上にオフセット（camera zoom 150 → 1 world unit ≒ 150px）。
+  // モバイルの一部サイズで MessageSection「RISE WITH THANKS」と被っていたため、
+  // 従来の 0.467(≒70px) から 0.85(≒127px) に引き上げ、全体的に少し上を歩かせる。
+  const SP_OFFSET_Y = 0.85;
   const logoBaseY = isSp ? -1.5 + SP_OFFSET_Y : -1.5;
 
   return (
