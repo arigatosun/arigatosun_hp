@@ -21,6 +21,16 @@ export const CURSOR_FOLLOW_CONFIG = {
   // ここで生成した角度をソフトクランプして可動域に収める。
   // 大きいほどカーソル端で大きく振り、小さいほど穏やか。
   baseAngleDeg: 90,
+  // ── アイドル動作（SP のみ）──
+  // タッチしていない間、上下を主体に「自由に動いている」揺れを出す。
+  // タッチ追従が優先で、最後の操作から resumeDelayMs 経過後にアイドルへ復帰する。
+  // 値は base angle（度）空間で与え、追従と同じ softClamp + weights を通すので可動域内に収まる。
+  // 自然さのため周波数の異なる2サインを合成する（単調な往復に見せない）。
+  idle: {
+    resumeDelayMs: 1200, // 最後のポインタ操作からこの時間後にアイドル復帰
+    pitch: { ampDeg: 12, speed: 0.5, ampDeg2: 6, speed2: 0.23, phase2: 1.3 }, // 上下（主）
+    yaw: { ampDeg: 9, speed: 0.37, ampDeg2: 4, speed2: 0.17, phase: 0.5 }, // 左右（副）
+  },
 } as const;
 
 export type CursorFollowConfig = typeof CURSOR_FOLLOW_CONFIG;
