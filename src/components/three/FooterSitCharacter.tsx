@@ -108,6 +108,12 @@ function SitModel({ position, scale, rotationY, rotationX, freezeCursor }: SitMo
   // 代わりに window の pointermove を直接拾って正規化する。
   const mouseRef = useRef({ x: 0, y: 0 });
 
+  // SP 判定（≤1023px）。アイドル動作は SP のみ有効。resize/matchMedia で更新。
+  const isSpRef = useRef(false);
+  // 最後にポインタ操作（タッチ/カーソル）した時刻(ms)。ここから resumeDelayMs 経過で
+  // アイドルへ復帰する。初期値 0 = SP 初期表示から即アイドルで動き出す。
+  const lastInteractRef = useRef(0);
+
   // useFrame 用の使い回しバッファ（GC 抑制）
   const tmpEuler = useRef(new THREE.Euler(0, 0, 0, 'YXZ'));
   const tmpQ = useRef(new THREE.Quaternion());
@@ -199,16 +205,35 @@ function SitModel({ position, scale, rotationY, rotationX, freezeCursor }: SitMo
     };
   }, [actions]);
 
-  // ウィンドウ全体の pointermove を拾ってマウス座標を -1..+1 に正規化。
+  // ウィンドウ全体の pointermove / pointerdown を拾ってマウス座標を -1..+1 に正規化。
   // Canvas が pointer-events: none のため R3F の state.mouse は使えない。
+  // pointerdown も拾うことで、SP のタップ（移動を伴わない）でもその位置を向く。
+  // どちらも lastInteractRef を更新し、操作中はアイドルより追従を優先する。
   useEffect(() => {
-    const onMove = (e: PointerEvent) => {
+    const apply = (e: PointerEvent) => {
       mouseRef.current.x = (e.clientX / window.innerWidth) * 2 - 1;
       // y は画面上が +1、下が -1 になるよう反転（R3F state.mouse の慣例に合わせる）
       mouseRef.current.y = -((e.clientY / window.innerHeight) * 2 - 1);
+      lastInteractRef.current =
+        typeof performance !== 'undefined' ? performance.now() : Date.now();
     };
-    window.addEventListener('pointermove', onMove, { passive: true });
-    return () => window.removeEventListener('pointermove', onMove);
+    window.addEventListener('pointermove', apply, { passive: true });
+    window.addEventListener('pointerdown', apply, { passive: true });
+    return () => {
+      window.removeEventListener('pointermove', apply);
+      window.removeEventListener('pointerdown', apply);
+    };
+  }, []);
+
+  // SP(≤1023px) 判定を保持。アイドル動作は SP のみ。
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 1023px)');
+    const update = () => {
+      isSpRef.current = mq.matches;
+    };
+    update();
+    mq.addEventListener('change', update);
+    return () => mq.removeEventListener('change', update);
   }, []);
 
   // ─── 2-bone IK ソルバ ───
@@ -345,16 +370,42 @@ function SitModel({ position, scale, rotationY, rotationX, freezeCursor }: SitMo
       return;
     }
 
-    // 3) マウス → 基準 yaw/pitch（rad）
-    //    Canvas が pointer-events: none のため state.mouse は更新されない。
-    //    window pointermove で更新される mouseRef を使う。
-    const mx = mouseRef.current.x;
-    const my = mouseRef.current.y;
-    const mag = Math.hypot(mx, my);
-    const within = mag < CURSOR_FOLLOW_CONFIG.deadzone;
-    const baseRad = CURSOR_FOLLOW_CONFIG.baseAngleDeg * DEG2RAD;
-    const baseYaw = within ? 0 : mx * baseRad;
-    const basePitch = within ? 0 : -my * baseRad;
+    // 3) 基準 yaw/pitch（rad）を決める。
+    //    SP で「最後の操作から resumeDelayMs 経過」しているとき＝アイドル動作、
+    //    それ以外（PC 全般、SP のタッチ追従中）はポインタ追従。
+    //    どちらも base angle（度→rad）として返し、以降の softClamp/weights を共通で通す。
+    let baseYaw: number;
+    let basePitch: number;
+
+    const now =
+      typeof performance !== 'undefined' ? performance.now() : Date.now();
+    const idleActive =
+      isSpRef.current &&
+      now - lastInteractRef.current > CURSOR_FOLLOW_CONFIG.idle.resumeDelayMs;
+
+    if (idleActive) {
+      // 上下を主体に、周波数の異なる2サインを合成して「自由に動いている」揺れにする。
+      const t = state.clock.elapsedTime;
+      const I = CURSOR_FOLLOW_CONFIG.idle;
+      const pitchDeg =
+        Math.sin(t * I.pitch.speed) * I.pitch.ampDeg +
+        Math.sin(t * I.pitch.speed2 + I.pitch.phase2) * I.pitch.ampDeg2;
+      const yawDeg =
+        Math.sin(t * I.yaw.speed + I.yaw.phase) * I.yaw.ampDeg +
+        Math.sin(t * I.yaw.speed2) * I.yaw.ampDeg2;
+      baseYaw = yawDeg * DEG2RAD;
+      basePitch = pitchDeg * DEG2RAD;
+    } else {
+      //    Canvas が pointer-events: none のため state.mouse は更新されない。
+      //    window pointermove/down で更新される mouseRef を使う。
+      const mx = mouseRef.current.x;
+      const my = mouseRef.current.y;
+      const mag = Math.hypot(mx, my);
+      const within = mag < CURSOR_FOLLOW_CONFIG.deadzone;
+      const baseRad = CURSOR_FOLLOW_CONFIG.baseAngleDeg * DEG2RAD;
+      baseYaw = within ? 0 : mx * baseRad;
+      basePitch = within ? 0 : -my * baseRad;
+    }
 
     // 4) ソフトクランプ（spine / head それぞれの可動域に丸める）
     const spineYaw = softClamp(baseYaw, CURSOR_FOLLOW_CONFIG.limits.spine.yawDeg * DEG2RAD);
@@ -369,13 +420,17 @@ function SitModel({ position, scale, rotationY, rotationX, freezeCursor }: SitMo
     const hPitch = headPitch * CURSOR_FOLLOW_CONFIG.weights.head;
 
     // 6) 目標 delta クォータニオン（YXZ: yaw を先に適用、その後 pitch）
+    //    アイドル中だけ平滑化を速めてキビキビ動かす（追従中・PC は従来の slerpFactor）。
+    const slerpF = idleActive
+      ? CURSOR_FOLLOW_CONFIG.idle.slerpFactor
+      : CURSOR_FOLLOW_CONFIG.slerpFactor;
     tmpEuler.current.set(sPitch, sYaw, 0, 'YXZ');
     tmpQ.current.setFromEuler(tmpEuler.current);
-    smoothedSpineDeltaQ.current.slerp(tmpQ.current, CURSOR_FOLLOW_CONFIG.slerpFactor);
+    smoothedSpineDeltaQ.current.slerp(tmpQ.current, slerpF);
 
     tmpEuler.current.set(hPitch, hYaw, 0, 'YXZ');
     tmpQ.current.setFromEuler(tmpEuler.current);
-    smoothedHeadDeltaQ.current.slerp(tmpQ.current, CURSOR_FOLLOW_CONFIG.slerpFactor);
+    smoothedHeadDeltaQ.current.slerp(tmpQ.current, slerpF);
 
     // 7) Sit rest ポーズに delta を合成
     spine.quaternion.copy(restSpineQ.current).multiply(smoothedSpineDeltaQ.current);
