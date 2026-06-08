@@ -39,12 +39,13 @@ const rightNav = [
   { href: '/contact', label: 'CONTACT US' },
 ];
 
-const snsNav = [
-  {
-    href: 'https://www.instagram.com/arigatosun_inc',
-    label: 'IG',
-    external: true,
-  },
+// SNS ドロップダウン配下（すべて外部リンク）。
+// hold:true はリンク先未確定（href='#'）。URL 確定後に href を差し替える。
+type SnsItem = { href: string; label: string; hold?: boolean };
+const snsDropdown: SnsItem[] = [
+  { href: 'https://www.instagram.com/arigatosun_inc', label: 'INSTAGRAM' },
+  { href: '#', label: 'YOUTUBE', hold: true },
+  { href: 'https://x.com/arigatosun_inc', label: 'X' },
 ];
 
 // CREATIVE PROJECTS バナー（Footer と同じ構成 / SP メニュー用）
@@ -60,6 +61,29 @@ const creativeProjects = [
     href: 'https://aseave.co.jp/',
   },
 ];
+
+// 外部リンクを示す右上矢印アイコン（ヘッダー内で複数箇所に使うため共通化）。
+function ExternalIcon({ size = 12 }: { size?: number }) {
+  return (
+    <svg
+      className={styles.externalIcon}
+      width={size}
+      height={size}
+      viewBox="0 0 10 10"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <path
+        d="M8 5.5V8.5C8 8.76522 7.89464 9.01957 7.70711 9.20711C7.51957 9.39464 7.26522 9.5 7 9.5H1.5C1.23478 9.5 0.98043 9.39464 0.792893 9.20711C0.605357 9.01957 0.5 8.76522 0.5 8.5V3C0.5 2.73478 0.605357 2.48043 0.792893 2.29289C0.98043 2.10536 1.23478 2 1.5 2H4.5M6.5 0.5H9.5M9.5 0.5V3.5M9.5 0.5L4 6"
+        stroke="currentColor"
+        strokeWidth="1"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -130,34 +154,31 @@ export default function Header() {
             </li>
           ))}
 
-          {snsNav.map((item) => (
-            <li key={item.label}>
-              <a
-                href={item.href}
-                className={styles.navLink}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {item.label}
-                <svg
-                  className={styles.externalIcon}
-                  width="12"
-                  height="12"
-                  viewBox="0 0 10 10"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M8 5.5V8.5C8 8.76522 7.89464 9.01957 7.70711 9.20711C7.51957 9.39464 7.26522 9.5 7 9.5H1.5C1.23478 9.5 0.98043 9.39464 0.792893 9.20711C0.605357 9.01957 0.5 8.76522 0.5 8.5V3C0.5 2.73478 0.605357 2.48043 0.792893 2.29289C0.98043 2.10536 1.23478 2 1.5 2H4.5M6.5 0.5H9.5M9.5 0.5V3.5M9.5 0.5L4 6"
-                    stroke="currentColor"
-                    strokeWidth="1"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </a>
-            </li>
-          ))}
+          {/* SNS: SERVICE / ABOUT と同じドロップダウン方式。トリガーは遷移先ページが
+              無いため非リンク（span）。配下は外部リンク3点（INSTAGRAM/YOUTUBE/X）。 */}
+          <li className={styles.hasDropdown}>
+            <span className={styles.navLink}>SNS</span>
+            <ul className={styles.dropdown}>
+              {snsDropdown.map((sns) => (
+                <li key={sns.label}>
+                  <a
+                    href={sns.href}
+                    className={styles.dropdownLink}
+                    {...(sns.hold
+                      ? {}
+                      : { target: '_blank', rel: 'noopener noreferrer' })}
+                  >
+                    <span className={styles.dropdownLinkLabel}>
+                      <span className={styles.dropdownLinkLabelText}>
+                        {sns.label}
+                      </span>
+                    </span>
+                    <ExternalIcon />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </li>
         </ul>
 
         {/* モバイルメニューボタン */}
@@ -294,31 +315,53 @@ export default function Header() {
               CONTACT US
             </Link>
 
-            <a
-              href={snsNav[0].href}
-              className={styles.mobileNavLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              INSTAGRAM
-              <svg
-                className={styles.externalIcon}
-                width="13"
-                height="13"
-                viewBox="0 0 10 10"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
+            {/* SNS: ABOUT / SERVICE と同じアコーディオン。遷移先ページが無いため
+                ラベルもタップで開閉（トグル）。配下は外部リンク3点。 */}
+            <div className={styles.spAccordion}>
+              <div className={styles.spAccordionHeader}>
+                <button
+                  type="button"
+                  className={styles.spAccordionLabel}
+                  onClick={() => toggleMenu('sns')}
+                  aria-expanded={!!openMenus.sns}
+                >
+                  SNS
+                </button>
+                <button
+                  type="button"
+                  className={styles.spAccordionToggle}
+                  onClick={() => toggleMenu('sns')}
+                  aria-expanded={!!openMenus.sns}
+                  aria-label={openMenus.sns ? 'SNS のサブメニューを閉じる' : 'SNS のサブメニューを開く'}
+                >
+                  <span
+                    className={`${styles.spAccordionIcon} ${openMenus.sns ? styles.spAccordionIconOpen : ''}`}
+                    aria-hidden="true"
+                  />
+                </button>
+              </div>
+              <div
+                className={`${styles.spAccordionPanel} ${openMenus.sns ? styles.spAccordionPanelOpen : ''}`}
               >
-                <path
-                  d="M8 5.5V8.5C8 8.76522 7.89464 9.01957 7.70711 9.20711C7.51957 9.39464 7.26522 9.5 7 9.5H1.5C1.23478 9.5 0.98043 9.39464 0.792893 9.20711C0.605357 9.01957 0.5 8.76522 0.5 8.5V3C0.5 2.73478 0.605357 2.48043 0.792893 2.29289C0.98043 2.10536 1.23478 2 1.5 2H4.5M6.5 0.5H9.5M9.5 0.5V3.5M9.5 0.5L4 6"
-                  stroke="currentColor"
-                  strokeWidth="1"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </a>
+                <ul className={styles.serviceSubList}>
+                  {snsDropdown.map((sns) => (
+                    <li key={sns.label}>
+                      <a
+                        href={sns.href}
+                        className={styles.serviceSubLink}
+                        onClick={() => setIsMenuOpen(false)}
+                        {...(sns.hold
+                          ? {}
+                          : { target: '_blank', rel: 'noopener noreferrer' })}
+                      >
+                        ・{sns.label}
+                        <ExternalIcon size={13} />
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
           </nav>
 
           {/* CREATIVE PROJECTS バナー */}
