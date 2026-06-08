@@ -88,5 +88,11 @@
     @include fluid(letter-spacing, 3.08, 3.08);
     // スマホは viewport 幅で自然折り返し（600px 制約は外す）
     max-width: none;
+
+    // Figma(2833:110333): SP は3文を1つの連続テキストとして幅310で自然折返し（4行）。
+    // 文ごとの <p> ブロック改行をやめ、inline で連続フローにする（PC は block のまま＝各文1行）。
+    p {
+      display: inline;
+    }
   }
 }
