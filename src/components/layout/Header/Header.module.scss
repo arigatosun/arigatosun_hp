@@ -351,11 +351,12 @@
   width: 100%;
 }
 
-// 親行: ラベル(Link=ページ遷移) を左、開閉トグル(button=▼) を右に配置。
+// 親行: ラベル(Link=ページ遷移) の直後にトグル(button=⊕)を置く（Figma 準拠）。
+// 右端の同一ラインに揃えず、テキスト幅に追従させる。
 .spAccordionHeader {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   width: 100%;
 }
 
@@ -363,7 +364,8 @@
 // SNS は <button> で実装するため、button 既定の中央寄せ・枠・余白をリセットして
 // Link 版（ABOUT/SERVICE）と完全に同じ左揃え表示にする。
 .spAccordionLabel {
-  flex: 1 1 auto;
+  // テキスト幅ぶんだけ占有（伸ばさない）→ トグルが文字の直後に来る。
+  flex: 0 0 auto;
   text-align: left;
   appearance: none;
   background: none;
