@@ -420,13 +420,17 @@ function SitModel({ position, scale, rotationY, rotationX, freezeCursor }: SitMo
     const hPitch = headPitch * CURSOR_FOLLOW_CONFIG.weights.head;
 
     // 6) 目標 delta クォータニオン（YXZ: yaw を先に適用、その後 pitch）
+    //    アイドル中だけ平滑化を速めてキビキビ動かす（追従中・PC は従来の slerpFactor）。
+    const slerpF = idleActive
+      ? CURSOR_FOLLOW_CONFIG.idle.slerpFactor
+      : CURSOR_FOLLOW_CONFIG.slerpFactor;
     tmpEuler.current.set(sPitch, sYaw, 0, 'YXZ');
     tmpQ.current.setFromEuler(tmpEuler.current);
-    smoothedSpineDeltaQ.current.slerp(tmpQ.current, CURSOR_FOLLOW_CONFIG.slerpFactor);
+    smoothedSpineDeltaQ.current.slerp(tmpQ.current, slerpF);
 
     tmpEuler.current.set(hPitch, hYaw, 0, 'YXZ');
     tmpQ.current.setFromEuler(tmpEuler.current);
-    smoothedHeadDeltaQ.current.slerp(tmpQ.current, CURSOR_FOLLOW_CONFIG.slerpFactor);
+    smoothedHeadDeltaQ.current.slerp(tmpQ.current, slerpF);
 
     // 7) Sit rest ポーズに delta を合成
     spine.quaternion.copy(restSpineQ.current).multiply(smoothedSpineDeltaQ.current);

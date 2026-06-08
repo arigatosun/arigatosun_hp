@@ -28,8 +28,11 @@ export const CURSOR_FOLLOW_CONFIG = {
   // 自然さのため周波数の異なる2サインを合成する（単調な往復に見せない）。
   idle: {
     resumeDelayMs: 1200, // 最後のポインタ操作からこの時間後にアイドル復帰
-    pitch: { ampDeg: 12, speed: 0.5, ampDeg2: 6, speed2: 0.23, phase2: 1.3 }, // 上下（主）
-    yaw: { ampDeg: 9, speed: 0.37, ampDeg2: 4, speed2: 0.17, phase: 0.5 }, // 左右（副）
+    // 「元気」に振幅大きめ＋速度速め。base angle(度)は softClamp で可動域に収まる。
+    pitch: { ampDeg: 20, speed: 1.1, ampDeg2: 10, speed2: 0.55, phase2: 1.3 }, // 上下（主）
+    yaw: { ampDeg: 16, speed: 0.85, ampDeg2: 7, speed2: 0.4, phase: 0.5 }, // 左右（副）
+    // アイドル中だけ追従の平滑化を速めてキビキビ動かす（PC のカーソル追従 slerpFactor は不変）。
+    slerpFactor: 0.09,
   },
 } as const;
 
