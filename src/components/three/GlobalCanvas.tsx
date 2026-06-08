@@ -25,7 +25,9 @@ export default function GlobalCanvas() {
   const walkScale = isSp ? 0.35 : 0.45;
   // SP は両キャラを 70px (camera zoom 150 → +0.467 world unit) 上にオフセット
   const SP_OFFSET_Y = 0.467;
-  const logoBaseY = isSp ? -1.5 + SP_OFFSET_Y : -1.5;
+  // SP のロゴ帯キャラはさらに 15px 上へ（15 / zoom150 = +0.1 world unit）。
+  const LOGO_WALKER_SP_UP = 0.1;
+  const logoBaseY = isSp ? -1.5 + SP_OFFSET_Y + LOGO_WALKER_SP_UP : -1.5;
 
   return (
     <Canvas
@@ -69,6 +71,9 @@ export default function GlobalCanvas() {
           walkAnimSpeed={0.8}
           sectionSelector='[data-section="logo-slider"]'
           triggerOnVisible
+          // SP はカーソルが無いので、歩くキャラの位置でロゴ帯のカラー reveal を点灯。
+          // PC は従来通りカーソル追従に任せる。
+          driveReveal={isSp}
           approachMarginPx={2800}
           // 右に抜けてから再度左から入るまでの待ち時間（default 6000ms）。
           // 右に抜けたら待ちなしで即左から再登場させる。

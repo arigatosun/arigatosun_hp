@@ -19,7 +19,8 @@
 
   @include sp {
     // Figma SP @390: LogoSlider 末尾 y=9069 → Message 見出し y=9229 = gap 160px
-    @include fluid(margin-top, 160, 360);
+    // 3D（ロゴ帯キャラ）と見出しが近すぎたため SP のみ +20px（160→180 / 360→380）。
+    @include fluid(margin-top, 180, 380);
     // Message は中央寄せ (align-items: center) のため、padding を左右対称にして
     // コンテンツが視覚的にビューポート中央に来るようにする。左 padding 値 (About の左と同じ
     // 40→200 / 390→1920) を両側に適用。

@@ -69,8 +69,10 @@ export default function LogoSlider() {
           ))}
         </div>
 
-        {/* カラー層: カーソル位置の放射状グラデーションでマスク表示 */}
-        <div ref={revealRef} className={styles.reveal} aria-hidden="true">
+        {/* カラー層: カーソル位置の放射状グラデーションでマスク表示。
+            SP では歩く3Dキャラ(WalkingCharacter driveReveal)がこの要素の
+            --mx/--my と opacity を駆動して「通った所だけカラー」にする。 */}
+        <div ref={revealRef} className={styles.reveal} data-logo-reveal aria-hidden="true">
           <div className={styles.track}>
             {items.map((logo, index) => (
               <div key={`color-${logo.id}-${index}`} className={styles.logoItem}>
