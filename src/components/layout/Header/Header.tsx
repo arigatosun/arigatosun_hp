@@ -85,6 +85,32 @@ function ExternalIcon({ size = 12 }: { size?: number }) {
   );
 }
 
+// SP アコーディオンの開閉トグル（丸囲み ⊕ / ⊖）。Figma 支給 SVG をそのまま使用。
+// 閉＝ ⊕（縦横バー）、開＝ ⊖（横バーのみ）。色は currentColor（常時黒・タップで赤くしない）。
+function AccordionToggleIcon({ open }: { open: boolean }) {
+  return (
+    <svg
+      className={styles.spAccordionIcon}
+      width="14"
+      height="14"
+      viewBox="0 0 14 14"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      {open ? (
+        <path d="M11 6.48926V7.51074H3V6.48926H11Z" fill="currentColor" />
+      ) : (
+        <path
+          d="M3 7.51029V6.48971H6.47047V3H7.51324V6.48971H11V7.51029H7.51324V11H6.47047V7.51029H3Z"
+          fill="currentColor"
+        />
+      )}
+      <circle cx="7" cy="7" r="6.5" stroke="currentColor" />
+    </svg>
+  );
+}
+
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   // SP メニューのアコーディオン開閉状態（キーごと・複数同時に開ける）。
@@ -226,10 +252,7 @@ export default function Header() {
                   aria-expanded={!!openMenus.about}
                   aria-label={openMenus.about ? 'ABOUT のサブメニューを閉じる' : 'ABOUT のサブメニューを開く'}
                 >
-                  <span
-                    className={`${styles.spAccordionIcon} ${openMenus.about ? styles.spAccordionIconOpen : ''}`}
-                    aria-hidden="true"
-                  />
+                  <AccordionToggleIcon open={!!openMenus.about} />
                 </button>
               </div>
               <div
@@ -268,10 +291,7 @@ export default function Header() {
                   aria-expanded={!!openMenus.service}
                   aria-label={openMenus.service ? 'SERVICE のサブメニューを閉じる' : 'SERVICE のサブメニューを開く'}
                 >
-                  <span
-                    className={`${styles.spAccordionIcon} ${openMenus.service ? styles.spAccordionIconOpen : ''}`}
-                    aria-hidden="true"
-                  />
+                  <AccordionToggleIcon open={!!openMenus.service} />
                 </button>
               </div>
               <div
@@ -334,10 +354,7 @@ export default function Header() {
                   aria-expanded={!!openMenus.sns}
                   aria-label={openMenus.sns ? 'SNS のサブメニューを閉じる' : 'SNS のサブメニューを開く'}
                 >
-                  <span
-                    className={`${styles.spAccordionIcon} ${openMenus.sns ? styles.spAccordionIconOpen : ''}`}
-                    aria-hidden="true"
-                  />
+                  <AccordionToggleIcon open={!!openMenus.sns} />
                 </button>
               </div>
               <div
