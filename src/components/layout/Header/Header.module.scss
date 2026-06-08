@@ -411,6 +411,8 @@
   width: 15px;
   height: 15px;
   flex-shrink: 0;
+  // テキストに対してやや上寄りに見えるため 2px 下げて視覚的に揃える。
+  transform: translateY(2px);
 }
 
 // 開閉パネル（grid-template-rows 0fr→1fr で高さを滑らかにアニメ）
