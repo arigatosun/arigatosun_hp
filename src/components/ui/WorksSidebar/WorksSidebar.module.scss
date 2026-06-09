@@ -78,6 +78,14 @@
   // inline で描画（NEWS と同じ背景枠＝フォントbox）。line-height:24px は行ピッチ用に維持され、
   // inline 要素の背景は font box に乗るので赤帯位置が NEWS と全幅で一致（レスポンシブ追従）。
   display: inline;
+  // フィルタ項目は <button> で描画するため、ボタン既定スタイルをリセット
+  // （background-color のみ透過に。赤マーカー帯の background-image は下で別途指定）。
+  appearance: none;
+  border: 0;
+  padding: 0;
+  background-color: transparent;
+  text-align: left;
+  cursor: pointer;
   text-decoration: none;
   color: var(--color-text-secondary);
   font-family: var(--font-en);

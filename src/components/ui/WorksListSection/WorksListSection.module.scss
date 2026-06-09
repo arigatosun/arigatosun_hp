@@ -63,6 +63,15 @@
   }
 }
 
+// ── 該当カテゴリに実績が無い時のメッセージ ──
+.empty {
+  color: var(--color-text-secondary);
+  font-family: var(--font-primary);
+  @include fluid(font-size, 14, 18);
+  line-height: 1.8;
+  @include fluid(padding-top, 20, 40);
+}
+
 // ── ページネーション位置（Figma PC: グリッド最下 + 240px / SP: + 100px） ──
 .paginationWrap {
   @include fluid(margin-top, 80, 240);
