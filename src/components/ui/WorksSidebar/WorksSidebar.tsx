@@ -1,27 +1,31 @@
+'use client';
+
 import Link from 'next/link';
 import SectionTitle from '@/components/ui/SectionTitle';
+import type { WorksCategory } from '@/types/work';
 import styles from './WorksSidebar.module.scss';
 
-export type WorksFilterKey =
-  | 'ALL'
-  | 'AI / DEVELOPMENT'
-  | 'DESIGN / BRANDING'
-  | 'IP / CREATIVE'
-  | 'CREATIVE PROJECT';
+// 'ALL' は「全件表示」の擬似カテゴリ。作品データ側の WorksCategory には含めない。
+export type WorksFilterKey = 'ALL' | WorksCategory;
 
 type WorksSidebarProps = {
   active?: WorksFilterKey;
+  /** フィルタ項目クリック時に呼ばれる。未指定なら項目はクリックしても何もしない。 */
+  onSelect?: (key: WorksFilterKey) => void;
 };
 
-const filterItems: { key: WorksFilterKey; href: string }[] = [
-  { key: 'ALL', href: '/works' },
-  { key: 'AI / DEVELOPMENT', href: '/works' },
-  { key: 'DESIGN / BRANDING', href: '/works' },
-  { key: 'IP / CREATIVE', href: '/works' },
-  { key: 'CREATIVE PROJECT', href: '/works' },
+const filterItems: WorksFilterKey[] = [
+  'ALL',
+  'AI / DEVELOPMENT',
+  'DESIGN / BRANDING',
+  'IP / CREATIVE',
+  'CREATIVE PROJECT',
 ];
 
-export default function WorksSidebar({ active = 'ALL' }: WorksSidebarProps) {
+export default function WorksSidebar({
+  active = 'ALL',
+  onSelect,
+}: WorksSidebarProps) {
   return (
     <aside className={styles.sidebar}>
       <SectionTitle
@@ -36,19 +40,24 @@ export default function WorksSidebar({ active = 'ALL' }: WorksSidebarProps) {
 
       <nav className={styles.nav}>
         <ul className={styles.list}>
-          {filterItems.map((item) => {
-            const isActive = item.key === active;
+          {filterItems.map((key) => {
+            const isActive = key === active;
             return (
               <li
-                key={item.key}
+                key={key}
                 className={`${styles.item} ${isActive ? styles.itemActive : ''}`}
               >
-                <Link href={item.href} className={styles.link}>
+                <button
+                  type="button"
+                  className={styles.link}
+                  onClick={() => onSelect?.(key)}
+                  aria-pressed={isActive}
+                >
                   <span>・</span>
                   <span className={styles.label}>
-                    {item.key} &gt;
+                    {key} &gt;
                   </span>
-                </Link>
+                </button>
               </li>
             );
           })}

@@ -6,11 +6,26 @@ export type WorkDetail = {
   value: string;
 };
 
+/**
+ * /works ページ左サイドバーの絞り込みカテゴリ。
+ * 'ALL'（全件表示の擬似カテゴリ）は含めない。作品が実際に属するカテゴリのみ。
+ */
+export type WorksCategory =
+  | 'AI / DEVELOPMENT'
+  | 'DESIGN / BRANDING'
+  | 'IP / CREATIVE'
+  | 'CREATIVE PROJECT';
+
 export type WorkItem = {
   id: string;
   client: string;
   title: string;
   details: WorkDetail[];
+  /**
+   * この作品が属するカテゴリ（複数可）。/works の左サイドバー絞り込みに使用。
+   * details のラベル（D / B：→ DESIGN / BRANDING、AI / D：→ AI / DEVELOPMENT 等）に対応。
+   */
+  categories: WorksCategory[];
   term: string;
   image: string;
   imageWidth: number;

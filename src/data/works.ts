@@ -9,6 +9,7 @@ const WORKS_DATA: readonly WorkItem[] = [
     id: 'choritz',
     client: '頂立輸入代行会社',
     title: '数値では測れない想いや姿勢を、ブランドの核心へ宿す。| 社名からVIまで、一気通貫のブランド構築',
+    categories: ['DESIGN / BRANDING'],
     details: [
       { label: 'D / B：', value: '会社名・タグライン・ロゴ・VI設計・WEB' },
     ],
@@ -28,6 +29,7 @@ const WORKS_DATA: readonly WorkItem[] = [
     title:
       '諦めきれなかった構想が、サービスとして動き出す。| 構想整理から要件定義・開発・改善まで、一気通貫の\n立ち上げ支援',
     breakAfterPipeAtMax: true,
+    categories: ['AI / DEVELOPMENT', 'DESIGN / BRANDING'],
     details: [
       { label: 'D / B：', value: 'ロゴデザイン、VI設計' },
       { label: 'AI / D：', value: '要件定義、アプリ開発、UI/UX、リリース、運用改善' },
@@ -42,6 +44,7 @@ const WORKS_DATA: readonly WorkItem[] = [
     id: 'logo-archive',
     client: 'VARIOUS CLIENTS',
     title: '独自の核を構築する。| ロゴ・VIのプロジェクトアーカイブ。',
+    categories: ['DESIGN / BRANDING'],
     details: [
       { label: 'D / B：', value: 'ロゴデザイン' },
     ],
@@ -54,6 +57,7 @@ const WORKS_DATA: readonly WorkItem[] = [
     id: 'nest',
     client: 'NEST',
     title: 'デジタルでは生まれない温もりと偶然性を、シンボルとして可視化する。| 拡張を見据えたロゴ・VI設計',
+    categories: ['DESIGN / BRANDING'],
     details: [
       { label: 'D / B：', value: 'ロゴ・VI 設計' },
     ],
@@ -68,6 +72,7 @@ const WORKS_DATA: readonly WorkItem[] = [
     id: 'work-5',
     client: '全日本漬物協同組合連合会',
     title: '何百年も続く日本の漬物文化を、この先も愛してもらえるカタチへ。| 最優秀賞から生まれたキャラクターデザインと、ポータルサイトのリブランディング',
+    categories: ['DESIGN / BRANDING'],
     details: [
       { label: 'D / B：', value: 'キャラクターデザイン、ポータルサイト設計・デザイン' },
     ],
@@ -80,6 +85,7 @@ const WORKS_DATA: readonly WorkItem[] = [
     id: 'work-6',
     client: '全日本漬物協同組合連合会',
     title: '何百年も続く日本の漬物文化を、この先も愛してもらえるカタチへ。| 最優秀賞から生まれたキャラクターデザインと、ポータルサイトのリブランディング',
+    categories: ['DESIGN / BRANDING'],
     details: [
       { label: 'D / B：', value: 'キャラクターデザイン、ポータルサイト設計・デザイン' },
     ],
@@ -92,6 +98,7 @@ const WORKS_DATA: readonly WorkItem[] = [
     id: 'work-7',
     client: '全日本漬物協同組合連合会',
     title: '何百年も続く日本の漬物文化を、この先も愛してもらえるカタチへ。| 最優秀賞から生まれたキャラクターデザインと、ポータルサイトのリブランディング',
+    categories: ['DESIGN / BRANDING'],
     details: [
       { label: 'D / B：', value: 'キャラクターデザイン、ポータルサイト設計・デザイン' },
     ],
@@ -104,6 +111,7 @@ const WORKS_DATA: readonly WorkItem[] = [
     id: 'work-8',
     client: '全日本漬物協同組合連合会',
     title: '何百年も続く日本の漬物文化を、この先も愛してもらえるカタチへ。| 最優秀賞から生まれたキャラクターデザインと、ポータルサイトのリブランディング',
+    categories: ['DESIGN / BRANDING'],
     details: [
       { label: 'D / B：', value: 'キャラクターデザイン、ポータルサイト設計・デザイン' },
     ],
@@ -116,6 +124,7 @@ const WORKS_DATA: readonly WorkItem[] = [
     id: 'work-9',
     client: '全日本漬物協同組合連合会',
     title: '何百年も続く日本の漬物文化を、この先も愛してもらえるカタチへ。| 最優秀賞から生まれたキャラクターデザインと、ポータルサイトのリブランディング',
+    categories: ['DESIGN / BRANDING'],
     details: [
       { label: 'D / B：', value: 'キャラクターデザイン、ポータルサイト設計・デザイン' },
     ],
@@ -128,6 +137,7 @@ const WORKS_DATA: readonly WorkItem[] = [
     id: 'work-10',
     client: '全日本漬物協同組合連合会',
     title: '何百年も続く日本の漬物文化を、この先も愛してもらえるカタチへ。| 最優秀賞から生まれたキャラクターデザインと、ポータルサイトのリブランディング',
+    categories: ['DESIGN / BRANDING'],
     details: [
       { label: 'D / B：', value: 'キャラクターデザイン、ポータルサイト設計・デザイン' },
     ],
