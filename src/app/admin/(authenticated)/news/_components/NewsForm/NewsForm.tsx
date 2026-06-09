@@ -41,6 +41,10 @@ function toDatetimeLocal(iso: string | null): string {
 export default function NewsForm({ news, categories, initialValues }: NewsFormProps) {
   const [state, formAction, isPending] = useActionState(saveNews, initialState);
   const intentRef = useRef<HTMLInputElement>(null);
+  // 公開日時: 画面表示用の datetime-local (publishedAtInputRef) と、
+  // サーバーに送る UTC ISO 用の hidden (publishedAtHiddenRef) を分離する。
+  const publishedAtInputRef = useRef<HTMLInputElement>(null);
+  const publishedAtHiddenRef = useRef<HTMLInputElement>(null);
   const isPublished = news?.status === 'published';
   const fieldErrors = 'fieldErrors' in state ? (state.fieldErrors ?? {}) : {};
   const globalError = 'error' in state ? state.error : null;
@@ -62,10 +66,28 @@ export default function NewsForm({ news, categories, initialValues }: NewsFormPr
     if (intentRef.current) intentRef.current.value = value;
   };
 
+  // datetime-local はタイムゾーン無しのナイーブ文字列のため、サーバー（本番=UTC）で
+  // new Date() するとローカル時刻として誤解釈され、JST 入力が +9h ズレて予約公開になる。
+  // そこで送信前にブラウザ（ユーザーの TZ）で UTC ISO に変換し hidden 経由でサーバーへ渡す。
+  // 表示側 toDatetimeLocal もブラウザ TZ なので、これで読み書きが対称になる。
+  const syncPublishedAt = () => {
+    const hidden = publishedAtHiddenRef.current;
+    if (!hidden) return;
+    const local = publishedAtInputRef.current?.value ?? '';
+    if (!local) {
+      hidden.value = '';
+      return;
+    }
+    const d = new Date(local);
+    // 不正値はそのまま渡し、サーバー側のフォーマット検証に委ねる
+    hidden.value = Number.isNaN(d.getTime()) ? local : d.toISOString();
+  };
+
   return (
     <form action={formAction} className={styles.root}>
       {news && <input type="hidden" name="id" value={news.id} />}
       <input ref={intentRef} type="hidden" name="intent" defaultValue="draft" />
+      <input ref={publishedAtHiddenRef} type="hidden" name="published_at" />
 
       {globalError && (
         <p className={styles.errorBanner} role="alert">
@@ -189,7 +211,7 @@ export default function NewsForm({ news, categories, initialValues }: NewsFormPr
         </label>
         <input
           id="published_at"
-          name="published_at"
+          ref={publishedAtInputRef}
           type="datetime-local"
           defaultValue={toDatetimeLocal(news?.published_at ?? null)}
           className={styles.input}
@@ -215,6 +237,7 @@ export default function NewsForm({ news, categories, initialValues }: NewsFormPr
               }
             }
             setIntent('draft');
+            syncPublishedAt();
           }}
         >
           {isPending ? '保存中...' : isPublished ? '下書きに戻す' : '下書きとして保存'}
@@ -223,7 +246,10 @@ export default function NewsForm({ news, categories, initialValues }: NewsFormPr
           type="submit"
           className={styles.buttonPrimary}
           disabled={isPending}
-          onClick={() => setIntent('publish')}
+          onClick={() => {
+            setIntent('publish');
+            syncPublishedAt();
+          }}
         >
           {isPending ? '保存中...' : isPublished ? '公開情報を更新' : '公開する'}
         </button>
