@@ -51,7 +51,7 @@
     var(--color-primary)
   );
   background-repeat: no-repeat;
-  background-position: right calc(50% + 0.094em);
+  background-position: right calc(50% + 0.094em - 1px); // 赤帯を1px上げる
   background-size: 0 0.85em;
   color: var(--color-text-secondary);
 }
