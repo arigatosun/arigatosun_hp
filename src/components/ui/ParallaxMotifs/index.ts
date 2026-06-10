@@ -1,1 +1,1 @@
-export { default } from './ParallaxMotifs';
+export { default } from './ParallaxMotifsLoader';
