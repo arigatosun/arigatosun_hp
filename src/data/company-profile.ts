@@ -33,7 +33,7 @@ export const COMPANY_INFO_ROWS: CompanyInfoRow[] = [
   {
     cells: [
       { label: '設立', value: '2024/05', valueFont: 'en' },
-      { label: '代表者', value: '吉川 遼／廣森 氷河／中村 修人' },
+      { label: '代表者', value: '中村 修人' },
       // 従業員数は非表示（要望により削除）。
     ],
   },
