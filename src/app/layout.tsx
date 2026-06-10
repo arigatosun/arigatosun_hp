@@ -1,6 +1,14 @@
 import type { Metadata } from 'next';
+import { Noto_Sans_JP } from 'next/font/google';
 import '@/styles/fonts.css';
 import '@/styles/globals.scss';
+
+const notoSansJp = Noto_Sans_JP({
+  weight: ['300', '400', '500', '700'],
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-noto-jp',
+});
 
 // ルートには title.template を置かない。
 // マーケ用 (公開) 側のテンプレートは app/(site)/layout.tsx、
@@ -23,12 +31,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
-      <body>
+      <body className={notoSansJp.variable}>
         {/* フォント配信元への事前接続（DNS/TLS を先行させ、描画ブロッキングを短縮）。
             React 19 が <link> を自動で <head> へホイストする。 */}
         <link rel="preconnect" href="https://use.typekit.net" crossOrigin="anonymous" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         {children}
       </body>
     </html>

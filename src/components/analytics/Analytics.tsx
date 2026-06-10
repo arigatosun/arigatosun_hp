@@ -12,14 +12,14 @@ const CLARITY_ID = process.env.NEXT_PUBLIC_CLARITY_ID;
  * Google タグマネージャー（GTM）+ Google Analytics 4 + Microsoft Clarity の計測タグ。
  * - 公開サイト（(site)）のみで読み込む（admin 配下では使わない）。
  * - 各 ID が env に設定されている時だけ該当タグを出力する。
- * - strategy="afterInteractive": ページ描画を妨げない読み込み。
+ * - strategy="lazyOnload": 見た目に無関係なタグは onload 後まで後ろ倒しにする。
  */
 export default function Analytics() {
   return (
     <>
       {GTM_ID && (
         <>
-          <Script id="gtm-init" strategy="afterInteractive">
+          <Script id="gtm-init" strategy="lazyOnload">
             {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
@@ -41,9 +41,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <>
           <Script
             src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
-            strategy="afterInteractive"
+            strategy="lazyOnload"
           />
-          <Script id="ga4-init" strategy="afterInteractive">
+          <Script id="ga4-init" strategy="lazyOnload">
             {`window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
@@ -53,7 +53,7 @@ gtag('config', '${GA_ID}');`}
       )}
 
       {CLARITY_ID && (
-        <Script id="ms-clarity" strategy="afterInteractive">
+        <Script id="ms-clarity" strategy="lazyOnload">
           {`(function(c,l,a,r,i,t,y){
 c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
 t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;

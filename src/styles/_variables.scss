@@ -51,9 +51,9 @@
 
   // ── フォント ──
   // Adobe Fonts (TypeKit) CDN経由で読み込み: https://use.typekit.net/vpb8rae.css
-  --font-primary: 'mozaic-geo-variable', 'Noto Sans JP', 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+  --font-primary: 'mozaic-geo-variable', var(--font-noto-jp), 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
   --font-en: 'mozaic-geo-variable', 'Helvetica Neue', Arial, sans-serif;
-  --font-jp: 'Noto Sans JP', 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+  --font-jp: var(--font-noto-jp), 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
 
   // ── フォントウェイト ──
