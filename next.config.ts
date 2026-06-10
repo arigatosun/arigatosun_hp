@@ -56,6 +56,19 @@ const nextConfig: NextConfig = {
       { source: '/top', destination: '/', permanent: true },
       // 旧インタビュー（/testimonials）は新サイトに該当ページが無いためトップへ
       { source: '/testimonials', destination: '/', permanent: true },
+      // 旧サイトの Works 詳細（UUID スラッグ）救済。
+      // KUSOMEGANE は現行の IP / CREATIVE 詳細が最も近いため個別に誘導する。
+      {
+        source: '/works/18d1d263-c3f1-4e70-ae07-75e4af3fb79b',
+        destination: '/service/ip-creative',
+        permanent: true,
+      },
+      // それ以外の旧 UUID 詳細は現行の Works 一覧へ集約する。
+      {
+        source: '/works/:slug([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})',
+        destination: '/works',
+        permanent: true,
+      },
       // Works スラッグを連番→内容ベースに変更。旧URL（公開済み）を新URLへ恒久リダイレクト
       { source: '/works/work-1', destination: '/works/choritz', permanent: true },
       { source: '/works/work-2', destination: '/works/logo-archive', permanent: true },
