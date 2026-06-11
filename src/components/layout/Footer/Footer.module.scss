@@ -344,17 +344,19 @@
   // Figma: line-to-line 41px = font line-height 22 + gap 19
   @include fluid(gap, 8, 19, 390, 1920);
   list-style: none;
-  // Figma: SERVICE 下 → AI/DEV top = 24px
-  @include fluid(margin-top, 10, 24, 390, 1920);
+  // SERVICE 下 → 1段目の間隔はアコーディオン開時に .accordionPanelOpen の
+  // padding-top で確保するため、ここでは margin-top を持たない（閉時の隙間ゼロ）。
 
-  // Figma SP(390): SERVICE 下 → AI/DEV top = 26、sub item line-to-line = 38 (box18 + gap20)
+  // Figma SP(390): sub item line-to-line = 38 (box18 + gap20)
   @include sp {
-    @include fluid(margin-top, 20, 26, 320, 390);
     @include fluid(gap, 20, 20, 320, 390);
   }
 }
 
 .subMenuItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   color: var(--color-text-secondary);
   font-family: var(--font-en);
   @include fluid(font-size, 12, 18, 390, 1920);
@@ -372,6 +374,85 @@
   @include sp {
     @include fluid(font-size, 14, 14);
     @include fluid(letter-spacing, 1.2, 1.2);
+  }
+}
+
+// ── アコーディオン（ABOUT / SERVICE / SNS をタップで開閉） ──
+// 親行: ラベル（Link=ページ遷移 / SNS のみ button）の直後にトグル(button=⊕)。
+.accordionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+// SNS のラベルは遷移先が無いため button。button 既定のスタイルを消して
+// 他の .mainMenuItem（INSTAGRAM だった枠）と同じ左揃え表示に揃える。
+.accordionLabelButton {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+}
+
+// 開閉トグル。タップ領域を確保しつつ行高は維持。白アーチ上なので白で表示。
+.accordionToggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 8px;
+  margin: -8px -8px -8px 0;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  color: var(--color-white);
+  transition: color var(--transition-base);
+
+  &:hover {
+    color: var(--color-primary);
+  }
+}
+
+// 丸囲みの +/− アイコン。テキストに追従してスケール。
+.accordionIcon {
+  display: block;
+  flex-shrink: 0;
+  @include fluid(width, 14, 18, 390, 1920);
+  @include fluid(height, 14, 18, 390, 1920);
+  // テキストに対してやや上寄りに見えるため少し下げて視覚的に揃える。
+  transform: translateY(1px);
+
+  @include sp {
+    @include fluid(width, 15, 15);
+    @include fluid(height, 15, 15);
+  }
+}
+
+// 開閉パネル（grid-template-rows 0fr→1fr で高さを滑らかにアニメ）
+.accordionPanel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition:
+    grid-template-rows var(--transition-base),
+    padding-top var(--transition-base);
+
+  // 閉じている間サブリストをクリップする
+  > * {
+    overflow: hidden;
+    min-height: 0;
+  }
+}
+
+.accordionPanelOpen {
+  grid-template-rows: 1fr;
+  // 開いた時だけ親行とサブリストの間隔を確保（閉時は隙間ゼロ）。
+  // Figma: SERVICE 下 → AI/DEV top = 24px / SP(390) = 26
+  @include fluid(padding-top, 10, 24, 390, 1920);
+
+  @include sp {
+    @include fluid(padding-top, 20, 26, 320, 390);
   }
 }
 

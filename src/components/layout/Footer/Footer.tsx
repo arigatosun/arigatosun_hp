@@ -2,13 +2,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import FooterSitCharacterLoader from '@/components/three/FooterSitCharacterLoader';
 import DeferMount from '@/components/ui/DeferMount';
+import FooterNav from './FooterNav';
 import styles from './Footer.module.scss';
-
-const serviceSubmenu = [
-  { href: '/service/ai-dev', label: '・AI / DEVELOPMENT' },
-  { href: '/service/design-branding', label: '・DESIGN / BRANDING' },
-  { href: '/service/ip-creative', label: '・IP / CREATIVE' },
-];
 
 export default function Footer() {
   return (
@@ -55,70 +50,7 @@ export default function Footer() {
             />
           </div>
 
-          <nav className={styles.nav}>
-            <ul className={styles.mainMenu}>
-              <li>
-                <Link href="/about" className={styles.mainMenuItem}>
-                  ABOUT
-                </Link>
-              </li>
-              <li>
-                <Link href="/service" className={styles.mainMenuItem}>
-                  SERVICE
-                </Link>
-                <ul className={styles.subMenu}>
-                  {serviceSubmenu.map((sub) => (
-                    <li key={sub.href}>
-                      <Link href={sub.href} className={styles.subMenuItem}>
-                        {sub.label}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </li>
-              <li>
-                <Link href="/works" className={styles.mainMenuItem}>
-                  WORKS
-                </Link>
-              </li>
-              <li>
-                <Link href="/news" className={styles.mainMenuItem}>
-                  NEWS
-                </Link>
-              </li>
-              <li>
-                <Link href="/contact" className={styles.mainMenuItem}>
-                  CONTACT US
-                </Link>
-              </li>
-              <li>
-                <a
-                  href="https://www.instagram.com/arigatosun_inc"
-                  className={styles.mainMenuItem}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  INSTAGRAM
-                  <svg
-                    className={styles.externalIcon}
-                    width="14"
-                    height="14"
-                    viewBox="0 0 10 10"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M8 5.5V8.5C8 8.76522 7.89464 9.01957 7.70711 9.20711C7.51957 9.39464 7.26522 9.5 7 9.5H1.5C1.23478 9.5 0.98043 9.39464 0.792893 9.20711C0.605357 9.01957 0.5 8.76522 0.5 8.5V3C0.5 2.73478 0.605357 2.48043 0.792893 2.29289C0.98043 2.10536 1.23478 2 1.5 2H4.5M6.5 0.5H9.5M9.5 0.5V3.5M9.5 0.5L4 6"
-                      stroke="currentColor"
-                      strokeWidth="1"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </a>
-              </li>
-            </ul>
-          </nav>
+          <FooterNav />
         </div>
 
         {/* 右側: CREATIVE PROJECTS */}
