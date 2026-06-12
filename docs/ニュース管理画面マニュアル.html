@@ -181,13 +181,14 @@
     <li><a href="#status"><span class="num">6.</span>公開状態（下書き / 公開 / 予約公開）</a></li>
     <li><a href="#editor"><span class="num">7.</span>リッチエディタの使い方</a></li>
     <li><a href="#images"><span class="num">8.</span>画像のアップロード</a></li>
-    <li><a href="#categories"><span class="num">9.</span>カテゴリー管理</a></li>
-    <li><a href="#public-site"><span class="num">10.</span>公開ページの動作</a></li>
-    <li><a href="#admin-users"><span class="num">11.</span>管理者アカウントの追加・削除</a></li>
-    <li><a href="#security"><span class="num">12.</span>セキュリティと制限事項</a></li>
-    <li><a href="#troubleshoot"><span class="num">13.</span>トラブルシューティング</a></li>
-    <li><a href="#spec"><span class="num">14.</span>技術仕様まとめ</a></li>
-    <li><a href="#glossary"><span class="num">15.</span>用語集</a></li>
+    <li><a href="#ai-compose"><span class="num">9.</span>AIで作成する（記事・画像）</a></li>
+    <li><a href="#categories"><span class="num">10.</span>カテゴリー管理</a></li>
+    <li><a href="#public-site"><span class="num">11.</span>公開ページの動作</a></li>
+    <li><a href="#admin-users"><span class="num">12.</span>管理者アカウントの追加・削除</a></li>
+    <li><a href="#security"><span class="num">13.</span>セキュリティと制限事項</a></li>
+    <li><a href="#troubleshoot"><span class="num">14.</span>トラブルシューティング</a></li>
+    <li><a href="#spec"><span class="num">15.</span>技術仕様まとめ</a></li>
+    <li><a href="#glossary"><span class="num">16.</span>用語集</a></li>
   </ol>
 </nav>
 
@@ -216,7 +217,9 @@
     <li><strong>記事の作成・編集・削除</strong>（タイトル / 本文 / カテゴリー / サムネ画像）</li>
     <li><strong>下書き保存と公開の切り替え</strong>（公開日時を未来に指定すれば予約公開も可能）</li>
     <li><strong>リッチエディタ</strong>での本文編集（見出し・太字・リスト・画像・テーブル・リンクなど）</li>
-    <li><strong>画像のアップロード</strong>（サムネと本文中の挿入画像）</li>
+    <li><strong>画像のアップロード</strong>（サムネと本文中の挿入画像）。本文画像は<strong>形（横長/正方形）で自動レイアウト</strong></li>
+    <li><strong>AIで記事をまるごと下書き</strong>（素材テキストから タイトル・本文・カテゴリ等を生成）</li>
+    <li><strong>AIで画像を生成</strong>（サムネ・本文画像）</li>
     <li><strong>カテゴリーの追加・編集・削除</strong>（初期値: INFORMATION / EVENTS / PRESS）</li>
   </ul>
 
@@ -440,6 +443,7 @@
       <tr><td><strong>コードブロック</strong></td><td>整形済みコード（複数行）</td><td>—</td></tr>
       <tr><td><strong>リンク</strong></td><td>URL を聞かれて選択範囲にリンク設定</td><td>—</td></tr>
       <tr><td><strong>画像</strong></td><td>画像をアップロードして挿入</td><td>—</td></tr>
+      <tr><td><strong>✦AI画像</strong></td><td>説明文（プロンプト）から画像をAI生成して挿入（後述のセクション9）</td><td>—</td></tr>
       <tr><td><strong>表</strong></td><td>3行×3列の表を挿入</td><td>—</td></tr>
       <tr><td><strong>↶</strong></td><td>元に戻す（Undo）</td><td><kbd>⌘Z</kbd> / <kbd>Ctrl+Z</kbd></td></tr>
       <tr><td><strong>↷</strong></td><td>やり直し（Redo）</td><td><kbd>⌘⇧Z</kbd> / <kbd>Ctrl+Y</kbd></td></tr>
@@ -460,7 +464,12 @@
   </div>
 
   <h3>画像の挿入</h3>
-  <p>ツールバーの <strong>画像</strong> ボタンをクリック → ファイル選択ダイアログから画像を選ぶと、自動でアップロードされカーソル位置に挿入されます。サムネイルとは別の場所（本文中）に表示されます。</p>
+  <p>ツールバーの <strong>画像</strong> ボタンをクリック → ファイル選択ダイアログから画像を選ぶと、自動でアップロードされカーソル位置に挿入されます。サムネイルとは別の場所（本文中）に表示されます。AIで生成して挿入したい時は <strong>✦AI画像</strong> ボタンを使います。</p>
+
+  <div class="box info">
+    <span class="bt">🖼 本文画像は「形」で自動レイアウトされます</span>
+    挿入した画像は、公開ページで <strong>横長 → 全幅</strong> / <strong>正方形 → 半分の大きさ</strong> に自動配置されます。正方形を2枚続けて入れると横並びになります。詳しくは <a href="#images">セクション8「画像のアップロード」</a> を参照してください。
+  </div>
 
   <h3>テーブルの編集</h3>
   <p>テーブルを挿入すると 3×3 のテーブルが入ります。セル内をクリックして入力可能です。行・列の追加/削除はキーボード操作またはマウスの右クリックメニュー（ブラウザ依存）で行います。</p>
@@ -485,10 +494,31 @@
     <li>編集画面の「サムネイル画像」セクションで <span class="btn-demo secondary">画像をアップロード</span> をクリック</li>
     <li>ファイルを選択 → アップロード後にプレビューが表示</li>
     <li>差し替える時は <span class="btn-demo secondary">別の画像をアップロード</span>、削除する時は <span class="btn-demo danger">削除</span> ボタン</li>
+    <li>AIで作る時は <span class="btn-demo primary">✦ AIで生成</span> ボタン（説明文を入力すると 16:9 の画像を生成。後述のセクション9）</li>
   </ol>
 
-  <h3>本文内の画像</h3>
-  <p>リッチエディタの <strong>画像</strong> ツールバーボタンから挿入。</p>
+  <div class="box info">
+    <span class="bt">📌 サムネイル＝「一番上に出る画像」</span>
+    サムネイル画像は、記事一覧・TOPページに出るほか、<strong>記事詳細ページの一番上に大きく（全幅・16:9）表示</strong>されます。記事の顔になる画像なので、横長で見栄えのするものを設定してください。
+  </div>
+
+  <h3>本文内の画像と「形による自動レイアウト」</h3>
+  <p>リッチエディタの <strong>画像</strong> ボタン（アップロード）または <strong>✦AI画像</strong> ボタン（AI生成）から挿入します。挿入した画像は、公開ページで<strong>画像の形（縦横比）に応じて自動でレイアウト</strong>されます。投稿者が並べ方を指定する必要はありません。</p>
+  <table class="spec">
+    <thead><tr><th>画像の形</th><th>公開ページでの表示</th></tr></thead>
+    <tbody>
+      <tr><td><strong>横長</strong>（幅が高さの1.2倍以上）</td><td>本文幅いっぱいの<strong>全幅</strong>（長方形のまま）</td></tr>
+      <tr><td><strong>正方形〜縦長</strong></td><td><strong>半分の大きさ</strong>（正方形にトリミング）。<strong>続けて2枚入れると横並び</strong>、1枚だけなら左半分</td></tr>
+    </tbody>
+  </table>
+  <div class="box note">
+    <span class="bt">💡 正方形を2枚横に並べたい時</span>
+    正方形に近い画像を <strong>続けて2枚</strong> 挿入してください（間に文章を挟まない）。公開ページで自動的に左右2列に並びます。3枚なら「2枚＋1枚」になります。
+  </div>
+  <div class="box warn">
+    <span class="bt">⚠ 既存記事の画像について</span>
+    この自動レイアウトは<strong>2026年6月のアップデート以降に新しく挿入した画像</strong>に効きます。それ以前から入っていた画像はサイズ情報を持たないため、すべて<strong>全幅表示</strong>になります（レイアウトは崩れません）。並べ替えたい場合は、その画像を入れ直してください。
+  </div>
 
   <h3>アップロード制限</h3>
   <table class="spec">
@@ -513,9 +543,62 @@
   </div>
 </section>
 
-<!-- ===== 9. カテゴリー管理 ===== -->
-<section id="categories" class="step">
+<!-- ===== 9. AIで作成する（記事・画像） ===== -->
+<section id="ai-compose" class="step">
   <span class="steptag">SECTION 9</span>
+  <h2>AIで作成する（記事・画像）</h2>
+  <p class="lead">別の実装者が追加した AI 機能です。「① 記事をまるごと下書きする」「② 画像を生成する」の2つがあります。どちらも <strong>AIが作ったものは“たたき台”</strong>。必ず人が確認・修正してから公開します。</p>
+
+  <h3>① AIで記事を下書きする</h3>
+  <p>メモ・議事録・プレス文・箇条書きなどの「素材」を貼り付けると、AI（Claude）が <strong>タイトル・スラッグ・カテゴリ・説明文・本文</strong> をまとめて下書きします。</p>
+  <ol class="steps">
+    <li>ニュース一覧の右上 <span class="btn-demo primary">✦ AIで作成</span> をクリック（<code class="inline">/admin/news/ai</code>）</li>
+    <li><strong>素材テキスト（必須）</strong> に元になる内容を貼り付ける</li>
+    <li>必要なら <strong>補足コンテキスト（任意）</strong>（対象読者・トーン・希望カテゴリ等）と <strong>参考URL（任意）</strong> を入力</li>
+    <li><span class="btn-demo primary">AIで生成する</span> をクリック（数秒〜十数秒）</li>
+    <li>生成されると <strong>いつもの編集フォーム</strong>（タイトル/本文/カテゴリ/サムネ）に内容が入った状態になる</li>
+    <li>内容を確認・修正し、いつも通り <span class="btn-demo secondary">下書きとして保存</span> または <span class="btn-demo primary">公開する</span></li>
+  </ol>
+
+  <div class="box info">
+    <span class="bt">📂 新しいカテゴリの提案</span>
+    AIが既存にないカテゴリを提案した場合、「<strong>○○を作成して使用</strong>」ボタンが出ます。押すとそのカテゴリが作られて選択されます。既存のカテゴリから選びたい時は、フォームのカテゴリ欄で選び直してください。
+  </div>
+
+  <div class="box note">
+    <span class="bt">🖼 画像の作り方ガイド（AI生成プロンプト付き）</span>
+    生成結果の上にある折りたたみ「<strong>画像の作り方（AI生成プロンプト付き）</strong>」を開くと、AIが提案した <strong>サムネ画像・本文画像のプロンプト</strong>（英語）が並びます。それをコピーして、下の「✦ AIで生成」「✦AI画像」に使うと、記事に合った画像を作れます。
+  </div>
+
+  <h3>② AIで画像を生成する</h3>
+  <p>画像はその場で AI（Gemini / 通称 Nano Banana Pro）に作らせて挿入できます。説明文（プロンプト）は <strong>英語推奨</strong>です。</p>
+  <table class="spec">
+    <thead><tr><th>どこの画像</th><th>ボタン</th><th>形（縦横比）</th></tr></thead>
+    <tbody>
+      <tr><td>サムネイル</td><td>サムネ欄の <span class="btn-demo primary">✦ AIで生成</span></td><td>16:9（横長）</td></tr>
+      <tr><td>本文中の画像</td><td>エディタの <span class="btn-demo primary">✦AI画像</span></td><td>4:3（横長 → 公開で全幅）</td></tr>
+    </tbody>
+  </table>
+  <ol class="steps">
+    <li>ボタンを押すと、生成したい画像の説明を聞かれる</li>
+    <li>内容を入力して実行 → 生成された画像が自動でアップロードされ、その場に入る</li>
+    <li>気に入らなければ、もう一度生成するか、通常の <strong>画像をアップロード</strong> で実写に差し替え</li>
+  </ol>
+
+  <div class="box warn">
+    <span class="bt">⛔ AIの出力は必ず人がチェック</span>
+    AIは事実と違う内容（日付・固有名詞・数字など）や、不自然な日本語・不適切な表現を出すことがあります。<strong>そのまま公開せず、必ず内容を読み返して修正</strong>してから公開してください。生成画像も意図と違うもの・権利的に不安なものが出ることがあるため、目視で確認を。
+  </div>
+
+  <div class="box term">
+    <span class="bt">⚙ 技術メモ（開発者向け）</span>
+    記事生成は Claude（<code class="inline">ANTHROPIC_MODEL</code>／既定 <code>claude-sonnet-4-6</code>）、画像生成は Gemini（<code class="inline">GEMINI_IMAGE_MODEL</code>／既定 <code>gemini-3-pro-image-preview</code>）。それぞれ API キー（<code class="inline">ANTHROPIC_API_KEY</code> / <code class="inline">GEMINI_API_KEY</code>）が env に必要で、未設定だと生成は失敗します。実装は <code class="inline">src/app/admin/_actions/ai-compose.ts</code> / <code class="inline">ai-image.ts</code>、設計は <code class="inline">docs/news-ai-compose-plan.md</code>。
+  </div>
+</section>
+
+<!-- ===== 10. カテゴリー管理 ===== -->
+<section id="categories" class="step">
+  <span class="steptag">SECTION 10</span>
   <h2>カテゴリー管理</h2>
   <p class="lead">ニュース記事に紐付けるカテゴリーを管理します。初期値は INFORMATION / EVENTS / PRESS の3つ。</p>
 
@@ -554,9 +637,9 @@
   </div>
 </section>
 
-<!-- ===== 10. 公開ページ ===== -->
+<!-- ===== 11. 公開ページ ===== -->
 <section id="public-site" class="step">
-  <span class="steptag">SECTION 10</span>
+  <span class="steptag">SECTION 11</span>
   <h2>公開ページの動作</h2>
   <p class="lead">投稿した記事は <code class="inline">/news</code> 配下に表示されます。</p>
 
@@ -578,6 +661,19 @@
   </ul>
   <p>下書きや予約公開（未来日時）は <strong>公開ページからは絶対に見えません</strong>。直接 URL を叩いても 404 になります。</p>
 
+  <h3>記事詳細ページのレイアウト（2026年6月〜）</h3>
+  <p>詳細ページは <strong>縦1カラム</strong> です。上から順に並びます。</p>
+  <ol class="steps">
+    <li><strong>サムネイル画像</strong>（全幅・16:9。設定が無い記事では省略されます）</li>
+    <li>タイトル → 公開日・カテゴリ → SNSシェアボタン → 区切り線</li>
+    <li><strong>本文</strong>（画像は形に応じて全幅／正方形グリッドに自動レイアウト。<a href="#images">セクション8</a>参照）</li>
+    <li>一番下に <span class="btn-demo secondary">&lt; BACK TO LIST</span>（スマホでは &lt; TOP PAGE）</li>
+  </ol>
+  <div class="box info">
+    <span class="bt">📱 スマホ表示</span>
+    スマホでは本文画像（横長・正方形とも）が<strong>全幅で縦に積まれて</strong>表示されます。
+  </div>
+
   <h3>キャッシュ</h3>
   <p>公開側は ISR（Incremental Static Regeneration）で <strong>60 秒キャッシュ</strong>。記事を保存しても最大 60 秒は古い表示が出ることがあります。</p>
 
@@ -585,9 +681,9 @@
   <p>サイト TOP には最新4件の記事が出ます。こちらはブラウザ側で Supabase から直接取得し、カテゴリータブで動的にフィルタできます。</p>
 </section>
 
-<!-- ===== 11. 管理者アカウントの追加・削除 ===== -->
+<!-- ===== 12. 管理者アカウントの追加・削除 ===== -->
 <section id="admin-users" class="step">
-  <span class="steptag">SECTION 11</span>
+  <span class="steptag">SECTION 12</span>
   <h2>管理者アカウントの追加・削除</h2>
   <p class="lead">管理画面にログインできるユーザーの管理は Supabase ダッシュボードで行います（管理画面内にはユーザー管理 UI を用意していません）。</p>
 
@@ -614,9 +710,9 @@
   </div>
 </section>
 
-<!-- ===== 12. セキュリティ ===== -->
+<!-- ===== 13. セキュリティ ===== -->
 <section id="security" class="step">
-  <span class="steptag">SECTION 12</span>
+  <span class="steptag">SECTION 13</span>
   <h2>セキュリティと制限事項</h2>
   <p class="lead">運用前に把握しておくべき仕様。</p>
 
@@ -659,9 +755,9 @@
   </div>
 </section>
 
-<!-- ===== 13. トラブルシューティング ===== -->
+<!-- ===== 14. トラブルシューティング ===== -->
 <section id="troubleshoot" class="step">
-  <span class="steptag">SECTION 13</span>
+  <span class="steptag">SECTION 14</span>
   <h2>トラブルシューティング</h2>
   <p class="lead">よくある詰まりポイントと対応。</p>
 
@@ -688,6 +784,19 @@
     <li><strong>サムネプレビューが出ない</strong>: <code class="inline">next.config.ts</code> の <code class="inline">images.remotePatterns</code> に Supabase URL が登録されているか確認（通常設定済み）</li>
   </ul>
 
+  <h3>AIの生成が失敗する</h3>
+  <ul>
+    <li><strong>「AIで作成」が失敗する</strong>: Claude の API キー（<code class="inline">ANTHROPIC_API_KEY</code>）が未設定/無効、または利用上限の可能性。素材テキストが空でも生成できません</li>
+    <li><strong>「✦AIで生成 / ✦AI画像」が失敗する</strong>: Gemini の API キー（<code class="inline">GEMINI_API_KEY</code>）が未設定/無効の可能性。プロンプトは英語推奨</li>
+    <li>いずれも本番では Vercel の環境変数に各キーが入っているか（Production/Preview 両方）を確認</li>
+  </ul>
+
+  <h3>本文画像が思った並びにならない</h3>
+  <ul>
+    <li><strong>正方形が横に並ばない</strong>: 2枚を<strong>続けて</strong>挿入してください（間に文章があると別々に表示）。また、画像が正方形に近い形である必要があります（横長は全幅になります）</li>
+    <li><strong>古い記事の画像が全部全幅になる</strong>: 2026年6月より前に入れた画像はサイズ情報が無いため全幅固定です。入れ直すと自動レイアウトが効きます</li>
+  </ul>
+
   <h3>カテゴリーを削除できない</h3>
   <ul>
     <li><strong>「このカテゴリーは記事で使用中のため削除できません」</strong>: そのカテゴリーを使っている記事を先に別カテゴリーに変更するか削除する</li>
@@ -704,9 +813,9 @@
   <p>これは本来起こらない実装。もし発生した場合は重大なバグなので開発者に報告してください。<strong>ヒント:</strong> 同じブラウザで admin にログイン中だと、シークレットウィンドウで確認すると分かりやすいです。</p>
 </section>
 
-<!-- ===== 14. 技術仕様 ===== -->
+<!-- ===== 15. 技術仕様 ===== -->
 <section id="spec" class="step">
-  <span class="steptag">SECTION 14</span>
+  <span class="steptag">SECTION 15</span>
   <h2>技術仕様まとめ</h2>
   <p class="lead">参考用のリファレンス。日常運用では読まなくて OK。</p>
 
@@ -761,6 +870,10 @@
       <tr><td><code>NEXT_PUBLIC_SUPABASE_URL</code></td><td>Supabase プロジェクト URL（クライアント露出 OK）</td></tr>
       <tr><td><code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code></td><td>匿名キー（クライアント露出 OK、RLS で守られる）</td></tr>
       <tr><td><code>SUPABASE_SERVICE_ROLE_KEY</code></td><td>サービスロールキー（サーバー側のみ、絶対に公開しない）</td></tr>
+      <tr><td><code>ANTHROPIC_API_KEY</code></td><td>AI記事生成（Claude）の API キー。未設定だと「AIで作成」が失敗</td></tr>
+      <tr><td><code>ANTHROPIC_MODEL</code></td><td>記事生成モデル（任意。既定 <code>claude-sonnet-4-6</code>）</td></tr>
+      <tr><td><code>GEMINI_API_KEY</code></td><td>AI画像生成（Gemini）の API キー。未設定だと「✦AIで生成 / ✦AI画像」が失敗</td></tr>
+      <tr><td><code>GEMINI_IMAGE_MODEL</code></td><td>画像生成モデル（任意。既定 <code>gemini-3-pro-image-preview</code>）</td></tr>
     </tbody>
   </table>
 
@@ -785,9 +898,9 @@
     └── news.ts         <span class="cm"># 公開ページ用の派生型</span></pre>
 </section>
 
-<!-- ===== 15. 用語集 ===== -->
+<!-- ===== 16. 用語集 ===== -->
 <section id="glossary" class="step">
-  <span class="steptag">SECTION 15</span>
+  <span class="steptag">SECTION 16</span>
   <h2>用語集</h2>
 
   <table class="spec">
@@ -842,7 +955,8 @@
 
   <hr>
   <p style="color: var(--muted); font-size: 13px; text-align: center; margin-top: 40px;">
-    マニュアル作成日: 2026-05-27 / 対応バージョン: Phase A〜E + セキュリティ強化版<br>
+    マニュアル作成日: 2026-05-27 ／ 最終更新: 2026-06-12<br>
+    対応バージョン: Phase A〜E + セキュリティ強化 + AI作成/AI画像生成 + 本文画像の自動レイアウト<br>
     記事内容・仕様についての質問は開発担当へ
   </p>
 </section>
