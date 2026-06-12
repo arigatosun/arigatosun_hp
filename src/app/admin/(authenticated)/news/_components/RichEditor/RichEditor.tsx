@@ -19,6 +19,8 @@ interface RichEditorProps {
   onBusyChange?: (busy: boolean) => void;
 }
 
+export const NEWS_EDITOR_SYNC_EVENT = 'arigatosun:sync-news-editor';
+
 // TipTap content として有効な初期値を返す。
 // - object (TipTap JSON) → そのまま
 // - string (Phase B 残骸の素テキスト) → 単一段落として扱う
@@ -88,8 +90,10 @@ export default function RichEditor({
     };
 
     form.addEventListener('submit', syncHiddenValue);
+    form.addEventListener(NEWS_EDITOR_SYNC_EVENT, syncHiddenValue);
     return () => {
       form.removeEventListener('submit', syncHiddenValue);
+      form.removeEventListener(NEWS_EDITOR_SYNC_EVENT, syncHiddenValue);
     };
   }, [editor]);
 

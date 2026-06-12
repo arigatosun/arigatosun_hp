@@ -3,7 +3,7 @@
 import { useActionState, useCallback, useEffect, useRef, useState } from 'react';
 import { saveNews, type NewsFormState } from '../../../../_actions/news';
 import type { Database, Json } from '@/types/supabase';
-import RichEditor from '../RichEditor';
+import RichEditor, { NEWS_EDITOR_SYNC_EVENT } from '../RichEditor';
 import ImageUploader from '../ImageUploader';
 import styles from './NewsForm.module.scss';
 
@@ -156,6 +156,7 @@ export default function NewsForm({ news, categories, initialValues }: NewsFormPr
     if (!form) return;
 
     syncPublishedAt();
+    form.dispatchEvent(new Event(NEWS_EDITOR_SYNC_EVENT));
     const formData = new FormData(form);
     const categoryId = String(formData.get('category_id') ?? '');
     const category = categories.find((c) => c.id === categoryId);
