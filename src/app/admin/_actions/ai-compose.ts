@@ -2,6 +2,7 @@
 
 import Anthropic from '@anthropic-ai/sdk';
 import { requireAdminUser } from './_lib/auth-guard';
+import { fetchUrlText } from './_lib/fetch-url';
 import type { AiBlock } from '@/lib/news/ai-blocks';
 import type { TablesInsert } from '@/types/supabase';
 
@@ -146,6 +147,18 @@ export async function generateNewsDraft(
       ? categoryList.map((c) => `- ${c.slug} : ${c.label}`).join('\n')
       : '（既存カテゴリなし。新規提案してください）';
 
+  // 参考URLが指定されていれば、ページ本文を実際に取得して素材に含める。
+  // 取得失敗（非対応形式・到達不可・SSRF遮断など）は best-effort で無視し、
+  // URL 自体はヒントとしてプロンプトに残す（生成自体は止めない）。
+  let sourceSection = '';
+  if (input.sourceUrl?.trim()) {
+    const url = input.sourceUrl.trim();
+    const fetched = await fetchUrlText(url);
+    sourceSection = fetched.ok
+      ? `\n## 参考URL（${url}）から自動取得した本文（素材として利用可・要約に活用）\n${fetched.text}`
+      : `\n## 参考URL\n${url}\n（注: ページ本文の自動取得に失敗しました: ${fetched.error}。URLは参考程度に）`;
+  }
+
   const userText = [
     '## 既存カテゴリ一覧',
     categoryHint,
@@ -153,7 +166,7 @@ export async function generateNewsDraft(
     '## 投稿者の素材',
     raw,
     input.context ? `\n## 補足コンテキスト（対象読者・トーン・希望カテゴリ等）\n${input.context}` : '',
-    input.sourceUrl ? `\n## 参考URL\n${input.sourceUrl}` : '',
+    sourceSection,
   ].join('\n');
 
   const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });

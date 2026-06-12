@@ -16,6 +16,12 @@
   color: var(--color-black);
 }
 
+.hint {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+
 .input,
 .textarea {
   width: 100%;
