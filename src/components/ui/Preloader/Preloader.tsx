@@ -147,11 +147,15 @@ export default function Preloader() {
         );
       };
 
-      // 0 → 90 はローディング感の装飾（完了判定には使わない）。
+      // ローディング感の装飾（完了判定には使わない）。
+      // 0→99 をほぼ一定速度（linear）でゆっくり進める。途中で固まらず、
+      // 0→90 と 90→99 が同じ速度感になる。実完了時は finish() が
+      // 現在値→100 へ詰める。duration は MAX_VISIBLE_MS よりわずかに長くし、
+      // フェイルセーフ発火まで 99 で停止しないようにする。
       gsap.to(counter, {
-        v: 90,
-        duration: 1.4,
-        ease: 'power1.out',
+        v: 99,
+        duration: 6.2,
+        ease: 'none',
         onUpdate: () => setProgress(Math.round(counter.v)),
       });
 
