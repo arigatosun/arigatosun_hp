@@ -70,7 +70,8 @@ export default function NewsForm({ news, categories, initialValues }: NewsFormPr
   };
 
   // React 19 の formAction では submitter button の name/value が
-  // FormData に乗らないケースがあるため、hidden input + onClick で明示的に intent を渡す
+  // FormData に乗らないケースがあるため、hidden input も併用して intent を渡す。
+  // 送信時には submitter を見て、押されたボタンの intent を最後に確定させる。
   const setIntent = (value: 'draft' | 'publish') => {
     if (intentRef.current) intentRef.current.value = value;
     setSubmitIntent(value);
@@ -163,9 +164,17 @@ export default function NewsForm({ news, categories, initialValues }: NewsFormPr
       aria-busy={isPending}
       onChange={scheduleDirtyCheck}
       onInput={scheduleDirtyCheck}
-      onSubmit={() => {
-        const currentIntent = intentRef.current?.value === 'publish' ? 'publish' : 'draft';
-        setSubmitIntent((prev) => prev ?? currentIntent);
+      onSubmit={(event) => {
+        const submitter = (event.nativeEvent as SubmitEvent).submitter;
+        const submitterValue =
+          submitter instanceof HTMLButtonElement && submitter.value === 'publish'
+            ? 'publish'
+            : submitter instanceof HTMLButtonElement && submitter.value === 'draft'
+              ? 'draft'
+              : null;
+        const currentIntent =
+          submitterValue ?? (intentRef.current?.value === 'publish' ? 'publish' : 'draft');
+        setIntent(currentIntent);
         syncPublishedAt();
       }}
     >
@@ -317,6 +326,8 @@ export default function NewsForm({ news, categories, initialValues }: NewsFormPr
         )}
         <button
           type="submit"
+          name="intent"
+          value="draft"
           className={styles.buttonSecondary}
           disabled={isPending || !canUseSecondary}
           aria-busy={isDraftPending}
@@ -336,6 +347,8 @@ export default function NewsForm({ news, categories, initialValues }: NewsFormPr
         </button>
         <button
           type="submit"
+          name="intent"
+          value="publish"
           className={styles.buttonPrimary}
           disabled={isPending || !canUsePrimary}
           aria-busy={isPublishPending}

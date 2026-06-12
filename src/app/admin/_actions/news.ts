@@ -79,7 +79,8 @@ function parseForm(formData: FormData): { value: ParsedForm } | { fieldErrors: P
   const description_raw = String(formData.get('description') ?? '').trim();
   const content = parseContent(String(formData.get('content') ?? ''));
   const published_at_raw = String(formData.get('published_at') ?? '').trim();
-  const intent_raw = String(formData.get('intent') ?? 'draft');
+  const intentValues = formData.getAll('intent').map((value) => String(value));
+  const intent_raw = intentValues.at(-1) ?? 'draft';
   const intent: ParsedForm['intent'] = intent_raw === 'publish' ? 'publish' : 'draft';
 
   if (!title) {
