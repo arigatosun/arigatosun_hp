@@ -121,6 +121,10 @@ export default function AiComposer({ initialCategories }: AiComposerProps) {
             onChange={(e) => setSourceUrl(e.target.value)}
             placeholder="https://..."
           />
+          <span className={styles.hint}>
+            ページの本文を読み取って素材に取り込みます（公開ページ・プレスリリース等）。
+            ログイン必須ページや取得できないURLはスキップされます。
+          </span>
         </label>
 
         {error && (
