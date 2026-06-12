@@ -43,6 +43,8 @@ export default function NewsForm({ news, categories, initialValues }: NewsFormPr
   const [state, formAction, isPending] = useActionState(saveNews, initialState);
   const [submitIntent, setSubmitIntent] = useState<'draft' | 'publish' | null>(null);
   const [isDirty, setIsDirty] = useState(() => !news && Boolean(initialValues));
+  const [isThumbnailBusy, setIsThumbnailBusy] = useState(false);
+  const [isEditorMediaBusy, setIsEditorMediaBusy] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
   const initialFingerprintRef = useRef<string | null>(null);
   const dirtyCheckFrameRef = useRef<number | null>(null);
@@ -58,6 +60,7 @@ export default function NewsForm({ news, categories, initialValues }: NewsFormPr
   const isDraftPending = pendingIntent === 'draft';
   const isPublishPending = pendingIntent === 'publish';
   const hasSavedNews = Boolean(news);
+  const isMediaBusy = isThumbnailBusy || isEditorMediaBusy;
 
   // 既存記事の値を最優先、無ければ AI 下書き等の初期値、それも無ければ空。
   const init = {
@@ -144,9 +147,9 @@ export default function NewsForm({ news, categories, initialValues }: NewsFormPr
   const secondaryPendingLabel = isPublished ? '戻しています...' : '下書き保存中...';
   const primaryLabel = isPublished ? '公開情報を更新' : '公開する';
   const primaryPendingLabel = isPublished ? '更新中...' : '公開中...';
-  const canUseSecondary = isPublished || isDirty;
-  const canUsePrimary = isPublished ? isDirty : hasSavedNews || isDirty;
-  const canPreview = hasSavedNews || isDirty;
+  const canUseSecondary = !isMediaBusy && (isPublished || isDirty);
+  const canUsePrimary = !isMediaBusy && (isPublished ? isDirty : hasSavedNews || isDirty);
+  const canPreview = !isMediaBusy && (hasSavedNews || isDirty);
 
   const handlePreview = () => {
     const form = formRef.current;
@@ -209,6 +212,10 @@ export default function NewsForm({ news, categories, initialValues }: NewsFormPr
       onChange={scheduleDirtyCheck}
       onInput={scheduleDirtyCheck}
       onSubmit={(event) => {
+        if (isMediaBusy) {
+          event.preventDefault();
+          return;
+        }
         const submitter = (event.nativeEvent as SubmitEvent).submitter;
         const submitterValue =
           submitter instanceof HTMLButtonElement && submitter.value === 'publish'
@@ -298,6 +305,7 @@ export default function NewsForm({ news, categories, initialValues }: NewsFormPr
           aiPrompt={initialValues?.thumbnailPrompt}
           aiAspectRatio="16:9"
           onValueChange={scheduleDirtyCheck}
+          onBusyChange={setIsThumbnailBusy}
         />
         <p className={styles.hint}>news-images バケットにアップロードされ、公開 URL が保存されます</p>
       </div>
@@ -340,7 +348,12 @@ export default function NewsForm({ news, categories, initialValues }: NewsFormPr
 
       <div className={styles.field}>
         <span className={styles.label}>本文</span>
-        <RichEditor name="content" defaultValue={init.content} onValueChange={scheduleDirtyCheck} />
+        <RichEditor
+          name="content"
+          defaultValue={init.content}
+          onValueChange={scheduleDirtyCheck}
+          onBusyChange={setIsEditorMediaBusy}
+        />
       </div>
 
       <div className={styles.field}>
@@ -363,7 +376,12 @@ export default function NewsForm({ news, categories, initialValues }: NewsFormPr
       </div>
 
       <div className={styles.actions}>
-        {isPending && (
+        {isMediaBusy && (
+          <p className={styles.actionStatus} role="status" aria-live="polite">
+            画像を処理しています。完了後に保存できます。
+          </p>
+        )}
+        {isPending && !isMediaBusy && (
           <p className={styles.actionStatus} role="status" aria-live="polite">
             {isPublishPending ? '公開設定を保存しています...' : '下書きを保存しています...'}
           </p>

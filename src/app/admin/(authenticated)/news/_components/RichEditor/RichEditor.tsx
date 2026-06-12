@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Link from '@tiptap/extension-link';
@@ -16,6 +16,7 @@ interface RichEditorProps {
   name: string;
   defaultValue?: unknown;
   onValueChange?: () => void;
+  onBusyChange?: (busy: boolean) => void;
 }
 
 // TipTap content として有効な初期値を返す。
@@ -39,7 +40,12 @@ function buildInitialContent(value: unknown): object | string | undefined {
   return undefined;
 }
 
-export default function RichEditor({ name, defaultValue, onValueChange }: RichEditorProps) {
+export default function RichEditor({
+  name,
+  defaultValue,
+  onValueChange,
+  onBusyChange,
+}: RichEditorProps) {
   const hiddenRef = useRef<HTMLInputElement>(null);
   const initialContent = buildInitialContent(defaultValue);
   const initialJsonString = initialContent
@@ -71,9 +77,25 @@ export default function RichEditor({ name, defaultValue, onValueChange }: RichEd
     },
   });
 
+  useEffect(() => {
+    if (!editor) return;
+    const hidden = hiddenRef.current;
+    const form = hidden?.form;
+    if (!hidden || !form) return;
+
+    const syncHiddenValue = () => {
+      hidden.value = JSON.stringify(editor.getJSON());
+    };
+
+    form.addEventListener('submit', syncHiddenValue);
+    return () => {
+      form.removeEventListener('submit', syncHiddenValue);
+    };
+  }, [editor]);
+
   return (
     <div className={styles.root}>
-      <Toolbar editor={editor} />
+      <Toolbar editor={editor} onBusyChange={onBusyChange} />
       <EditorContent editor={editor} className={styles.editor} />
       <input ref={hiddenRef} type="hidden" name={name} defaultValue={initialJsonString} />
     </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState, useTransition } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { uploadNewsImage } from '../../../../_actions/upload';
 import { generateNewsImage } from '../../../../_actions/ai-image';
@@ -14,6 +14,7 @@ interface ImageUploaderProps {
   aiPrompt?: string;
   aiAspectRatio?: string;
   onValueChange?: () => void;
+  onBusyChange?: (busy: boolean) => void;
 }
 
 export default function ImageUploader({
@@ -23,12 +24,21 @@ export default function ImageUploader({
   aiPrompt,
   aiAspectRatio = '16:9',
   onValueChange,
+  onBusyChange,
 }: ImageUploaderProps) {
   const [url, setUrl] = useState<string | null>(defaultValue ?? null);
   const [error, setError] = useState<string | null>(null);
-  const [isUploading, startUpload] = useTransition();
+  const [isUploading, setIsUploading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const hiddenRef = useRef<HTMLInputElement>(null);
   const isInitialRenderRef = useRef(true);
+
+  const setImageUrl = (nextUrl: string | null) => {
+    if (hiddenRef.current) {
+      hiddenRef.current.value = nextUrl ?? '';
+    }
+    setUrl(nextUrl);
+  };
 
   useEffect(() => {
     if (isInitialRenderRef.current) {
@@ -38,6 +48,10 @@ export default function ImageUploader({
     onValueChange?.();
   }, [onValueChange, url]);
 
+  useEffect(() => {
+    onBusyChange?.(isUploading);
+  }, [isUploading, onBusyChange]);
+
   const handleAiGenerate = () => {
     const prompt = window.prompt(
       '生成したい画像の内容（英語推奨）',
@@ -45,35 +59,49 @@ export default function ImageUploader({
     );
     if (!prompt || !prompt.trim()) return;
     setError(null);
-    startUpload(async () => {
-      const result = await generateNewsImage(prompt.trim(), aiAspectRatio);
-      if (result.ok) {
-        setUrl(result.url);
-      } else {
-        setError(result.error);
+    setIsUploading(true);
+    void (async () => {
+      try {
+        const result = await generateNewsImage(prompt.trim(), aiAspectRatio);
+        if (result.ok) {
+          setImageUrl(result.url);
+        } else {
+          setError(result.error);
+        }
+      } catch {
+        setError('画像の処理に失敗しました。時間をおいて再度お試しください。');
+      } finally {
+        setIsUploading(false);
       }
-    });
+    })();
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     setError(null);
-    startUpload(async () => {
-      const formData = new FormData();
-      formData.append('file', file);
-      const result = await uploadNewsImage(formData);
-      if (result.ok) {
-        setUrl(result.url);
-      } else {
-        setError(result.error);
+    setIsUploading(true);
+    void (async () => {
+      try {
+        const formData = new FormData();
+        formData.append('file', file);
+        const result = await uploadNewsImage(formData);
+        if (result.ok) {
+          setImageUrl(result.url);
+        } else {
+          setError(result.error);
+        }
+        if (inputRef.current) inputRef.current.value = '';
+      } catch {
+        setError('画像の処理に失敗しました。時間をおいて再度お試しください。');
+      } finally {
+        setIsUploading(false);
       }
-      if (inputRef.current) inputRef.current.value = '';
-    });
+    })();
   };
 
   const handleRemove = () => {
-    setUrl(null);
+    setImageUrl(null);
     setError(null);
   };
 
@@ -121,7 +149,7 @@ export default function ImageUploader({
           {error}
         </p>
       )}
-      <input type="hidden" name={name} value={url ?? ''} />
+      <input ref={hiddenRef} type="hidden" name={name} defaultValue={url ?? ''} />
     </div>
   );
 }

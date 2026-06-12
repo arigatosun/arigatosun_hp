@@ -1,13 +1,14 @@
 'use client';
 
 import type { Editor } from '@tiptap/react';
-import { useState, useTransition } from 'react';
+import { useEffect, useState } from 'react';
 import { uploadNewsImage } from '../../../../_actions/upload';
 import { generateNewsImage } from '../../../../_actions/ai-image';
 import styles from './Toolbar.module.scss';
 
 interface ToolbarProps {
   editor: Editor | null;
+  onBusyChange?: (busy: boolean) => void;
 }
 
 /**
@@ -32,9 +33,13 @@ function insertImage(
   editor.chain().focus().insertContent({ type: 'image', attrs }).run();
 }
 
-export default function Toolbar({ editor }: ToolbarProps) {
-  const [isUploading, startUpload] = useTransition();
+export default function Toolbar({ editor, onBusyChange }: ToolbarProps) {
+  const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
+
+  useEffect(() => {
+    onBusyChange?.(isUploading);
+  }, [isUploading, onBusyChange]);
 
   if (!editor) return null;
 
@@ -46,21 +51,28 @@ export default function Toolbar({ editor }: ToolbarProps) {
       const file = input.files?.[0];
       if (!file) return;
       setUploadError(null);
-      startUpload(async () => {
-        const formData = new FormData();
-        formData.append('file', file);
-        const result = await uploadNewsImage(formData);
-        if (result.ok) {
-          const dims = await getImageDimensions(result.url);
-          insertImage(editor, {
-            src: result.url,
-            alt: file.name,
-            ...(dims ?? {}),
-          });
-        } else {
-          setUploadError(result.error);
+      setIsUploading(true);
+      void (async () => {
+        try {
+          const formData = new FormData();
+          formData.append('file', file);
+          const result = await uploadNewsImage(formData);
+          if (result.ok) {
+            const dims = await getImageDimensions(result.url);
+            insertImage(editor, {
+              src: result.url,
+              alt: file.name,
+              ...(dims ?? {}),
+            });
+          } else {
+            setUploadError(result.error);
+          }
+        } catch {
+          setUploadError('画像の処理に失敗しました。時間をおいて再度お試しください。');
+        } finally {
+          setIsUploading(false);
         }
-      });
+      })();
     };
     input.click();
   };
@@ -69,19 +81,26 @@ export default function Toolbar({ editor }: ToolbarProps) {
     const prompt = window.prompt('生成したい画像の内容を入力してください（英語推奨）');
     if (!prompt || !prompt.trim()) return;
     setUploadError(null);
-    startUpload(async () => {
-      const result = await generateNewsImage(prompt.trim(), '4:3');
-      if (result.ok) {
-        const dims = await getImageDimensions(result.url);
-        insertImage(editor, {
-          src: result.url,
-          alt: prompt.trim(),
-          ...(dims ?? {}),
-        });
-      } else {
-        setUploadError(result.error);
+    setIsUploading(true);
+    void (async () => {
+      try {
+        const result = await generateNewsImage(prompt.trim(), '4:3');
+        if (result.ok) {
+          const dims = await getImageDimensions(result.url);
+          insertImage(editor, {
+            src: result.url,
+            alt: prompt.trim(),
+            ...(dims ?? {}),
+          });
+        } else {
+          setUploadError(result.error);
+        }
+      } catch {
+        setUploadError('画像の処理に失敗しました。時間をおいて再度お試しください。');
+      } finally {
+        setIsUploading(false);
       }
-    });
+    })();
   };
 
   const handleLink = () => {
