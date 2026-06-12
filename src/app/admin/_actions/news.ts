@@ -197,7 +197,7 @@ export async function saveNews(
     revalidatePath('/admin/news');
     revalidatePath(`/admin/news/${id}/edit`);
     revalidatePublicNews(status, published_at, value.slug);
-    return { ok: true, id };
+    redirect(`/admin/news/${id}/edit?saved=${value.intent === 'publish' ? 'published' : 'draft'}`);
   } else {
     // 新規: slug_year は DB トリガーで自動設定だが、型上は INSERT に slug_year が必須。
     // クライアントから渡さなくても DB 側で BEFORE INSERT が埋めるが、生成された型は

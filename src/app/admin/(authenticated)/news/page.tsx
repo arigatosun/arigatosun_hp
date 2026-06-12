@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server';
 import { deleteNews } from '../../_actions/news';
 import StatusBadge, { resolveDisplayStatus } from './_components/StatusBadge';
 import ConfirmForm from '../../_components/ConfirmForm';
+import PendingSubmitButton from '../../_components/PendingSubmitButton';
 import styles from './page.module.scss';
 
 export const metadata: Metadata = {
@@ -143,9 +144,9 @@ export default async function NewsListPage({ searchParams }: NewsListPageProps) 
                       className={styles.deleteForm}
                     >
                       <input type="hidden" name="id" value={n.id} />
-                      <button type="submit" className={styles.actionDelete}>
+                      <PendingSubmitButton className={styles.actionDelete} pendingLabel="削除中...">
                         削除
-                      </button>
+                      </PendingSubmitButton>
                     </ConfirmForm>
                   </td>
                 </tr>

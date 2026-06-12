@@ -209,11 +209,40 @@
   border-radius: 6px;
   font-size: 12px;
   cursor: pointer;
-  transition: border-color 0.15s, background 0.15s;
+  min-width: 4.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  transition: border-color 0.15s, background 0.15s, transform 0.15s;
 
-  &:hover {
+  &:hover:not(:disabled) {
     border-color: var(--color-primary);
     background: var(--color-primary-rgba-25);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(1px);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+
+  &[data-pending='true'] {
+    opacity: 1;
+    cursor: progress;
+  }
+
+  &[data-pending='true']::before {
+    content: '';
+    width: 0.8em;
+    height: 0.8em;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.75s linear infinite;
   }
 }
 
@@ -247,5 +276,11 @@
 
   &:hover {
     background: var(--color-primary-dark);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
 }

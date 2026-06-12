@@ -83,10 +83,45 @@
   font-size: 13px;
   font-weight: var(--font-weight-medium);
   cursor: pointer;
-  transition: background 0.15s, color 0.15s;
+  min-width: 9.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  transition: background 0.15s, color 0.15s, transform 0.15s;
 
-  &:hover {
+  &:hover:not(:disabled) {
     background: var(--color-primary);
     color: var(--color-white);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(1px);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+
+  &[data-pending='true'] {
+    opacity: 1;
+    cursor: progress;
+  }
+
+  &[data-pending='true']::before {
+    content: '';
+    width: 0.85em;
+    height: 0.85em;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.75s linear infinite;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
 }

@@ -5,12 +5,13 @@ import { createClient } from '@/lib/supabase/server';
 import { deleteNews } from '../../../../_actions/news';
 import NewsForm from '../../_components/NewsForm';
 import ConfirmForm from '../../../../_components/ConfirmForm';
+import PendingSubmitButton from '../../../../_components/PendingSubmitButton';
 import StatusBadge, { resolveDisplayStatus } from '../../_components/StatusBadge';
 import styles from './page.module.scss';
 
 interface EditPageProps {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ created?: string }>;
+  searchParams: Promise<{ created?: string; saved?: string }>;
 }
 
 export async function generateMetadata({ params }: EditPageProps): Promise<Metadata> {
@@ -24,7 +25,7 @@ export async function generateMetadata({ params }: EditPageProps): Promise<Metad
 
 export default async function NewsEditPage({ params, searchParams }: EditPageProps) {
   const { id } = await params;
-  const { created } = await searchParams;
+  const { created, saved } = await searchParams;
 
   const supabase = await createClient();
 
@@ -36,6 +37,15 @@ export default async function NewsEditPage({ params, searchParams }: EditPagePro
   if (newsError || !news) {
     notFound();
   }
+
+  const successMessage =
+    created === '1'
+      ? '記事を作成しました。続けて編集できます。'
+      : saved === 'published'
+        ? '公開設定と変更内容を保存しました。'
+        : saved === 'draft'
+          ? '下書きとして保存しました。'
+          : null;
 
   return (
     <div className={styles.root}>
@@ -60,9 +70,9 @@ export default async function NewsEditPage({ params, searchParams }: EditPagePro
         />
       </div>
 
-      {created === '1' && (
+      {successMessage && (
         <p className={styles.successBanner} role="status">
-          記事を作成しました。続けて編集できます。
+          {successMessage}
         </p>
       )}
 
@@ -76,9 +86,9 @@ export default async function NewsEditPage({ params, searchParams }: EditPagePro
           message={`「${news.title}」を完全に削除します。よろしいですか？この操作は取り消せません。`}
         >
           <input type="hidden" name="id" value={news.id} />
-          <button type="submit" className={styles.dangerButton}>
+          <PendingSubmitButton className={styles.dangerButton} pendingLabel="削除中...">
             この記事を削除する
-          </button>
+          </PendingSubmitButton>
         </ConfirmForm>
       </section>
     </div>

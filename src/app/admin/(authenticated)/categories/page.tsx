@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { createClient } from '@/lib/supabase/server';
 import { saveCategory, deleteCategory } from '../../_actions/categories';
 import ConfirmForm from '../../_components/ConfirmForm';
+import PendingSubmitButton from '../../_components/PendingSubmitButton';
 import styles from './page.module.scss';
 
 export const metadata: Metadata = {
@@ -121,9 +122,9 @@ export default async function CategoriesPage({ searchParams }: CategoriesPagePro
                       </p>
                     )}
                     <div className={styles.rowActions}>
-                      <button type="submit" className={styles.saveBtn}>
+                      <PendingSubmitButton className={styles.saveBtn} pendingLabel="保存中...">
                         保存
-                      </button>
+                      </PendingSubmitButton>
                     </div>
                   </form>
                   {/* 削除は別フォームとして並列に置く（form のネスト不可のため） */}
@@ -133,9 +134,9 @@ export default async function CategoriesPage({ searchParams }: CategoriesPagePro
                     className={styles.deleteForm}
                   >
                     <input type="hidden" name="id" value={c.id} />
-                    <button type="submit" className={styles.deleteBtn}>
+                    <PendingSubmitButton className={styles.deleteBtn} pendingLabel="削除中...">
                       削除
-                    </button>
+                    </PendingSubmitButton>
                   </ConfirmForm>
                 </li>
               );
@@ -195,9 +196,9 @@ export default async function CategoriesPage({ searchParams }: CategoriesPagePro
             </p>
           )}
           <div className={styles.rowActions}>
-            <button type="submit" className={styles.saveBtn}>
+            <PendingSubmitButton className={styles.saveBtn} pendingLabel="追加中...">
               + 追加
-            </button>
+            </PendingSubmitButton>
           </div>
         </form>
       </section>

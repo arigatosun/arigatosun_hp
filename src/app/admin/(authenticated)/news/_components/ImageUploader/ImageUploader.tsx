@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition, useRef } from 'react';
+import { useEffect, useRef, useState, useTransition } from 'react';
 import Image from 'next/image';
 import { uploadNewsImage } from '../../../../_actions/upload';
 import { generateNewsImage } from '../../../../_actions/ai-image';
@@ -13,6 +13,7 @@ interface ImageUploaderProps {
   // AI 生成の初期プロンプト候補（あると「AIで生成」ボタンを表示）
   aiPrompt?: string;
   aiAspectRatio?: string;
+  onValueChange?: () => void;
 }
 
 export default function ImageUploader({
@@ -21,11 +22,21 @@ export default function ImageUploader({
   label = '画像',
   aiPrompt,
   aiAspectRatio = '16:9',
+  onValueChange,
 }: ImageUploaderProps) {
   const [url, setUrl] = useState<string | null>(defaultValue ?? null);
   const [error, setError] = useState<string | null>(null);
   const [isUploading, startUpload] = useTransition();
   const inputRef = useRef<HTMLInputElement>(null);
+  const isInitialRenderRef = useRef(true);
+
+  useEffect(() => {
+    if (isInitialRenderRef.current) {
+      isInitialRenderRef.current = false;
+      return;
+    }
+    onValueChange?.();
+  }, [onValueChange, url]);
 
   const handleAiGenerate = () => {
     const prompt = window.prompt(

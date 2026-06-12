@@ -1,6 +1,6 @@
 'use client';
 
-import { useActionState, useRef } from 'react';
+import { useActionState, useCallback, useEffect, useRef, useState } from 'react';
 import { saveNews, type NewsFormState } from '../../../../_actions/news';
 import type { Database, Json } from '@/types/supabase';
 import RichEditor from '../RichEditor';
@@ -40,6 +40,11 @@ function toDatetimeLocal(iso: string | null): string {
 
 export default function NewsForm({ news, categories, initialValues }: NewsFormProps) {
   const [state, formAction, isPending] = useActionState(saveNews, initialState);
+  const [submitIntent, setSubmitIntent] = useState<'draft' | 'publish' | null>(null);
+  const [isDirty, setIsDirty] = useState(() => !news && Boolean(initialValues));
+  const formRef = useRef<HTMLFormElement>(null);
+  const initialFingerprintRef = useRef<string | null>(null);
+  const dirtyCheckFrameRef = useRef<number | null>(null);
   const intentRef = useRef<HTMLInputElement>(null);
   // 公開日時: 画面表示用の datetime-local (publishedAtInputRef) と、
   // サーバーに送る UTC ISO 用の hidden (publishedAtHiddenRef) を分離する。
@@ -48,6 +53,10 @@ export default function NewsForm({ news, categories, initialValues }: NewsFormPr
   const isPublished = news?.status === 'published';
   const fieldErrors = 'fieldErrors' in state ? (state.fieldErrors ?? {}) : {};
   const globalError = 'error' in state ? state.error : null;
+  const pendingIntent = isPending ? submitIntent : null;
+  const isDraftPending = pendingIntent === 'draft';
+  const isPublishPending = pendingIntent === 'publish';
+  const hasSavedNews = Boolean(news);
 
   // 既存記事の値を最優先、無ければ AI 下書き等の初期値、それも無ければ空。
   const init = {
@@ -64,7 +73,53 @@ export default function NewsForm({ news, categories, initialValues }: NewsFormPr
   // FormData に乗らないケースがあるため、hidden input + onClick で明示的に intent を渡す
   const setIntent = (value: 'draft' | 'publish') => {
     if (intentRef.current) intentRef.current.value = value;
+    setSubmitIntent(value);
   };
+
+  const getFormSnapshot = useCallback(() => {
+    const form = formRef.current;
+    if (!form) return [];
+    const formData = new FormData(form);
+    const ignoredFields = new Set(['id', 'intent', 'published_at']);
+    const entries: Array<[string, string]> = [];
+
+    formData.forEach((value, key) => {
+      if (ignoredFields.has(key)) return;
+      entries.push([key, typeof value === 'string' ? value : value.name]);
+    });
+    entries.push(['published_at_local', publishedAtInputRef.current?.value ?? '']);
+
+    return entries;
+  }, []);
+
+  const hasMeaningfulValue = useCallback(() => {
+    return getFormSnapshot().some(([, value]) => value.trim() !== '');
+  }, [getFormSnapshot]);
+
+  const getFingerprint = useCallback(() => {
+    return JSON.stringify(getFormSnapshot());
+  }, [getFormSnapshot]);
+
+  const updateDirtyState = useCallback(() => {
+    if (!hasSavedNews) {
+      setIsDirty(hasMeaningfulValue());
+      return;
+    }
+
+    const initialFingerprint = initialFingerprintRef.current;
+    if (!initialFingerprint) return;
+    setIsDirty(getFingerprint() !== initialFingerprint);
+  }, [getFingerprint, hasMeaningfulValue, hasSavedNews]);
+
+  const scheduleDirtyCheck = useCallback(() => {
+    if (dirtyCheckFrameRef.current) {
+      cancelAnimationFrame(dirtyCheckFrameRef.current);
+    }
+    dirtyCheckFrameRef.current = requestAnimationFrame(() => {
+      dirtyCheckFrameRef.current = null;
+      updateDirtyState();
+    });
+  }, [updateDirtyState]);
 
   // datetime-local はタイムゾーン無しのナイーブ文字列のため、サーバー（本番=UTC）で
   // new Date() するとローカル時刻として誤解釈され、JST 入力が +9h ズレて予約公開になる。
@@ -83,8 +138,37 @@ export default function NewsForm({ news, categories, initialValues }: NewsFormPr
     hidden.value = Number.isNaN(d.getTime()) ? local : d.toISOString();
   };
 
+  const secondaryLabel = isPublished ? '下書きに戻す' : '下書きとして保存';
+  const secondaryPendingLabel = isPublished ? '戻しています...' : '下書き保存中...';
+  const primaryLabel = isPublished ? '公開情報を更新' : '公開する';
+  const primaryPendingLabel = isPublished ? '更新中...' : '公開中...';
+  const canUseSecondary = isPublished || isDirty;
+  const canUsePrimary = isPublished ? isDirty : hasSavedNews || isDirty;
+
+  useEffect(() => {
+    initialFingerprintRef.current = getFingerprint();
+
+    return () => {
+      if (dirtyCheckFrameRef.current) {
+        cancelAnimationFrame(dirtyCheckFrameRef.current);
+      }
+    };
+  }, [getFingerprint]);
+
   return (
-    <form action={formAction} className={styles.root}>
+    <form
+      ref={formRef}
+      action={formAction}
+      className={styles.root}
+      aria-busy={isPending}
+      onChange={scheduleDirtyCheck}
+      onInput={scheduleDirtyCheck}
+      onSubmit={() => {
+        const currentIntent = intentRef.current?.value === 'publish' ? 'publish' : 'draft';
+        setSubmitIntent((prev) => prev ?? currentIntent);
+        syncPublishedAt();
+      }}
+    >
       {news && <input type="hidden" name="id" value={news.id} />}
       <input ref={intentRef} type="hidden" name="intent" defaultValue="draft" />
       <input ref={publishedAtHiddenRef} type="hidden" name="published_at" />
@@ -160,6 +244,7 @@ export default function NewsForm({ news, categories, initialValues }: NewsFormPr
           label="サムネイル"
           aiPrompt={initialValues?.thumbnailPrompt}
           aiAspectRatio="16:9"
+          onValueChange={scheduleDirtyCheck}
         />
         <p className={styles.hint}>news-images バケットにアップロードされ、公開 URL が保存されます</p>
       </div>
@@ -202,7 +287,7 @@ export default function NewsForm({ news, categories, initialValues }: NewsFormPr
 
       <div className={styles.field}>
         <span className={styles.label}>本文</span>
-        <RichEditor name="content" defaultValue={init.content} />
+        <RichEditor name="content" defaultValue={init.content} onValueChange={scheduleDirtyCheck} />
       </div>
 
       <div className={styles.field}>
@@ -225,10 +310,17 @@ export default function NewsForm({ news, categories, initialValues }: NewsFormPr
       </div>
 
       <div className={styles.actions}>
+        {isPending && (
+          <p className={styles.actionStatus} role="status" aria-live="polite">
+            {isPublishPending ? '公開設定を保存しています...' : '下書きを保存しています...'}
+          </p>
+        )}
         <button
           type="submit"
           className={styles.buttonSecondary}
-          disabled={isPending}
+          disabled={isPending || !canUseSecondary}
+          aria-busy={isDraftPending}
+          data-pending={isDraftPending ? 'true' : undefined}
           onClick={(e) => {
             if (isPublished) {
               if (!window.confirm('この記事を非公開（下書き）に戻しますか？')) {
@@ -240,18 +332,20 @@ export default function NewsForm({ news, categories, initialValues }: NewsFormPr
             syncPublishedAt();
           }}
         >
-          {isPending ? '保存中...' : isPublished ? '下書きに戻す' : '下書きとして保存'}
+          {isDraftPending ? secondaryPendingLabel : secondaryLabel}
         </button>
         <button
           type="submit"
           className={styles.buttonPrimary}
-          disabled={isPending}
+          disabled={isPending || !canUsePrimary}
+          aria-busy={isPublishPending}
+          data-pending={isPublishPending ? 'true' : undefined}
           onClick={() => {
             setIntent('publish');
             syncPublishedAt();
           }}
         >
-          {isPending ? '保存中...' : isPublished ? '公開情報を更新' : '公開する'}
+          {isPublishPending ? primaryPendingLabel : primaryLabel}
         </button>
       </div>
     </form>

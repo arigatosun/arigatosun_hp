@@ -15,6 +15,7 @@ import styles from './RichEditor.module.scss';
 interface RichEditorProps {
   name: string;
   defaultValue?: unknown;
+  onValueChange?: () => void;
 }
 
 // TipTap content として有効な初期値を返す。
@@ -38,7 +39,7 @@ function buildInitialContent(value: unknown): object | string | undefined {
   return undefined;
 }
 
-export default function RichEditor({ name, defaultValue }: RichEditorProps) {
+export default function RichEditor({ name, defaultValue, onValueChange }: RichEditorProps) {
   const hiddenRef = useRef<HTMLInputElement>(null);
   const initialContent = buildInitialContent(defaultValue);
   const initialJsonString = initialContent
@@ -66,6 +67,7 @@ export default function RichEditor({ name, defaultValue }: RichEditorProps) {
       if (hiddenRef.current) {
         hiddenRef.current.value = JSON.stringify(editor.getJSON());
       }
+      onValueChange?.();
     },
   });
 
