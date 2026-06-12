@@ -148,24 +148,16 @@ export default function Preloader() {
       };
 
       // ローディング感の装飾（完了判定には使わない）。
-      // 0→90 を素早く上げたあと、90→99 を長めにゆっくり這わせる。
-      // こうすると実読み込みの待ち時間が「90 で固まる」のではなく
-      // 90〜99 のゆるやかな進行に分散し、数字が止まらず滑らかに動く。
-      // 実完了時は finish() が現在値→100 へ詰める。
-      gsap
-        .timeline()
-        .to(counter, {
-          v: 90,
-          duration: 1.2,
-          ease: 'power2.out',
-          onUpdate: () => setProgress(Math.round(counter.v)),
-        })
-        .to(counter, {
-          v: 99,
-          duration: 5,
-          ease: 'power1.out',
-          onUpdate: () => setProgress(Math.round(counter.v)),
-        });
+      // 0→99 をほぼ一定速度（linear）でゆっくり進める。途中で固まらず、
+      // 0→90 と 90→99 が同じ速度感になる。実完了時は finish() が
+      // 現在値→100 へ詰める。duration は MAX_VISIBLE_MS よりわずかに長くし、
+      // フェイルセーフ発火まで 99 で停止しないようにする。
+      gsap.to(counter, {
+        v: 99,
+        duration: 6.2,
+        ease: 'none',
+        onUpdate: () => setProgress(Math.round(counter.v)),
+      });
 
       // 完了条件は「window load 済」かつ「ヒーロー3Dの初回描画完了」の両方。
       // どちらかが揃っていなくても MAX_VISIBLE_MS のフェイルセーフで必ず終了する
