@@ -11,12 +11,19 @@
   // 以前の padding-bottom(112) + footer margin-top:0 の個別調整は撤去。
 }
 
+// 1カラム構成。Figma はコンテンツ幅 1200 / 1920 フレーム中央（左右マージン 360）。
+// max-width 1248（= 1200 + 左右ガター 24）＋中央寄せで、1920 時にコンテンツ実幅 1200 になる。
 .inner {
-  @include fluid(padding-left, 20, 200, 390, 1920);
-  @include fluid(padding-right, 20, 200, 390, 1920);
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1248px;
+  margin-inline: auto;
+  // PC の端貼り付き防止ガター（1024〜1248 幅で効く固定値。1248 以上は max-width が支配）。
+  padding-inline: 24px;
   @include fluid(padding-top, 48, 120, 390, 1920);
 
   @include sp {
+    max-width: none;
     // Figma SP(390): 左右 padding 42 / 上 40
     @include fluid(padding-left, 30, 42, 320, 390);
     @include fluid(padding-right, 30, 42, 320, 390);
@@ -24,53 +31,22 @@
   }
 }
 
-// ── 上部: アイキャッチ（左）＋ 記事情報（右）──
-.article {
-  display: flex;
-  align-items: flex-start;
-  @include fluid(gap, 40, 120, 390, 1920);
-
-  @include sp {
-    flex-direction: column;
-    @include fluid(gap, 24, 40);
-  }
-}
-
-.eyecatch {
+// ── 最上部: アイキャッチ（サムネイル）を全幅 16:9 で表示 ──
+.hero {
   position: relative;
-  flex-shrink: 0;
-  @include fluid(width, 280, 640, 390, 1920);
-  aspect-ratio: 640 / 360;
+  width: 100%;
+  aspect-ratio: 16 / 9;
   overflow: hidden;
   background: var(--color-white);
-
-  // PC: 本文スクロール中は画像を固定（sticky）。本文（.article 下端）が終わると自然に解除。
-  // top は固定ヘッダー（実測 ~112px）を避けた位置。
-  @include pc {
-    position: sticky;
-    top: 120px;
-    align-self: flex-start; // sticky を効かせるため伸長させない（flex-start を明示）
-  }
+  @include fluid(margin-bottom, 28, 68, 390, 1920); // hero → title
 
   @include sp {
-    width: 100%;
+    @include fluid(margin-bottom, 20, 28, 320, 390);
   }
 }
 
-.eyecatchImg {
+.heroImg {
   object-fit: cover;
-}
-
-.eyecatchPlaceholder {
-  display: block;
-  width: 100%;
-  height: 100%;
-  background: var(--color-white);
-}
-
-.rightColumn {
-  flex: 1;
-  min-width: 0;
 }
 
 .title {
@@ -271,7 +247,7 @@
 // さらに fluid() で 1920 基準にスケール（中間幅も比例）させる。
 // 参照: admin .../RichEditor/RichEditor.module.scss（WYSIWYG 一致のためサイズ感を合わせる）
 .body {
-  @include fluid(margin-top, 40, 76, 390, 1920);
+  @include fluid(margin-top, 56, 120, 390, 1920); // divider → 本文先頭（Figma 120）
   color: var(--color-black);
   font-family: 'Noto Sans JP', var(--font-jp);
   @include fluid(font-size, 14, 16, 390, 1920);
@@ -279,8 +255,7 @@
   @include fluid(letter-spacing, 1.2, 1.82, 390, 1920);
 
   @include sp {
-    // Figma SP: divider(575.73) → body heading(623.73) = 48
-    @include fluid(margin-top, 40, 48, 320, 390);
+    @include fluid(margin-top, 40, 56, 320, 390);
   }
 
   // CSS Modules ではタグセレクタ（h2/p/ul 等）はモジュールクラス配下でも
@@ -288,6 +263,60 @@
   // ── ブロック間の標準余白 ──
   > * + * {
     @include fluid(margin-top, 16, 24, 390, 1920);
+  }
+
+  // 先頭要素は上余白を持たない（.body 自体の margin-top で divider との間隔を作る）。
+  > :first-child {
+    margin-top: 0;
+  }
+
+  // ── 本文中の画像（render.ts が縦横比で振り分け）──
+  // 長方形(横長) → 全幅。正方形 → 半幅グリッド（連続分は 2 列・1 枚なら左半分）。
+  figure[data-news-img='wide'],
+  [data-news-grid] {
+    @include fluid(margin-top, 40, 100, 390, 1920); // メディアブロック前の余白（Figma 100）
+  }
+
+  // 先頭がメディアの場合は上余白を相殺（属性セレクタは specificity が高いので個別指定）。
+  figure[data-news-img='wide']:first-child,
+  [data-news-grid]:first-child {
+    margin-top: 0;
+  }
+
+  figure[data-news-img='wide'] {
+    margin-bottom: 0;
+    width: 100%;
+
+    img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 0;
+    }
+  }
+
+  [data-news-grid] {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    @include fluid(gap, 16, 40, 390, 1920); // Figma 正方形間 gap 40
+
+    @include sp {
+      grid-template-columns: 1fr; // SP は縦積み・全幅
+    }
+
+    figure[data-news-img='square'] {
+      margin: 0;
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+
+      img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 0;
+      }
+    }
   }
 
     // ── 見出し（RichEditor: h1 22 bold / h2 18 bold / h3 16 medium） ──

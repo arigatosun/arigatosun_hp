@@ -149,43 +149,37 @@ export default async function NewsDetailPage({ params }: Props) {
     <div className={styles.page} data-news-detail>
       <JsonLd data={articleJsonLd} />
       <div className={styles.inner}>
-        <div className={styles.article}>
-          {/* 左: アイキャッチ画像 */}
-          <div className={styles.eyecatch}>
-            {entry.thumbnail_url ? (
-              <Image
-                src={entry.thumbnail_url}
-                alt=""
-                fill
-                className={styles.eyecatchImg}
-                sizes="(max-width: 1023px) 100vw, 640px"
-                priority
-              />
-            ) : (
-              <span className={styles.eyecatchPlaceholder} aria-hidden="true" />
-            )}
-          </div>
-
-          {/* 右: タイトル・日付・シェア・本文 */}
-          <div className={styles.rightColumn}>
-            <h1 className={styles.title}>{entry.title}</h1>
-            <p className={styles.meta}>
-              <span className={styles.date}>{formatNewsDate(entry.published_at)}</span>
-              <span className={styles.category}>#{entry.category?.label ?? ''}</span>
-            </p>
-            <div className={styles.share}>{renderShareButtons(shareUrl, entry.title)}</div>
-            <span className={styles.headerDivider} aria-hidden="true" />
-
-            {/* TipTap が生成した HTML を出力。コンテンツは認証済み管理者が作成した信頼コンテンツ。 */}
-            <div
-              className={styles.body}
-              dangerouslySetInnerHTML={{ __html: contentHtml }}
+        {/* 最上部: アイキャッチ（＝TOPページ等に出るサムネイル）を全幅 16:9 で表示 */}
+        {entry.thumbnail_url && (
+          <div className={styles.hero}>
+            <Image
+              src={entry.thumbnail_url}
+              alt={entry.thumbnail_alt ?? ''}
+              fill
+              className={styles.heroImg}
+              sizes="(max-width: 1023px) 100vw, 1200px"
+              priority
             />
-
-            <span className={styles.bottomDividerSp} aria-hidden="true" />
-            <div className={styles.shareBottomSp}>{renderShareButtons(shareUrl, entry.title)}</div>
           </div>
-        </div>
+        )}
+
+        <h1 className={styles.title}>{entry.title}</h1>
+        <p className={styles.meta}>
+          <span className={styles.date}>{formatNewsDate(entry.published_at)}</span>
+          <span className={styles.category}>#{entry.category?.label ?? ''}</span>
+        </p>
+        <div className={styles.share}>{renderShareButtons(shareUrl, entry.title)}</div>
+        <span className={styles.headerDivider} aria-hidden="true" />
+
+        {/* TipTap が生成した HTML を出力。コンテンツは認証済み管理者が作成した信頼コンテンツ。
+            本文中の画像は render.ts が縦横比で「全幅/正方形グリッド」に自動振り分け済み。 */}
+        <div
+          className={styles.body}
+          dangerouslySetInnerHTML={{ __html: contentHtml }}
+        />
+
+        <span className={styles.bottomDividerSp} aria-hidden="true" />
+        <div className={styles.shareBottomSp}>{renderShareButtons(shareUrl, entry.title)}</div>
 
         <div className={styles.backWrap}>
           <Link href="/news" className={`${styles.backButton} ${styles.backButtonPc}`}>

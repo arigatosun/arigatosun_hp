@@ -4,7 +4,7 @@ import { useRef } from 'react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Link from '@tiptap/extension-link';
-import Image from '@tiptap/extension-image';
+import { NewsImage } from '@/lib/news/image-extension';
 // TipTap v3 では Table / TableRow / TableCell / TableHeader は named export
 // （default export は無いので注意）
 import { Table, TableRow, TableCell, TableHeader } from '@tiptap/extension-table';
@@ -52,7 +52,7 @@ export default function RichEditor({ name, defaultValue }: RichEditorProps) {
       // StarterKit v3 は Link を内包するため、明示的に追加する Link と重複しないよう無効化。
       StarterKit.configure({ link: false }),
       Link.configure({ openOnClick: false, autolink: true }),
-      Image,
+      NewsImage,
       Table.configure({ resizable: true }),
       TableRow,
       TableCell,
