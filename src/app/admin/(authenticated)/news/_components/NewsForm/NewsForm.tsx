@@ -30,6 +30,7 @@ interface NewsFormProps {
 }
 
 const initialState: NewsFormState = { idle: true };
+const NEWS_PREVIEW_STORAGE_KEY = 'arigatosun:news-preview:v1';
 
 function toDatetimeLocal(iso: string | null): string {
   if (!iso) return '';
@@ -145,6 +146,49 @@ export default function NewsForm({ news, categories, initialValues }: NewsFormPr
   const primaryPendingLabel = isPublished ? '更新中...' : '公開中...';
   const canUseSecondary = isPublished || isDirty;
   const canUsePrimary = isPublished ? isDirty : hasSavedNews || isDirty;
+  const canPreview = hasSavedNews || isDirty;
+
+  const handlePreview = () => {
+    const form = formRef.current;
+    if (!form) return;
+
+    syncPublishedAt();
+    const formData = new FormData(form);
+    const categoryId = String(formData.get('category_id') ?? '');
+    const category = categories.find((c) => c.id === categoryId);
+    const contentRaw = String(formData.get('content') ?? '');
+    let content: Json = {};
+
+    try {
+      const parsed = JSON.parse(contentRaw);
+      content = parsed && typeof parsed === 'object' ? (parsed as Json) : {};
+    } catch {
+      content = {};
+    }
+
+    const publishedAt =
+      String(formData.get('published_at') ?? '') || news?.published_at || new Date().toISOString();
+    const editUrl = news ? `/admin/news/${news.id}/edit` : '/admin/news/new';
+    const payload = {
+      title: String(formData.get('title') ?? ''),
+      slug: String(formData.get('slug') ?? ''),
+      categoryLabel: category?.label ?? '',
+      description: String(formData.get('description') ?? ''),
+      thumbnailUrl: String(formData.get('thumbnail_url') ?? ''),
+      thumbnailAlt: String(formData.get('thumbnail_alt') ?? ''),
+      publishedAt,
+      content,
+      editUrl,
+      capturedAt: new Date().toISOString(),
+    };
+
+    try {
+      window.localStorage.setItem(NEWS_PREVIEW_STORAGE_KEY, JSON.stringify(payload));
+      window.open('/admin/news/preview', '_blank', 'noopener,noreferrer');
+    } catch {
+      window.alert('プレビューを開けませんでした。ブラウザの設定をご確認ください。');
+    }
+  };
 
   useEffect(() => {
     initialFingerprintRef.current = getFingerprint();
@@ -324,6 +368,14 @@ export default function NewsForm({ news, categories, initialValues }: NewsFormPr
             {isPublishPending ? '公開設定を保存しています...' : '下書きを保存しています...'}
           </p>
         )}
+        <button
+          type="button"
+          className={styles.previewButton}
+          disabled={isPending || !canPreview}
+          onClick={handlePreview}
+        >
+          プレビュー
+        </button>
         <button
           type="submit"
           name="intent"

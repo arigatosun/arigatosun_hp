@@ -107,7 +107,8 @@
 }
 
 .buttonPrimary,
-.buttonSecondary {
+.buttonSecondary,
+.previewButton {
   padding: 10px 20px;
   border-radius: 8px;
   font-size: 14px;
@@ -176,6 +177,23 @@
   &:hover:not(:disabled) {
     border-color: var(--color-primary);
     color: var(--color-primary);
+  }
+
+  &:disabled:not([data-pending='true']) {
+    background: var(--color-gray-100);
+    border-color: var(--color-gray-200);
+    color: var(--color-gray-400);
+  }
+}
+
+.previewButton {
+  background: var(--color-black);
+  color: var(--color-white);
+  border: 1px solid var(--color-black);
+
+  &:hover:not(:disabled) {
+    background: var(--color-gray-800);
+    border-color: var(--color-gray-800);
   }
 
   &:disabled:not([data-pending='true']) {
