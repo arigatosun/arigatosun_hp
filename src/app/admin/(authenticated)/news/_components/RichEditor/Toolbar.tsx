@@ -10,6 +10,28 @@ interface ToolbarProps {
   editor: Editor | null;
 }
 
+/**
+ * 画像 URL から実寸（naturalWidth / naturalHeight）を読み取る。
+ * 公開側がこの縦横比で「全幅(長方形) / 半幅グリッド(正方形)」を自動振り分けする。
+ * 失敗時は null（寸法なし＝公開側は全幅にフォールバック）。
+ */
+function getImageDimensions(src: string): Promise<{ width: number; height: number } | null> {
+  return new Promise((resolve) => {
+    const img = new window.Image();
+    img.onload = () => resolve({ width: img.naturalWidth, height: img.naturalHeight });
+    img.onerror = () => resolve(null);
+    img.src = src;
+  });
+}
+
+/** 画像ノードをエディタに挿入する（実寸 width/height 付き）。 */
+function insertImage(
+  editor: Editor,
+  attrs: { src: string; alt: string; width?: number; height?: number }
+) {
+  editor.chain().focus().insertContent({ type: 'image', attrs }).run();
+}
+
 export default function Toolbar({ editor }: ToolbarProps) {
   const [isUploading, startUpload] = useTransition();
   const [uploadError, setUploadError] = useState<string | null>(null);
@@ -29,7 +51,12 @@ export default function Toolbar({ editor }: ToolbarProps) {
         formData.append('file', file);
         const result = await uploadNewsImage(formData);
         if (result.ok) {
-          editor.chain().focus().setImage({ src: result.url, alt: file.name }).run();
+          const dims = await getImageDimensions(result.url);
+          insertImage(editor, {
+            src: result.url,
+            alt: file.name,
+            ...(dims ?? {}),
+          });
         } else {
           setUploadError(result.error);
         }
@@ -45,7 +72,12 @@ export default function Toolbar({ editor }: ToolbarProps) {
     startUpload(async () => {
       const result = await generateNewsImage(prompt.trim(), '4:3');
       if (result.ok) {
-        editor.chain().focus().setImage({ src: result.url, alt: prompt.trim() }).run();
+        const dims = await getImageDimensions(result.url);
+        insertImage(editor, {
+          src: result.url,
+          alt: prompt.trim(),
+          ...(dims ?? {}),
+        });
       } else {
         setUploadError(result.error);
       }
