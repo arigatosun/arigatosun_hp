@@ -39,12 +39,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const entry = await getPublishedNewsByYearSlug(y, slug);
   if (!entry) return { title: '記事が見つかりません', robots: 'noindex' };
 
-  // 本文 HTML からタグを除去して要約（meta description / OG 用）。
-  const description = renderNewsContentToHtml(entry.content)
-    .replace(/<[^>]+>/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim()
-    .slice(0, 120);
+  // meta description / OG: 入力された説明文（手動 or AI生成）を優先し、
+  // 空欄なら本文の先頭から自動生成する。フォーム注釈「空欄なら本文から
+  // 自動生成されます」と実装を一致させる（入力した説明文を確実に使う）。
+  const description =
+    entry.description?.trim() ||
+    renderNewsContentToHtml(entry.content)
+      .replace(/<[^>]+>/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .slice(0, 120);
 
   return {
     title: entry.title,
