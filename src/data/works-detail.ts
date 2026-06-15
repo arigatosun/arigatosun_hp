@@ -816,7 +816,7 @@ const MENTE_DETAIL: WorkDetailContent = {
       // 見出しは写真とまとめて sticky 固定するため interview 内に持たせる
       title: '■クライアントの声',
       // Figma cv_1 (680×419)
-      photo: { w: 680, h: 419, src: `${MENTE}/interview.png` },
+      photo: { w: 680, h: 419, src: `${MENTE}/interview.png`, flip: true },
       heading: ['開発だけをする会社ではなく、', '一緒に整理しながら共に進んでくれる会社。'],
       // a は Figma 3031:44841 の明示改行（<p>区切り）に合わせたセグメント配列
       qa: [

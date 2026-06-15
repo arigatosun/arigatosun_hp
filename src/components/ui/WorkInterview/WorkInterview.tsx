@@ -5,8 +5,8 @@ import styles from './WorkInterview.module.scss';
 type WorkInterviewProps = {
   /** セクション見出し（■クライアントの声）。写真とまとめて左カラムで sticky 固定する。 */
   title: string;
-  /** 左カラムの写真。src 未指定時はサイズ確保のプレースホルダー。 */
-  photo: { w: number; h: number; src?: string };
+  /** 左カラムの写真。src 未指定時はサイズ確保のプレースホルダー。flip 指定で水平反転。 */
+  photo: { w: number; h: number; src?: string; flip?: boolean };
   /** 右カラム見出し。配列 = 明示改行（要素間に <br>）。 */
   heading: string[];
   /** Q&A の繰り返し。a は Figma の明示改行ごとのセグメント配列。 */
@@ -42,6 +42,7 @@ export default function WorkInterview({
                 fill
                 sizes="(max-width: 1023px) 92vw, 680px"
                 className={styles.photoImg}
+                style={photo.flip ? { transform: 'scaleX(-1)' } : undefined}
               />
             ) : (
               <div className={styles.photoPlaceholder} aria-hidden="true" />
