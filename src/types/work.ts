@@ -240,6 +240,20 @@ export type WorkContentBlock = { gap: number; spGap?: number } & (
       qa: { q: string; a: string[] }[];
     }
   | {
+      type: 'appBadges'; // App Store / Google Play のストアバッジを横並びで配置（外部リンク）
+      /** 横並びのバッジ。先頭から左→右に並ぶ。 */
+      badges: {
+        /** バッジ画像。w/h は画像の実寸（アスペクト比保持用）。 */
+        src: string;
+        w: number;
+        h: number;
+        /** 遷移先ストア URL（別タブで開く）。 */
+        href: string;
+        /** スクリーンリーダー向けラベル（例: App Store でダウンロード）。 */
+        label: string;
+      }[];
+    }
+  | {
       type: 'relatedWorks'; // 他実績へのリンクカード群
     }
 );

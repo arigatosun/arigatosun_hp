@@ -15,6 +15,7 @@ import WorkCaption from '@/components/ui/WorkCaption';
 import WorkDivider from '@/components/ui/WorkDivider';
 import WorkCreditList from '@/components/ui/WorkCreditList';
 import WorkInterview from '@/components/ui/WorkInterview';
+import WorkAppBadges from '@/components/ui/WorkAppBadges';
 import WorkRelatedSection from '@/components/ui/WorkRelatedSection';
 import WorkArchive from '@/components/ui/WorkArchive';
 import styles from './page.module.scss';
@@ -161,6 +162,8 @@ export default async function WorkDetailPage({ params }: PageParams) {
               qa={block.qa}
             />
           );
+        } else if (block.type === 'appBadges') {
+          node = <WorkAppBadges badges={block.badges} />;
         } else if (block.type === 'relatedWorks') {
           node = <WorkRelatedSection works={relatedWorks} />;
         }

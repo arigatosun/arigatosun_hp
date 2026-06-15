@@ -808,6 +808,27 @@ const MENTE_DETAIL: WorkDetailContent = {
         '今後も機能追加や改善を重ねながら、サービスの成長を支えるパートナーとして伴走していきます。',
       ],
     },
+    {
+      type: 'appBadges',
+      gap: 48,
+      spGap: 28,
+      badges: [
+        {
+          src: `${MENTE}/badge-app-store.svg`,
+          w: 120,
+          h: 40,
+          href: 'https://apps.apple.com/jp/app/メンテ-理美容師検索-予約アプリ-mente/id6757512643',
+          label: 'App Store でダウンロード',
+        },
+        {
+          src: `${MENTE}/badge-google-play.png`,
+          w: 811,
+          h: 241,
+          href: 'https://play.google.com/store/apps/details?id=com.nj.mente&hl=ja',
+          label: 'Google Play で手に入れよう',
+        },
+      ],
+    },
     { type: 'divider', gap: 200 },
     {
       type: 'interview',
