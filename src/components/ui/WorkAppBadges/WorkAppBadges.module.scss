@@ -15,13 +15,8 @@
   flex-wrap: wrap;
   align-items: center;
   @include fluid(gap, 12, 24);
-  // PC: 左揃え
+  // PC・SP ともに左揃え
   justify-content: flex-start;
-
-  // SP: 中央揃え
-  @include sp {
-    justify-content: center;
-  }
 }
 
 .badge {
