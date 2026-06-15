@@ -1,0 +1,36 @@
+// Figma フレーム 1920px 準拠
+@use '@/styles/fluid' as * with (
+  $fluid-max-viewport: 1920
+);
+@use '@/styles/breakpoints' as *;
+
+// 本文ブロック（WorkTextSection）と左端を揃える。Figma SP x=40 / PC x=200。
+.section {
+  @include fluid(padding-left, 40, 200);
+  @include fluid(padding-right, 40, 200);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  @include fluid(gap, 12, 24);
+  // PC・SP ともに左揃え
+  justify-content: flex-start;
+}
+
+.badge {
+  display: inline-flex;
+  transition: opacity var(--transition-base);
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+// 高さ基準でバッジを揃え、幅はアスペクト比に追従させる
+.badgeImg {
+  display: block;
+  width: auto;
+  @include fluid(height, 40, 52);
+}
