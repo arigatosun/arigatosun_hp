@@ -1,0 +1,65 @@
+@use '@/styles/fluid' as *;
+@use '@/styles/breakpoints' as *;
+
+.root {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  @include fluid(padding, 24, 40);
+  background: var(--color-bg);
+}
+
+.card {
+  width: 100%;
+  @include fluid(max-width, 320, 560);
+  @include fluid(padding, 28, 48);
+  background: var(--color-white);
+  @include fluid(border-radius, 12, 16);
+  border: 1px solid var(--color-placeholder);
+}
+
+.title {
+  margin: 0;
+  color: var(--color-black);
+  font-family: var(--font-primary);
+  font-weight: var(--font-weight-bold);
+  @include fluid(font-size, 18, 24);
+  @include fluid(line-height, 28, 36);
+}
+
+.body {
+  @include fluid(margin-top, 14, 20);
+  margin-bottom: 0;
+  color: var(--color-black);
+  font-family: var(--font-primary);
+  font-weight: var(--font-weight-regular);
+  @include fluid(font-size, 14, 16);
+  @include fluid(line-height, 24, 30);
+}
+
+.note {
+  @include fluid(margin-top, 12, 16);
+  margin-bottom: 0;
+  color: var(--color-text-secondary);
+  font-family: var(--font-primary);
+  @include fluid(font-size, 12, 13);
+  @include fluid(line-height, 20, 22);
+}
+
+.actions {
+  @include fluid(margin-top, 22, 32);
+  margin-bottom: 0;
+}
+
+.link {
+  color: var(--color-link-blue);
+  font-family: var(--font-primary);
+  @include fluid(font-size, 14, 16);
+  text-decoration: underline;
+  transition: color var(--transition-base);
+
+  &:hover {
+    color: var(--color-primary);
+  }
+}
