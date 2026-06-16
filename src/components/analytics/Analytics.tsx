@@ -1,4 +1,12 @@
+'use client';
+
 import Script from 'next/script';
+import { useSyncExternalStore } from 'react';
+import { isOptedOut } from '@/lib/analyticsOptout';
+
+// オプトアウト状態は「ページ表示時の Cookie」を 1 回読むだけでよく、
+// セッション中に変化したら追従する必要はないため購読は no-op。
+const subscribe = () => () => {};
 
 // アクセス解析タグ。ID は env で管理し、本番でのみ設定する想定。
 // env 未設定（preview/dev 等）では一切スクリプトを読み込まない（完全 no-op）。
@@ -13,8 +21,21 @@ const CLARITY_ID = process.env.NEXT_PUBLIC_CLARITY_ID;
  * - 公開サイト（(site)）のみで読み込む（admin 配下では使わない）。
  * - 各 ID が env に設定されている時だけ該当タグを出力する。
  * - strategy="lazyOnload": 見た目に無関係なタグは onload 後まで後ろ倒しにする。
+ * - 会社関係者などのオプトアウト Cookie（/optout で付与）がある端末では一切読み込まない。
+ *   判定はクライアントで行うため、ページ自体の静的生成（SSG）は維持される。
  */
 export default function Analytics() {
+  // サーバー（SSR）では常に false → タグを HTML に含めない。
+  // クライアントで Cookie を読み、オプトアウトでなければ true になりタグを読み込む。
+  // タグは元々 strategy="lazyOnload"（onload 後）なので、この遅延は実害がない。
+  const enabled = useSyncExternalStore(
+    subscribe,
+    () => !isOptedOut(),
+    () => false,
+  );
+
+  if (!enabled) return null;
+
   return (
     <>
       {GTM_ID && (
