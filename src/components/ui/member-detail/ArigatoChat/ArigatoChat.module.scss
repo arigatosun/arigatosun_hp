@@ -142,8 +142,8 @@
 .welcomeIntro {
   display: flex;
   flex-direction: column;
-  // Figma: 段落間に1行分の空きを入れる（行ピッチ32と同値の gap で空行に見せる）
-  @include fluid(gap, 20, 32, 390, 1920);
+  // 本文は1段落（6行連続・段落間の空行なし）。複数段落を持つ場合の保険として gap は最小に。
+  gap: 0;
 }
 
 .welcomeIntroParagraph {
