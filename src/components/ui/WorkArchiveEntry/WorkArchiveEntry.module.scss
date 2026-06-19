@@ -104,17 +104,20 @@
   }
 }
 
-// <CREDIT> 4 行ブロック — 英字は Mozaic GEO、日本語は Noto Sans JP（font-primary）。
-// 細見え解消のためウェイトは Light(300) → Regular(400)（サイズ・字間は据え置き）。
+// <CREDIT> 4 行ブロック — Figma SP: Mozaic GEO Variable / 14px / 300 / 32px / ls 1.68。
 .credit {
   margin: 0;
   @include fluid(margin-top, 24, 16);
   color: var(--color-text-secondary);
   font-family: var(--font-primary);
-  font-weight: var(--font-weight-regular);
+  font-weight: var(--font-weight-light);
   @include fluid(font-size, 14, 14);
   @include fluid(line-height, 32, 32);
   @include fluid(letter-spacing, 1.68, 2.8);
+
+  @include sp {
+    @include fluid(letter-spacing, 1.68, 1.68);
+  }
 }
 
 // 見出し / クレジット内の SP 専用改行 (`\n` または ` | ` の位置で SP のみ改行)
@@ -123,4 +126,3 @@
     display: none;
   }
 }
-
