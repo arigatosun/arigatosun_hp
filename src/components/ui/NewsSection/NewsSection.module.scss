@@ -63,7 +63,8 @@
   @include fluid(margin-bottom, 60, 197, 390, 1920);
 
   @include sp {
-    @include fluid(margin-bottom, 16, 24);
+    // SP は /news ページの見出し→カテゴリ間余白（categoryList margin-top）に揃える
+    @include fluid(margin-bottom, 48, 128, 390, 1200);
   }
 }
 
