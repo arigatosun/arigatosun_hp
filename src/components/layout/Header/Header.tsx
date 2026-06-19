@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
+import { CHATBOT_MEMBER_PATH } from '@/data/members';
 import styles from './Header.module.scss';
 
 type DropdownItem = { href: string; label: string };
@@ -119,11 +120,14 @@ export default function Header() {
 
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + '/');
 
+  // 赤背景のアリガトくんチャットページではナビ/ロゴを白文字バリアントにする。
+  const onDark = pathname === CHATBOT_MEMBER_PATH;
+
   const toggleMenu = (key: string) =>
     setOpenMenus((prev) => ({ ...prev, [key]: !prev[key] }));
 
   return (
-    <header className={styles.header}>
+    <header className={`${styles.header} ${onDark ? styles.onDark : ''}`}>
       <nav className={styles.nav}>
         {/* PC ナビゲーション */}
         <ul className={styles.navList}>

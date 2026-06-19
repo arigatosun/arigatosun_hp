@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
+import FooterGate from '@/components/layout/Footer/FooterGate';
 import Preloader from '@/components/ui/Preloader';
 import { PRELOADER_SESSION_KEY } from '@/components/ui/Preloader/sessionKey';
 import ScrollAnchorOnResize from '@/components/ui/ScrollAnchorOnResize';
@@ -75,7 +76,9 @@ export default function SiteLayout({
       <ScrollAnchorOnResize />
       <Header />
       <main>{children}</main>
-      <Footer />
+      <FooterGate>
+        <Footer />
+      </FooterGate>
     </>
   );
 }

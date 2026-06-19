@@ -7,6 +7,7 @@ import MemberQuoteText from '@/components/ui/member-detail/MemberQuoteText';
 import MemberIntroText from '@/components/ui/member-detail/MemberIntroText';
 import MemberCareerSection from '@/components/ui/member-detail/MemberCareerSection';
 import MemberProjectGrid from '@/components/ui/member-detail/MemberProjectGrid';
+import ArigatoChat from '@/components/ui/member-detail/ArigatoChat';
 import MemberSection from '@/components/ui/MemberSection';
 import styles from './page.module.scss';
 
@@ -67,6 +68,12 @@ export default async function MemberDetailPage({ params }: Props) {
 
   if (!member) {
     notFound();
+  }
+
+  // チャットUI（アリガトくん）はプロフィールではなく専用のチャット画面（全画面）を表示。
+  // このページは Footer 非表示・Header 白文字バリアント（(site)/layout 側で出し分け）。
+  if (member.chatBot) {
+    return <ArigatoChat />;
   }
 
   const roleJp = member.roleJp ?? ROLE_JP_DEFAULTS[member.role] ?? '社員';
