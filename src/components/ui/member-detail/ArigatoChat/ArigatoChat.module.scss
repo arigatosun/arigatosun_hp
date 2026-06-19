@@ -96,8 +96,10 @@
   display: flex;
   align-items: baseline;
   flex-wrap: wrap;
-  @include fluid(gap, 8, 24, 390, 1920);
-  @include fluid(margin-top, 8, 12, 390, 1920);
+  // Figma: アリガトくん(x871) ↔ (ARIGATOKUN)(x1094) の間隔 ≈ 37px
+  @include fluid(gap, 16, 38, 390, 1920);
+  // Figma: overline → name の余白 16px
+  @include fluid(margin-top, 10, 16, 390, 1920);
 }
 
 .welcomeNameJp {
@@ -120,7 +122,8 @@
   display: block;
   height: 1px;
   @include fluid(width, 36, 52, 390, 1920);
-  @include fluid(margin-block, 14, 24, 390, 1920);
+  // Figma: name → divider ≈ 48px / divider → catch ≈ 48px
+  @include fluid(margin-block, 24, 48, 390, 1920);
   background-color: var(--color-white);
 }
 
@@ -137,7 +140,8 @@
 .welcomeIntro {
   display: flex;
   flex-direction: column;
-  @include fluid(gap, 16, 24, 390, 1920);
+  // Figma: 段落間に1行分の空きを入れる（行ピッチ32と同値の gap で空行に見せる）
+  @include fluid(gap, 20, 32, 390, 1920);
 }
 
 .welcomeIntroParagraph {
