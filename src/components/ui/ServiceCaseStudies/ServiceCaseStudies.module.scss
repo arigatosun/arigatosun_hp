@@ -4,7 +4,7 @@
 @use '@/styles/breakpoints' as *;
 
 .section {
-  // Figma SP (390): カード画像 x=28 / 本文 x=40
+  // SP: サービスカード群と同じ左右 40px 基準に揃える
   // Figma PC (1920): 左右 200。
   @include fluid(padding-left, 40, 200);
   @include fluid(padding-right, 40, 200);
@@ -64,13 +64,11 @@
   background-color: var(--color-placeholder);
 
   @include sp {
-    // Figma SP: サムネは x=28 w=334（本文 40 より 12px 外側へ両側張り出す）。
-    // margin-inline: -12 だけでは box 幅が 310 のままで左にだけ -12 ずれて
-    // 非対称になるため、width も 24px 拡張して左右対称に張り出させる。
-    width: calc(100% + 24px);
-    margin-left: -12px;
-    margin-right: -12px;
-    aspect-ratio: 334 / 188;
+    // SP でも外側へ張り出させず、上のカード群と同じ左右余白に揃える。
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    aspect-ratio: 310 / 175;
   }
 }
 

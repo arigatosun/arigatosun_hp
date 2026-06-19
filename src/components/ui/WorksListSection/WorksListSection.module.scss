@@ -8,7 +8,7 @@
 .section {
   position: relative;
   z-index: 5;
-  // Figma PC: 左右 200px（pagination の全幅中央のため対称） / SP(390): 左右 28px（カード 334 を中央配置）
+  // Figma PC: 左右 200px（pagination の全幅中央のため対称） / SP: 上のカード群に合わせて左右 40px
   @include fluid(padding-left, 20, 200);
   @include fluid(padding-right, 20, 200);
   // Figma 実測: サイドバー上端 y=200 (page top 込み) − header 80 = 120 / SP: 80 (y=160 - header 80)
@@ -16,10 +16,10 @@
   // フッター手前の余白は全ページ共通の footer-gap mixin で統一（_fluid.scss で一元管理）
   @include footer-gap;
 
-  // SP(390): カード横幅 334 を中央に置くため 28px 左右に固定 / 上部余白も Figma SP 80 に合わせる
+  // SP: サービスカード群と同じ左右余白に揃える / 上部余白は Figma SP 80 に合わせる
   @include sp {
-    padding-left: 28px;
-    padding-right: 28px;
+    @include fluid(padding-left, 40, 40);
+    @include fluid(padding-right, 40, 40);
     padding-top: 80px;
   }
 }

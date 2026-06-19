@@ -24,8 +24,8 @@
     width: 100%;
   }
 
-  // Figma SP は要素 x=40。.section が左 28px の padding を持つので、サイドバー側で +12 を補填
-  @include sp { padding-left: 12px; }
+  // SP は親 .section の左右 40px にそのまま揃える
+  @include sp { padding-left: 0; }
 }
 
 // Figma 実測:
