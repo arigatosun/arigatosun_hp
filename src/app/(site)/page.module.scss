@@ -298,6 +298,13 @@
   width: 100%;
 }
 
+// 見出しの改行: SP のみ「〜と」の後で改行する（PC は 1 行表示を維持）
+.aboutHeadingBr {
+  @include pc {
+    display: none;
+  }
+}
+
 .aboutHeading {
   @include fluid(margin-top, 24, 80);
   color: var(--color-black);

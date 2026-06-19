@@ -116,7 +116,9 @@ export default async function Home() {
         />
 
         <div className={styles.aboutContent}>
-          <h3 className={styles.aboutHeading}>「AIにフルベット」と決めて、2年。</h3>
+          <h3 className={styles.aboutHeading}>
+            「AIにフルベット」と<br className={styles.aboutHeadingBr} />決めて、2年。
+          </h3>
 
           <RevealText className={styles.aboutMessage}>
             <RevealBlock className={styles.aboutBlock}>
