@@ -44,14 +44,26 @@
   flex-direction: column;
 }
 
+// 会話前: ヒーローを上寄せにし（scrollArea は伸ばさない）、
+// 入力欄をヒーロー本文の 88px 下に置く（Figma: intro末 y629 → 入力欄 y717）。
+.welcomeMode {
+  .scrollArea {
+    flex: 0 1 auto;
+  }
+
+  .inputBar {
+    @include fluid(margin-top, 44, 88, 390, 1920);
+  }
+}
+
 // ── 会話開始前: キャラクター紹介ヒーロー ──
 .welcome {
-  margin-block: auto; // scrollArea 内で縦中央
   display: flex;
   align-items: center;
   justify-content: center;
   @include fluid(gap, 32, 100, 390, 1920);
-  @include fluid(padding-block, 24, 40, 390, 1920);
+  // 本文末 → 入力欄の余白(88px)は .welcomeMode .inputBar 側で持つため下padは0。
+  @include fluid(padding-top, 24, 40, 390, 1920);
 
   @include sp {
     flex-direction: column;

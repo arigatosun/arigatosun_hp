@@ -69,7 +69,12 @@ export default function ArigatoChat() {
   };
 
   return (
-    <section className={styles.root} aria-label="アリガトくんチャット">
+    <section
+      className={`${styles.root} ${
+        hasConversation ? styles.chatting : styles.welcomeMode
+      }`}
+      aria-label="アリガトくんチャット"
+    >
       <div className={styles.stage}>
         <div className={styles.scrollArea} ref={scrollRef}>
           {!hasConversation ? (
