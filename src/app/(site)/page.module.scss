@@ -298,6 +298,13 @@
   width: 100%;
 }
 
+// 見出しの改行: SP のみ「〜と」の後で改行する（PC は 1 行表示を維持）
+.aboutHeadingBr {
+  @include pc {
+    display: none;
+  }
+}
+
 .aboutHeading {
   @include fluid(margin-top, 24, 80);
   color: var(--color-black);
@@ -306,11 +313,12 @@
   font-weight: var(--font-weight-regular);
   font-style: normal;
   line-height: 2.0625; // Figma: 66px / 32px
-  @include fluid(letter-spacing, 12.8, 25.6);
+  // Figma(4052:31869): 32px / tracking 10.24px。SP は比例縮小（約半分）。
+  @include fluid(letter-spacing, 5.12, 10.24);
   @include fluid(margin-bottom, 40, 64);
 
   @include sp {
-    // Figma SP @390: font 20 / line-height 32 (= 1.6) / letter-spacing 12.8
+    // Figma SP @390: font 20 / line-height 32 (= 1.6)
     @include fluid(font-size, 20, 32);
     line-height: 1.6;
     // Figma SP (Group 1040): title block 下端 y=1027 → heading 上端 y=1095.6 = gap 68px
@@ -348,6 +356,12 @@
   @include sp {
     // Figma SP (Group 1040 / 2749-28730): 段落間 gap = 40px
     @include fluid(margin-bottom, 40, 62);
+
+    // SP: 塊（段落）内の各文（RevealLine = 子 span）は改行せず流し込みで自然折り返しさせる。
+    // 改行は塊どうしの間（.aboutBlock の margin）のみ。PC は Figma 通り 1 文 1 行を維持。
+    > span {
+      display: inline;
+    }
   }
 }
 
