@@ -20,7 +20,8 @@
   margin: 0;
   @include fluid(margin-bottom, 8, 16, 390, 1920);
   color: var(--color-text-secondary);
-  font-family: var(--font-jp);
+  // 日本語は Noto フォールバックのまま、英語は mozaic で表示
+  font-family: var(--font-primary);
   font-weight: var(--font-weight-regular);
   @include fluid(font-size, 14, 16, 390, 1920);
   @include fluid(line-height, 22, 32, 390, 1920);
@@ -40,7 +41,8 @@
   // 経歴は改行（\n）で年表的に複数行を表示する。pre-line で改行のみ反映（連続空白は1つに圧縮）
   white-space: pre-line;
   color: var(--color-black);
-  font-family: var(--font-jp);
+  // 日本語は Noto フォールバックのまま、英語は mozaic で表示
+  font-family: var(--font-primary);
   font-weight: var(--font-weight-regular);
   @include fluid(font-size, 14, 16, 390, 1920);
   @include fluid(line-height, 22, 32, 390, 1920);

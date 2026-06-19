@@ -30,7 +30,8 @@
 .role {
   margin: 0;
   color: var(--color-text-secondary);
-  font-family: var(--font-jp);
+  // 日本語は Noto フォールバックのまま、英語(CDO 等)は mozaic で表示
+  font-family: var(--font-primary);
   font-weight: var(--font-weight-regular);
   @include fluid(font-size, 12, 14, 390, 1920);
   @include fluid(line-height, 18, 24, 390, 1920);
