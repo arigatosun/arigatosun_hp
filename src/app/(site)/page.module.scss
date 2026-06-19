@@ -349,6 +349,12 @@
   @include sp {
     // Figma SP (Group 1040 / 2749-28730): 段落間 gap = 40px
     @include fluid(margin-bottom, 40, 62);
+
+    // SP: 塊（段落）内の各文（RevealLine = 子 span）は改行せず流し込みで自然折り返しさせる。
+    // 改行は塊どうしの間（.aboutBlock の margin）のみ。PC は Figma 通り 1 文 1 行を維持。
+    > span {
+      display: inline;
+    }
   }
 }
 
