@@ -6,10 +6,10 @@ const description =
   '株式会社アリガトサンへのお問い合わせ。AI開発・デザイン・ブランディング・IPコンテンツ制作のご相談を承ります。構想段階のご相談からお気軽にどうぞ。';
 
 export const metadata: Metadata = {
-  title: 'コンタクト',
+  title: 'Contact',
   description,
   openGraph: {
-    title: 'コンタクト | 株式会社アリガトサン',
+    title: 'Contact | 株式会社アリガトサン',
     description,
   },
 };

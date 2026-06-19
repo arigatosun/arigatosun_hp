@@ -4,7 +4,7 @@ import SectionTitle from '@/components/ui/SectionTitle';
 import styles from './page.module.scss';
 
 export const metadata: Metadata = {
-  title: 'お問い合わせを受け付けました',
+  title: 'Thank You',
   robots: { index: false, follow: false },
 };
 

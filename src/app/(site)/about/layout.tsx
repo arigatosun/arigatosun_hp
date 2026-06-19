@@ -6,10 +6,10 @@ const description =
   '株式会社アリガトサンについて。「感謝とともに昇る。」を理念に、AI(LLM)開発からデザイン・ブランディング、IPコンテンツ制作までを行うクリエイティブスタジオです。';
 
 export const metadata: Metadata = {
-  title: 'アバウト',
+  title: 'About',
   description,
   openGraph: {
-    title: 'アバウト | 株式会社アリガトサン',
+    title: 'About | 株式会社アリガトサン',
     description,
   },
 };

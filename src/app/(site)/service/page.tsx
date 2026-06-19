@@ -4,7 +4,7 @@ import ServiceCardGrid from '@/components/ui/ServiceCardGrid';
 import styles from './page.module.scss';
 
 export const metadata: Metadata = {
-  title: 'サービス',
+  title: 'Service',
 };
 
 export default function ServicePage() {
