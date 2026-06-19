@@ -4,7 +4,8 @@
 // レスポンシブ方針（member 詳細 / 2026-05）: PC(≥1024) は 1920 基準、SP(≤1023) は 1200 据え置き。
 .root {
   color: var(--color-black);
-  font-family: var(--font-jp);
+  // 日本語は Noto フォールバックのまま、英語は mozaic で表示
+  font-family: var(--font-primary);
   font-weight: var(--font-weight-regular);
 }
 
