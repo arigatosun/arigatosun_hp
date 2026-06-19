@@ -35,9 +35,9 @@ function parseYear(year: string): number | null {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { year, slug } = await params;
   const y = parseYear(year);
-  if (!y) return { title: '記事が見つかりません', robots: 'noindex' };
+  if (!y) return { title: 'Not Found', robots: 'noindex' };
   const entry = await getPublishedNewsByYearSlug(y, slug);
-  if (!entry) return { title: '記事が見つかりません', robots: 'noindex' };
+  if (!entry) return { title: 'Not Found', robots: 'noindex' };
 
   // meta description / OG: 入力された説明文（手動 or AI生成）を優先し、
   // 空欄なら本文の先頭から自動生成する。フォーム注釈「空欄なら本文から

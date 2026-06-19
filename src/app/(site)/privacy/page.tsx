@@ -4,7 +4,7 @@ import { privacyLead, privacySections } from '@/data/privacy-policy';
 import styles from './page.module.scss';
 
 export const metadata: Metadata = {
-  title: 'プライバシーポリシー',
+  title: 'Privacy Policy',
   description:
     '株式会社アリガトサンのプライバシーポリシー（個人情報保護方針）です。取得する情報、利用目的、第三者提供、安全管理措置等について記載しています。',
 };

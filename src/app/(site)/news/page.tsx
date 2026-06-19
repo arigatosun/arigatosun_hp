@@ -7,7 +7,7 @@ import { formatNewsDate, newsDetailHref } from '@/lib/news/format';
 import styles from './page.module.scss';
 
 export const metadata: Metadata = {
-  title: 'ニュース',
+  title: 'News',
   description:
     '株式会社アリガトサンのニュース・お知らせ一覧。AI開発・デザイン・ブランディング・IPコンテンツに関する最新情報をお届けします。',
 };
