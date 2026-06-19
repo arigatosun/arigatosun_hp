@@ -48,32 +48,9 @@
   }
 }
 
-// SP 専用インジケーター: Figma SP「Group 1213」(20×568) を表示。
-// 円位置 y=40.6 / 170.6 / 324.6 / 478.6 と item の高さ (130 / 154 / 154 / auto)
-// を合わせることで、各 PHASE の title 中央付近に円が来る。
-.indicatorSpWrap {
-  display: none;
-
-  @include sp {
-    display: block;
-    position: absolute;
-    left: 0;
-    top: 0;
-    z-index: 1;
-    width: 20px;
-    height: 568px;
-    user-select: none;
-    pointer-events: none;
-  }
-}
-
-.indicatorSp {
-  @include sp {
-    display: block;
-    width: 20px;
-    height: auto;
-  }
-}
+// SP: 固定 SVG インジケーターは廃止し、左の丸（外円リング + 内側ドット）と
+// 縦線を CSS で描画する（content-driven）。円は title 中央に追従する。
+// → .item::before（外円リング）/ .item::after（縦線）/ .dot（内側ドット）参照。
 
 .list {
   list-style: none;
@@ -99,23 +76,41 @@
     height: auto;
   }
 
-  // ── SP: SVG 円位置に合わせた固定高さ ──
-  // SVG 円間距離: PHASE.1(40.6) → PHASE.2(170.6) = 130
-  //              PHASE.2 → PHASE.3 (324.6) = 154
-  //              PHASE.3 → PHASE.4 (478.6) = 154
-  //              PHASE.4 → 末尾 (568) = 89.4 → 最後は auto
+  // ── SP: 高さは内容に追従（content-driven）。左の円・縦線は CSS で描画する。
   @include sp {
-    padding-left: 43px; // 円 + gap
-    height: 130px;
+    padding-left: 43px; // 円 + gap = 43 (円中心 x=10, テキスト x=43)
+    height: auto;
+    @include fluid(padding-bottom, 30, 44); // PHASE 間の余白
 
-    &:nth-child(2) {
-      height: 154px;
-    }
-    &:nth-child(3) {
-      height: 154px;
-    }
     &:last-child {
-      height: auto;
+      padding-bottom: 0;
+    }
+
+    // 縦線（0.6px グレー）: 全 item を貫いて連続線になる
+    &::after {
+      content: '';
+      position: absolute;
+      left: 10px;
+      top: 0;
+      bottom: 0;
+      width: 0.6px;
+      background: var(--color-text-secondary);
+      transform: translateX(-50%);
+      z-index: 0;
+    }
+
+    // 外円リング（透明・0.6px グレー枠）。中心は title 中央（item 上端から約 50px）。
+    &::before {
+      content: '';
+      position: absolute;
+      left: 10px;
+      top: 50px;
+      width: 18.6px;
+      height: 18.6px;
+      border: 0.6px solid var(--color-text-secondary);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
     }
   }
 }
@@ -140,15 +135,17 @@
   transition: opacity 0.2s ease-out;
 
   @include sp {
-    // SP は SVG 内側の塗り円 (r=5.7) を覆う赤丸
+    // SP: CSS 描画の内側ドット。通常はグレー、active で赤（.itemActive .dot）。
     -webkit-mask-image: none;
     mask-image: none;
-    left: 10px; // SVG cx と一致
-    top: 40.6px; // SVG circle Y from item top
+    left: 10px;
+    top: 50px; // title 中央付近（item 上端から約 50px）
     width: 11.4px;
     height: 11.4px;
     transform: translate(-50%, -50%);
     border-radius: 50%;
+    background: var(--color-text-secondary);
+    opacity: 1;
   }
 }
 
@@ -214,6 +211,13 @@
   .dot {
     opacity: 1;
   }
+
+  // SP: active 行の内側ドットを赤に
+  @include sp {
+    .dot {
+      background: var(--color-primary);
+    }
+  }
 }
 
 // テキストは glow（z=0）より前面、dot（z=3）より背面に来るよう z-index:1
@@ -247,6 +251,12 @@
   @include fluid(font-size, 18, 20);
   @include fluid(line-height, 21.6, 36);
   @include fluid(letter-spacing, 4.0, 4.8);
+
+  @include sp {
+    @include fluid(font-size, 16, 20); // SP は 16 に縮小（PC は据え置き）
+    // PHASE ラベルとの余白（見出しの上）を広げる。下の description.margin-top と均等。
+    @include fluid(margin-top, 14, 20);
+  }
 }
 
 // 説明文
@@ -264,4 +274,10 @@
   @include fluid(letter-spacing, 1.44, 3.84);
   // data 側 \n を改行として保持
   white-space: pre-line;
+
+  @include sp {
+    @include fluid(line-height, 20, 32); // SP の行間を詰める（PC は据え置き）
+    // 見出しとの余白（見出しの下）。上の title.margin-top と均等。
+    @include fluid(margin-top, 14, 20);
+  }
 }

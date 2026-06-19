@@ -43,35 +43,9 @@
   }
 }
 
-// SP 専用インジケーター: Figma SP「Group 12072」(20×533) をそのまま表示。
-// 円位置 y=33 / 140 / 249 / 379 / 487 と item の高さ (107 / 109 / 130 / 108 / auto)
-// を合わせることで、各 STEP の title 中央付近に円が来る。
-
-// インジケーター wrap (SVG + 赤マスク layer を重ねるためのコンテナ)
-.indicatorSpWrap {
-  display: none;
-
-  @include sp {
-    display: block;
-    position: absolute;
-    left: 0;
-    top: 0;
-    z-index: 1;
-    width: 20px;
-    height: 533px; // SVG 高さ
-    user-select: none;
-    pointer-events: none;
-  }
-}
-
-.indicatorSp {
-  @include sp {
-    display: block;
-    width: 20px;
-    height: auto;
-  }
-}
-
+// SP: 固定 SVG インジケーターは廃止し、左の丸（外円リング + 内側ドット）と
+// 縦線を CSS で描画する（content-driven）。円は title 中央に追従する。
+// → .item::before（外円リング）/ .item::after（縦線）/ .dot（内側ドット）参照。
 
 .list {
   list-style: none;
@@ -97,23 +71,42 @@
     height: auto;
   }
 
-  // ── SP: Figma SP「Group 12072」(SVG) を indicatorSp で表示するので、
-  //    CSS 描画の円・線は持たず、SVG の円位置に合わせて item 高さを固定する。
+  // ── SP: 高さは内容に追従（content-driven）。左の円・縦線は CSS で描画する。
   @include sp {
-    padding-left: 43px; // 円 + gap = 43 (Figma: 円中心 x=10, テキスト x=43)
+    padding-left: 43px; // 円 + gap = 43 (円中心 x=10, テキスト x=43)
+    height: auto;
+    @include fluid(padding-bottom, 30, 44); // STEP 間の余白
 
-    // SVG の円間距離をそのまま item 高さに割り当てる:
-    //   circle1 y=33  → circle2 y=140  : item1 = 107
-    //   circle2 y=140 → circle3 y=249  : item2 = 109
-    //   circle3 y=249 → circle4 y=379  : item3 = 130 (説明文 2 行ぶん広め)
-    //   circle4 y=379 → circle5 y=487  : item4 = 108
-    //   最後 item は auto (内容高さに任せる)
-    height: 107px;
+    &:last-child {
+      padding-bottom: 0;
+    }
 
-    &:nth-child(2) { height: 109px; }
-    &:nth-child(3) { height: 130px; }
-    &:nth-child(4) { height: 108px; }
-    &:last-child { height: auto; }
+    // 縦線（0.6px グレー）: 全 item を貫いて連続線になる
+    &::after {
+      content: '';
+      position: absolute;
+      left: 10px;
+      top: 0;
+      bottom: 0;
+      width: 0.6px;
+      background: var(--color-text-secondary);
+      transform: translateX(-50%);
+      z-index: 0;
+    }
+
+    // 外円リング（透明・0.6px グレー枠）。中心は title 中央（item 上端から約 50px）。
+    &::before {
+      content: '';
+      position: absolute;
+      left: 10px;
+      top: 50px;
+      width: 18.6px;
+      height: 18.6px;
+      border: 0.6px solid var(--color-text-secondary);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2;
+    }
   }
 }
 
@@ -134,14 +127,14 @@
   pointer-events: none;
   transition: opacity 0.2s ease-out, background-color 0.2s ease-out;
 
-  // SP: SVG の灰色塗り円を覆い隠す赤丸 (active 時のみ opacity:1)
+  // SP: CSS 描画の内側ドット。通常はグレー、active で赤（.itemActive .dot）。
   @include sp {
-    left: 10px; // SVG cx と一致
-    top: 33px; // SVG circle Y は各 item の top + 33 に対応
-    width: 11.4px; // SVG 内側塗り円と同寸でフルカバー
+    left: 10px;
+    top: 50px; // title 中央付近（item 上端から約 50px）
+    width: 11.4px;
     height: 11.4px;
-    background: var(--color-primary);
-    opacity: 0; // 通常は SVG のグレー dot を見せる
+    background: var(--color-text-secondary);
+    opacity: 1;
   }
 }
 
@@ -163,8 +156,8 @@
   transition: opacity 0.35s ease-out;
 
   @include sp {
-    left: 140px; // SP は title 中央あたり (padding 43 + title 1/2)
-    top: 32px;
+    left: 140px; // title 中央あたり (padding 43 + title 1/2)
+    top: 50px; // 円中心（title 中央）に合わせる
     width: 380px;
   }
 }
@@ -204,6 +197,13 @@
   .dot {
     opacity: 1;
   }
+
+  // SP: active 行の内側ドットを赤に
+  @include sp {
+    .dot {
+      background: var(--color-primary);
+    }
+  }
 }
 
 // テキストは glow（z=0）より前面、dot（z=3）より背面に来るよう z-index:1。
@@ -240,6 +240,12 @@
   @include fluid(font-size, 18, 20);
   @include fluid(line-height, 21.6, 36);
   @include fluid(letter-spacing, 4.0, 4.8);
+
+  @include sp {
+    @include fluid(font-size, 16, 20); // SP は 16 に縮小（PC は据え置き）
+    // STEP ラベルとの余白（見出しの上）を広げる。下の description.margin-top と均等。
+    @include fluid(margin-top, 14, 20);
+  }
 }
 
 // 説明文
@@ -253,4 +259,10 @@
   @include fluid(font-size, 12, 16);
   @include fluid(line-height, 22.8, 38);
   @include fluid(letter-spacing, 1.44, 4);
+
+  @include sp {
+    @include fluid(line-height, 20, 38); // SP の行間を詰める（PC は据え置き）
+    // 見出しとの余白（見出しの下）。上の title.margin-top と均等。
+    @include fluid(margin-top, 14, 20);
+  }
 }
