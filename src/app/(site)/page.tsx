@@ -116,30 +116,31 @@ export default async function Home() {
         />
 
         <div className={styles.aboutContent}>
-          <h3 className={styles.aboutHeading}>感謝とともに昇る。</h3>
+          <h3 className={styles.aboutHeading}>「AIにフルベット」と決めて、2年。</h3>
 
           <RevealText className={styles.aboutMessage}>
             <RevealBlock className={styles.aboutBlock}>
-              {/* Figma SP の段落構造に合わせて、長い1文は 1 つの RevealLine 内で自然改行させる */}
-              <RevealLine>株式会社アリガトサンは、</RevealLine>
-              <RevealLine>
-                AI(LLM)システムの開発からデザイン・ブランディング、IPコンテンツ制作を行うクリエイティブスタジオです。
-              </RevealLine>
+              {/* Figma の段落構造（空行区切り）に合わせて RevealBlock 単位で分け、長い1文は自然改行させる */}
+              <RevealLine>誰よりもAIと向き合ってきた私たちは、こう考えています。</RevealLine>
+              <RevealLine>ホワイトカラーの仕事の多くは、数年で塗り替わる。</RevealLine>
+              <RevealLine>それでも最後まで価値が残るのは、ヒトにしか出せない判断・感性・関係性だと。</RevealLine>
             </RevealBlock>
 
             <RevealBlock className={styles.aboutBlock}>
-              <RevealLine>AIが当たり前になった世の中で、</RevealLine>
-              <RevealLine>「正解を導くこと」は簡単になったかもしれません。</RevealLine>
+              <RevealLine>私たちのミッションは、不可能に見える未来を、実装すること。</RevealLine>
+              <RevealLine>机上の正解を出すことは、もう難しくありません。</RevealLine>
+              <RevealLine>難しいのは、その正解を現場で動かし、成果に変えることです。</RevealLine>
+            </RevealBlock>
+
+            <RevealBlock className={styles.aboutBlock}>
+              <RevealLine>だから、PoCでも、分厚い仕様書でもなく、&quot;動く実装&quot;を届ける。</RevealLine>
+              <RevealLine>AIでできることはAIに任せ、ヒトが本当に向き合うべき仕事に、時間を取り戻す。</RevealLine>
             </RevealBlock>
 
             <div className={styles.aboutLastRow} data-motifs-trigger>
               <RevealBlock className={styles.aboutBlock}>
-                <RevealLine>しかし、</RevealLine>
-                <RevealLine>人が人らしく生きる上で忘れてはいけないものは「心の動き」です。</RevealLine>
-                <RevealLine>心が躍り、思わず理性が吹き飛ぶような「想像を超えた」瞬間。</RevealLine>
-                <RevealLine>そこにこそ本当の「ありがとう」が宿ると信じ、この社名を名付けました。</RevealLine>
-                <RevealLine>妥協なき愛で、世を照らす太陽であれ。</RevealLine>
-                <RevealLine>正解を超える体験を創造するために、私たちは挑戦を続けます。</RevealLine>
+                <RevealLine>AI開発・実装と、人に届くデザインで。</RevealLine>
+                <RevealLine>私たちは、AIを「試す」会社ではなく、AIを「使える状態にする」会社です。</RevealLine>
               </RevealBlock>
 
               <Button href="/about" size="sm">VIEW ABOUT &gt;</Button>

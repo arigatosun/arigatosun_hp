@@ -306,11 +306,12 @@
   font-weight: var(--font-weight-regular);
   font-style: normal;
   line-height: 2.0625; // Figma: 66px / 32px
-  @include fluid(letter-spacing, 12.8, 25.6);
+  // Figma(4052:31869): 32px / tracking 10.24px。SP は比例縮小（約半分）。
+  @include fluid(letter-spacing, 5.12, 10.24);
   @include fluid(margin-bottom, 40, 64);
 
   @include sp {
-    // Figma SP @390: font 20 / line-height 32 (= 1.6) / letter-spacing 12.8
+    // Figma SP @390: font 20 / line-height 32 (= 1.6)
     @include fluid(font-size, 20, 32);
     line-height: 1.6;
     // Figma SP (Group 1040): title block 下端 y=1027 → heading 上端 y=1095.6 = gap 68px
