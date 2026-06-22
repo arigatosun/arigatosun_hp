@@ -7,7 +7,8 @@ export const WELCOME = {
   overline: 'OFFICIAL CHARACTER',
   name: 'アリガトくん',
   nameEn: '(ARIGATOKUN)',
-  catchphrase: '“ありがとう”の気持ちから生まれた、小さな太陽。',
+  // SP のみ「から」の後で改行（PC は1行）。2セグメントで保持し、間に SP 専用改行を入れる。
+  catchphrase: ['“ありがとう”の気持ちから', '生まれた、小さな太陽。'],
   // 段落ごとに行配列で保持（Figma の明示的改行を <br> で再現する）。
   // 6行は段落間の空行を入れず連続表示する（1段落で保持）。
   intro: [

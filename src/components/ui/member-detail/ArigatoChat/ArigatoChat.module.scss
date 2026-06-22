@@ -90,8 +90,9 @@
   @include fluid(padding-top, 24, 40, 390, 1920);
 
   @include sp {
+    // Figma SP(4282:107267): キャラ・テキストとも左寄せ（中央寄せにしない）
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     @include fluid(gap, 20, 32, 390, 1200);
   }
 }
@@ -128,6 +129,11 @@
   letter-spacing: 0.13em;
   line-height: 1.5;
   color: var(--color-white);
+
+  // Figma SP: 15px
+  @include sp {
+    @include fluid(font-size, 15, 15, 390, 1200);
+  }
 }
 
 .welcomeName {
@@ -146,6 +152,12 @@
   @include fluid(font-size, 20, 28, 390, 1920);
   letter-spacing: 0.13em;
   line-height: 1.43;
+
+  // Figma SP: 20px / 字間 0.08em
+  @include sp {
+    @include fluid(font-size, 20, 20, 390, 1200);
+    letter-spacing: 0.08em;
+  }
 }
 
 .welcomeNameEn {
@@ -154,6 +166,11 @@
   @include fluid(font-size, 18, 26, 390, 1920);
   letter-spacing: 0.13em;
   line-height: 1.54;
+
+  // Figma SP: 20px
+  @include sp {
+    @include fluid(font-size, 20, 20, 390, 1200);
+  }
 }
 
 .welcomeDivider {
@@ -163,6 +180,11 @@
   // Figma: name → divider ≈ 48px / divider → catch ≈ 48px
   @include fluid(margin-block, 24, 48, 390, 1920);
   background-color: var(--color-white);
+
+  // Figma SP: 52px
+  @include sp {
+    @include fluid(width, 52, 52, 390, 1200);
+  }
 }
 
 .welcomeCatch {
@@ -173,6 +195,12 @@
   line-height: 1.6;
   color: var(--color-white);
   @include fluid(margin-bottom, 16, 24, 390, 1920);
+
+  // Figma SP: 18px / 字間 0.24em（自然折り返し位置を Figma に合わせる）
+  @include sp {
+    @include fluid(font-size, 18, 18, 390, 1200);
+    letter-spacing: 0.24em;
+  }
 }
 
 .welcomeIntro {
@@ -189,6 +217,30 @@
   letter-spacing: 0.24em;
   line-height: 2;
   color: var(--color-white);
+
+  // Figma SP: 14px / 字間 0.13em / 行高 28px（自然折り返し位置を Figma に合わせる）
+  @include sp {
+    @include fluid(font-size, 14, 14, 390, 1200);
+    letter-spacing: 0.13em;
+    line-height: 2;
+  }
+}
+
+// 改行の出し分け：
+//   .brPcOnly … PC のみ改行（SP では結合して自然折り返し）
+//   .brSpOnly … SP のみ改行（PC では1行）。block span で確実に改行させる。
+.brPcOnly {
+  @include sp {
+    display: none;
+  }
+}
+
+.brSpOnly {
+  display: none;
+
+  @include sp {
+    display: block;
+  }
 }
 
 // ── 会話開始後: チャットバブル ──

@@ -97,14 +97,25 @@ export default function ArigatoChat() {
                   <span className={styles.welcomeNameEn}>{WELCOME.nameEn}</span>
                 </h1>
                 <span className={styles.welcomeDivider} aria-hidden="true" />
-                <p className={styles.welcomeCatch}>{WELCOME.catchphrase}</p>
+                <p className={styles.welcomeCatch}>
+                  {WELCOME.catchphrase[0]}
+                  {/* SP のみ「から」の後で改行 */}
+                  <span className={styles.brSpOnly} aria-hidden="true" />
+                  {WELCOME.catchphrase[1]}
+                </p>
                 <div className={styles.welcomeIntro}>
                   {WELCOME.intro.map((paragraph, pi) => (
                     <p key={pi} className={styles.welcomeIntroParagraph}>
                       {paragraph.map((line, li) => (
                         <span key={li}>
                           {line}
-                          {li < paragraph.length - 1 && <br />}
+                          {li < paragraph.length - 1 &&
+                            // 2行目→3行目の改行は PC のみ（SP では結合して自然折り返し）
+                            (li === 1 ? (
+                              <br className={styles.brPcOnly} />
+                            ) : (
+                              <br />
+                            ))}
                         </span>
                       ))}
                     </p>
