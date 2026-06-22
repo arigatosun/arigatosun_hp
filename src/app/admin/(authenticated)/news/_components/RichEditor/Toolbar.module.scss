@@ -1,4 +1,6 @@
 .root {
+  // 本文が枠内スクロールしてもツールバーは縮まず常に上部に残す。
+  flex-shrink: 0;
   border-bottom: 1px solid var(--color-gray-200);
   background: var(--color-gray-100);
   padding: 8px 12px;
