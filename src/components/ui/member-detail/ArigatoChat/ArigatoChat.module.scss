@@ -33,6 +33,11 @@
   display: flex;
   flex-direction: column;
   @include fluid(padding-inline, 20, 40, 390, 1920);
+
+  // SP: 左右余白は Figma SP(390px) 基準の 40px に揃える（node 4282:107267）
+  @include sp {
+    @include fluid(padding-inline, 40, 40, 390, 1200);
+  }
 }
 
 // 会話/ヒーロー表示領域（縦方向スクロール）
@@ -359,6 +364,8 @@
   @include sp {
     flex-direction: column;
     @include fluid(gap, 4, 8, 390, 1200);
+    // SP: 左右余白を本文と同じ 40px に揃える（Figma node 4282:107267）
+    @include fluid(padding-inline, 40, 40, 390, 1200);
   }
 }
 
