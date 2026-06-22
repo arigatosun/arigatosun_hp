@@ -1,4 +1,9 @@
 .root {
+  // ツールバーを常に枠上部に固定し、本文だけを枠内でスクロールさせる。
+  // 長い本文を下まで編集してもツールバーが画面外に流れず使い続けられる。
+  display: flex;
+  flex-direction: column;
+  max-height: 70vh;
   border: 1px solid var(--color-gray-300);
   border-radius: 8px;
   overflow: hidden;
@@ -6,10 +11,14 @@
 }
 
 .editor {
-  min-height: 300px;
+  // flex 子で overflow を効かせるため min-height: 0 が必須。
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
 
   :global(.ProseMirror) {
     padding: 16px;
+    // 枠内スクロール時も本文の編集領域に十分な高さを確保する。
     min-height: 300px;
     line-height: 1.7;
     font-size: 14px;

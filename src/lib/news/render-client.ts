@@ -66,7 +66,7 @@ export function renderNewsContentToHtmlClient(content: Json): string {
 
   if (!Array.isArray(doc.content)) {
     try {
-      return addImageLoadingHints(generateHTML(doc as DocNode, EXTENSIONS));
+      return preserveEmptyParagraphs(addImageLoadingHints(generateHTML(doc as DocNode, EXTENSIONS)));
     } catch {
       return '';
     }
@@ -80,7 +80,7 @@ export function renderNewsContentToHtmlClient(content: Json): string {
     if (textBuf.length === 0) return;
     try {
       const html = generateHTML({ type: 'doc', content: textBuf } as DocNode, EXTENSIONS);
-      out.push(addImageLoadingHints(html));
+      out.push(preserveEmptyParagraphs(addImageLoadingHints(html)));
     } catch {
       // Skip invalid blocks so the preview keeps rendering.
     }
@@ -115,4 +115,13 @@ export function renderNewsContentToHtmlClient(content: Json): string {
 
 function addImageLoadingHints(html: string): string {
   return html.replace(/<img(?![^>]*\sloading=)/gi, '<img loading="lazy" decoding="async"');
+}
+
+/**
+ * 管理画面で Enter のみで作った空行は TipTap 上は空段落 {type:'paragraph'} となり、
+ * generateHTML が `<p></p>` を出力する。これは高さ 0 ＋ マージン相殺で消えてしまう
+ * （＝改行が反映されない）。`<br>` を入れて 1 行ぶんの空行として残す。
+ */
+function preserveEmptyParagraphs(html: string): string {
+  return html.replace(/<p><\/p>/g, '<p><br></p>');
 }
