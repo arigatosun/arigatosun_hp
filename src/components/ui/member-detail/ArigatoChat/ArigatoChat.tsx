@@ -7,7 +7,7 @@ import {
   WELCOME,
   INPUT_PLACEHOLDER,
   COPYRIGHT,
-  BOT_ANSWER,
+  matchAnswer,
 } from '@/data/arigato-chat';
 import styles from './ArigatoChat.module.scss';
 
@@ -63,7 +63,7 @@ export default function ArigatoChat() {
     setMessages((prev) => [
       ...prev,
       { id: idRef.current++, role: 'user', lines: [text] },
-      { id: idRef.current++, role: 'bot', lines: BOT_ANSWER },
+      { id: idRef.current++, role: 'bot', lines: matchAnswer(text) },
     ]);
     scrollToBottom();
   };
