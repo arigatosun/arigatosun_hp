@@ -66,6 +66,21 @@ const WORKS_DATA: readonly WorkItem[] = [
     imageWidth: 920,
     imageHeight: 520,
   },
+  // care-go（ケアGO 詳細ページ実装中）。client/categories/details は CREDIT 確定前の暫定値。
+  // 一覧での表示順は後で調整可能。カード画像は正確寸法 920×520 のプレースホルダ（実画像は後送り）。
+  {
+    id: 'care-go',
+    client: '株式会社YKT Innovation',
+    title: 'ケアGO | 介護業界特化AI SaaSの開発',
+    categories: ['AI / DEVELOPMENT'],
+    details: [
+      { label: 'AI / D：', value: '要件定義、AI SaaS開発、クラウド管理' },
+    ],
+    term: '',
+    image: '/images/works/care-go/card.png',
+    imageWidth: 920,
+    imageHeight: 520,
+  },
   // work-5 以降は今後の実装枠（プレースホルダ）。実データができ次第コメントを外す。
   /*
   {

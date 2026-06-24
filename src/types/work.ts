@@ -134,10 +134,21 @@ export type WorkContentBlock = { gap: number; spGap?: number } & (
       body: string[]; // 明示改行を保持
     }
   | {
+      type: 'pageTitle'; // banner 直下のページタイトル（ブランド名＋サブ見出し＋下線）
+      label: string; // ブランド名（例: ケアGO）
+      subtitle: string; // サブ見出し（例: 介護業界特化AI SaaSの開発）
+    }
+  | {
       type: 'textSection';
       level: 'main' | 'sub'; // main=■見出し(24px) / sub=＜＞見出し(20px)
       heading: string;
       body?: string[]; // 任意（見出しのみブロックを許可）
+      /**
+       * テキスト列の Figma 実測幅（px・1920 基準）。指定時のみ heading/body を
+       * この幅で max-width 固定し（左寄せ）、Figma の自然改行位置を一致させる。
+       * 省略時は従来どおり左右 padding 内の全幅（既存ページ不変）。
+       */
+      width?: number;
     }
   | {
       type: 'namingCard';
@@ -148,6 +159,8 @@ export type WorkContentBlock = { gap: number; spGap?: number } & (
   | {
       type: 'paragraph'; // 見出しなしの本文ブロック
       body: string[];
+      /** テキスト列の Figma 実測幅（px・1920 基準）。指定時のみ列を max-width 固定（左寄せ）。 */
+      width?: number;
     }
   | {
       type: 'showcaseCard'; // 色付きカード＋中央グラフィック
@@ -186,6 +199,11 @@ export type WorkContentBlock = { gap: number; spGap?: number } & (
       src: string;
       w: number; // カードの Figma 寸法（アスペクト比に使用）
       h: number;
+      /**
+       * PC カードの最大幅（Figma 実測 px・1920 基準）。指定時のみ左寄せで
+       * max-width 固定する（例: 740 幅の写真）。省略時は従来どおり全幅。
+       */
+      width?: number;
       /**
        * SP 専用のレイアウト切替。指定時、SP のみ src を使わずプレースホルダー描画。
        * - pairStacked:  上下 2 段 (白カード / 黒カード) のプレースホルダー。NEST メインロゴ用

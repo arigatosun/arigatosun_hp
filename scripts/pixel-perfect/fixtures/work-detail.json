@@ -1,0 +1,43 @@
+{
+  "section": "work-detail",
+  "viewportWidth": 1920,
+  "source": "figma-mcp",
+  "_comment": "ケアGO 詳細ページの Figma 正解値（node 4317:6417 配下を get_design_context で実測）。1920px capture（fluid max = Figma値）と突き合わせる。注: 同名クラス(.body/.heading)は先頭一致のみ照合される（compare の findElementByKey 仕様）。",
+  "elements": [
+    {
+      "key": "pageTitle",
+      "description": "banner直下タイトルブロック。左右padding x=200",
+      "expected": { "paddingLeft": 200, "paddingRight": 200 }
+    },
+    {
+      "key": "label",
+      "description": "ブランド名「ケアGO」 (Figma 4286:5628)",
+      "expected": { "fontSize": 28, "lineHeight": 56, "letterSpacing": 8.12 }
+    },
+    {
+      "key": "subtitle",
+      "description": "サブ見出し「介護業界特化AI SaaSの開発」 (Figma 4286:5629)",
+      "expected": { "fontSize": 24, "lineHeight": 56, "letterSpacing": 6.96, "marginTop": 8 }
+    },
+    {
+      "key": "divider",
+      "description": "短い下線 48x1 (Figma 4286:5631)",
+      "expected": { "width": 48, "height": 1, "marginTop": 40 }
+    },
+    {
+      "key": "body",
+      "description": "本文（先頭=イントロ paragraph 4286:7947 w1279 / 16・lh36・ls3.84）",
+      "expected": { "fontSize": 16, "lineHeight": 36, "letterSpacing": 3.84, "width": 1279 }
+    },
+    {
+      "key": "heading",
+      "description": "■見出し（先頭=■開発前の課題 4286:5640 / 24・lh56・ls6.96）",
+      "expected": { "fontSize": 24, "lineHeight": 56, "letterSpacing": 6.96 }
+    },
+    {
+      "key": "column",
+      "description": "textSection のテキスト列（先頭=■開発前の課題 w1304）",
+      "expected": { "width": 1304 }
+    }
+  ]
+}
