@@ -47,6 +47,7 @@ function Collage({ photos, frameW, frameH, variant, objectPosition }: CollagePro
                 src={photo.src}
                 alt=""
                 fill
+                quality={90}
                 sizes={`(max-width: 1023px) ${Math.min(100, widthVw + 20)}vw, ${widthVw}vw`}
                 className={styles.photoImg}
                 style={objectPosition ? { objectPosition } : undefined}

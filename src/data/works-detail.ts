@@ -1160,11 +1160,12 @@ const CARE_GO_DETAIL: WorkDetailContent = {
     {
       type: 'mockupCard',
       gap: 40,
+      // 写真本来の縦横比 3:2（1024×683）で全体表示し、トリミング/歪みを無くす。
       src: `${CARE_GO}/interview.jpg`,
-      w: 740,
-      h: 452,
+      w: 1024,
+      h: 683,
       width: 740,
-      sp: { variant: 'placeholder', spAspectRatio: '740 / 452' },
+      sp: { variant: 'placeholder', spAspectRatio: '1024 / 683' },
     },
     // インタビュー記事リンク（4286:5648 w1192）。写真下→=40。
     // NOTE: 外部記事URLが未確定のため現状はテキスト表示。href受領後に<a>へ差し替える。

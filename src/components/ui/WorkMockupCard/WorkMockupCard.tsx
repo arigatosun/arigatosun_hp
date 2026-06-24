@@ -134,6 +134,7 @@ export default function WorkMockupCard({
             src={src}
             alt=""
             fill
+            quality={90}
             sizes="(max-width: 1023px) 92vw, 1520px"
             className={styles.image}
           />
@@ -164,6 +165,7 @@ export default function WorkMockupCard({
               src={spImageSrc}
               alt=""
               fill
+              quality={90}
               sizes="100vw"
               className={styles.image}
             />
