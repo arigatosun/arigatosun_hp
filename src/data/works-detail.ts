@@ -938,30 +938,39 @@ const MENTE_DETAIL: WorkDetailContent = {
 // banner はページ専用ベイク画像「手間はAIに。あなたはケアに。ケアGO」(1920×760)。実画像は後送りのため
 // src 省略のグレープレースホルダで寸法だけ確保。本文12セクションは後続スライスで追加する。
 // 画像配置先のベースパス `/images/works/care-go` は本文スライスで const 化して使う。
+const CARE_GO = '/images/works/care-go';
+
 const CARE_GO_DETAIL: WorkDetailContent = {
   slug: 'care-go',
   pattern: 'detail',
   hero: {
-    // PC: Figma「Rectangle 214」実測 1920×760（濃紺パーティクル banner）。
+    // PC: Figma banner「arigatosun_web_works 1」(4286:6817) 実測 1920×820（濃紺パーティクル）。
     width: 1920,
-    height: 760,
+    height: 820,
     band: 'none',
     flatPhoto: true,
-    // 実 banner 画像は後送り。src 省略でグレープレースホルダ（寸法は正確）。
-    photos: [{ x: 0, y: 0, width: 1920, height: 760 }],
+    photos: [
+      { src: `${CARE_GO}/hero-banner.jpg`, x: 0, y: 0, width: 1920, height: 820 },
+    ],
     // SP 専用デザインなし → PC banner と同アスペクトで 390 幅に縮約（規則導出）。
     spOffsetTop: 42.5,
     spWidth: 390,
-    spHeight: Math.round((760 / 1920) * 390),
+    spHeight: Math.round((820 / 1920) * 390),
     spPhotos: [
-      { x: 0, y: 0, width: 390, height: Math.round((760 / 1920) * 390) },
+      {
+        src: `${CARE_GO}/hero-banner.jpg`,
+        x: 0,
+        y: 0,
+        width: 390,
+        height: Math.round((820 / 1920) * 390),
+      },
     ],
   },
   blocks: [
-    // banner 下端 → タイトル「ケアGO」上 = Figma 実測 240px。
+    // banner(820)下端964 → タイトル「ケアGO」上1144 = Figma 実測 180px。
     {
       type: 'pageTitle',
-      gap: 240,
+      gap: 180,
       label: 'ケアGO',
       subtitle: '介護業界特化AI SaaSの開発',
     },
@@ -1011,7 +1020,7 @@ const CARE_GO_DETAIL: WorkDetailContent = {
     {
       type: 'mockupCard',
       gap: 60,
-      src: '',
+      src: `${CARE_GO}/diagram-1.png`,
       w: 1520,
       h: 647,
       sp: { variant: 'placeholder', spAspectRatio: '1520 / 647' },
@@ -1032,7 +1041,7 @@ const CARE_GO_DETAIL: WorkDetailContent = {
     {
       type: 'mockupCard',
       gap: 60,
-      src: '',
+      src: `${CARE_GO}/diagram-2.png`,
       w: 1520,
       h: 757,
       sp: { variant: 'placeholder', spAspectRatio: '1520 / 757' },
@@ -1055,7 +1064,7 @@ const CARE_GO_DETAIL: WorkDetailContent = {
     {
       type: 'mockupCard',
       gap: 60,
-      src: '',
+      src: `${CARE_GO}/diagram-3.png`,
       w: 1520,
       h: 779,
       sp: { variant: 'placeholder', spAspectRatio: '1520 / 779' },
@@ -1076,7 +1085,7 @@ const CARE_GO_DETAIL: WorkDetailContent = {
     {
       type: 'mockupCard',
       gap: 60,
-      src: '',
+      src: `${CARE_GO}/diagram-4.png`,
       w: 1520,
       h: 773,
       sp: { variant: 'placeholder', spAspectRatio: '1520 / 773' },
@@ -1114,7 +1123,7 @@ const CARE_GO_DETAIL: WorkDetailContent = {
     {
       type: 'mockupCard',
       gap: 111,
-      src: '',
+      src: `${CARE_GO}/product-overview.png`,
       w: 1520,
       h: 1308,
       sp: { variant: 'placeholder', spAspectRatio: '1520 / 1308' },
@@ -1123,7 +1132,7 @@ const CARE_GO_DETAIL: WorkDetailContent = {
     {
       type: 'mockupCard',
       gap: 60,
-      src: '',
+      src: `${CARE_GO}/product-detail.png`,
       w: 1520,
       h: 969,
       sp: { variant: 'placeholder', spAspectRatio: '1520 / 969' },
@@ -1151,7 +1160,7 @@ const CARE_GO_DETAIL: WorkDetailContent = {
     {
       type: 'mockupCard',
       gap: 40,
-      src: '',
+      src: `${CARE_GO}/interview.jpg`,
       w: 740,
       h: 452,
       width: 740,
