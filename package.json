@@ -9,7 +9,8 @@
     "start": "next start",
     "lint": "eslint",
     "pp:capture": "tsx scripts/pixel-perfect/capture/run.ts",
-    "pp:compare": "tsx scripts/pixel-perfect/compare/run.ts"
+    "pp:compare": "tsx scripts/pixel-perfect/compare/run.ts",
+    "pp:lines": "tsx scripts/pixel-perfect/lines/run.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.100.1",
