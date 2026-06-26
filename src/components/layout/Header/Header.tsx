@@ -34,18 +34,18 @@ const leftNav: NavItem[] = [
   { href: '/works', label: 'WORKS' },
 ];
 
-const rightNav = [
-  { href: '/news', label: 'NEWS' },
-  { href: '/contact', label: 'CONTACT US' },
+// NEWS 配下のサブ項目。リンク先（カテゴリ別ページ/フィルタ）は内容フェーズで確定するため暫定アンカー。
+const newsDropdown: DropdownItem[] = [
+  { href: '/news#information', label: 'INFORMATION' },
+  { href: '/news#events', label: 'EVENTS' },
+  { href: '/news#column', label: 'COLUMN' },
 ];
 
-// SNS ドロップダウン配下（すべて外部リンク）。
-// hold:true はリンク先未確定（href='#'）。URL 確定後に href を差し替える。
-type SnsItem = { href: string; label: string; hold?: boolean };
-const snsDropdown: SnsItem[] = [
-  { href: 'https://www.instagram.com/arigatosun_inc', label: 'INSTAGRAM' },
-  { href: '#', label: 'YOUTUBE', hold: true },
-  { href: 'https://x.com/arigatosun_inc', label: 'X' },
+const rightNav: NavItem[] = [
+  // INTERVIEW: ページ未作成のため暫定 /interview（内容フェーズで実ページ作成）。
+  { href: '/interview', label: 'INTERVIEW' },
+  { href: '/news', label: 'NEWS', hasDropdown: true, dropdown: newsDropdown },
+  { href: '/contact', label: 'CONTACT' },
 ];
 
 // CREATIVE PROJECTS バナー（Footer と同じ構成 / SP メニュー用）
@@ -61,29 +61,6 @@ const creativeProjects = [
     href: 'https://aseave.co.jp/',
   },
 ];
-
-// 外部リンクを示す右上矢印アイコン（ヘッダー内で複数箇所に使うため共通化）。
-function ExternalIcon({ size = 12 }: { size?: number }) {
-  return (
-    <svg
-      className={styles.externalIcon}
-      width={size}
-      height={size}
-      viewBox="0 0 10 10"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-hidden="true"
-    >
-      <path
-        d="M8 5.5V8.5C8 8.76522 7.89464 9.01957 7.70711 9.20711C7.51957 9.39464 7.26522 9.5 7 9.5H1.5C1.23478 9.5 0.98043 9.39464 0.792893 9.20711C0.605357 9.01957 0.5 8.76522 0.5 8.5V3C0.5 2.73478 0.605357 2.48043 0.792893 2.29289C0.98043 2.10536 1.23478 2 1.5 2H4.5M6.5 0.5H9.5M9.5 0.5V3.5M9.5 0.5L4 6"
-        stroke="currentColor"
-        strokeWidth="1"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
 
 // SP アコーディオンの開閉トグル（丸囲み ⊕ / ⊖）。Figma 支給 SVG をそのまま使用。
 // 閉＝ ⊕（縦横バー）、開＝ ⊖（横バーのみ）。色は currentColor（常時黒・タップで赤くしない）。
@@ -170,41 +147,33 @@ export default function Header() {
           </li>
 
           {rightNav.map((item) => (
-            <li key={item.href}>
+            <li
+              key={item.href}
+              className={item.hasDropdown ? styles.hasDropdown : undefined}
+            >
               <Link
                 href={item.href}
                 className={`${styles.navLink} ${isActive(item.href) ? styles.active : ''}`}
               >
                 {item.label}
               </Link>
+              {item.hasDropdown && item.dropdown && (
+                <ul className={styles.dropdown}>
+                  {item.dropdown.map((sub) => (
+                    <li key={sub.href}>
+                      <Link href={sub.href} className={styles.dropdownLink}>
+                        <span className={styles.dropdownLinkLabel}>
+                          <span className={styles.dropdownLinkLabelText}>
+                            {sub.label}
+                          </span>
+                        </span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </li>
           ))}
-
-          {/* SNS: SERVICE / ABOUT と同じドロップダウン方式。トリガーは遷移先ページが
-              無いため非リンク（span）。配下は外部リンク3点（INSTAGRAM/YOUTUBE/X）。 */}
-          <li className={styles.hasDropdown}>
-            <span className={styles.navLink}>SNS</span>
-            <ul className={styles.dropdown}>
-              {snsDropdown.map((sns) => (
-                <li key={sns.label}>
-                  <a
-                    href={sns.href}
-                    className={styles.dropdownLink}
-                    {...(sns.hold
-                      ? {}
-                      : { target: '_blank', rel: 'noopener noreferrer' })}
-                  >
-                    <span className={styles.dropdownLinkLabel}>
-                      <span className={styles.dropdownLinkLabelText}>
-                        {sns.label}
-                      </span>
-                    </span>
-                    <ExternalIcon />
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </li>
         </ul>
 
         {/* モバイルメニューボタン */}
@@ -321,64 +290,59 @@ export default function Header() {
               WORKS
             </Link>
             <Link
-              href="/news"
-              className={`${styles.mobileNavLink} ${isActive('/news') ? styles.active : ''}`}
+              href="/interview"
+              className={`${styles.mobileNavLink} ${isActive('/interview') ? styles.active : ''}`}
               onClick={() => setIsMenuOpen(false)}
             >
-              NEWS
-            </Link>
-            <Link
-              href="/contact"
-              className={`${styles.mobileNavLink} ${isActive('/contact') ? styles.active : ''}`}
-              onClick={() => setIsMenuOpen(false)}
-            >
-              CONTACT US
+              INTERVIEW
             </Link>
 
-            {/* SNS: ABOUT / SERVICE と同じアコーディオン。遷移先ページが無いため
-                ラベルもタップで開閉（トグル）。配下は外部リンク3点。 */}
+            {/* NEWS: ABOUT / SERVICE と同じアコーディオン。ラベル＝/news へ遷移 / ▼＝サブ開閉。 */}
             <div className={styles.spAccordion}>
               <div className={styles.spAccordionHeader}>
-                <button
-                  type="button"
-                  className={styles.spAccordionLabel}
-                  onClick={() => toggleMenu('sns')}
-                  aria-expanded={!!openMenus.sns}
+                <Link
+                  href="/news"
+                  className={`${styles.spAccordionLabel} ${isActive('/news') ? styles.active : ''}`}
+                  onClick={() => setIsMenuOpen(false)}
                 >
-                  SNS
-                </button>
+                  NEWS
+                </Link>
                 <button
                   type="button"
                   className={styles.spAccordionToggle}
-                  onClick={() => toggleMenu('sns')}
-                  aria-expanded={!!openMenus.sns}
-                  aria-label={openMenus.sns ? 'SNS のサブメニューを閉じる' : 'SNS のサブメニューを開く'}
+                  onClick={() => toggleMenu('news')}
+                  aria-expanded={!!openMenus.news}
+                  aria-label={openMenus.news ? 'NEWS のサブメニューを閉じる' : 'NEWS のサブメニューを開く'}
                 >
-                  <AccordionToggleIcon open={!!openMenus.sns} />
+                  <AccordionToggleIcon open={!!openMenus.news} />
                 </button>
               </div>
               <div
-                className={`${styles.spAccordionPanel} ${openMenus.sns ? styles.spAccordionPanelOpen : ''}`}
+                className={`${styles.spAccordionPanel} ${openMenus.news ? styles.spAccordionPanelOpen : ''}`}
               >
                 <ul className={styles.serviceSubList}>
-                  {snsDropdown.map((sns) => (
-                    <li key={sns.label}>
-                      <a
-                        href={sns.href}
+                  {newsDropdown.map((sub) => (
+                    <li key={sub.href}>
+                      <Link
+                        href={sub.href}
                         className={styles.serviceSubLink}
                         onClick={() => setIsMenuOpen(false)}
-                        {...(sns.hold
-                          ? {}
-                          : { target: '_blank', rel: 'noopener noreferrer' })}
                       >
-                        ・{sns.label}
-                        <ExternalIcon size={13} />
-                      </a>
+                        ・{sub.label}
+                      </Link>
                     </li>
                   ))}
                 </ul>
               </div>
             </div>
+
+            <Link
+              href="/contact"
+              className={`${styles.mobileNavLink} ${isActive('/contact') ? styles.active : ''}`}
+              onClick={() => setIsMenuOpen(false)}
+            >
+              CONTACT
+            </Link>
           </nav>
 
           {/* CREATIVE PROJECTS バナー */}
