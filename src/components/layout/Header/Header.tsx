@@ -34,11 +34,12 @@ const leftNav: NavItem[] = [
   { href: '/works', label: 'WORKS' },
 ];
 
-// NEWS 配下のサブ項目。リンク先（カテゴリ別ページ/フィルタ）は内容フェーズで確定するため暫定アンカー。
+// NEWS 配下のサブ項目。/news ページ左サイドバーのカテゴリ絞り込み（?category=<slug>）に紐づく。
+// slug は Supabase categories テーブル準拠（information / events / column）。NEWS 本体は ALL = /news。
 const newsDropdown: DropdownItem[] = [
-  { href: '/news#information', label: 'INFORMATION' },
-  { href: '/news#events', label: 'EVENTS' },
-  { href: '/news#column', label: 'COLUMN' },
+  { href: '/news?category=information', label: 'INFORMATION' },
+  { href: '/news?category=events', label: 'EVENTS' },
+  { href: '/news?category=column', label: 'COLUMN' },
 ];
 
 const rightNav: NavItem[] = [
