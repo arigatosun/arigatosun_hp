@@ -990,7 +990,7 @@ const CARE_GO_DETAIL: WorkDetailContent = {
     // サービスURL（イントロ直下・1行空けて配置）。URL 部分は青リンク・別タブ。
     {
       type: 'linkLine',
-      gap: 36,
+      gap: 30,
       spGap: 20,
       width: 1279,
       label: 'URL→ ',
