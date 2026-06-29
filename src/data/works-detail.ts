@@ -990,8 +990,8 @@ const CARE_GO_DETAIL: WorkDetailContent = {
     // サービスURL（イントロ直下・1行空けて配置）。URL 部分は青リンク・別タブ。
     {
       type: 'linkLine',
-      gap: 14,
-      spGap: 10,
+      gap: 8,
+      spGap: 6,
       width: 1279,
       label: 'URL→ ',
       href: 'https://carego-ai.jp/',
