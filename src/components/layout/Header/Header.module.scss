@@ -73,6 +73,30 @@
   color: var(--color-primary);
 }
 
+// ── 赤背景ページ（/about/member/arigato-kun）専用バリアント ──
+// 透明ヘッダーの黒文字・赤ロゴは赤背景で見えないため、ナビ/ロゴ/ハンバーガーを白へ。
+.onDark {
+  .navLink,
+  .active {
+    color: var(--color-white);
+  }
+
+  .navLink:hover {
+    color: var(--color-white);
+    opacity: 0.7;
+  }
+
+  // 赤い mini-logo.svg を白へ反転
+  .logo img,
+  .mobileLogo img {
+    filter: brightness(0) invert(1);
+  }
+
+  .menuLine {
+    background-color: var(--color-white);
+  }
+}
+
 // ── SERVICE ドロップダウン ──
 .hasDropdown {
   position: relative;

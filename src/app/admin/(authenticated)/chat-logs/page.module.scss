@@ -1,0 +1,220 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-black);
+  margin: 0;
+}
+
+.lead {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.note {
+  background: var(--color-gray-100);
+  color: var(--color-text-secondary);
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 12px;
+  line-height: 1.7;
+  margin: 0;
+}
+
+.errorBanner {
+  background: var(--color-primary-rgba-25);
+  color: var(--color-primary-dark);
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  margin: 0;
+}
+
+// ── 話題別の件数サマリー ──
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 10px;
+}
+
+.summaryCard {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 16px;
+  background: var(--color-white);
+  border: 1px solid var(--color-gray-200);
+  border-radius: 10px;
+  text-decoration: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+
+  &:hover {
+    border-color: var(--color-primary);
+  }
+}
+
+.summaryCardActive {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 1px var(--color-primary);
+}
+
+// 未分類は FAQ 強化の手がかりなので強調する。
+.summaryCardAlert {
+  border-color: var(--color-primary);
+  background: var(--color-primary-rgba-25);
+}
+
+.summaryLabel {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.summaryCount {
+  font-size: 22px;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-black);
+}
+
+// ── フィルタータブ ──
+.tabs {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid var(--color-gray-200);
+}
+
+.tab {
+  padding: 10px 16px;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color 0.15s, border-color 0.15s;
+
+  &:hover {
+    color: var(--color-black);
+  }
+}
+
+.tabActive {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
+  font-weight: var(--font-weight-medium);
+}
+
+.tabCurrent {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+// ── テーブル ──
+.tableWrapper {
+  background: var(--color-white);
+  border: 1px solid var(--color-gray-200);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+
+  th {
+    text-align: left;
+    padding: 12px 16px;
+    background: var(--color-gray-100);
+    color: var(--color-text-secondary);
+    font-weight: var(--font-weight-medium);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--color-gray-200);
+  }
+
+  td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--color-gray-200);
+    vertical-align: middle;
+    color: var(--color-black);
+  }
+
+  tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  tbody tr:hover {
+    background: var(--color-gray-100);
+  }
+}
+
+.colDate {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+.colTopic {
+  white-space: nowrap;
+}
+
+.colQuestion {
+  color: var(--color-black);
+  line-height: 1.6;
+  word-break: break-word;
+}
+
+.topicBadge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  background: var(--color-gray-100);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-gray-200);
+}
+
+.topicBadgeAlert {
+  background: var(--color-primary-rgba-25);
+  color: var(--color-primary-dark);
+  border-color: var(--color-primary);
+}
+
+.limitNote {
+  padding: 12px 16px;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  margin: 0;
+  border-top: 1px solid var(--color-gray-200);
+}
+
+// ── 空状態 ──
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 48px 16px;
+  background: var(--color-white);
+  border: 1px solid var(--color-gray-200);
+  border-radius: 12px;
+}
+
+.emptyText {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  margin: 0;
+}

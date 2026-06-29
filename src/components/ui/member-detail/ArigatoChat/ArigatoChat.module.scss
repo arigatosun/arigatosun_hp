@@ -1,0 +1,470 @@
+@use '@/styles/fluid' as *;
+@use '@/styles/breakpoints' as *;
+
+// アリガトくんチャットページ（/about/member/arigato-kun）。
+// Figma 1920px フレーム基準（node 4059:5370 / 4059:5388）。
+// 全画面の赤テクスチャ背景に、中央 1000px の会話カラム + 入力欄 + 注意書き + コピーライト。
+
+.root {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  min-height: 100dvh;
+  overflow: hidden;
+  // Header(position: fixed) のオフセット。サイト共通の 80px に合わせる。
+  padding-top: 80px;
+  color: var(--color-white);
+  background-color: var(--color-primary);
+  background-image: url('/images/sections/arigato-chat/bg.webp');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+// 全体の外枠。会話カラム(1000px)よりヒーローの方が広い(約1186px)ため、
+// 外枠は広めに取り、会話/入力欄/注意書きを 1000px に内側で絞る。
+.stage {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  max-width: 1340px; // ヒーロー(キャラ386 + gap100 + 本文最長行≈734 ≈ 1220) + 左右ガター
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  @include fluid(padding-inline, 20, 40, 390, 1920);
+
+  // SP: 左右余白は Figma SP(390px) 基準の 40px に揃える（node 4282:107267）
+  @include sp {
+    @include fluid(padding-inline, 40, 40, 390, 1200);
+  }
+}
+
+// 会話/ヒーロー表示領域（縦方向スクロール）
+.scrollArea {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+// 会話前: ヒーローを上寄せにし（scrollArea は伸ばさない）、
+// 入力欄をヒーロー本文の 88px 下に置く（Figma: intro末 y629 → 入力欄 y717）。
+.welcomeMode {
+  .scrollArea {
+    flex: 0 1 auto;
+  }
+
+  .inputBar {
+    @include fluid(margin-top, 44, 88, 390, 1920);
+  }
+}
+
+// 会話中: 固定ヘッダー下にバブルが潜り込む際、上端を赤グラデーションでフェードさせる。
+// グラデーション(z5)は前面コンテンツより上・ヘッダー(z-header=100)より下に重なる。
+.chatting::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  @include fluid(height, 130, 180, 390, 1920);
+  background: linear-gradient(
+    to bottom,
+    var(--color-primary) 0%,
+    var(--color-primary) 48%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: 5;
+}
+
+// ── 会話開始前: キャラクター紹介ヒーロー ──
+.welcome {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  @include fluid(gap, 32, 100, 390, 1920);
+  // 本文末 → 入力欄の余白(88px)は .welcomeMode .inputBar 側で持つため下padは0。
+  @include fluid(padding-top, 24, 40, 390, 1920);
+
+  @include sp {
+    // Figma SP(4282:107267): キャラ・テキストとも左寄せ（中央寄せにしない）
+    flex-direction: column;
+    align-items: flex-start;
+    @include fluid(gap, 20, 32, 390, 1200);
+  }
+}
+
+.welcomeChar {
+  flex-shrink: 0;
+  @include fluid(width, 200, 386, 390, 1920);
+
+  @include sp {
+    @include fluid(width, 180, 300, 390, 1200);
+  }
+}
+
+.welcomeCharImg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.welcomeText {
+  // PC: 本文の最長行（≈734px）を1行に収める固定キャップ。
+  // ボックス幅は中身（最長行）に追従し、横幅が足りない時のみ折り返す。
+  max-width: 780px;
+
+  @include sp {
+    max-width: 100%;
+  }
+}
+
+.welcomeOverline {
+  font-family: var(--font-en);
+  font-weight: var(--font-weight-regular);
+  @include fluid(font-size, 12, 16, 390, 1920);
+  letter-spacing: 0.13em;
+  line-height: 1.5;
+  color: var(--color-white);
+
+  // Figma SP: 15px
+  @include sp {
+    @include fluid(font-size, 15, 15, 390, 1200);
+  }
+}
+
+.welcomeName {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  // Figma: アリガトくん(x871) ↔ (ARIGATOKUN)(x1094) の間隔 ≈ 37px
+  @include fluid(gap, 16, 38, 390, 1920);
+  // Figma: overline → name の余白 16px
+  @include fluid(margin-top, 10, 16, 390, 1920);
+}
+
+.welcomeNameJp {
+  font-family: var(--font-primary);
+  font-weight: var(--font-weight-medium);
+  @include fluid(font-size, 20, 28, 390, 1920);
+  letter-spacing: 0.13em;
+  line-height: 1.43;
+
+  // Figma SP: 20px / 字間 0.08em
+  @include sp {
+    @include fluid(font-size, 20, 20, 390, 1200);
+    letter-spacing: 0.08em;
+  }
+}
+
+.welcomeNameEn {
+  font-family: var(--font-en);
+  font-weight: var(--font-weight-regular);
+  @include fluid(font-size, 18, 26, 390, 1920);
+  letter-spacing: 0.13em;
+  line-height: 1.54;
+
+  // Figma SP: 20px
+  @include sp {
+    @include fluid(font-size, 20, 20, 390, 1200);
+  }
+}
+
+.welcomeDivider {
+  display: block;
+  height: 1px;
+  @include fluid(width, 36, 52, 390, 1920);
+  // Figma: name → divider ≈ 48px / divider → catch ≈ 48px
+  @include fluid(margin-block, 24, 48, 390, 1920);
+  background-color: var(--color-white);
+
+  // Figma SP: 52px
+  @include sp {
+    @include fluid(width, 52, 52, 390, 1200);
+  }
+}
+
+.welcomeCatch {
+  font-family: var(--font-primary);
+  font-weight: var(--font-weight-medium);
+  @include fluid(font-size, 16, 20, 390, 1920);
+  letter-spacing: 0.13em;
+  line-height: 1.6;
+  color: var(--color-white);
+  @include fluid(margin-bottom, 16, 24, 390, 1920);
+
+  // Figma SP: 18px / 字間 0.24em（自然折り返し位置を Figma に合わせる）
+  @include sp {
+    @include fluid(font-size, 18, 18, 390, 1200);
+    letter-spacing: 0.24em;
+  }
+}
+
+.welcomeIntro {
+  display: flex;
+  flex-direction: column;
+  // 本文は1段落（6行連続・段落間の空行なし）。複数段落を持つ場合の保険として gap は最小に。
+  gap: 0;
+}
+
+.welcomeIntroParagraph {
+  font-family: var(--font-primary);
+  font-weight: var(--font-weight-medium);
+  @include fluid(font-size, 13, 16, 390, 1920);
+  letter-spacing: 0.24em;
+  line-height: 2;
+  color: var(--color-white);
+
+  // Figma SP: 14px / 字間 0.13em / 行高 28px（自然折り返し位置を Figma に合わせる）
+  @include sp {
+    @include fluid(font-size, 14, 14, 390, 1200);
+    letter-spacing: 0.13em;
+    line-height: 2;
+  }
+}
+
+// 改行の出し分け：
+//   .brPcOnly … PC のみ改行（SP では結合して自然折り返し）
+//   .brSpOnly … SP のみ改行（PC では1行）。block span で確実に改行させる。
+.brPcOnly {
+  @include sp {
+    display: none;
+  }
+}
+
+.brSpOnly {
+  display: none;
+
+  @include sp {
+    display: block;
+  }
+}
+
+// ── 会話開始後: チャットバブル ──
+.messages {
+  width: 100%;
+  max-width: 1000px; // Figma: 会話カラム 1000px
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  @include fluid(gap, 20, 40, 390, 1920);
+  @include fluid(padding-block, 16, 32, 390, 1920);
+}
+
+.rowUser {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.bubbleUser {
+  width: 100%;
+  @include fluid(max-width, 320, 616, 390, 1920);
+  background-color: var(--color-bg);
+  @include fluid(border-radius, 14, 20, 390, 1920);
+  @include fluid(padding-block, 8, 10, 390, 1920);
+  @include fluid(padding-inline, 20, 28, 390, 1920);
+  color: var(--color-black);
+}
+
+.rowBot {
+  display: flex;
+}
+
+.bubbleBot {
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  @include fluid(gap, 12, 16, 390, 1920);
+  background-color: var(--color-bg);
+  @include fluid(border-radius, 16, 24, 390, 1920);
+  @include fluid(padding-block, 16, 24, 390, 1920);
+  @include fluid(padding-left, 16, 28, 390, 1920);
+  @include fluid(padding-right, 20, 40, 390, 1920);
+  color: var(--color-black);
+}
+
+.botAvatar {
+  flex-shrink: 0;
+  align-self: flex-end;
+  @include fluid(width, 48, 77, 390, 1920);
+}
+
+.botAvatarImg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.bubbleBotText {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.bubbleLine {
+  @include fluid(font-size, 14, 16, 390, 1920);
+  line-height: 1.75;
+  letter-spacing: 0.04em;
+  opacity: 0.75; // Figma: バブル内テキストは不透明度75%
+}
+
+// 応答待ち（最初のトークン到着前）のタイピング表示。3点が順に明滅する。
+.typing {
+  display: inline-flex;
+  align-items: center;
+  @include fluid(gap, 4, 6, 390, 1920);
+  @include fluid(padding-block, 4, 6, 390, 1920);
+
+  span {
+    display: block;
+    @include fluid(width, 6, 8, 390, 1920);
+    @include fluid(height, 6, 8, 390, 1920);
+    border-radius: 50%;
+    background-color: var(--color-black);
+    opacity: 0.3;
+    animation: arigatoTyping 1.2s ease-in-out infinite;
+  }
+
+  span:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+
+  span:nth-child(3) {
+    animation-delay: 0.4s;
+  }
+}
+
+@keyframes arigatoTyping {
+  0%,
+  60%,
+  100% {
+    opacity: 0.3;
+    transform: translateY(0);
+  }
+  30% {
+    opacity: 0.75;
+    transform: translateY(-25%);
+  }
+}
+
+// ── 入力欄（Figma: 1000px / radius 50 / 高さ 52）──
+.inputBar {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 1000px; // Figma: 入力欄 1000px
+  margin-inline: auto;
+  background-color: var(--color-bg);
+  @include fluid(border-radius, 40, 50, 390, 1920);
+  @include fluid(height, 44, 52, 390, 1920);
+  @include fluid(padding-left, 20, 36, 390, 1920);
+  @include fluid(padding-right, 16, 24, 390, 1920);
+  @include fluid(gap, 8, 16, 390, 1920);
+  @include fluid(margin-top, 12, 20, 390, 1920);
+}
+
+.input {
+  flex: 1 1 auto;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  outline: none;
+  color: var(--color-black);
+  // 最小 16px で iOS の自動ズームを防ぐ
+  @include fluid(font-size, 16, 18, 390, 1920);
+  letter-spacing: 0.08em;
+  line-height: 1.78;
+
+  &::placeholder {
+    color: var(--color-text-secondary);
+    opacity: 0.75;
+  }
+}
+
+.sendButton {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--color-primary);
+  @include fluid(width, 20, 26, 390, 1920);
+  @include fluid(height, 20, 26, 390, 1920);
+  transition: opacity var(--transition-base);
+
+  svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  &:hover {
+    opacity: 0.7;
+  }
+
+  &:disabled {
+    cursor: default;
+    opacity: 0.35;
+  }
+}
+
+// ── 注意書き ──
+.disclaimer {
+  flex-shrink: 0;
+  width: 100%;
+  @include fluid(max-width, 520, 920, 390, 1920); // Figma: w891
+  margin-inline: auto;
+  text-align: center;
+  font-family: var(--font-primary);
+  font-weight: var(--font-weight-medium);
+  @include fluid(font-size, 10, 12, 390, 1920);
+  letter-spacing: 0.24em;
+  line-height: 1.83;
+  color: var(--color-white);
+  @include fluid(margin-top, 12, 18, 390, 1920);
+}
+
+.disclaimerLink {
+  color: inherit;
+  text-decoration: underline;
+  transition: opacity var(--transition-base);
+
+  &:hover {
+    opacity: 0.7;
+  }
+}
+
+// ── コピーライト行（root 直下・全幅中央）──
+.copyright {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  @include fluid(gap, 24, 60, 390, 1920);
+  @include fluid(margin-top, 16, 28, 390, 1920);
+  @include fluid(padding-bottom, 16, 24, 390, 1920);
+  @include fluid(padding-inline, 20, 40, 390, 1920);
+  font-family: var(--font-en);
+  font-weight: var(--font-weight-light);
+  @include fluid(font-size, 11, 14, 390, 1920);
+  letter-spacing: 0.13em;
+  line-height: 1.71;
+  color: var(--color-white);
+
+  @include sp {
+    flex-direction: column;
+    @include fluid(gap, 4, 8, 390, 1200);
+    // SP: 左右余白を本文と同じ 40px に揃える（Figma node 4282:107267）
+    @include fluid(padding-inline, 40, 40, 390, 1200);
+  }
+}
+
+.copyrightLeft {
+  opacity: 0.75;
+}

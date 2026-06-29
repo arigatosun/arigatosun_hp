@@ -23,6 +23,9 @@ export default function AdminHeader({ email }: AdminHeaderProps) {
           <Link href="/admin/categories" className={styles.navLink}>
             カテゴリー
           </Link>
+          <Link href="/admin/chat-logs" className={styles.navLink}>
+            チャットログ
+          </Link>
         </nav>
         <div className={styles.right}>
           <span className={styles.email} title={email}>
