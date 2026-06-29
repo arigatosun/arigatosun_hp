@@ -109,8 +109,18 @@
   flex-shrink: 0;
   @include fluid(width, 200, 386, 390, 1920);
 
+  // SP: キャラを全幅の不透明な赤い帯として上部に sticky 固定する。
+  // スクロールしてもキャラが左上に残り、本文は帯の下端（フェードではなく明確な境界）で
+  // 切れて出入りする（チャット画面上端のような区切り）。
   @include sp {
-    @include fluid(width, 180, 300, 390, 1200);
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    align-self: stretch; // 帯を全幅にして本文を覆い、下端で明確に切る
+    width: auto;
+    background-color: var(--color-primary);
+    // 帯の下端＝本文の切れ目。キャラ画像の下に少しだけ余白を取る。
+    @include fluid(padding-bottom, 12, 16, 320, 390);
   }
 }
 
@@ -118,6 +128,11 @@
   display: block;
   width: 100%;
   height: auto;
+
+  // SP: 帯は全幅だが画像は元サイズのまま左寄せにする。
+  @include sp {
+    @include fluid(width, 180, 300, 320, 390);
+  }
 }
 
 .welcomeText {
