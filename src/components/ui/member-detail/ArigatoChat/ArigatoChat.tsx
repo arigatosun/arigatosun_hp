@@ -143,35 +143,41 @@ export default function ArigatoChat() {
                 />
               </div>
               <div className={styles.welcomeText}>
-                <p className={styles.welcomeOverline}>{WELCOME.overline}</p>
-                <h1 className={styles.welcomeName}>
-                  <span className={styles.welcomeNameJp}>{WELCOME.name}</span>
-                  <span className={styles.welcomeNameEn}>{WELCOME.nameEn}</span>
-                </h1>
-                <span className={styles.welcomeDivider} aria-hidden="true" />
-                <p className={styles.welcomeCatch}>
-                  {WELCOME.catchphrase[0]}
-                  {/* SP のみ「から」の後で改行 */}
-                  <span className={styles.brSpOnly} aria-hidden="true" />
-                  {WELCOME.catchphrase[1]}
-                </p>
-                <div className={styles.welcomeIntro}>
-                  {WELCOME.intro.map((paragraph, pi) => (
-                    <p key={pi} className={styles.welcomeIntroParagraph}>
-                      {paragraph.map((line, li) => (
-                        <span key={li}>
-                          {line}
-                          {li < paragraph.length - 1 &&
-                            // 2行目→3行目の改行は PC のみ（SP では結合して自然折り返し）
-                            (li === 1 ? (
-                              <br className={styles.brPcOnly} />
-                            ) : (
-                              <br />
-                            ))}
-                        </span>
-                      ))}
-                    </p>
-                  ))}
+                {/* SP では「キャラ + ここ(head)」までを固定し、welcomeBody 以降をスクロールさせる */}
+                <div className={styles.welcomeHead}>
+                  <p className={styles.welcomeOverline}>{WELCOME.overline}</p>
+                  <h1 className={styles.welcomeName}>
+                    <span className={styles.welcomeNameJp}>{WELCOME.name}</span>
+                    <span className={styles.welcomeNameEn}>{WELCOME.nameEn}</span>
+                  </h1>
+                </div>
+                {/* SP ではこのブロックだけが独立してスクロールする（上端＝固定部との区切り） */}
+                <div className={styles.welcomeBody}>
+                  <span className={styles.welcomeDivider} aria-hidden="true" />
+                  <p className={styles.welcomeCatch}>
+                    {WELCOME.catchphrase[0]}
+                    {/* SP のみ「から」の後で改行 */}
+                    <span className={styles.brSpOnly} aria-hidden="true" />
+                    {WELCOME.catchphrase[1]}
+                  </p>
+                  <div className={styles.welcomeIntro}>
+                    {WELCOME.intro.map((paragraph, pi) => (
+                      <p key={pi} className={styles.welcomeIntroParagraph}>
+                        {paragraph.map((line, li) => (
+                          <span key={li}>
+                            {line}
+                            {li < paragraph.length - 1 &&
+                              // 2行目→3行目の改行は PC のみ（SP では結合して自然折り返し）
+                              (li === 1 ? (
+                                <br className={styles.brPcOnly} />
+                              ) : (
+                                <br />
+                              ))}
+                          </span>
+                        ))}
+                      </p>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
