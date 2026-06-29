@@ -120,6 +120,17 @@ export type WorkNamingRow = {
 };
 
 /**
+ * richText ブロックのインラインセグメント。
+ * - { text } 通常テキスト
+ * - { text, nowrap } 折り返さない（記事タイトル等を1行で保つ）
+ * - { text, href } リンク（http... は別タブ外部リンク / それ以外は内部 Link）
+ */
+export type WorkRichSegment =
+  | { text: string }
+  | { text: string; nowrap: true }
+  | { text: string; href: string };
+
+/**
  * 詳細ページの本文ブロック。順序入替可能な配列で持つ（block ベース構成）。
  * 今後 process / credit 等のブロック型を追加してユニオンを拡張する。
  */
@@ -168,6 +179,11 @@ export type WorkContentBlock = { gap: number; spGap?: number } & (
       href: string; // 遷移先 URL（別タブ）
       text: string; // リンク表示テキスト
       width?: number; // テキスト列の Figma 実測幅
+    }
+  | {
+      type: 'richText'; // 通常 / nowrap / リンク を混在できるインラインテキスト1ブロック
+      segments: WorkRichSegment[];
+      width?: number; // テキスト列の Figma 実測幅（省略時は全幅）
     }
   | {
       type: 'showcaseCard'; // 色付きカード＋中央グラフィック

@@ -1177,15 +1177,21 @@ const CARE_GO_DETAIL: WorkDetailContent = {
       width: 740,
       sp: { variant: 'placeholder', spAspectRatio: '740 / 452' },
     },
-    // インタビュー記事リンク（4286:5648 w1192）。写真下→=40。
-    // NOTE: 外部記事URLが未確定のため現状はテキスト表示。href受領後に<a>へ差し替える。
+    // インタビュー記事リンク（4286:5648）。写真下→=40。
+    // - 記事タイトル「…」は nowrap で1行保持（途中改行させない）。
+    // - 「こちら」を「これから追加するインタビュー」へのリンクに。リンク先は暫定 /interview
+    //   （実ページ/記事URL確定後に差し替え）。
+    // - 1行表示にするため width 制約は外し、本文全幅を使う。
     {
-      type: 'paragraph',
+      type: 'richText',
       gap: 40,
       spGap: 20,
-      width: 1192,
-      body: [
-        '株式会社YKT Innovation様のインタビュー記事「完成形が見えないからこそ、早く形にして試す」はこちらからご覧いただけます。',
+      segments: [
+        { text: '株式会社YKT Innovation様のインタビュー記事「' },
+        { text: '完成形が見えないからこそ、早く形にして試す', nowrap: true },
+        { text: '」は' },
+        { text: 'こちら', href: '/interview' },
+        { text: 'からご覧いただけます。' },
       ],
     },
     // 区切り線（Rectangle 4683）。リンク下→=201。

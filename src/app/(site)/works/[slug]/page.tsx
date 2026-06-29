@@ -10,6 +10,7 @@ import WorkTextSection from '@/components/ui/WorkTextSection';
 import WorkNamingCard from '@/components/ui/WorkNamingCard';
 import WorkParagraph from '@/components/ui/WorkParagraph';
 import WorkLinkLine from '@/components/ui/WorkLinkLine';
+import WorkRichText from '@/components/ui/WorkRichText';
 import WorkShowcaseCard from '@/components/ui/WorkShowcaseCard';
 import WorkImageGrid from '@/components/ui/WorkImageGrid';
 import WorkMockupCard from '@/components/ui/WorkMockupCard';
@@ -122,6 +123,8 @@ export default async function WorkDetailPage({ params }: PageParams) {
               width={block.width}
             />
           );
+        } else if (block.type === 'richText') {
+          node = <WorkRichText segments={block.segments} width={block.width} />;
         } else if (block.type === 'showcaseCard') {
           node = (
             <WorkShowcaseCard
