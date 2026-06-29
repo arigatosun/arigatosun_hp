@@ -43,6 +43,8 @@
 
 .image {
   object-fit: cover;
+  // Figma は object-bottom（下基準で上をトリミング）。中央基準だと頭が詰まり「縦伸び」に見えるため合わせる。
+  object-position: bottom;
 }
 
 // クライアント名（16 / lh24 / ls2.08 / グレー）。画像下 28。
