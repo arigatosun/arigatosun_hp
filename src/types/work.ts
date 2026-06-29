@@ -163,6 +163,13 @@ export type WorkContentBlock = { gap: number; spGap?: number } & (
       width?: number;
     }
   | {
+      type: 'linkLine'; // 「URL→ リンク」のような外部リンク1行
+      label?: string; // リンク前のラベル（例: "URL→ "）
+      href: string; // 遷移先 URL（別タブ）
+      text: string; // リンク表示テキスト
+      width?: number; // テキスト列の Figma 実測幅
+    }
+  | {
       type: 'showcaseCard'; // 色付きカード＋中央グラフィック
       background: 'white' | 'pink';
       card: { w: number; h: number }; // カードの Figma 寸法（アスペクト比に使用）

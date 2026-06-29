@@ -9,6 +9,7 @@ import WorkPageTitle from '@/components/ui/WorkPageTitle';
 import WorkTextSection from '@/components/ui/WorkTextSection';
 import WorkNamingCard from '@/components/ui/WorkNamingCard';
 import WorkParagraph from '@/components/ui/WorkParagraph';
+import WorkLinkLine from '@/components/ui/WorkLinkLine';
 import WorkShowcaseCard from '@/components/ui/WorkShowcaseCard';
 import WorkImageGrid from '@/components/ui/WorkImageGrid';
 import WorkMockupCard from '@/components/ui/WorkMockupCard';
@@ -112,6 +113,15 @@ export default async function WorkDetailPage({ params }: PageParams) {
           node = <WorkNamingCard rows={block.rows} spImage={block.spImage} />;
         } else if (block.type === 'paragraph') {
           node = <WorkParagraph body={block.body} width={block.width} />;
+        } else if (block.type === 'linkLine') {
+          node = (
+            <WorkLinkLine
+              label={block.label}
+              href={block.href}
+              text={block.text}
+              width={block.width}
+            />
+          );
         } else if (block.type === 'showcaseCard') {
           node = (
             <WorkShowcaseCard

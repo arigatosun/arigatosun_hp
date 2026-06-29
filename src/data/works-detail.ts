@@ -987,6 +987,16 @@ const CARE_GO_DETAIL: WorkDetailContent = {
         'この記事では、ケアGOのサービスの魅力と、その裏側で弊社がクライアントの要望をどのように噛み砕き、AI SaaSとして業務に落とし込んでいったのかを紹介します。',
       ],
     },
+    // サービスURL（イントロ直下・1行空けて配置）。URL 部分は青リンク・別タブ。
+    {
+      type: 'linkLine',
+      gap: 36,
+      spGap: 20,
+      width: 1279,
+      label: 'URL→ ',
+      href: 'https://carego-ai.jp/',
+      text: 'https://carego-ai.jp/',
+    },
     // ■開発前の課題（Figma 4286:5639 / 見出し4286:5640 + 本文2段落4286:5641 w1304）。
     {
       type: 'textSection',
