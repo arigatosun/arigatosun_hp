@@ -41,6 +41,7 @@ export const privacySections: readonly PrivacySection[] = [
         '採用応募に関する情報',
         '当社Webサイトの閲覧履歴、アクセスログ、Cookie等の端末識別子',
         '広告の閲覧・クリック・コンバージョン等に関する情報',
+        'AIチャット（アリガトくん）にご入力いただいた内容',
         'その他、当社サービスの提供、連絡、確認、改善に必要な情報',
       ],
     },
@@ -122,7 +123,18 @@ export const privacySections: readonly PrivacySection[] = [
     },
   },
   {
-    heading: '8. 保有個人データの開示、訂正、利用停止等',
+    heading: '8. AIチャット（アリガトくん）について',
+    block: {
+      type: 'text',
+      paragraphs: [
+        '当社Webサイトでは、AI（大規模言語モデル）を用いたチャット機能「アリガトくん」を提供しています。ご入力いただいた内容は、回答を生成するため、当社が利用する外部のAIサービス事業者（米国Anthropic, PBC等、海外の事業者を含みます。）に送信され、各事業者のプライバシーポリシーその他の規約に基づき取り扱われます。',
+        '当社は、回答品質の向上、よくあるご質問の把握、サービス改善等のため、チャットにご入力いただいた質問内容を記録する場合があります。記録にあたっては、メールアドレス・電話番号・URL等を伏字化（マスキング）したうえで保存し、IPアドレスは保存しません。また、記録した内容は一定期間（90日）の経過後に自動的に削除し、閲覧は当社の権限を持つ担当者に限定します。',
+        'チャットには、機微な個人情報（健康状態、信条等）やご本人以外の第三者の個人情報を入力しないようお願いいたします。お見積り、ご依頼、採用その他の正式なお問い合わせについては、お問い合わせフォームよりご連絡ください。',
+      ],
+    },
+  },
+  {
+    heading: '9. 保有個人データの開示、訂正、利用停止等',
     block: {
       type: 'text',
       paragraphs: [
@@ -132,7 +144,7 @@ export const privacySections: readonly PrivacySection[] = [
     },
   },
   {
-    heading: '9. プライバシーポリシーの変更',
+    heading: '10. プライバシーポリシーの変更',
     block: {
       type: 'text',
       paragraphs: [
@@ -142,7 +154,7 @@ export const privacySections: readonly PrivacySection[] = [
     },
   },
   {
-    heading: '10. お問い合わせ窓口',
+    heading: '11. お問い合わせ窓口',
     block: {
       type: 'contact',
       lead: '本プライバシーポリシーに関するお問い合わせ、個人情報の取扱いに関するご相談、開示等の請求については、以下の窓口までご連絡ください。',
@@ -153,10 +165,10 @@ export const privacySections: readonly PrivacySection[] = [
     },
   },
   {
-    heading: '11. 制定日・改定日',
+    heading: '12. 制定日・改定日',
     block: {
       type: 'text',
-      paragraphs: ['制定日：2026年5月', '最終改定日：2026年5月'],
+      paragraphs: ['制定日：2026年5月', '最終改定日：2026年6月'],
     },
   },
 ];
