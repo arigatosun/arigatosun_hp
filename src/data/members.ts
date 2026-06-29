@@ -191,7 +191,7 @@ const allMembers: Member[] = [
     catchphrase: 'デザインで世界を変える。',
     description: '人が触れるものに、デザインは欠かせない。',
     // Figma 3467:94892 準拠
-    roleJp: '最高デザイン責任者 (CDO) / DESIGN DIRECTOR',
+    roleJp: '最高デザイン責任者 (CDO)',
     // SP は「、」で改行（PC は 1 行）
     quote: ['人が触れるものに、', 'デザインは欠かせない。'],
     // PC(3467:94892) と SP(3467:94859) で改行（段落区切り）が異なるため出し分け

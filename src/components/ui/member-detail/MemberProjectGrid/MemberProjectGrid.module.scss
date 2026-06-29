@@ -6,7 +6,8 @@
   margin: 0;
   @include fluid(margin-bottom, 12, 20, 390, 1920);
   color: var(--color-text-secondary);
-  font-family: var(--font-jp);
+  // 日本語は Noto フォールバックのまま、英語は mozaic で表示
+  font-family: var(--font-primary);
   font-weight: var(--font-weight-regular);
   @include fluid(font-size, 14, 16, 390, 1920);
   @include fluid(line-height, 22, 32, 390, 1920);
