@@ -97,6 +97,30 @@ export type Database = {
           },
         ]
       }
+      arigato_chat_logs: {
+        Row: {
+          char_count: number
+          created_at: string
+          id: string
+          question: string
+          topic: string
+        }
+        Insert: {
+          char_count: number
+          created_at?: string
+          id?: string
+          question: string
+          topic: string
+        }
+        Update: {
+          char_count?: number
+          created_at?: string
+          id?: string
+          question?: string
+          topic?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

@@ -11,7 +11,7 @@ export default async function AdminDashboardPage() {
   const supabase = await createClient();
   const nowIso = new Date().toISOString();
 
-  const [draftRes, publishedRes, scheduledRes, categoriesRes] = await Promise.all([
+  const [draftRes, publishedRes, scheduledRes, categoriesRes, chatLogsRes] = await Promise.all([
     supabase.from('news').select('*', { count: 'exact', head: true }).eq('status', 'draft'),
     supabase
       .from('news')
@@ -24,12 +24,14 @@ export default async function AdminDashboardPage() {
       .eq('status', 'published')
       .gt('published_at', nowIso),
     supabase.from('categories').select('*', { count: 'exact', head: true }),
+    supabase.from('arigato_chat_logs').select('*', { count: 'exact', head: true }),
   ]);
 
   const draftCount = draftRes.count ?? 0;
   const publishedCount = publishedRes.count ?? 0;
   const scheduledCount = scheduledRes.count ?? 0;
   const categoryCount = categoriesRes.count ?? 0;
+  const chatLogCount = chatLogsRes.count ?? 0;
 
   return (
     <div className={styles.root}>
@@ -52,6 +54,10 @@ export default async function AdminDashboardPage() {
         <Link href="/admin/categories" className={styles.card}>
           <span className={styles.cardLabel}>カテゴリー</span>
           <span className={styles.cardCount}>{categoryCount}</span>
+        </Link>
+        <Link href="/admin/chat-logs" className={styles.card}>
+          <span className={styles.cardLabel}>チャットログ</span>
+          <span className={styles.cardCount}>{chatLogCount}</span>
         </Link>
       </div>
 

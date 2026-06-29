@@ -37,7 +37,19 @@ export const COPYRIGHT = {
 // ※ まだ LLM 連携はしておらず、入力文のキーワードで話題を判定して定型回答を返す。
 //   将来 AI 連携（B）時は matchAnswer をサーバー応答（LLM）呼び出しに差し替えるだけでよい。
 //   keywords は小文字・部分一致で判定。具体的な話題を先に置き、汎用の「会社」を後ろに置く。
+// topic は質問ログの話題分類（classifyTopic）にも流用する。未分類は 'unknown'。
+export type FaqTopic =
+  | 'greeting'
+  | 'recruit'
+  | 'service'
+  | 'member'
+  | 'works'
+  | 'contact'
+  | 'character'
+  | 'company';
+
 export type FaqEntry = {
+  topic: FaqTopic;
   keywords: string[];
   answer: string[];
 };
@@ -45,6 +57,7 @@ export type FaqEntry = {
 export const FAQ: FaqEntry[] = [
   {
     // 挨拶
+    topic: 'greeting',
     keywords: ['こんにち', 'こんばん', 'おはよう', 'はじめまして', 'やあ', 'hello', 'hi', 'よろしく'],
     answer: [
       'こんにちは！アリガトくんだサン🌞',
@@ -54,6 +67,7 @@ export const FAQ: FaqEntry[] = [
   },
   {
     // 採用・求人
+    topic: 'recruit',
     keywords: ['採用', '求人', '応募', '募集', '働', '仕事', '転職', 'インターン', 'エントリー', 'キャリア', 'join', 'career', 'recruit'],
     answer: [
       '一緒に挑戦したい仲間、大かんげいサン！',
@@ -63,6 +77,7 @@ export const FAQ: FaqEntry[] = [
   },
   {
     // サービス・できること
+    topic: 'service',
     keywords: ['サービス', 'できること', '業務', 'ai開発', 'llm', 'デザイン', 'ブランディング', 'ロゴ', 'vi', 'ip', 'クリエイティブ', '制作', '開発', 'アプリ', 'webサイト', 'service'],
     answer: [
       'アリガトサンのサービスは、大きく3つあるサン！',
@@ -74,6 +89,7 @@ export const FAQ: FaqEntry[] = [
   },
   {
     // メンバー
+    topic: 'member',
     keywords: ['メンバー', '社員', 'スタッフ', 'チーム', '誰', 'だれ', '代表', '社長', 'ceo', 'cto', 'member', 'people'],
     answer: [
       'アリガトサンには、個性ゆたかな仲間がそろっているサン！',
@@ -83,6 +99,7 @@ export const FAQ: FaqEntry[] = [
   },
   {
     // 実績・事例
+    topic: 'works',
     keywords: ['実績', '事例', '作品', 'works', '制作物', 'ポートフォリオ', 'プロジェクト', '案件'],
     answer: [
       'アリガトサンの実績は、WORKS ページで見られるサン！',
@@ -92,6 +109,7 @@ export const FAQ: FaqEntry[] = [
   },
   {
     // 問い合わせ・相談
+    topic: 'contact',
     keywords: ['問い合わせ', '問合', '連絡', '相談', '依頼', '見積', 'コンタクト', 'メール', 'contact'],
     answer: [
       'ご相談・お問い合わせは、CONTACT ページからどうぞサン📩',
@@ -100,6 +118,7 @@ export const FAQ: FaqEntry[] = [
   },
   {
     // アリガトくん自身
+    topic: 'character',
     keywords: ['きみ', 'あなた', 'アリガトくん', '名前', '何者', 'なにもの', '自己紹介', 'マスコット', 'キャラ'],
     answer: [
       '僕はアリガトくん！アリガトサンのマスコットキャラクターサン🌞',
@@ -109,6 +128,7 @@ export const FAQ: FaqEntry[] = [
   },
   {
     // 会社・事業（汎用。最後に置く）
+    topic: 'company',
     keywords: ['会社', '事業', 'アリガトサン', 'どんな', '概要', '理念', 'ミッション', '何の', 'なんの', 'company', 'about'],
     answer: [
       '聞いてくれてうれしいサン！',
@@ -137,4 +157,33 @@ export function matchAnswer(input: string): string[] {
     }
   }
   return FALLBACK_ANSWER;
+}
+
+// 質問ログ用の話題分類。FAQ のキーワードを流用し、どれにも当たらなければ 'unknown'。
+// LLM を追加で叩かないため分類コストはゼロ。'unknown' は「Bot が想定していない質問」＝
+// FAQ 強化の手がかりになる。
+export type LogTopic = FaqTopic | 'unknown';
+
+export function classifyTopic(input: string): LogTopic {
+  const text = input.toLowerCase();
+  for (const entry of FAQ) {
+    if (entry.keywords.some((kw) => text.includes(kw.toLowerCase()))) {
+      return entry.topic;
+    }
+  }
+  return 'unknown';
+}
+
+// 質問ログ保存前の個人情報マスキング。
+// 構造的な PII（メール / 電話・長い数字列 / URL）を伏字化する。
+// 文章中の氏名までは完全には検出できないため、これは「リスク低減」であり「完全な匿名化」ではない。
+// 併せて IP 非保存・短期保持・管理画面のみ閲覧で多層的にリスクを下げる前提。
+export function maskPII(input: string): string {
+  return input
+    // メールアドレス
+    .replace(/[\w.+-]+@[\w-]+\.[\w.-]+/g, '[メール]')
+    // URL
+    .replace(/https?:\/\/[^\s]+/gi, '[URL]')
+    // 電話番号・長い数字列（区切り含む 9 桁以上）
+    .replace(/\d[\d\s().-]{7,}\d/g, '[番号]');
 }
