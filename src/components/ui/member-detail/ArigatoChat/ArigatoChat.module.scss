@@ -97,8 +97,11 @@
     flex-direction: column;
     align-items: flex-start;
     @include fluid(gap, 20, 32, 390, 1200);
-    // SP は従来の余白を維持（PC のみ拡大）
-    @include fluid(padding-top, 24, 40, 390, 1200);
+    // SP: ヘッダー下端 → OFFICIAL CHARACTER の「見た目の余白」を 62px にする。
+    // SPヘッダー実高さ ≈101px（=padding24 + ロゴ53 + padding24）と .root padding-top 80px の
+    // 21px 重なりを考慮し、見た目 62px = 62 + (101 - 80) ＝ padding-top 83px（390基準）。
+    // 320px でも見た目62pxになるよう min を 75 に逆算（320時ヘッダー≈93px）。
+    @include fluid(padding-top, 75, 83, 320, 390);
   }
 }
 
