@@ -86,14 +86,19 @@
   align-items: center;
   justify-content: center;
   @include fluid(gap, 32, 100, 390, 1920);
+  // ヘッダー下端 → OFFICIAL CHARACTER の「見た目の余白」を 110px にする。
+  // ヘッダー(position:fixed)実高さ ≈ 112px に対し .root の padding-top は 80px のため、
+  // 32px 分が重なる。見た目 110px = 110 + (112 - 80) ＝ padding-top 142px（1920基準）。
   // 本文末 → 入力欄の余白(88px)は .welcomeMode .inputBar 側で持つため下padは0。
-  @include fluid(padding-top, 24, 40, 390, 1920);
+  @include fluid(padding-top, 96, 142, 390, 1920);
 
   @include sp {
     // Figma SP(4282:107267): キャラ・テキストとも左寄せ（中央寄せにしない）
     flex-direction: column;
     align-items: flex-start;
     @include fluid(gap, 20, 32, 390, 1200);
+    // SP は従来の余白を維持（PC のみ拡大）
+    @include fluid(padding-top, 24, 40, 390, 1200);
   }
 }
 
