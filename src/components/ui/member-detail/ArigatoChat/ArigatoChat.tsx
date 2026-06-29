@@ -40,9 +40,16 @@ function SendIcon() {
   );
 }
 
+// 受け取ったテキストを段落配列（バブルの行）に整形する。空行は落とす。
+function toLines(text: string): string[] {
+  return text.split(/\n+/).map((l) => l.trim()).filter(Boolean);
+}
+
 export default function ArigatoChat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
+  // 応答ストリーミング中はフォームをロックして二重送信を防ぐ。
+  const [isStreaming, setIsStreaming] = useState(false);
   const idRef = useRef(0);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -55,17 +62,62 @@ export default function ArigatoChat() {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // 指定 id のメッセージの lines を更新する。
+  const setMessageLines = (id: number, lines: string[]) => {
+    setMessages((prev) => prev.map((m) => (m.id === id ? { ...m, lines } : m)));
+    scrollToBottom();
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const text = input.trim();
-    if (!text) return;
+    if (!text || isStreaming) return;
     setInput('');
-    setMessages((prev) => [
-      ...prev,
-      { id: idRef.current++, role: 'user', lines: [text] },
-      { id: idRef.current++, role: 'bot', lines: matchAnswer(text) },
-    ]);
+
+    const userMessage: Message = { id: idRef.current++, role: 'user', lines: [text] };
+    const botId = idRef.current++;
+    // ユーザー発話 + 空のボット応答（タイピング表示）を同時に追加する。
+    setMessages((prev) => [...prev, userMessage, { id: botId, role: 'bot', lines: [] }]);
     scrollToBottom();
+    setIsStreaming(true);
+
+    // サーバーへ渡す会話履歴（最新ユーザー発話を含む）。
+    const history = [...messages, userMessage].map((m) => ({
+      role: m.role,
+      text: m.lines.join('\n'),
+    }));
+
+    try {
+      const res = await fetch('/api/arigato-chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: history }),
+      });
+
+      // 非ストリーム（キー未設定/レート超過/エラー）は FAQ 定型文へフォールバック。
+      if (!res.ok || !res.body) {
+        setMessageLines(botId, matchAnswer(text));
+        return;
+      }
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let acc = '';
+      for (;;) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        acc += decoder.decode(value, { stream: true });
+        setMessageLines(botId, toLines(acc));
+      }
+      acc += decoder.decode();
+      const finalLines = toLines(acc);
+      // 何も返らなかった場合も FAQ にフォールバック。
+      setMessageLines(botId, finalLines.length > 0 ? finalLines : matchAnswer(text));
+    } catch {
+      setMessageLines(botId, matchAnswer(text));
+    } finally {
+      setIsStreaming(false);
+    }
   };
 
   return (
@@ -150,11 +202,19 @@ export default function ArigatoChat() {
                         />
                       </span>
                       <div className={styles.bubbleBotText}>
-                        {m.lines.map((line, i) => (
-                          <p key={i} className={styles.bubbleLine}>
-                            {line}
-                          </p>
-                        ))}
+                        {m.lines.length === 0 ? (
+                          <span className={styles.typing} aria-label="入力中">
+                            <span />
+                            <span />
+                            <span />
+                          </span>
+                        ) : (
+                          m.lines.map((line, i) => (
+                            <p key={i} className={styles.bubbleLine}>
+                              {line}
+                            </p>
+                          ))
+                        )}
                       </div>
                     </div>
                   </div>
@@ -172,8 +232,14 @@ export default function ArigatoChat() {
             placeholder={INPUT_PLACEHOLDER}
             className={styles.input}
             aria-label="メッセージを入力"
+            disabled={isStreaming}
           />
-          <button type="submit" className={styles.sendButton} aria-label="送信">
+          <button
+            type="submit"
+            className={styles.sendButton}
+            aria-label="送信"
+            disabled={isStreaming || input.trim() === ''}
+          >
             <SendIcon />
           </button>
         </form>
