@@ -30,13 +30,9 @@ export default function MemberSection({ variant = 'grid' }: MemberSectionProps) 
 
     const rotateX = ((y - centerY) / centerY) * -5;
     const rotateY = ((x - centerX) / centerX) * 5;
-    const glowX = (x / rect.width) * 100;
-    const glowY = (y / rect.height) * 100;
 
     card.style.setProperty('--rotate-x', `${rotateX}deg`);
     card.style.setProperty('--rotate-y', `${rotateY}deg`);
-    card.style.setProperty('--glow-x', `${glowX}%`);
-    card.style.setProperty('--glow-y', `${glowY}%`);
   }, []);
 
   const handleMouseEnter = useCallback((_e: React.MouseEvent<HTMLElement>, index: number) => {
@@ -51,8 +47,6 @@ export default function MemberSection({ variant = 'grid' }: MemberSectionProps) 
     card.classList.remove(styles.cardHovered);
     card.style.removeProperty('--rotate-x');
     card.style.removeProperty('--rotate-y');
-    card.style.removeProperty('--glow-x');
-    card.style.removeProperty('--glow-y');
   }, []);
 
   // カード1枚をレンダリングする共通関数
