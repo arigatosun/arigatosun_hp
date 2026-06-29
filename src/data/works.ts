@@ -66,8 +66,10 @@ const WORKS_DATA: readonly WorkItem[] = [
     imageWidth: 920,
     imageHeight: 520,
   },
-  // care-go（ケアGO）。一覧での表示順は後で調整可能。
-  // カード画像は専用サムネ未支給のため banner を流用（920×520 に object-cover でトリミング）。
+  // === ケアGO 詳細ページは公開保留中（他実装と同時公開するまで非表示）===
+  // この一覧エントリを有効化すると /works にカードが出て /works/care-go が開ける（404解除）。
+  // 詳細データ(works-detail.ts CARE_GO_DETAIL)・画像・コンポーネントは残置。公開時にコメントを外すだけ。
+  /*
   {
     id: 'care-go',
     client: '株式会社YKT Innovation',
@@ -81,6 +83,7 @@ const WORKS_DATA: readonly WorkItem[] = [
     imageWidth: 920,
     imageHeight: 520,
   },
+  */
   // work-5 以降は今後の実装枠（プレースホルダ）。実データができ次第コメントを外す。
   /*
   {
