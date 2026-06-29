@@ -125,10 +125,13 @@ export type WorkNamingRow = {
  * - { text, nowrap } 折り返さない（記事タイトル等を1行で保つ）
  * - { text, href } リンク（http... は別タブ外部リンク / それ以外は内部 Link）
  */
-export type WorkRichSegment =
-  | { text: string }
-  | { text: string; nowrap: true }
-  | { text: string; href: string };
+export type WorkRichSegment = {
+  text: string;
+  /** リンク（http... は別タブ外部 / それ以外は内部 Link）。nowrap と併用可。 */
+  href?: string;
+  /** 折り返さない（記事タイトル等を1行で保つ）。href と併用可。 */
+  nowrap?: boolean;
+};
 
 /**
  * 詳細ページの本文ブロック。順序入替可能な配列で持つ（block ベース構成）。

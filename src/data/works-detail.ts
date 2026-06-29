@@ -1178,9 +1178,8 @@ const CARE_GO_DETAIL: WorkDetailContent = {
       sp: { variant: 'placeholder', spAspectRatio: '740 / 452' },
     },
     // インタビュー記事リンク（4286:5648）。写真下→=40。
-    // - 記事タイトル「…」は nowrap で1行保持（途中改行させない）。
-    // - 「こちら」を「これから追加するインタビュー」へのリンクに。リンク先は暫定 /interview
-    //   （実ページ/記事URL確定後に差し替え）。
+    // - 記事タイトル「…」自体を「これから追加するインタビュー」へのリンクに（nowrap で1行保持）。
+    //   リンク先は暫定 /interview（実ページ/記事URL確定後に差し替え）。
     // - 1行表示にするため width 制約は外し、本文全幅を使う。
     {
       type: 'richText',
@@ -1188,10 +1187,12 @@ const CARE_GO_DETAIL: WorkDetailContent = {
       spGap: 20,
       segments: [
         { text: '株式会社YKT Innovation様のインタビュー記事「' },
-        { text: '完成形が見えないからこそ、早く形にして試す', nowrap: true },
-        { text: '」は' },
-        { text: 'こちら', href: '/interview' },
-        { text: 'からご覧いただけます。' },
+        {
+          text: '完成形が見えないからこそ、早く形にして試す',
+          nowrap: true,
+          href: '/interview',
+        },
+        { text: '」はこちらからご覧いただけます。' },
       ],
     },
     // 区切り線（Rectangle 4683）。リンク下→=201。

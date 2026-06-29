@@ -26,26 +26,29 @@ export default function WorkRichText({ segments, width }: WorkRichTextProps) {
         }
       >
         {segments.map((seg, i) => {
-          if ('href' in seg) {
-            // http(s) は外部リンク（別タブ）、それ以外は内部 Link。
+          if (seg.href) {
+            // http(s) は外部リンク（別タブ）、それ以外は内部 Link。nowrap 併用可。
             const external = /^https?:\/\//.test(seg.href);
+            const cls = seg.nowrap
+              ? `${styles.link} ${styles.nowrap}`
+              : styles.link;
             return external ? (
               <a
                 key={i}
                 href={seg.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={styles.link}
+                className={cls}
               >
                 {seg.text}
               </a>
             ) : (
-              <Link key={i} href={seg.href} className={styles.link}>
+              <Link key={i} href={seg.href} className={cls}>
                 {seg.text}
               </Link>
             );
           }
-          if ('nowrap' in seg) {
+          if (seg.nowrap) {
             return (
               <span key={i} className={styles.nowrap}>
                 {seg.text}
