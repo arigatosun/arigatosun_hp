@@ -129,11 +129,9 @@
   perspective: 800px;
   cursor: pointer;
 
-  // 3D tilt + リフトアップ用のCSS変数（デフォルト値）
+  // 3D tilt 用のCSS変数（デフォルト値）
   --rotate-x: 0deg;
   --rotate-y: 0deg;
-  --glow-x: 50%;
-  --glow-y: 50%;
 }
 
 // 未記入メンバー（詳細未完成）: クリック無効・ホバー演出なしの非反応カード。
@@ -157,30 +155,9 @@
   will-change: transform;
   transform-style: preserve-3d;
 
-  // ヒートマップグロー（擬似要素）
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(
-      circle at var(--glow-x) var(--glow-y),
-      var(--color-primary-rgba-25) 0%,
-      rgba(218, 39, 25, 0.08) 35%,
-      transparent 70%
-    );
-    opacity: 0;
-    transition: opacity 0.5s ease;
-    z-index: 2;
-    pointer-events: none;
-  }
-
   @include sp {
     transform: none;
     transition: none;
-
-    &::before {
-      display: none;
-    }
   }
 }
 
@@ -191,10 +168,6 @@
     box-shadow:
       0 12px 40px rgba(218, 39, 25, 0.08),
       0 4px 16px rgba(0, 0, 0, 0.06);
-
-    &::before {
-      opacity: 1;
-    }
   }
 
   // モノクロ → カラーへフェード
