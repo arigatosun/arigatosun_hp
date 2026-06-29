@@ -54,10 +54,22 @@
 .welcomeMode {
   .scrollArea {
     flex: 0 1 auto;
+
+    // SP: キャラ+名前を固定し welcomeBody だけ内部スクロールさせるため、
+    // 外側スクロールは止めて高さを満たす（flex チェーンの起点）。
+    @include sp {
+      flex: 1 1 auto;
+      overflow: hidden;
+    }
   }
 
   .inputBar {
     @include fluid(margin-top, 44, 88, 390, 1920);
+
+    // SP: scrollArea を満たすため、入力欄は満たした領域の直下に置く。
+    @include sp {
+      @include fluid(margin-top, 12, 16, 390, 1200);
+    }
   }
 }
 
@@ -96,6 +108,9 @@
     // Figma SP(4282:107267): キャラ・テキストとも左寄せ（中央寄せにしない）
     flex-direction: column;
     align-items: flex-start;
+    // 固定ゾーン（キャラ+名前）＋スクロールゾーン（welcomeBody）のため scrollArea を満たす
+    flex: 1 1 auto;
+    min-height: 0;
     @include fluid(gap, 20, 32, 390, 1200);
     // SP: ヘッダー下端 → OFFICIAL CHARACTER の「見た目の余白」を 62px にする。
     // SPヘッダー実高さ ≈101px（=padding24 + ロゴ53 + padding24）と .root padding-top 80px の
@@ -109,18 +124,8 @@
   flex-shrink: 0;
   @include fluid(width, 200, 386, 390, 1920);
 
-  // SP: キャラを全幅の不透明な赤い帯として上部に sticky 固定する。
-  // スクロールしてもキャラが左上に残り、本文は帯の下端（フェードではなく明確な境界）で
-  // 切れて出入りする（チャット画面上端のような区切り）。
   @include sp {
-    position: sticky;
-    top: 0;
-    z-index: 2;
-    align-self: stretch; // 帯を全幅にして本文を覆い、下端で明確に切る
-    width: auto;
-    background-color: var(--color-primary);
-    // 帯の下端＝本文の切れ目。キャラ画像の下に少しだけ余白を取る。
-    @include fluid(padding-bottom, 12, 16, 320, 390);
+    @include fluid(width, 180, 300, 390, 1200);
   }
 }
 
@@ -128,11 +133,6 @@
   display: block;
   width: 100%;
   height: auto;
-
-  // SP: 帯は全幅だが画像は元サイズのまま左寄せにする。
-  @include sp {
-    @include fluid(width, 180, 300, 320, 390);
-  }
 }
 
 .welcomeText {
@@ -142,6 +142,35 @@
 
   @include sp {
     max-width: 100%;
+    // SP: welcomeHead（固定）+ welcomeBody（スクロール）の縦チェーン
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+}
+
+// SP: キャラ直後の固定ゾーン（OFFICIAL CHARACTER / 名前）。PC では透明ラッパー。
+.welcomeHead {
+  display: contents;
+
+  @include sp {
+    display: block;
+    flex: 0 0 auto;
+  }
+}
+
+// SP: ここ（区切り線・キャッチ・本文）だけが独立スクロール。上端で本文が切れる
+// ＝固定部との「区切り」（背景は付けない・クリーンな境界）。PC では透明ラッパー。
+.welcomeBody {
+  display: contents;
+
+  @include sp {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
   }
 }
 
