@@ -362,6 +362,18 @@
   opacity: 0.75; // Figma: バブル内テキストは不透明度75%
 }
 
+// ボット応答内のページリンク（[表示テキスト](/path)）。ブランドレッド＋下線。
+.bubbleLink {
+  color: var(--color-primary);
+  text-decoration: underline;
+  font-weight: var(--font-weight-medium);
+  transition: opacity var(--transition-base);
+
+  &:hover {
+    opacity: 0.7;
+  }
+}
+
 // 応答待ち（最初のトークン到着前）のタイピング表示。3点が順に明滅する。
 .typing {
   display: inline-flex;

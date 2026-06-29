@@ -45,6 +45,49 @@ function toLines(text: string): string[] {
   return text.split(/\n+/).map((l) => l.trim()).filter(Boolean);
 }
 
+// ボット応答内のマークダウンを React ノードに変換する。
+//   [表示テキスト](/path) → 内部リンク（next/link） / 外部URLは別タブ
+//   **太字**            → <strong>
+// それ以外はそのままテキスト。
+function renderRich(line: string): React.ReactNode[] {
+  const nodes: React.ReactNode[] = [];
+  const pattern = /\[([^\]]+)\]\(([^)]+)\)|\*\*([^*]+)\*\*/g;
+  let lastIndex = 0;
+  let key = 0;
+  let match: RegExpExecArray | null;
+  while ((match = pattern.exec(line)) !== null) {
+    if (match.index > lastIndex) nodes.push(line.slice(lastIndex, match.index));
+    if (match[1] !== undefined) {
+      const text = match[1];
+      const url = match[2];
+      if (url.startsWith('/')) {
+        nodes.push(
+          <Link key={key++} href={url} className={styles.bubbleLink}>
+            {text}
+          </Link>,
+        );
+      } else {
+        nodes.push(
+          <a
+            key={key++}
+            href={url}
+            className={styles.bubbleLink}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {text}
+          </a>,
+        );
+      }
+    } else if (match[3] !== undefined) {
+      nodes.push(<strong key={key++}>{match[3]}</strong>);
+    }
+    lastIndex = pattern.lastIndex;
+  }
+  if (lastIndex < line.length) nodes.push(line.slice(lastIndex));
+  return nodes;
+}
+
 export default function ArigatoChat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
@@ -217,7 +260,7 @@ export default function ArigatoChat() {
                         ) : (
                           m.lines.map((line, i) => (
                             <p key={i} className={styles.bubbleLine}>
-                              {line}
+                              {renderRich(line)}
                             </p>
                           ))
                         )}
