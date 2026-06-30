@@ -6,6 +6,7 @@ import ParallaxMotifs from '@/components/ui/ParallaxMotifs';
 import ServiceSection from '@/components/ui/ServiceSection';
 import WorksSection from '@/components/ui/WorksSection';
 import NewsSection from '@/components/ui/NewsSection';
+import InterviewSection from '@/components/ui/InterviewSection';
 import LogoSlider from '@/components/ui/LogoSlider';
 import MessageSection from '@/components/ui/MessageSection';
 import GlobalCanvasLoader from '@/components/three/GlobalCanvasLoader';
@@ -156,6 +157,9 @@ export default async function Home() {
 
       {/* ── ワークスセクション ── */}
       <WorksSection works={works} />
+
+      {/* ── インタビューセクション ── */}
+      <InterviewSection />
 
       {/* ── ニュースセクション ── */}
       <NewsSection />

@@ -1,0 +1,41 @@
+// Figma フレーム 1920px 準拠
+@use '@/styles/fluid' as * with (
+  $fluid-max-viewport: 1920
+);
+@use '@/styles/breakpoints' as *;
+
+// 左右 x=200 / SP 20。上はヘッダー下からタイトルまで。
+.page {
+  @include fluid(padding-left, 20, 200, 390, 1920);
+  @include fluid(padding-right, 20, 200, 390, 1920);
+  // ヘッダー文字下端(79) → インタビュー文字上端 の距離を 157px に（= 79+157=236）。
+  @include fluid(padding-top, 120, 236, 390, 1920);
+  @include fluid(padding-bottom, 100, 240, 390, 1920);
+}
+
+// SectionTitle の wrapper margin を打ち消し。
+.title {
+  margin: 0;
+}
+
+// カード 3列（480 / 列gap40 / 行gap180 @1920）。SP は縦積み。タイトル→グリッド 48。
+.grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  @include fluid(column-gap, 24, 40);
+  @include fluid(row-gap, 64, 180);
+  @include fluid(margin-top, 32, 48);
+
+  @include sp {
+    grid-template-columns: 1fr;
+    @include fluid(row-gap, 40, 56);
+  }
+}
+
+// ページ送り（最終行 → 240px 下・中央）。WorksPagination 内部で中央寄せ＋ボタン描画。
+.pagination {
+  @include fluid(margin-top, 100, 240, 390, 1920);
+}

@@ -1,0 +1,36 @@
+// Figma フレーム 1920px 準拠
+@use '@/styles/fluid' as * with (
+  $fluid-max-viewport: 1920
+);
+@use '@/styles/breakpoints' as *;
+
+// NEWS セクションの直上。左右 x=200 / SP 20。上下はサイト共通のセクション間リズムに合わせる。
+.section {
+  @include fluid(padding-left, 20, 200, 390, 1920);
+  @include fluid(padding-right, 20, 200, 390, 1920);
+  @include fluid(padding-top, 60, 180, 390, 1920);
+  @include fluid(padding-bottom, 60, 120, 390, 1920);
+}
+
+// SectionTitle の wrapper margin を打ち消し（他セクション踏襲）。
+.title {
+  margin: 0;
+}
+
+// カード3列（480 / gap41 @1920）。SP は縦積み。
+.grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  @include fluid(gap, 24, 41);
+  @include fluid(margin-top, 32, 48); // タイトル → カード
+
+  @include sp {
+    grid-template-columns: 1fr;
+    @include fluid(gap, 40, 56);
+  }
+}
+
+// カードの中身（画像/会社名/見出し/本文）は共通 InterviewCard が持つ。

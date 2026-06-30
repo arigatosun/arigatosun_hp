@@ -1,0 +1,67 @@
+// Figma フレーム 1920px 準拠
+@use '@/styles/fluid' as * with (
+  $fluid-max-viewport: 1920
+);
+@use '@/styles/breakpoints' as *;
+
+.page {
+  @include fluid(padding-left, 20, 200, 390, 1920);
+  @include fluid(padding-right, 20, 200, 390, 1920);
+  @include fluid(padding-top, 120, 200, 390, 1920);
+  @include fluid(padding-bottom, 120, 280, 390, 1920);
+}
+
+// 一覧へ戻るリンク。
+.back {
+  display: inline-block;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  @include fluid(font-size, 13, 15);
+  @include fluid(letter-spacing, 1.5, 2);
+  @include fluid(margin-bottom, 28, 44);
+
+  &:hover {
+    color: var(--color-black);
+  }
+}
+
+// ヒーロー画像（カード比率 1.638・object-bottom）。
+.hero {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 480 / 293;
+  overflow: hidden;
+  @include fluid(margin-bottom, 24, 40);
+}
+
+.heroImage {
+  object-fit: cover;
+  object-position: bottom;
+}
+
+.client {
+  margin: 0;
+  color: var(--color-text-secondary);
+  @include fluid(font-size, 14, 16);
+  @include fluid(line-height, 22, 26);
+  @include fluid(letter-spacing, 1.6, 2.08);
+  @include fluid(margin-bottom, 12, 16);
+}
+
+.heading {
+  margin: 0;
+  color: var(--color-black);
+  font-weight: var(--font-weight-regular);
+  @include fluid(font-size, 22, 34);
+  @include fluid(line-height, 34, 52);
+  @include fluid(letter-spacing, 1.8, 2.4);
+}
+
+// 準備中の案内文。
+.note {
+  @include fluid(margin-top, 48, 88);
+  color: var(--color-text-secondary);
+  @include fluid(font-size, 14, 16);
+  @include fluid(line-height, 24, 30);
+  @include fluid(letter-spacing, 1.2, 1.6);
+}

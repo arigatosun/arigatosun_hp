@@ -1,0 +1,272 @@
+// Figma フレーム 1920px 準拠（node 4408:31664）。content幅1200・中央寄せ（左右padding 360@1920）。
+@use '@/styles/fluid' as * with (
+  $fluid-max-viewport: 1920
+);
+@use '@/styles/breakpoints' as *;
+
+.page {
+  @include fluid(padding-left, 20, 360, 390, 1920);
+  @include fluid(padding-right, 20, 360, 390, 1920);
+  @include fluid(padding-top, 100, 168, 390, 1920);
+  @include fluid(padding-bottom, 120, 200, 390, 1920);
+}
+
+// ── ヒーロー（1200×733・object-bottom）──
+.hero {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1200 / 733;
+  overflow: hidden;
+}
+.heroImg {
+  object-fit: cover;
+  object-position: bottom;
+}
+
+// ── ヒーロー下メタ ──
+.metaClient {
+  @include fluid(margin-top, 40, 60);
+  margin-bottom: 0;
+  color: var(--color-text-secondary);
+  font-family: var(--font-jp);
+  @include fluid(font-size, 14, 16);
+  @include fluid(line-height, 22, 24);
+  @include fluid(letter-spacing, 1.6, 2.08);
+}
+.metaHeading {
+  @include fluid(margin-top, 8, 10);
+  margin-bottom: 0;
+  color: var(--color-black);
+  font-family: var(--font-jp);
+  font-weight: var(--font-weight-regular);
+  @include fluid(font-size, 18, 22);
+  @include fluid(line-height, 30, 36);
+  @include fluid(letter-spacing, 1.6, 2.2);
+}
+.metaBody {
+  @include fluid(margin-top, 10, 14);
+  margin-bottom: 0;
+  color: var(--color-text-secondary);
+  font-family: var(--font-jp);
+  @include fluid(font-size, 13, 14);
+  @include fluid(line-height, 22, 24);
+  @include fluid(letter-spacing, 1.4, 1.82);
+}
+
+// ── 区切り線（1px #808080 / opacity 0.3）──
+.divider {
+  width: 100%;
+  height: 1px;
+  border: 0;
+  background: var(--color-text-secondary);
+  opacity: 0.3;
+  @include fluid(margin-top, 60, 100);
+  margin-bottom: 0;
+}
+
+// ── ■ セクション見出し（最大24px = Figma同寸）──
+// 長い見出しは1行で枠幅いっぱい（fill）。フォントは24を保ち、収まらない狭幅でのみ縮小。
+.heading {
+  @include fluid(margin-top, 72, 120); // 既定（回答/ノート→見出し）
+  margin-bottom: 0;
+  color: var(--color-black);
+  font-family: var(--font-jp);
+  font-weight: var(--font-weight-regular);
+  white-space: nowrap;
+  letter-spacing: 0.1em;
+  line-height: 2;
+  @include fluid(font-size, 17, 24, 1024, 1487);
+
+  @include sp {
+    white-space: normal;
+    line-height: 1.7;
+    letter-spacing: 0.08em;
+    @include fluid(font-size, 16, 20);
+  }
+}
+// 画像→見出し（個別に mt 指定が無いものは80。Q&A7/ケアGO実績は data の mt=120 で上書き）
+.image + .heading {
+  @include fluid(margin-top, 48, 80);
+}
+// 区切り線→見出し（Q&A1 は data の mt=120 で上書き）
+.divider + .heading {
+  @include fluid(margin-top, 60, 100);
+}
+
+// fill: 横幅いっぱいに両端揃え（長い見出し用）。フォント最大(24)のまま字間を自動配分。
+.headingFill {
+  white-space: normal;
+  text-align: justify;
+  text-align-last: justify;
+  letter-spacing: 0;
+
+  @include sp {
+    text-align-last: auto;
+    letter-spacing: 0.08em;
+  }
+}
+
+// ── プロジェクト概要（番号付き3項目）──
+.overview {
+  @include fluid(margin-top, 24, 40);
+}
+.overviewPoint + .overviewPoint {
+  @include fluid(margin-top, 28, 44);
+}
+
+// L2 ラベル（20px medium）共通：番号タイトル / プロフィールラベル / 質問
+.pointTitle,
+.profileLabel,
+.question {
+  margin: 0;
+  color: var(--color-black);
+  font-family: var(--font-jp);
+  font-weight: var(--font-weight-medium);
+  @include fluid(font-size, 16, 20);
+  @include fluid(line-height, 28, 34);
+  @include fluid(letter-spacing, 2.4, 3.2);
+}
+
+// 本文（14px）共通
+.pointDesc,
+.profileLine,
+.answerPara,
+.note {
+  margin: 0;
+  color: var(--color-black);
+  font-family: var(--font-jp);
+  @include fluid(font-size, 13, 14);
+  @include fluid(line-height, 26, 30);
+  // 字間は Figma の改行(行数)に一致するよう 1.4 に。1.82 だとブラウザの折り返しが Figma より1行増える。
+  @include fluid(letter-spacing, 1.2, 1.4);
+}
+
+// tightLast 指定の段落：広幅(1600px〜)で1行に収める（フォントを少し縮小）。狭幅は通常折り返し。
+.oneLine {
+  white-space: nowrap;
+  text-wrap: nowrap;
+  letter-spacing: 0.13em;
+  @include fluid(font-size, 11.5, 13.5, 1600, 1920);
+
+  @media (max-width: 1599px) {
+    white-space: normal;
+    text-wrap: balance;
+    @include fluid(font-size, 13, 14);
+  }
+}
+
+.pointDesc {
+  @include fluid(margin-top, 6, 8);
+}
+
+// ── プロフィール（GUEST SPEAKER / INTERVIEWER）──
+.profile {
+  @include fluid(margin-top, 60, 100);
+}
+.profile + .profile {
+  @include fluid(margin-top, 24, 40);
+}
+.profileLine {
+  @include fluid(margin-top, 6, 8);
+}
+
+// ── 質問（ー...）──
+.question {
+  @include fluid(margin-top, 48, 80); // 回答→次の質問
+}
+.heading + .question {
+  @include fluid(margin-top, 28, 48); // 見出し→最初の質問
+}
+
+// ── 回答（岡田様）/ 髙橋）──
+.answer {
+  @include fluid(margin-top, 14, 18);
+}
+.answer + .answer {
+  @include fluid(margin-top, 16, 20);
+}
+.speaker,
+.bold {
+  font-weight: var(--font-weight-bold);
+}
+
+// ── 補足ノート（→...）──
+.note {
+  @include fluid(margin-top, 28, 44);
+}
+.image + .note {
+  @include fluid(margin-top, 16, 20);
+}
+
+// ── 写真 / 図版（1200幅）──
+.image {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  @include fluid(margin-top, 72, 120); // 既定（回答→画像）。works-15/17・photo-bottom は data の mt で上書き
+}
+.image + .image {
+  @include fluid(margin-top, 24, 40);
+}
+.heading + .image {
+  @include fluid(margin-top, 24, 40);
+}
+.img {
+  object-fit: cover;
+}
+.imgBottom {
+  object-fit: cover;
+  object-position: bottom;
+}
+
+// ── ケアGO実績リンク文 ──
+.workLink {
+  @include fluid(margin-top, 24, 40);
+  margin-bottom: 0;
+  font-family: var(--font-jp);
+  @include fluid(font-size, 14, 16);
+  @include fluid(line-height, 30, 36);
+  @include fluid(letter-spacing, 2.4, 3.84);
+}
+.workLinkInner {
+  color: var(--color-black);
+  text-decoration: none;
+}
+.underline {
+  color: var(--color-link-blue);
+  text-decoration: underline;
+  text-underline-position: from-font;
+}
+.workLinkInner:hover .underline {
+  opacity: 0.7;
+}
+
+// ── BACK TO LIST ボタン ──
+.backWrap {
+  display: flex;
+  justify-content: center;
+  @include fluid(margin-top, 160, 240);
+}
+.back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  @include fluid(width, 300, 380);
+  @include fluid(height, 56, 64);
+  border: 1px solid var(--color-black);
+  border-radius: 9999px;
+  color: var(--color-black);
+  text-decoration: none;
+  font-family: var(--font-en);
+  font-weight: var(--font-weight-light);
+  @include fluid(font-size, 16, 20);
+  @include fluid(letter-spacing, 2.08, 2.6);
+  transition:
+    color var(--transition-base),
+    background-color var(--transition-base);
+
+  &:hover {
+    background: var(--color-black);
+    color: var(--color-white);
+  }
+}
