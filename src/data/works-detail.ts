@@ -1162,11 +1162,11 @@ const CARE_GO_DETAIL: WorkDetailContent = {
       src: `${CARE_GO}/interview.jpg`,
       w: 740,
       h: 452,
-      width: 740,    },
+      width: 740,
+    },
     // インタビュー記事リンク（4286:5648）。写真下→=40。
-    // - 記事タイトル「…」自体を「これから追加するインタビュー」へのリンクに（nowrap で1行保持）。
-    //   リンク先は暫定 /interview（実ページ/記事URL確定後に差し替え）。
-    // - 1行表示にするため width 制約は外し、本文全幅を使う。
+    // - 記事タイトル「…」自体をインタビュー詳細記事へのリンクに（PCのみ nowrap で1行保持・SPは折り返し）。
+    //   リンク先は /interview/ykt-innovation（YKT Innovation のインタビュー詳細）。
     {
       type: 'richText',
       gap: 40,
@@ -1176,7 +1176,7 @@ const CARE_GO_DETAIL: WorkDetailContent = {
         {
           text: '完成形が見えないからこそ、早く形にして試す',
           nowrap: true,
-          href: '/interview',
+          href: '/interview/ykt-innovation',
         },
         { text: '」はこちらからご覧いただけます。' },
       ],
