@@ -83,12 +83,15 @@ function Block({ block }: { block: IvBlock }) {
     case 'answer':
       return (
         <div className={styles.answer}>
-          {block.paragraphs.map((para, i) => (
-            <p key={i} className={styles.answerPara}>
-              {i === 0 && <b className={styles.speaker}>{block.speaker}）</b>}
-              <Rich para={para} />
-            </p>
-          ))}
+          {block.paragraphs.map((para, i) => {
+            const tight = block.tightLast && i === block.paragraphs.length - 1;
+            return (
+              <p key={i} className={`${styles.answerPara}${tight ? ` ${styles.oneLine}` : ''}`}>
+                {i === 0 && <b className={styles.speaker}>{block.speaker}）</b>}
+                <Rich para={para} />
+              </p>
+            );
+          })}
         </div>
       );
 

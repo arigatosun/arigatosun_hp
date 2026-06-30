@@ -16,8 +16,8 @@ export type IvBlock =
   | { type: 'profile'; label: string; lines: IvPara[] }
   // ー... 質問（20px medium）。
   | { type: 'question'; text: string }
-  // 回答（岡田様）/ 髙橋）+ 段落）。
-  | { type: 'answer'; speaker: string; paragraphs: IvPara[] }
+  // 回答（岡田様）/ 髙橋）+ 段落）。tightLast=最後の段落を広幅で1行に収める（少し縮小）。
+  | { type: 'answer'; speaker: string; paragraphs: IvPara[]; tightLast?: boolean }
   // →... 補足ノート（14px）。
   | { type: 'note'; text: string }
   // 写真 / 図版。mt=上余白の個別指定(px@1920)。
@@ -137,6 +137,7 @@ const YKT_INNOVATION: InterviewDetail = {
     {
       type: 'answer',
       speaker: '岡田様',
+      tightLast: true,
       paragraphs: [
         [{ t: '自社の課題解決としても必要でしたが、同時に「これは売れるな」という感覚もありました。自分たちがあったら嬉しいし、訪問介護を伸ばすうえでも必要なシステムです。さらに、ケアGOをきっかけに同業の方と話す機会も増えました。業務改善だけではなく、認知や採用にもつながる。そこが相性の良さだと思っています。' }],
         [{ t: 'ケアGOは、単なる社内効率化ツールではありません。自社の現場課題を解決しながら、同業他社との接点を作り、採用や認知にもつながる事業資産として育っていきました。' }],

@@ -142,6 +142,20 @@
   text-wrap: balance;
 }
 
+// tightLast 指定の段落：広幅(1600px〜)で1行に収める（フォントを少し縮小）。狭幅は通常折り返し。
+.oneLine {
+  white-space: nowrap;
+  text-wrap: nowrap;
+  letter-spacing: 0.13em;
+  @include fluid(font-size, 11.5, 13.5, 1600, 1920);
+
+  @media (max-width: 1599px) {
+    white-space: normal;
+    text-wrap: balance;
+    @include fluid(font-size, 13, 14);
+  }
+}
+
 .pointDesc {
   @include fluid(margin-top, 6, 8);
 }
