@@ -137,9 +137,8 @@
   font-family: var(--font-jp);
   @include fluid(font-size, 13, 14);
   @include fluid(line-height, 26, 30);
-  @include fluid(letter-spacing, 1.4, 1.82);
-  // 各行を均等幅にして、行末に1〜数文字だけ孤立する短い最終行を作らない。
-  text-wrap: balance;
+  // 字間は Figma の改行(行数)に一致するよう 1.4 に。1.82 だとブラウザの折り返しが Figma より1行増える。
+  @include fluid(letter-spacing, 1.2, 1.4);
 }
 
 // tightLast 指定の段落：広幅(1600px〜)で1行に収める（フォントを少し縮小）。狭幅は通常折り返し。
