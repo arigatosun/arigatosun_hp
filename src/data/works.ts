@@ -16,8 +16,8 @@ const WORKS_DATA: readonly WorkItem[] = [
     ],
     term: '2025.11 ~ 2026.3',
     image: '/images/works/care-go/card.jpg',
-    imageWidth: 920,
-    imageHeight: 520,
+    imageWidth: 1520,
+    imageHeight: 800,
   },
   {
     id: 'mente',
