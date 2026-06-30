@@ -64,16 +64,25 @@
   margin-bottom: 0;
 }
 
-// ── ■ セクション見出し（24px）──
+// ── ■ セクション見出し（最大24px）──
+// 長い見出しを1行に収めるため、字間をem化＋フォントを枠幅に追従させる（PCは nowrap、SPは折り返し）。
 .heading {
   @include fluid(margin-top, 56, 96);
   margin-bottom: 0;
   color: var(--color-black);
   font-family: var(--font-jp);
   font-weight: var(--font-weight-regular);
-  @include fluid(font-size, 18, 24);
-  @include fluid(line-height, 34, 56);
-  @include fluid(letter-spacing, 3, 6.96);
+  white-space: nowrap;
+  letter-spacing: 0.2em;
+  line-height: 2;
+  @include fluid(font-size, 16, 24, 1024, 1920);
+
+  @include sp {
+    white-space: normal;
+    line-height: 1.7;
+    letter-spacing: 0.16em;
+    @include fluid(font-size, 16, 20);
+  }
 }
 
 // ── プロジェクト概要（番号付き3項目）──
