@@ -36,7 +36,7 @@ const IV = '/images/interview/ykt-innovation';
 
 const YKT_INNOVATION: InterviewDetail = {
   slug: 'ykt-innovation',
-  hero: { src: '/images/sections/interview/ykt.jpg', alt: '株式会社YKT Innovation インタビュー' },
+  hero: { src: `${IV}/hero.jpg`, alt: '株式会社YKT Innovation インタビュー' },
   meta: {
     client: '株式会社YKT Innovation 様',
     heading: '完成形が見えないからこそ、早く形にして試す',
@@ -190,7 +190,7 @@ const YKT_INNOVATION: InterviewDetail = {
 
     // ── Q&A 5 ──
     { type: 'heading', lines: ['■「10時間くらいかかっていたものが、1時間くらいになる」', '　 ー 社内検証と導入後の反応'] },
-    { type: 'question', text: 'ー 開発会社を探していた当時、アリガトサンを選んだ理由を教えてください。' },
+    { type: 'question', text: 'ー 社内で使ってみたとき、どのような反応がありましたか。' },
     {
       type: 'answer',
       speaker: '岡田様',
