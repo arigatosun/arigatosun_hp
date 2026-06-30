@@ -41,7 +41,7 @@ const YKT_INNOVATION: InterviewDetail = {
   hero: { src: `${IV}/hero.jpg`, alt: '株式会社YKT Innovation インタビュー' },
   meta: {
     client: '株式会社YKT Innovation 様',
-    heading: '完成形が見えないからこそ、早く形にして試す',
+    heading: '訪問介護の書類作成を10時間から1時間へ。AI SaaS「ケアGO」を現場起点で開発した舞台裏',
     body: '課題から生まれたアイデアが、現場で動く事業になるまで。弊社代表とリードエンジニアが岡田様を訪ねてお聞きした、開発の舞台裏。',
   },
   blocks: [
