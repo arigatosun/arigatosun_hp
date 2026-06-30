@@ -8,7 +8,8 @@
 .page {
   @include fluid(padding-left, 20, 200, 390, 1920);
   @include fluid(padding-right, 20, 200, 390, 1920);
-  @include fluid(padding-top, 120, 237, 390, 1920);
+  // ヘッダー文字下端(79) → インタビュー文字上端 の距離を 157px に（= 79+157=236）。
+  @include fluid(padding-top, 120, 236, 390, 1920);
   @include fluid(padding-bottom, 100, 240, 390, 1920);
 }
 
