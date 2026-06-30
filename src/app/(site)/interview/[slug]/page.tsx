@@ -4,6 +4,8 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { Fragment } from 'react';
 import { INTERVIEWS, getInterviewBySlug } from '@/data/interviews';
+import { getInterviewDetailBySlug } from '@/data/interview-detail';
+import InterviewArticle from './InterviewArticle';
 import styles from './page.module.scss';
 
 type Params = { params: Promise<{ slug: string }> };
@@ -27,6 +29,10 @@ export default async function InterviewDetailPage({ params }: Params) {
   const { slug } = await params;
   const item = getInterviewBySlug(slug);
   if (!item) notFound();
+
+  // 本文（記事）があれば本実装、無ければ準備中プレースホルダ。
+  const detail = getInterviewDetailBySlug(slug);
+  if (detail) return <InterviewArticle detail={detail} />;
 
   return (
     <article className={styles.page}>

@@ -1,0 +1,227 @@
+// Figma フレーム 1920px 準拠（node 4408:31664）。content幅1200・中央寄せ（左右padding 360@1920）。
+@use '@/styles/fluid' as * with (
+  $fluid-max-viewport: 1920
+);
+@use '@/styles/breakpoints' as *;
+
+.page {
+  @include fluid(padding-left, 20, 360, 390, 1920);
+  @include fluid(padding-right, 20, 360, 390, 1920);
+  @include fluid(padding-top, 100, 168, 390, 1920);
+  @include fluid(padding-bottom, 120, 200, 390, 1920);
+}
+
+// ── ヒーロー（1200×733・object-bottom）──
+.hero {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1200 / 733;
+  overflow: hidden;
+}
+.heroImg {
+  object-fit: cover;
+  object-position: bottom;
+}
+
+// ── ヒーロー下メタ ──
+.metaClient {
+  @include fluid(margin-top, 40, 60);
+  margin-bottom: 0;
+  color: var(--color-text-secondary);
+  font-family: var(--font-jp);
+  @include fluid(font-size, 14, 16);
+  @include fluid(line-height, 22, 24);
+  @include fluid(letter-spacing, 1.6, 2.08);
+}
+.metaHeading {
+  @include fluid(margin-top, 8, 10);
+  margin-bottom: 0;
+  color: var(--color-black);
+  font-family: var(--font-jp);
+  font-weight: var(--font-weight-regular);
+  @include fluid(font-size, 18, 22);
+  @include fluid(line-height, 30, 36);
+  @include fluid(letter-spacing, 1.6, 2.2);
+}
+.metaBody {
+  @include fluid(margin-top, 10, 14);
+  margin-bottom: 0;
+  color: var(--color-text-secondary);
+  font-family: var(--font-jp);
+  @include fluid(font-size, 13, 14);
+  @include fluid(line-height, 22, 24);
+  @include fluid(letter-spacing, 1.4, 1.82);
+}
+
+// ── 区切り線（1px #808080 / opacity 0.3）──
+.divider {
+  width: 100%;
+  height: 1px;
+  border: 0;
+  background: var(--color-text-secondary);
+  opacity: 0.3;
+  @include fluid(margin-top, 60, 100);
+  margin-bottom: 0;
+}
+
+// ── ■ セクション見出し（24px）──
+.heading {
+  @include fluid(margin-top, 56, 96);
+  margin-bottom: 0;
+  color: var(--color-black);
+  font-family: var(--font-jp);
+  font-weight: var(--font-weight-regular);
+  @include fluid(font-size, 18, 24);
+  @include fluid(line-height, 34, 56);
+  @include fluid(letter-spacing, 3, 6.96);
+}
+
+// ── プロジェクト概要（番号付き3項目）──
+.overview {
+  @include fluid(margin-top, 24, 40);
+}
+.overviewPoint + .overviewPoint {
+  @include fluid(margin-top, 28, 44);
+}
+
+// L2 ラベル（20px medium）共通：番号タイトル / プロフィールラベル / 質問
+.pointTitle,
+.profileLabel,
+.question {
+  margin: 0;
+  color: var(--color-black);
+  font-family: var(--font-jp);
+  font-weight: var(--font-weight-medium);
+  @include fluid(font-size, 16, 20);
+  @include fluid(line-height, 28, 34);
+  @include fluid(letter-spacing, 2.4, 3.2);
+}
+
+// 本文（14px）共通
+.pointDesc,
+.profileLine,
+.answerPara,
+.note {
+  margin: 0;
+  color: var(--color-black);
+  font-family: var(--font-jp);
+  @include fluid(font-size, 13, 14);
+  @include fluid(line-height, 26, 30);
+  @include fluid(letter-spacing, 1.4, 1.82);
+}
+
+.pointDesc {
+  @include fluid(margin-top, 6, 8);
+}
+
+// ── プロフィール（GUEST SPEAKER / INTERVIEWER）──
+.profile {
+  @include fluid(margin-top, 60, 100);
+}
+.profile + .profile {
+  @include fluid(margin-top, 48, 71);
+}
+.profileLine {
+  @include fluid(margin-top, 6, 8);
+}
+
+// ── 質問（ー...）──
+.question {
+  @include fluid(margin-top, 28, 44);
+}
+.heading + .question {
+  @include fluid(margin-top, 24, 40);
+}
+
+// ── 回答（岡田様）/ 髙橋）──
+.answer {
+  @include fluid(margin-top, 14, 18);
+}
+.answer + .answer {
+  @include fluid(margin-top, 16, 20);
+}
+.speaker,
+.bold {
+  font-weight: var(--font-weight-bold);
+}
+
+// ── 補足ノート（→...）──
+.note {
+  @include fluid(margin-top, 28, 44);
+}
+.image + .note {
+  @include fluid(margin-top, 16, 20);
+}
+
+// ── 写真 / 図版（1200幅）──
+.image {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  @include fluid(margin-top, 48, 80);
+}
+.image + .image {
+  @include fluid(margin-top, 24, 40);
+}
+.heading + .image {
+  @include fluid(margin-top, 24, 40);
+}
+.img {
+  object-fit: cover;
+}
+.imgBottom {
+  object-fit: cover;
+  object-position: bottom;
+}
+
+// ── ケアGO実績リンク文 ──
+.workLink {
+  @include fluid(margin-top, 40, 64);
+  margin-bottom: 0;
+  font-family: var(--font-jp);
+  @include fluid(font-size, 14, 16);
+  @include fluid(line-height, 30, 36);
+  @include fluid(letter-spacing, 2.4, 3.84);
+}
+.workLinkInner {
+  color: var(--color-black);
+  text-decoration: none;
+}
+.underline {
+  color: var(--color-link-blue);
+  text-decoration: underline;
+  text-underline-position: from-font;
+}
+.workLinkInner:hover .underline {
+  opacity: 0.7;
+}
+
+// ── BACK TO LIST ボタン ──
+.backWrap {
+  display: flex;
+  justify-content: center;
+  @include fluid(margin-top, 160, 240);
+}
+.back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  @include fluid(width, 300, 380);
+  @include fluid(height, 56, 64);
+  border: 1px solid var(--color-black);
+  border-radius: 9999px;
+  color: var(--color-black);
+  text-decoration: none;
+  font-family: var(--font-en);
+  font-weight: var(--font-weight-light);
+  @include fluid(font-size, 16, 20);
+  @include fluid(letter-spacing, 2.08, 2.6);
+  transition:
+    color var(--transition-base),
+    background-color var(--transition-base);
+
+  &:hover {
+    background: var(--color-black);
+    color: var(--color-white);
+  }
+}
