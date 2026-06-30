@@ -1,6 +1,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Fragment } from 'react';
+import ShareButtons from '@/components/ui/ShareButtons';
+import { SITE_URL } from '@/lib/site';
 import type { InterviewDetail, IvBlock, IvPara } from '@/data/interview-detail';
 import styles from './InterviewArticle.module.scss';
 
@@ -29,7 +31,12 @@ function Rich({ para }: { para: IvPara }) {
 function Block({ block }: { block: IvBlock }) {
   switch (block.type) {
     case 'divider':
-      return <hr className={styles.divider} />;
+      return (
+        <hr
+          className={styles.divider}
+          style={block.mt != null ? gapStyle(block.mt) : undefined}
+        />
+      );
 
     case 'heading':
       return (
@@ -189,6 +196,11 @@ export default function InterviewArticle({ detail }: { detail: InterviewDetail }
       <p className={styles.metaClient}>{detail.meta.client}</p>
       <h1 className={styles.metaHeading}>{detail.meta.heading}</h1>
       <p className={styles.metaBody}>{detail.meta.body}</p>
+
+      <ShareButtons
+        url={`${SITE_URL}/interview/${detail.slug}`}
+        title={detail.meta.heading}
+      />
 
       {detail.blocks.map((b, i) => (
         <Block key={i} block={b} />

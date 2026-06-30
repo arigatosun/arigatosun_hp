@@ -7,7 +7,7 @@ export type IvSeg = { t: string; b?: boolean };
 export type IvPara = IvSeg[];
 
 export type IvBlock =
-  | { type: 'divider' }
+  | { type: 'divider'; mt?: number }
   // ■... セクション見出し（24px）。lines = 明示改行。fill=横幅いっぱいに両端揃え。mt=上余白の個別指定(px@1920)。
   | { type: 'heading'; lines: string[]; fill?: boolean; mt?: number }
   // プロジェクト概要の3項目（番号付き見出し + 2行説明）。
@@ -45,7 +45,8 @@ const YKT_INNOVATION: InterviewDetail = {
     body: '課題から生まれたアイデアが、現場で動く事業になるまで。弊社代表とリードエンジニアが岡田様を訪ねてお聞きした、開発の舞台裏。',
   },
   blocks: [
-    { type: 'divider' },
+    // メタ下にシェアボタンが入るため、区切り線の上余白を詰める。
+    { type: 'divider', mt: 48 },
 
     { type: 'heading', lines: ['■プロジェクト概要'] },
     {
@@ -272,7 +273,8 @@ const NJ_MENTE: InterviewDetail = {
     body: '男性美容への想いから生まれたMen’teが、サービスとして動き出すまで。過去の開発で感じた不安を越え、構想を共に整理しながら形にしていった過程をお聞きしました。',
   },
   blocks: [
-    { type: 'divider' },
+    // メタ下にシェアボタンが入るため、区切り線の上余白を詰める。
+    { type: 'divider', mt: 48 },
 
     // ── Q&A（Q)質問 / A)回答・太字話者なし）。回答→次の質問=60、最初の質問は区切り下=120 ──
     { type: 'question', text: 'Q)Men’teを立ち上げようと思った背景を教えてください。', mt: 120 },
