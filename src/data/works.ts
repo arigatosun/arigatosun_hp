@@ -15,7 +15,7 @@ const WORKS_DATA: readonly WorkItem[] = [
       { label: 'AI / D：', value: '要件定義、AI SaaS開発、クラウド管理' },
     ],
     term: '2025.11 ~ 2026.3',
-    image: '/images/works/care-go/hero-banner.jpg',
+    image: '/images/works/care-go/card.jpg',
     imageWidth: 920,
     imageHeight: 520,
   },
