@@ -32,7 +32,8 @@
   color: var(--color-text-secondary);
   // 日本語は Noto フォールバックのまま、英語(CDO 等)は mozaic で表示
   font-family: var(--font-primary);
-  font-weight: var(--font-weight-regular);
+  // 一覧カード(.cardRole)と同じ細さに合わせる。
+  font-weight: var(--font-weight-light);
   @include fluid(font-size, 12, 14, 390, 1920);
   @include fluid(line-height, 18, 24, 390, 1920);
   @include fluid(letter-spacing, 0.91, 1.82, 390, 1920);
