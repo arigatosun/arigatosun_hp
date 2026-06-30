@@ -1,0 +1,85 @@
+@use '@/styles/fluid' as * with (
+  $fluid-max-viewport: 1920
+);
+@use '@/styles/breakpoints' as *;
+
+// ニュース詳細のシェアと同仕様（右寄せ・同アイコン・同サイズ）。
+.share {
+  @include fluid(margin-top, 20, 32, 390, 1920);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  @include fluid(gap, 12, 18, 390, 1920);
+
+  @include sp {
+    justify-content: center;
+    @include fluid(gap, 14, 18, 320, 390);
+  }
+}
+
+// アイコン基底（個別サイズは下の修飾クラス）。
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+}
+
+.iconX {
+  @include fluid(width, 17, 21, 390, 1920);
+  @include fluid(height, 18, 22, 390, 1920);
+
+  @include sp {
+    @include fluid(width, 18, 21, 320, 390);
+    @include fluid(height, 19, 22, 320, 390);
+  }
+}
+
+.iconFb {
+  @include fluid(width, 19, 24, 390, 1920);
+  @include fluid(height, 19, 24, 390, 1920);
+
+  @include sp {
+    @include fluid(width, 20, 24, 320, 390);
+    @include fluid(height, 20, 24, 320, 390);
+  }
+
+  // share-2.png は周囲に白余白を含むため ×1.518 拡大し iconRound で円形クリップ（ニュース同様）。
+  img {
+    transform: scale(1.518);
+  }
+}
+
+.iconLine {
+  @include fluid(width, 19, 24, 390, 1920);
+  @include fluid(height, 18, 23, 390, 1920);
+
+  @include sp {
+    @include fluid(width, 20, 24, 320, 390);
+    @include fluid(height, 19, 23, 320, 390);
+  }
+}
+
+.iconLink {
+  @include fluid(width, 16, 20, 390, 1920);
+  @include fluid(height, 16, 20, 390, 1920);
+
+  @include sp {
+    @include fluid(width, 17, 20, 320, 390);
+    @include fluid(height, 17, 20, 320, 390);
+  }
+}
+
+.iconRound {
+  border-radius: 50%;
+  overflow: hidden;
+
+  img {
+    object-fit: cover;
+  }
+}
