@@ -1,0 +1,60 @@
+// Figma フレーム 1920px 準拠
+@use '@/styles/fluid' as * with (
+  $fluid-max-viewport: 1920
+);
+@use '@/styles/breakpoints' as *;
+
+// インタビューカード（TOP セクション / 一覧ページ共通）。画像 480×293 + 会社名 + 見出し + 本文抜粋。
+.card {
+  display: block;
+}
+
+// カード画像 480×293（object-cover）。
+.imageWrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 480 / 293;
+  overflow: hidden;
+}
+
+.image {
+  object-fit: cover;
+  // Figma は object-bottom（下基準で上をトリミング）。中央基準だと頭が詰まり「縦伸び」に見えるため合わせる。
+  object-position: bottom;
+}
+
+// クライアント名（16 / lh24 / ls2.08 / グレー）。画像下 28。
+.client {
+  margin: 0;
+  @include fluid(margin-top, 18, 28);
+  color: var(--color-text-secondary);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  font-weight: var(--font-weight-regular);
+  @include fluid(font-size, 13, 16);
+  @include fluid(line-height, 20, 24);
+  @include fluid(letter-spacing, 1.4, 2.08);
+}
+
+// 見出し（22 / lh36 / ls2.2 / 黒）。会社名下 14。
+.heading {
+  margin: 0;
+  @include fluid(margin-top, 10, 14);
+  color: var(--color-black);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  font-weight: var(--font-weight-regular);
+  @include fluid(font-size, 17, 22);
+  @include fluid(line-height, 28, 36);
+  @include fluid(letter-spacing, 1.6, 2.2);
+}
+
+// 本文抜粋（14 / lh24 / ls1.82 / グレー）。見出し下 12。
+.body {
+  margin: 0;
+  @include fluid(margin-top, 10, 12);
+  color: var(--color-text-secondary);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  font-weight: var(--font-weight-regular);
+  @include fluid(font-size, 12.5, 14);
+  @include fluid(line-height, 20, 24);
+  @include fluid(letter-spacing, 1.4, 1.82);
+}

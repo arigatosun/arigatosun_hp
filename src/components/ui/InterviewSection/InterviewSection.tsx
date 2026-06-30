@@ -1,6 +1,5 @@
-import Image from 'next/image';
-import { Fragment } from 'react';
 import SectionTitle from '@/components/ui/SectionTitle';
+import InterviewCard from '@/components/ui/InterviewCard';
 import { INTERVIEWS } from '@/data/interviews';
 import styles from './InterviewSection.module.scss';
 
@@ -21,34 +20,8 @@ export default function InterviewSection() {
       />
       <ul className={styles.grid}>
         {items.map((item, i) => (
-          <li key={i} className={styles.card}>
-            <div className={styles.imageWrap}>
-              <Image
-                src={item.image}
-                alt={item.imageAlt ?? ''}
-                fill
-                quality={90}
-                sizes="(max-width: 1023px) 92vw, 480px"
-                className={styles.image}
-              />
-            </div>
-            <p className={styles.client}>{item.client}</p>
-            <h3 className={styles.heading}>
-              {item.heading.map((line, j) => (
-                <Fragment key={j}>
-                  {j > 0 && <br />}
-                  {line}
-                </Fragment>
-              ))}
-            </h3>
-            <p className={styles.body}>
-              {item.body.map((line, j) => (
-                <Fragment key={j}>
-                  {j > 0 && <br />}
-                  {line}
-                </Fragment>
-              ))}
-            </p>
+          <li key={i}>
+            <InterviewCard item={item} />
           </li>
         ))}
       </ul>
