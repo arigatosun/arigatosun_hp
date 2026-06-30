@@ -5,18 +5,19 @@ import type { WorkItem } from '@/types/work';
 
 // 静的データ（暫定ソース。WordPress 連携時に置き換え）
 const WORKS_DATA: readonly WorkItem[] = [
+  // ケアGO（YKT Innovation）: /works 一覧カード + /works/care-go 詳細ページを公開。
   {
-    id: 'choritz',
-    client: '頂立輸入代行会社',
-    title: '数値では測れない想いや姿勢を、ブランドの核心へ宿す。| 社名からVIまで、一気通貫のブランド構築',
-    categories: ['DESIGN / BRANDING'],
+    id: 'care-go',
+    client: '株式会社YKT Innovation',
+    title: 'ケアGO | 介護業界特化AI SaaSの開発',
+    categories: ['AI / DEVELOPMENT'],
     details: [
-      { label: 'D / B：', value: '会社名・タグライン・ロゴ・VI設計・WEB' },
+      { label: 'AI / D：', value: '要件定義、AI SaaS開発、クラウド管理' },
     ],
-    term: '2025.12 ~ 2026.4',
-    image: '/images/sections/works/choritz.png',
-    imageWidth: 920,
-    imageHeight: 518,
+    term: '2025.11 ~ 2026.3',
+    image: '/images/works/care-go/card.jpg',
+    imageWidth: 1520,
+    imageHeight: 800,
   },
   {
     id: 'mente',
@@ -66,19 +67,18 @@ const WORKS_DATA: readonly WorkItem[] = [
     imageWidth: 920,
     imageHeight: 520,
   },
-  // ケアGO（YKT Innovation）: /works 一覧カード + /works/care-go 詳細ページを公開。
   {
-    id: 'care-go',
-    client: '株式会社YKT Innovation',
-    title: 'ケアGO | 介護業界特化AI SaaSの開発',
-    categories: ['AI / DEVELOPMENT'],
+    id: 'choritz',
+    client: '頂立輸入代行会社',
+    title: '数値では測れない想いや姿勢を、ブランドの核心へ宿す。| 社名からVIまで、一気通貫のブランド構築',
+    categories: ['DESIGN / BRANDING'],
     details: [
-      { label: 'AI / D：', value: '要件定義、AI SaaS開発、クラウド管理' },
+      { label: 'D / B：', value: '会社名・タグライン・ロゴ・VI設計・WEB' },
     ],
-    term: '2025.11 ~ 2026.3',
-    image: '/images/works/care-go/hero-banner.jpg',
+    term: '2025.12 ~ 2026.4',
+    image: '/images/sections/works/choritz.png',
     imageWidth: 920,
-    imageHeight: 520,
+    imageHeight: 518,
   },
   // work-5 以降は今後の実装枠（プレースホルダ）。実データができ次第コメントを外す。
   /*
