@@ -138,6 +138,8 @@
   @include fluid(font-size, 13, 14);
   @include fluid(line-height, 26, 30);
   @include fluid(letter-spacing, 1.4, 1.82);
+  // 行末に1〜2文字だけ孤立するのを避ける（短い最終行を作らない）。
+  text-wrap: pretty;
 }
 
 .pointDesc {
