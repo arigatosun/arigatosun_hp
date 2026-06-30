@@ -64,8 +64,8 @@
   margin-bottom: 0;
 }
 
-// ── ■ セクション見出し（最大24px）──
-// 長い見出しを1行に収めるため、字間をem化＋フォントを枠幅に追従させる（PCは nowrap、SPは折り返し）。
+// ── ■ セクション見出し（最大24px = Figma同寸）──
+// 長い見出しは1行で枠幅いっぱい（fill）。フォントは24を保ち、収まらない狭幅でのみ縮小。
 .heading {
   @include fluid(margin-top, 56, 96);
   margin-bottom: 0;
@@ -73,15 +73,28 @@
   font-family: var(--font-jp);
   font-weight: var(--font-weight-regular);
   white-space: nowrap;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.1em;
   line-height: 2;
-  @include fluid(font-size, 16, 24, 1024, 1920);
+  @include fluid(font-size, 17, 24, 1024, 1487);
 
   @include sp {
     white-space: normal;
     line-height: 1.7;
-    letter-spacing: 0.16em;
+    letter-spacing: 0.08em;
     @include fluid(font-size, 16, 20);
+  }
+}
+
+// fill: 横幅いっぱいに両端揃え（長い見出し用）。フォント最大(24)のまま字間を自動配分。
+.headingFill {
+  white-space: normal;
+  text-align: justify;
+  text-align-last: justify;
+  letter-spacing: 0;
+
+  @include sp {
+    text-align-last: auto;
+    letter-spacing: 0.08em;
   }
 }
 

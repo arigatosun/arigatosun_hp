@@ -8,8 +8,8 @@ export type IvPara = IvSeg[];
 
 export type IvBlock =
   | { type: 'divider' }
-  // ■... セクション見出し（24px）。lines = 明示改行。
-  | { type: 'heading'; lines: string[] }
+  // ■... セクション見出し（24px）。lines = 明示改行。fill=横幅いっぱいに両端揃え。
+  | { type: 'heading'; lines: string[]; fill?: boolean }
   // プロジェクト概要の3項目（番号付き見出し + 2行説明）。
   | { type: 'overview'; points: { title: string; desc: string[] }[] }
   // ■GUEST SPEAKER / ■INTERVIEWER（ラベル20px + 本文行）。
@@ -97,7 +97,7 @@ const YKT_INNOVATION: InterviewDetail = {
     { type: 'divider' },
 
     // ── Q&A 1 ──
-    { type: 'heading', lines: ['■「本来はケアに出てほしい人が、書類に時間を取られている」ー ケアGO構想の背景'] },
+    { type: 'heading', lines: ['■「本来はケアに出てほしい人が、書類に時間を取られている」ー ケアGO構想の背景'], fill: true },
     { type: 'question', text: 'ー ケアGOを作る前、介護現場ではどの業務が一番大きな負担になっていましたか。' },
     {
       type: 'answer',

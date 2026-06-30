@@ -27,7 +27,7 @@ function Block({ block }: { block: IvBlock }) {
 
     case 'heading':
       return (
-        <h2 className={styles.heading}>
+        <h2 className={`${styles.heading}${block.fill ? ` ${styles.headingFill}` : ''}`}>
           {block.lines.map((l, i) => (
             <Fragment key={i}>
               {i > 0 && <br />}
