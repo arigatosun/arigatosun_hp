@@ -67,7 +67,7 @@
 // ── ■ セクション見出し（最大24px = Figma同寸）──
 // 長い見出しは1行で枠幅いっぱい（fill）。フォントは24を保ち、収まらない狭幅でのみ縮小。
 .heading {
-  @include fluid(margin-top, 56, 96);
+  @include fluid(margin-top, 72, 120); // 既定（回答/ノート→見出し）
   margin-bottom: 0;
   color: var(--color-black);
   font-family: var(--font-jp);
@@ -83,6 +83,14 @@
     letter-spacing: 0.08em;
     @include fluid(font-size, 16, 20);
   }
+}
+// 画像→見出し（個別に mt 指定が無いものは80。Q&A7/ケアGO実績は data の mt=120 で上書き）
+.image + .heading {
+  @include fluid(margin-top, 48, 80);
+}
+// 区切り線→見出し（Q&A1 は data の mt=120 で上書き）
+.divider + .heading {
+  @include fluid(margin-top, 60, 100);
 }
 
 // fill: 横幅いっぱいに両端揃え（長い見出し用）。フォント最大(24)のまま字間を自動配分。
@@ -141,7 +149,7 @@
   @include fluid(margin-top, 60, 100);
 }
 .profile + .profile {
-  @include fluid(margin-top, 48, 71);
+  @include fluid(margin-top, 24, 40);
 }
 .profileLine {
   @include fluid(margin-top, 6, 8);
@@ -149,10 +157,10 @@
 
 // ── 質問（ー...）──
 .question {
-  @include fluid(margin-top, 28, 44);
+  @include fluid(margin-top, 48, 80); // 回答→次の質問
 }
 .heading + .question {
-  @include fluid(margin-top, 24, 40);
+  @include fluid(margin-top, 28, 48); // 見出し→最初の質問
 }
 
 // ── 回答（岡田様）/ 髙橋）──
@@ -180,7 +188,7 @@
   position: relative;
   width: 100%;
   overflow: hidden;
-  @include fluid(margin-top, 48, 80);
+  @include fluid(margin-top, 72, 120); // 既定（回答→画像）。works-15/17・photo-bottom は data の mt で上書き
 }
 .image + .image {
   @include fluid(margin-top, 24, 40);
@@ -198,7 +206,7 @@
 
 // ── ケアGO実績リンク文 ──
 .workLink {
-  @include fluid(margin-top, 40, 64);
+  @include fluid(margin-top, 24, 40);
   margin-bottom: 0;
   font-family: var(--font-jp);
   @include fluid(font-size, 14, 16);

@@ -4,6 +4,12 @@ import { Fragment } from 'react';
 import type { InterviewDetail, IvBlock, IvPara } from '@/data/interview-detail';
 import styles from './InterviewArticle.module.scss';
 
+// 個別の上余白（mt: px@1920）を fluid に。SP は約0.6倍。
+function gapStyle(mt: number): React.CSSProperties {
+  const min = Math.round(mt * 0.6);
+  return { marginTop: `clamp(${min}px, ${(mt / 19.2).toFixed(3)}vw, ${mt}px)` };
+}
+
 function Rich({ para }: { para: IvPara }) {
   return (
     <>
@@ -27,7 +33,10 @@ function Block({ block }: { block: IvBlock }) {
 
     case 'heading':
       return (
-        <h2 className={`${styles.heading}${block.fill ? ` ${styles.headingFill}` : ''}`}>
+        <h2
+          className={`${styles.heading}${block.fill ? ` ${styles.headingFill}` : ''}`}
+          style={block.mt != null ? gapStyle(block.mt) : undefined}
+        >
           {block.lines.map((l, i) => (
             <Fragment key={i}>
               {i > 0 && <br />}
@@ -88,7 +97,13 @@ function Block({ block }: { block: IvBlock }) {
 
     case 'image':
       return (
-        <div className={styles.image} style={{ aspectRatio: `${block.w} / ${block.h}` }}>
+        <div
+          className={styles.image}
+          style={{
+            aspectRatio: `${block.w} / ${block.h}`,
+            ...(block.mt != null ? gapStyle(block.mt) : {}),
+          }}
+        >
           <Image
             src={block.src}
             alt={block.alt}

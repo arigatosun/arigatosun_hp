@@ -8,8 +8,8 @@ export type IvPara = IvSeg[];
 
 export type IvBlock =
   | { type: 'divider' }
-  // ■... セクション見出し（24px）。lines = 明示改行。fill=横幅いっぱいに両端揃え。
-  | { type: 'heading'; lines: string[]; fill?: boolean }
+  // ■... セクション見出し（24px）。lines = 明示改行。fill=横幅いっぱいに両端揃え。mt=上余白の個別指定(px@1920)。
+  | { type: 'heading'; lines: string[]; fill?: boolean; mt?: number }
   // プロジェクト概要の3項目（番号付き見出し + 2行説明）。
   | { type: 'overview'; points: { title: string; desc: string[] }[] }
   // ■GUEST SPEAKER / ■INTERVIEWER（ラベル20px + 本文行）。
@@ -20,8 +20,8 @@ export type IvBlock =
   | { type: 'answer'; speaker: string; paragraphs: IvPara[] }
   // →... 補足ノート（14px）。
   | { type: 'note'; text: string }
-  // 写真 / 図版。
-  | { type: 'image'; src: string; alt: string; w: number; h: number; pos?: 'bottom' }
+  // 写真 / 図版。mt=上余白の個別指定(px@1920)。
+  | { type: 'image'; src: string; alt: string; w: number; h: number; pos?: 'bottom'; mt?: number }
   // ケアGO実績へのリンク文。
   | { type: 'workLink' };
 
@@ -97,7 +97,7 @@ const YKT_INNOVATION: InterviewDetail = {
     { type: 'divider' },
 
     // ── Q&A 1 ──
-    { type: 'heading', lines: ['■「本来はケアに出てほしい人が、書類に時間を取られている」ー ケアGO構想の背景'], fill: true },
+    { type: 'heading', lines: ['■「本来はケアに出てほしい人が、書類に時間を取られている」ー ケアGO構想の背景'], fill: true, mt: 120 },
     { type: 'question', text: 'ー ケアGOを作る前、介護現場ではどの業務が一番大きな負担になっていましたか。' },
     {
       type: 'answer',
@@ -182,7 +182,7 @@ const YKT_INNOVATION: InterviewDetail = {
         [{ t: '要望をそのまま作るというより、システムを見ながら「こっちの方が使いやすいのでは」と噛み砕いて返してくれるところが強いです。こちらが思っていたものより良い形で返ってくることが多かった。100点以上を超えて返ってくる、思っていたより良いという感覚がありました。' }],
       ],
     },
-    { type: 'image', src: `${IV}/works-17.png`, alt: 'ケアGO 開発プロセス図', w: 1200, h: 765 },
+    { type: 'image', src: `${IV}/works-17.png`, alt: 'ケアGO 開発プロセス図', w: 1200, h: 765, mt: 60 },
     {
       type: 'note',
       text: '→完成形が曖昧な新規SaaS開発では、発注者がすべてを仕様書に落とし込めるわけではありません。現場の課題を汲み取り、実装可能な形に翻訳する力が、ケアGOの開発では大きな価値になりました。',
@@ -229,11 +229,11 @@ const YKT_INNOVATION: InterviewDetail = {
         [{ t: '処理ごとに、適したAIモデルを見ています。画像やPDFの読み取りはGeminiが強い。一方で、音声文字起こしにはWhisper、文章生成や整形にはGPTを使う場面があります。すべてを一つのAIモデルで処理するのではなく、用途ごとに選ぶ設計です。ケアGOのAI実装は、入力、AI処理、人間確認、出力の流れと、用途別モデル選定を合わせて見ると理解しやすくなります。' }],
       ],
     },
-    { type: 'image', src: `${IV}/works-15.png`, alt: 'AIモデル用途別の使い分け図', w: 1200, h: 610 },
+    { type: 'image', src: `${IV}/works-15.png`, alt: 'AIモデル用途別の使い分け図', w: 1200, h: 610, mt: 60 },
     { type: 'image', src: `${IV}/works-18.png`, alt: 'ケアGO AI処理フロー図', w: 1200, h: 615 },
 
     // ── Q&A 7 ──
-    { type: 'heading', lines: ['■「AIの会社って怖い」からこそ、不安を下げる進め方が必要'] },
+    { type: 'heading', lines: ['■「AIの会社って怖い」からこそ、不安を下げる進め方が必要'], mt: 120 },
     { type: 'question', text: 'ー AIやシステム開発を検討している企業に、アリガトサンをどう紹介しますか。' },
     {
       type: 'answer',
@@ -242,10 +242,10 @@ const YKT_INNOVATION: InterviewDetail = {
         [{ t: 'AIの会社は、相場が分かりにくくて怖いと思うんです。だからこそ、安心して相談できることが大事で、その点でアリガトサンさんは安心してお願いできる会社だと思います。ケアGOの開発でも、レスポンスが早くて、こちらのふわっとした要望にも「それなら、こういう機能で実装できますよ」と返してくれました。費用感を現実的に示してくれて、早く触れる形を出してくれて、曖昧な要望にも仮説を返してくれて、小回りよく改善してくれる。初めて相談する企業でも不安を下げられる、こういう進め方ができる会社なので、AIやシステム開発を考えているなら勧めたいですね。' }],
       ],
     },
-    { type: 'image', src: `${IV}/photo-bottom.jpg`, alt: 'インタビューの様子', w: 1200, h: 733, pos: 'bottom' },
+    { type: 'image', src: `${IV}/photo-bottom.jpg`, alt: 'インタビューの様子', w: 1200, h: 733, pos: 'bottom', mt: 80 },
 
     // ── ケアGO実績紹介 ──
-    { type: 'heading', lines: ['■ケアGOの実績紹介'] },
+    { type: 'heading', lines: ['■ケアGOの実績紹介'], mt: 120 },
     { type: 'image', src: `${IV}/banner.jpg`, alt: 'ケアGO 介護業界特化AI SaaSの開発', w: 1200, h: 513 },
     { type: 'workLink' },
   ],
