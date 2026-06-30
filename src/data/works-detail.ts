@@ -1032,9 +1032,7 @@ const CARE_GO_DETAIL: WorkDetailContent = {
       gap: 60,
       src: `${CARE_GO}/diagram-1.png`,
       w: 1520,
-      h: 647,
-      sp: { variant: 'placeholder', spAspectRatio: '1520 / 647' },
-    },
+      h: 647,    },
     // §5 ■AIに任せ切らず〜（Frame 627270: 見出し+本文2段落 + 図版1520×757）。
     {
       type: 'textSection',
@@ -1053,9 +1051,7 @@ const CARE_GO_DETAIL: WorkDetailContent = {
       gap: 60,
       src: `${CARE_GO}/diagram-2.png`,
       w: 1520,
-      h: 757,
-      sp: { variant: 'placeholder', spAspectRatio: '1520 / 757' },
-    },
+      h: 757,    },
     // §6 ■用途別〜（Frame 627271: 見出し+本文4段落 + 図版1520×779）。
     {
       type: 'textSection',
@@ -1076,9 +1072,7 @@ const CARE_GO_DETAIL: WorkDetailContent = {
       gap: 60,
       src: `${CARE_GO}/diagram-3.png`,
       w: 1520,
-      h: 779,
-      sp: { variant: 'placeholder', spAspectRatio: '1520 / 779' },
-    },
+      h: 779,    },
     // §7 ■アジャイル型開発〜（Frame 627272: 見出し+本文2段落 + 図版1520×773）。
     {
       type: 'textSection',
@@ -1097,9 +1091,7 @@ const CARE_GO_DETAIL: WorkDetailContent = {
       gap: 60,
       src: `${CARE_GO}/diagram-4.png`,
       w: 1520,
-      h: 773,
-      sp: { variant: 'placeholder', spAspectRatio: '1520 / 773' },
-    },
+      h: 773,    },
     // §8 ■実データ〜（Frame 627267: 見出し+本文3段落・図版なし）。
     {
       type: 'textSection',
@@ -1135,18 +1127,14 @@ const CARE_GO_DETAIL: WorkDetailContent = {
       gap: 111,
       src: `${CARE_GO}/product-overview.png`,
       w: 1520,
-      h: 1308,
-      sp: { variant: 'placeholder', spAspectRatio: '1520 / 1308' },
-    },
+      h: 1308,    },
     // 製品画像（__arigatosun_web_works-22 1 / 1520×969・画像後送り）。
     {
       type: 'mockupCard',
       gap: 60,
       src: `${CARE_GO}/product-detail.png`,
       w: 1520,
-      h: 969,
-      sp: { variant: 'placeholder', spAspectRatio: '1520 / 969' },
-    },
+      h: 969,    },
     // 締めパラグラフ（Frame 4286:7973 w1304・2段落）。
     {
       type: 'paragraph',
@@ -1175,12 +1163,10 @@ const CARE_GO_DETAIL: WorkDetailContent = {
       w: 740,
       h: 452,
       width: 740,
-      sp: { variant: 'placeholder', spAspectRatio: '740 / 452' },
     },
     // インタビュー記事リンク（4286:5648）。写真下→=40。
-    // - 記事タイトル「…」自体を「これから追加するインタビュー」へのリンクに（nowrap で1行保持）。
-    //   リンク先は暫定 /interview（実ページ/記事URL確定後に差し替え）。
-    // - 1行表示にするため width 制約は外し、本文全幅を使う。
+    // - 記事タイトル「…」自体をインタビュー詳細記事へのリンクに（PCのみ nowrap で1行保持・SPは折り返し）。
+    //   リンク先は /interview/ykt-innovation（YKT Innovation のインタビュー詳細）。
     {
       type: 'richText',
       gap: 40,
@@ -1190,7 +1176,7 @@ const CARE_GO_DETAIL: WorkDetailContent = {
         {
           text: '完成形が見えないからこそ、早く形にして試す',
           nowrap: true,
-          href: '/interview',
+          href: '/interview/ykt-innovation',
         },
         { text: '」はこちらからご覧いただけます。' },
       ],
