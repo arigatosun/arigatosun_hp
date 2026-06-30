@@ -1,0 +1,34 @@
+// Figma フレーム 1920px 準拠
+@use '@/styles/fluid' as * with (
+  $fluid-max-viewport: 1920
+);
+@use '@/styles/breakpoints' as *;
+
+// 「URL→ リンク」のような外部リンク1行。左端は本文と同じ Figma x=200 / SP x=40。
+.linkLine {
+  @include fluid(padding-left, 40, 200);
+  @include fluid(padding-right, 40, 200);
+}
+
+// 本文（paragraph）と同じタイポ（16 / lh36 / ls3.84）。
+.text {
+  margin: 0;
+  color: var(--color-black);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  font-weight: var(--font-weight-regular);
+  @include fluid(font-size, 14, 16);
+  @include fluid(line-height, 30, 36);
+  @include fluid(letter-spacing, 2.52, 3.84);
+  word-break: break-all; // 長い URL の折り返し
+}
+
+// URL 部分は標準の青リンク。ホバーで下線。
+.link {
+  color: var(--color-link-blue);
+  text-decoration: none;
+  transition: opacity var(--transition-base);
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

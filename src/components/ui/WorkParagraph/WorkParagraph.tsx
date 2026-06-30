@@ -3,12 +3,25 @@ import styles from './WorkParagraph.module.scss';
 
 type WorkParagraphProps = {
   body: string[];
+  /** テキスト列の Figma 実測幅（px・1920 基準）。指定時のみ列を max-width 固定。 */
+  width?: number;
 };
 
-export default function WorkParagraph({ body }: WorkParagraphProps) {
+export default function WorkParagraph({ body, width }: WorkParagraphProps) {
   return (
     <section className={styles.paragraph}>
-      <p className={styles.body}>
+      <p
+        className={styles.body}
+        style={
+          width
+            ? {
+                maxWidth: `clamp(${Math.round(width * 0.42)}px, ${(
+                  width / 19.2
+                ).toFixed(3)}vw, ${width}px)`,
+              }
+            : undefined
+        }
+      >
         {body.map((line, index) => (
           <Fragment key={index}>
             {index > 0 && <br />}

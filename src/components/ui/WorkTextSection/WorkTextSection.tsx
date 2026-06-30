@@ -5,19 +5,18 @@ type WorkTextSectionProps = {
   level: 'main' | 'sub';
   heading: string;
   body?: string[];
+  /** テキスト列の Figma 実測幅（px・1920 基準）。指定時のみ列を max-width 固定。 */
+  width?: number;
 };
 
 export default function WorkTextSection({
   level,
   heading,
   body,
+  width,
 }: WorkTextSectionProps) {
-  return (
-    <section
-      className={`${styles.section} ${
-        level === 'sub' ? styles.sub : styles.main
-      }`}
-    >
+  const inner = (
+    <>
       {level === 'sub' ? (
         <h3 className={styles.heading}>{heading}</h3>
       ) : (
@@ -48,6 +47,31 @@ export default function WorkTextSection({
             </Fragment>
           ))}
         </p>
+      )}
+    </>
+  );
+
+  return (
+    <section
+      className={`${styles.section} ${
+        level === 'sub' ? styles.sub : styles.main
+      }`}
+    >
+      {width ? (
+        // Figma 実測幅を 1920 基準 clamp で max-width 固定（gapStyle と同手法）。
+        // min = width*0.42（SP では container 幅で自然に充填され実質無効）。
+        <div
+          className={styles.column}
+          style={{
+            maxWidth: `clamp(${Math.round(width * 0.42)}px, ${(
+              width / 19.2
+            ).toFixed(3)}vw, ${width}px)`,
+          }}
+        >
+          {inner}
+        </div>
+      ) : (
+        inner
       )}
     </section>
   );

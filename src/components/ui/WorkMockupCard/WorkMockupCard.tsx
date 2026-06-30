@@ -8,6 +8,8 @@ type WorkMockupCardProps = {
   src: string;
   w: number;
   h: number;
+  /** PC カードの最大幅（Figma 実測 px・1920 基準）。指定時のみ左寄せで max-width 固定。 */
+  width?: number;
   sp?: {
     variant: SpVariant;
     spAspectRatio?: string;
@@ -94,6 +96,7 @@ export default function WorkMockupCard({
   src,
   w,
   h,
+  width,
   sp,
   spSrc,
   spW,
@@ -111,12 +114,27 @@ export default function WorkMockupCard({
       className={`${styles.wrap} ${spFullBleed ? styles.wrapFullBleed : ''}`}
     >
       {/* PC: 画像カード。src 未指定時はサイズ確保のプレースホルダー（画像は後追い） */}
-      <div className={styles.cardPc} style={{ aspectRatio: `${w} / ${h}` }}>
+      <div
+        className={styles.cardPc}
+        style={{
+          aspectRatio: `${w} / ${h}`,
+          // width 指定時は左寄せで max-width 固定（Figma 実測幅・1920 基準 clamp）。
+          ...(width
+            ? {
+                maxWidth: `clamp(${Math.round(width * 0.42)}px, ${(
+                  width / 19.2
+                ).toFixed(3)}vw, ${width}px)`,
+                marginRight: 'auto',
+              }
+            : {}),
+        }}
+      >
         {src ? (
           <Image
             src={src}
             alt=""
             fill
+            quality={90}
             sizes="(max-width: 1023px) 92vw, 1520px"
             className={styles.image}
           />
@@ -147,6 +165,7 @@ export default function WorkMockupCard({
               src={spImageSrc}
               alt=""
               fill
+              quality={90}
               sizes="100vw"
               className={styles.image}
             />

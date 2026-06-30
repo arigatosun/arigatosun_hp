@@ -66,6 +66,20 @@ const WORKS_DATA: readonly WorkItem[] = [
     imageWidth: 920,
     imageHeight: 520,
   },
+  // ケアGO（YKT Innovation）: /works 一覧カード + /works/care-go 詳細ページを公開。
+  {
+    id: 'care-go',
+    client: '株式会社YKT Innovation',
+    title: 'ケアGO | 介護業界特化AI SaaSの開発',
+    categories: ['AI / DEVELOPMENT'],
+    details: [
+      { label: 'AI / D：', value: '要件定義、AI SaaS開発、クラウド管理' },
+    ],
+    term: '2025.11 ~ 2026.3',
+    image: '/images/works/care-go/hero-banner.jpg',
+    imageWidth: 920,
+    imageHeight: 520,
+  },
   // work-5 以降は今後の実装枠（プレースホルダ）。実データができ次第コメントを外す。
   /*
   {

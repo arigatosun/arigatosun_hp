@@ -5,9 +5,12 @@ import { getAllWorks, getWorkBySlug } from '@/data/works';
 import { getWorkDetailBySlug } from '@/data/works-detail';
 import WorkDetailHero from '@/components/ui/WorkDetailHero';
 import WorkLeadBlock from '@/components/ui/WorkLeadBlock';
+import WorkPageTitle from '@/components/ui/WorkPageTitle';
 import WorkTextSection from '@/components/ui/WorkTextSection';
 import WorkNamingCard from '@/components/ui/WorkNamingCard';
 import WorkParagraph from '@/components/ui/WorkParagraph';
+import WorkLinkLine from '@/components/ui/WorkLinkLine';
+import WorkRichText from '@/components/ui/WorkRichText';
 import WorkShowcaseCard from '@/components/ui/WorkShowcaseCard';
 import WorkImageGrid from '@/components/ui/WorkImageGrid';
 import WorkMockupCard from '@/components/ui/WorkMockupCard';
@@ -81,7 +84,7 @@ export default async function WorkDetailPage({ params }: PageParams) {
 
   // パターンA（詳細）はブロック積み上げ構成
   return (
-    <div className={styles.page}>
+    <div className={styles.page} data-section="work-detail">
       {detail && <WorkDetailHero hero={detail.hero} />}
 
       {detail?.blocks.map((block, index) => {
@@ -94,18 +97,34 @@ export default async function WorkDetailPage({ params }: PageParams) {
               body={block.body}
             />
           );
+        } else if (block.type === 'pageTitle') {
+          node = (
+            <WorkPageTitle label={block.label} subtitle={block.subtitle} />
+          );
         } else if (block.type === 'textSection') {
           node = (
             <WorkTextSection
               level={block.level}
               heading={block.heading}
               body={block.body}
+              width={block.width}
             />
           );
         } else if (block.type === 'namingCard') {
           node = <WorkNamingCard rows={block.rows} spImage={block.spImage} />;
         } else if (block.type === 'paragraph') {
-          node = <WorkParagraph body={block.body} />;
+          node = <WorkParagraph body={block.body} width={block.width} />;
+        } else if (block.type === 'linkLine') {
+          node = (
+            <WorkLinkLine
+              label={block.label}
+              href={block.href}
+              text={block.text}
+              width={block.width}
+            />
+          );
+        } else if (block.type === 'richText') {
+          node = <WorkRichText segments={block.segments} width={block.width} />;
         } else if (block.type === 'showcaseCard') {
           node = (
             <WorkShowcaseCard
@@ -137,6 +156,7 @@ export default async function WorkDetailPage({ params }: PageParams) {
               src={block.src}
               w={block.w}
               h={block.h}
+              width={block.width}
               sp={block.sp}
               spSrc={block.spSrc}
               spW={block.spW}

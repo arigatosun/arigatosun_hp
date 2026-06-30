@@ -10,6 +10,12 @@
   @include fluid(padding-right, 40, 200);
 }
 
+// width 指定時のテキスト列。max-width はインライン style で Figma 実測幅を
+// 1920 基準 clamp 固定（左寄せ）。Figma の自然改行位置を一致させるためのラッパー。
+.column {
+  width: 100%;
+}
+
 .heading {
   margin: 0;
   color: var(--color-black);

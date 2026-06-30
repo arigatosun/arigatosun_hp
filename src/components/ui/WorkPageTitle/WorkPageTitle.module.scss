@@ -1,0 +1,45 @@
+// Figma フレーム 1920px 準拠
+@use '@/styles/fluid' as * with (
+  $fluid-max-viewport: 1920
+);
+@use '@/styles/breakpoints' as *;
+
+// banner 直下のページタイトル。テキスト左端は Figma 実測 x=200 (PC) / x=40 (SP)
+.pageTitle {
+  @include fluid(padding-left, 40, 200);
+  @include fluid(padding-right, 40, 200);
+}
+
+// ブランド名「ケアGO」 PC 28 / ls 8.12 / lh 56（Figma 4286:5628 実測）
+.label {
+  margin: 0;
+  color: var(--color-black);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  font-weight: var(--font-weight-regular);
+  @include fluid(font-size, 18, 28);
+  @include fluid(line-height, 36, 56);
+  @include fluid(letter-spacing, 4.32, 8.12);
+}
+
+// サブ見出し「介護業界特化AI SaaSの開発」 PC 24 / ls 6.96 / lh 56（Figma 4286:5629 実測）
+.subtitle {
+  margin: 0;
+  // label 下端 → subtitle 上 = PC 8（SP は規則導出 6）
+  @include fluid(margin-top, 6, 8);
+  color: var(--color-black);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  font-weight: var(--font-weight-regular);
+  @include fluid(font-size, 16, 24);
+  @include fluid(line-height, 32, 56);
+  @include fluid(letter-spacing, 2.88, 6.96);
+}
+
+// 短い横線 48×1 / #140700（Figma 4286:5631）。subtitle → 下線 = PC 40（SP 導出 28）
+// 48/1 は微小値のため px 直書き可（responsive.md の例外）。下端余白は次ブロックの gap が担う。
+.divider {
+  display: block;
+  @include fluid(margin-top, 28, 40);
+  width: 48px;
+  height: 1px;
+  background: var(--color-black);
+}
