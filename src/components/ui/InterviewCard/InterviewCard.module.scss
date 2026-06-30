@@ -5,8 +5,16 @@
 @use '@/styles/breakpoints' as *;
 
 // インタビューカード（TOP セクション / 一覧ページ共通）。画像 480×293 + 会社名 + 見出し + 本文抜粋。
+// カード全体が詳細ページへのリンク（<a>）。
 .card {
   display: block;
+  color: inherit;
+  text-decoration: none;
+
+  // ホバーで画像をわずかに拡大（クリック可能の合図）。
+  &:hover .image {
+    transform: scale(1.03);
+  }
 }
 
 // カード画像 480×293（object-cover）。
@@ -21,6 +29,7 @@
   object-fit: cover;
   // Figma は object-bottom（下基準で上をトリミング）。中央基準だと頭が詰まり「縦伸び」に見えるため合わせる。
   object-position: bottom;
+  transition: transform 0.4s ease;
 }
 
 // クライアント名（16 / lh24 / ls2.08 / グレー）。画像下 28。

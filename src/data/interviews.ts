@@ -3,6 +3,8 @@
 // WordPress / CMS 連携時はこの配列を fetch 化すれば利用側は無修正。
 
 export type InterviewItem = {
+  /** 詳細ページの識別子（/interview/<slug>）。年内ユニーク。 */
+  slug: string;
   /** クライアント名（例: 株式会社YKT Innovation 様）。 */
   client: string;
   /** 見出し。配列 = 明示改行（要素間に <br>）。 */
@@ -12,12 +14,11 @@ export type InterviewItem = {
   /** カード画像（480×293 基準・object-cover）。 */
   image: string;
   imageAlt?: string;
-  /** 詳細インタビューへのリンク（実ページ未作成のため現状未使用）。 */
-  href?: string;
 };
 
 export const INTERVIEWS: InterviewItem[] = [
   {
+    slug: 'ykt-innovation',
     client: '株式会社YKT Innovation 様',
     heading: ['完成形が見えないからこそ、', '早く形にして試す'],
     body: [
@@ -28,6 +29,7 @@ export const INTERVIEWS: InterviewItem[] = [
     image: '/images/sections/interview/ykt.jpg',
   },
   {
+    slug: 'nj-mente',
     client: '株式会社NJ 様',
     heading: ['開発だけをする会社ではなく、一緒に整理しながら共に進んでくれる会社。'],
     body: [
@@ -36,3 +38,8 @@ export const INTERVIEWS: InterviewItem[] = [
     image: '/images/sections/interview/nj.jpg',
   },
 ];
+
+/** slug から1件取得（無ければ undefined）。 */
+export function getInterviewBySlug(slug: string): InterviewItem | undefined {
+  return INTERVIEWS.find((i) => i.slug === slug);
+}

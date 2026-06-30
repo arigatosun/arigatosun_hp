@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import { Fragment } from 'react';
 import type { InterviewItem } from '@/data/interviews';
 import styles from './InterviewCard.module.scss';
@@ -7,10 +8,10 @@ type InterviewCardProps = {
   item: InterviewItem;
 };
 
-// インタビューカード（TOP セクション / 一覧ページ共通）。
+// インタビューカード（TOP セクション / 一覧ページ共通）。カード全体が詳細ページへのリンク。
 export default function InterviewCard({ item }: InterviewCardProps) {
   return (
-    <article className={styles.card}>
+    <Link href={`/interview/${item.slug}`} className={styles.card}>
       <div className={styles.imageWrap}>
         <Image
           src={item.image}
@@ -38,6 +39,6 @@ export default function InterviewCard({ item }: InterviewCardProps) {
           </Fragment>
         ))}
       </p>
-    </article>
+    </Link>
   );
 }
