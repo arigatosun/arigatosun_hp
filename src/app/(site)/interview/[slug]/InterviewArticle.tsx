@@ -78,7 +78,14 @@ function Block({ block }: { block: IvBlock }) {
       );
 
     case 'question':
-      return <p className={styles.question}>{block.text}</p>;
+      return (
+        <p
+          className={styles.question}
+          style={block.mt != null ? gapStyle(block.mt) : undefined}
+        >
+          {block.text}
+        </p>
+      );
 
     case 'answer':
       return (
@@ -87,7 +94,9 @@ function Block({ block }: { block: IvBlock }) {
             const tight = block.tightLast && i === block.paragraphs.length - 1;
             return (
               <p key={i} className={`${styles.answerPara}${tight ? ` ${styles.oneLine}` : ''}`}>
-                {i === 0 && <b className={styles.speaker}>{block.speaker}）</b>}
+                {i === 0 && block.speaker && (
+                  <b className={styles.speaker}>{block.speaker}）</b>
+                )}
                 <Rich para={para} />
               </p>
             );
@@ -118,13 +127,41 @@ function Block({ block }: { block: IvBlock }) {
         </div>
       );
 
+    case 'appBadges':
+      return (
+        <div
+          className={styles.appBadges}
+          style={block.mt != null ? gapStyle(block.mt) : undefined}
+        >
+          {block.badges.map((bd, i) => (
+            <a
+              key={i}
+              href={bd.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.appBadge}
+              aria-label={bd.label}
+              style={{ aspectRatio: `${bd.w} / ${bd.h}` }}
+            >
+              <Image
+                src={bd.src}
+                alt={bd.label}
+                fill
+                sizes="160px"
+                className={styles.appBadgeImg}
+              />
+            </a>
+          ))}
+        </div>
+      );
+
     case 'workLink':
       return (
         <p className={styles.workLink}>
-          <Link href="/works/care-go" className={styles.workLinkInner}>
-            <span>ケアGO</span>
-            <span className={styles.underline}>「介護業界特化AI SaaSの開発」</span>
-            <span>はこちらからご覧いただけます。</span>
+          <Link href={block.href} className={styles.workLinkInner}>
+            <span>{block.pre}</span>
+            <span className={styles.underline}>{block.linkLabel}</span>
+            <span>{block.post}</span>
           </Link>
         </p>
       );

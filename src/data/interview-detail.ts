@@ -14,16 +14,18 @@ export type IvBlock =
   | { type: 'overview'; points: { title: string; desc: string[] }[] }
   // ■GUEST SPEAKER / ■INTERVIEWER（ラベル20px + 本文行）。
   | { type: 'profile'; label: string; lines: IvPara[] }
-  // ー... 質問（20px medium）。
-  | { type: 'question'; text: string }
-  // 回答（岡田様）/ 髙橋）+ 段落）。tightLast=最後の段落を広幅で1行に収める（少し縮小）。
-  | { type: 'answer'; speaker: string; paragraphs: IvPara[]; tightLast?: boolean }
+  // ー... / Q)... 質問（20px medium）。mt=上余白の個別指定(px@1920)。
+  | { type: 'question'; text: string; mt?: number }
+  // 回答（speaker 省略時は太字話者プレフィックスなし＝本文がそのまま頭から。岡田様）/ 髙橋）等）。
+  | { type: 'answer'; speaker?: string; paragraphs: IvPara[]; tightLast?: boolean }
   // →... 補足ノート（14px）。
   | { type: 'note'; text: string }
   // 写真 / 図版。mt=上余白の個別指定(px@1920)。
   | { type: 'image'; src: string; alt: string; w: number; h: number; pos?: 'bottom'; mt?: number }
-  // ケアGO実績へのリンク文。
-  | { type: 'workLink' };
+  // App Store / Google Play バッジ（リンク）。mt=上余白の個別指定(px@1920)。
+  | { type: 'appBadges'; badges: { src: string; w: number; h: number; href: string; label: string }[]; mt?: number }
+  // 実績ページへのリンク文（pre + 「linkLabel」(青リンク) + post）。
+  | { type: 'workLink'; pre: string; linkLabel: string; post: string; href: string };
 
 export type InterviewDetail = {
   slug: string;
@@ -247,12 +249,141 @@ const YKT_INNOVATION: InterviewDetail = {
     // ── ケアGO実績紹介 ──
     { type: 'heading', lines: ['■ケアGOの実績紹介'], mt: 120 },
     { type: 'image', src: `${IV}/banner.jpg`, alt: 'ケアGO 介護業界特化AI SaaSの開発', w: 1200, h: 513 },
-    { type: 'workLink' },
+    {
+      type: 'workLink',
+      pre: 'ケアGO',
+      linkLabel: '「介護業界特化AI SaaSの開発」',
+      post: 'はこちらからご覧いただけます。',
+      href: '/works/care-go',
+    },
+  ],
+};
+
+// ── NJ / Men’te（理美容師検索予約アプリ）インタビュー記事。Figma node 4418:31686。──
+const NJ = '/images/interview/nj-mente';
+const MENTE_WORKS = '/images/works/mente';
+
+const NJ_MENTE: InterviewDetail = {
+  slug: 'nj-mente',
+  hero: { src: '/images/sections/interview/nj.jpg', alt: '株式会社NJ Men’te インタビュー' },
+  meta: {
+    client: '株式会社NJ 様',
+    heading: '開発だけをする会社ではなく、一緒に整理しながら共に進んでくれる会社。',
+    body: '男性美容への想いから生まれたMen’teが、サービスとして動き出すまで。過去の開発で感じた不安を越え、構想を共に整理しながら形にしていった過程をお聞きしました。',
+  },
+  blocks: [
+    { type: 'divider' },
+
+    // ── Q&A（Q)質問 / A)回答・太字話者なし）。回答→次の質問=60、最初の質問は区切り下=120 ──
+    { type: 'question', text: 'Q)Men’teを立ち上げようと思った背景を教えてください。', mt: 120 },
+    {
+      type: 'answer',
+      paragraphs: [
+        [{ t: 'A)僕自身が美容師として働く中で、「日本の男性の美意識を底上げし、日本国民をカッコ良くする」という想いがずっとありました。' }],
+        [{ t: 'ただ、一人をカッコ良くするだけでは限界があります。' }],
+        [{ t: '既存の予約媒体では難しい部分もあり、美容師個人がもっと活躍できる形を作らない限り、本当の意味で国民の底上げにはつながらないと感じていました。' }],
+        [{ t: 'そこで、新しい形で男性の美容意識を高められるサービスとして、Men’teの構想を考え始めました。' }],
+      ],
+    },
+    { type: 'question', text: 'Q)開発を進めるうえで、どのような不安がありましたか？', mt: 60 },
+    {
+      type: 'answer',
+      paragraphs: [
+        [{ t: 'A)アプリ開発自体が完全に未経験だったので、「何をどう進めればいいのか分からない」「本当に形になるのか」という不安は常にありました。特に、自分の頭の中にはイメージがあるのに、それを開発側に正確に伝える難しさが大きかったです。' }],
+      ],
+    },
+    { type: 'question', text: 'Q)以前の開発では、どのような課題がありましたか？', mt: 60 },
+    {
+      type: 'answer',
+      paragraphs: [
+        [{ t: 'A)以前お願いしていた会社では、かなり大きな金額をかけて開発を進めていました。ただ、途中から「今どこまで進んでいるのか」「何が完成していて、何が未完成なのか」が見えづらくなっていきました。コミュニケーション面でも認識のズレが増え、自分の中では不安がどんどん大きくなっていった印象です。結果として、思い描いていた形にはならず、精神的にもかなりしんどい時期でした。' }],
+      ],
+    },
+    { type: 'question', text: 'Q)一度うまくいかなかった中で、改めて開発を依頼しようと思えた理由は何でしたか？', mt: 60 },
+    {
+      type: 'answer',
+      paragraphs: [
+        [{ t: 'A)正直、一度失敗を経験していたので、「また同じことになるんじゃないか」という怖さはかなりありました。それでも再挑戦しようと思えたのは、Men’teを諦めきれなかったからです。美容業界で実際に働いているからこそ、このサービスには需要があると思っていました。' }],
+        [{ t: '御社を選んだ理由は、単純に信頼ができたからです。' }],
+        [{ t: 'ただ作るだけではなく、「なぜ必要なのか」「どういう使われ方をするのか」を一緒に整理しながら進めてくれた感覚がありました。過去の失敗も親身に相談に乗ってくれて、ここなら信頼できるという確信を持てました。' }],
+      ],
+    },
+    { type: 'question', text: 'Q)開発が始まってからの進め方はどう感じましたか？', mt: 60 },
+    {
+      type: 'answer',
+      paragraphs: [
+        [{ t: 'A)以前の開発資料がそのまま使えない部分も多かったので、かなりゼロベースに近い状態から要件を整理していく必要がありました。その中でも、細かく確認しながら進めてもらえたので、「今どこを作っているのか」「次に何を決めるべきか」が以前よりかなり見えやすかったです。アプリ開発は専門用語も多く、経営者側が理解しきれない部分もありますが、その都度すり合わせをしながら進めてもらえた点は安心感がありました。' }],
+      ],
+    },
+    { type: 'question', text: 'Q)リリース後のサポートについては、どのように感じていますか？', mt: 60 },
+    {
+      type: 'answer',
+      paragraphs: [
+        [{ t: 'A)リリースして終わりではなく、運用が始まってからの対応がすごく大事だと思っています。実際、使い始めると細かい改善点や不具合は必ず出てきます。その時に相談できる状態があるのは、とても感謝しています。アプリは運営しながら育てていくものだと思っているので、継続的に相談できる環境があるのは本当に助かっています。' }],
+      ],
+    },
+    { type: 'question', text: 'Q)弊社に依頼した後、状況はどう変わりましたか？', mt: 60 },
+    {
+      type: 'answer',
+      paragraphs: [
+        [{ t: 'A)以前は、「本当に完成するのか分からない」という不安の方が強かったです。' }],
+        [{ t: '今は、もちろん課題はまだまだありますが、前に進んでいる感覚があります。実際にユーザー登録や利用も始まり、頭の中の構想だったものが、少しずつサービスとして形になってきています。' }],
+        [{ t: '期待というより、「やっとスタート地点に立てた」という感覚が近いかもしれません。' }],
+      ],
+    },
+    { type: 'question', text: 'Q)同じような悩みを持つ経営者の方に勧めるとしたら、弊社をどのように伝えますか？', mt: 60 },
+    {
+      type: 'answer',
+      paragraphs: [
+        [{ t: 'A)「開発だけをする会社」ではなく、「一緒に整理しながら共に進んでくれる会社」と伝えると思います。特に、アプリ開発が初めての経営者は、不安や分からないことがかなり多いです。その時に、一方的ではなくコミュニケーションを取りながら進めてくれるかはかなり重要だと思います。' }],
+      ],
+    },
+    { type: 'question', text: 'Q)今後、弊社に期待していることはありますか？', mt: 60 },
+    {
+      type: 'answer',
+      paragraphs: [
+        [{ t: 'A)Men’teはまだこれからのサービスなので、今後も改善や機能追加はかなり増えていくと思っています。なので、単発の開発だけではなく、「一緒にサービスを育てていくパートナー」として、引き続き相談しながら進めていけたら嬉しいです。' }],
+      ],
+    },
+
+    // App Store / Google Play バッジ
+    {
+      type: 'appBadges',
+      mt: 80,
+      badges: [
+        {
+          src: `${MENTE_WORKS}/badge-app-store.svg`,
+          w: 120,
+          h: 40,
+          href: 'https://apps.apple.com/jp/app/メンテ-理美容師検索-予約アプリ-mente/id6757512643',
+          label: 'App Store でダウンロード',
+        },
+        {
+          src: `${MENTE_WORKS}/badge-google-play.png`,
+          w: 811,
+          h: 241,
+          href: 'https://play.google.com/store/apps/details?id=com.nj.mente&hl=ja',
+          label: 'Google Play で手に入れよう',
+        },
+      ],
+    },
+
+    // ── Men’te 実績紹介 ──
+    { type: 'heading', lines: ['■Men’teの実績紹介'], mt: 120 },
+    { type: 'image', src: `${NJ}/mente-banner.jpg`, alt: 'Men’te 理美容師検索・予約アプリ', w: 1200, h: 513 },
+    {
+      type: 'workLink',
+      pre: 'Men’te',
+      linkLabel: '「諦めきれなかった構想が、サービスとして動き出す。」',
+      post: 'はこちらからご覧いただけます。',
+      href: '/works/mente',
+    },
   ],
 };
 
 const DETAILS: Record<string, InterviewDetail> = {
   'ykt-innovation': YKT_INNOVATION,
+  'nj-mente': NJ_MENTE,
 };
 
 /** slug から記事本文を取得（無ければ undefined）。 */

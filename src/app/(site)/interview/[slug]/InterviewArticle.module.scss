@@ -219,7 +219,27 @@
   object-position: bottom;
 }
 
-// ── ケアGO実績リンク文 ──
+// ── App Store / Google Play バッジ（横並び・リンク）──
+.appBadges {
+  display: flex;
+  align-items: center;
+  @include fluid(gap, 10, 14);
+}
+.appBadge {
+  display: block;
+  position: relative;
+  @include fluid(height, 34, 40); // 高さ固定・幅は aspect-ratio(インライン)で導出
+  transition: opacity var(--transition-base);
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+.appBadgeImg {
+  object-fit: contain;
+}
+
+// ── 実績リンク文（pre + 「linkLabel」(青リンク) + post）──
 .workLink {
   @include fluid(margin-top, 24, 40);
   margin-bottom: 0;
