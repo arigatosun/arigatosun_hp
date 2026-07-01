@@ -261,7 +261,7 @@
 
 // 説明文
 // Figma SP: Noto Sans JP Regular / 12px / lh 22.8 / ls 1.44 (=0.12em) / #140700 / w=267
-// Figma PC: 16px / lh 32 / ls 3.84
+// Figma PC: 16px / lh 32 / ls 3.84（行間は AI(STEP) 側の 38 に統一）
 // Figma: title 下端 y=5174 → description 上端 y=5182 = 8px
 .description {
   margin: 0;
@@ -270,13 +270,13 @@
   font-family: 'Noto Sans JP', var(--font-jp);
   font-weight: var(--font-weight-regular);
   @include fluid(font-size, 12, 16);
-  @include fluid(line-height, 22.8, 32);
+  @include fluid(line-height, 22.8, 38);
   @include fluid(letter-spacing, 1.44, 3.84);
   // data 側 \n を改行として保持
   white-space: pre-line;
 
   @include sp {
-    @include fluid(line-height, 20, 32); // SP の行間を詰める（PC は据え置き）
+    @include fluid(line-height, 20, 38); // SP の行間（AI(STEP) 側に統一）
     // SP の字間を詰めて、第1節（例: PHASE.1「〜抽出し、」）が 1 行に収まるようにする。
     @include fluid(letter-spacing, 0.2, 3.84);
     // 見出しとの余白（見出しの下）。上の title.margin-top と均等。
