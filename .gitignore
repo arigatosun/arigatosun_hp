@@ -49,6 +49,10 @@ next-env.d.ts
 .claude/memory/
 .claude/worktrees/
 
+# agent / codex ローカル設定（個人環境用・共有しない）
+.agents/
+.codex/
+
 # session-temporary（試運転用一時ファイル）
 /.tmp-review/
 /scripts/_*.ts
