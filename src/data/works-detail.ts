@@ -1090,7 +1090,7 @@ const CARE_GO_DETAIL: WorkDetailContent = {
       width: 740,
     },
     // インタビュー記事リンク（4286:5648）。写真下→=40。
-    // - 記事タイトル「…」自体をインタビュー詳細記事へのリンクに（PCのみ nowrap で1行保持・SPは折り返し）。
+    // - 記事タイトル「…」自体をインタビュー詳細記事へのリンクに（タイトルが長いため自然折り返し）。
     //   リンク先は /interview/ykt-innovation（YKT Innovation のインタビュー詳細）。
     {
       type: 'richText',
@@ -1099,8 +1099,7 @@ const CARE_GO_DETAIL: WorkDetailContent = {
       segments: [
         { text: '株式会社YKT Innovation様のインタビュー記事「' },
         {
-          text: '完成形が見えないからこそ、早く形にして試す',
-          nowrap: true,
+          text: '訪問介護の書類作成を10時間から1時間へ。AI SaaS「ケアGO」を現場起点で開発した舞台裏',
           href: '/interview/ykt-innovation',
         },
         { text: '」はこちらからご覧いただけます。' },
