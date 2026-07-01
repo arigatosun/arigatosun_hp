@@ -254,8 +254,8 @@
 
   @include sp {
     @include fluid(font-size, 16, 20); // SP は 16 に縮小（PC は据え置き）
-    // PHASE ラベルとの余白（見出しの上）を広げる。下の description.margin-top と均等。
-    @include fluid(margin-top, 14, 20);
+    // PHASE ラベルとの余白（見出しの上）。下の description.margin-top と均等。
+    @include fluid(margin-top, 6, 12);
   }
 }
 
@@ -280,6 +280,6 @@
     // SP の字間を詰めて、第1節（例: PHASE.1「〜抽出し、」）が 1 行に収まるようにする。
     @include fluid(letter-spacing, 0.2, 3.84);
     // 見出しとの余白（見出しの下）。上の title.margin-top と均等。
-    @include fluid(margin-top, 14, 20);
+    @include fluid(margin-top, 6, 12);
   }
 }
