@@ -27,10 +27,21 @@ function topicLabel(key: string): string {
   return TOPIC_LABELS.find((t) => t.key === key)?.label ?? key;
 }
 
+// 本番サーバー（Vercel）は UTC で動くため、getHours() 等のローカル依存メソッドだと
+// JST から 9 時間ずれる。timeZone を明示して常に日本時間で表示する。
+const dateFormatter = new Intl.DateTimeFormat('ja-JP', {
+  timeZone: 'Asia/Tokyo',
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+  hour: '2-digit',
+  minute: '2-digit',
+  hourCycle: 'h23',
+});
+
 function formatDate(iso: string): string {
-  const d = new Date(iso);
-  const pad = (n: number) => String(n).padStart(2, '0');
-  return `${d.getFullYear()}/${pad(d.getMonth() + 1)}/${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  // ja-JP は "2026/07/03 01:54" 形式で返す（区切りは "/" と半角スペース）。
+  return dateFormatter.format(new Date(iso));
 }
 
 interface ChatLogsPageProps {
