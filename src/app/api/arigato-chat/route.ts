@@ -1,10 +1,16 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { classifyTopic, maskPII } from '@/data/arigato-chat';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { checkChatGate, hashIp } from '@/lib/arigato-chat/rate-limit';
 
 // アリガトくんチャット（/about/member/arigato-kun）の応答エンドポイント。
-// 公開ページのため、課金・濫用対策として IP レート制限・入力長上限・履歴件数上限を設ける。
-// API キー未設定や生成失敗時はクライアント側で FAQ 定型文（src/data/arigato-chat.ts）にフォールバックする。
+// 公開ページのため、課金・濫用対策を多層で設ける:
+//   1. インメモリ IP バースト制限（同一インスタンス内の連投を即遮断）
+//   2. Supabase 共有ゲート（IP時間窓の永続レート制限 + サイト全体の1日総量サーキットブレーカー）
+//   3. 入力長・履歴件数・出力トークン上限（1回あたりの最大コストを抑制）
+// レート/上限超過・API キー未設定・生成失敗時は、クライアント側で FAQ 定型文
+// （src/data/arigato-chat.ts の matchAnswer）へ自動フォールバックする（沈黙しない）。
+// 最終的な費用の天井は Anthropic Console の月間上限が担保する（コード外の設定）。
 
 // チャット用モデル。env で上書き可。未設定なら高速・低コストの Haiku を既定にする。
 const CHAT_MODEL = process.env.ARIGATO_CHAT_MODEL ?? 'claude-haiku-4-5';
@@ -12,9 +18,9 @@ const CHAT_MODEL = process.env.ARIGATO_CHAT_MODEL ?? 'claude-haiku-4-5';
 // 1 メッセージあたりの入力長上限（巨大ペイロード対策）。
 const MAX_INPUT_CHARS = 1000;
 // サーバーへ送る会話履歴の上限（直近 N 件のみ採用。コスト抑制）。
-const MAX_HISTORY = 12;
-// 応答の最大トークン数（マスコットの簡潔な返答を想定）。
-const MAX_TOKENS = 1024;
+const MAX_HISTORY = 6;
+// 応答の最大トークン数（マスコットの簡潔な返答は 2〜4 文想定。濫用時の出力コストも抑える）。
+const MAX_TOKENS = 512;
 
 // ── レート制限（IP ベース・インメモリ。contact route と同方針のベストエフォート）──
 // サーバーレスでもインスタンス再利用中は有効に働く。厳密保証が要る場合は外部ストアに置き換える。
@@ -107,8 +113,10 @@ function logQuestion(question: string): void {
  *            キー未設定/レート超過/不正入力時は JSON エラー（クライアントは FAQ にフォールバック）。
  */
 export async function POST(request: Request) {
-  // 濫用対策: レート超過は最優先で弾く（パース前。Claude もログ保存もしない）。
-  if (isRateLimited(getClientIp(request))) {
+  const ip = getClientIp(request);
+
+  // 濫用対策(即時): インメモリのバースト制限。同一インスタンス内の連投を最優先で弾く（パース前）。
+  if (isRateLimited(ip)) {
     return Response.json(
       { error: 'お話のペースが速すぎるみたいサン。少し時間をおいてね。', code: 'rate_limited' },
       { status: 429 },
@@ -136,6 +144,24 @@ export async function POST(request: Request) {
   const last = messages[messages.length - 1];
   if (!last || last.role !== 'user') {
     return Response.json({ error: 'メッセージが空です。', code: 'empty' }, { status: 400 });
+  }
+
+  // 濫用対策(永続): Supabase 共有ゲート。IP単位の時間窓 + サイト全体の1日総量を原子的に判定する。
+  // インメモリ制限（上）がインスタンスをまたぐと無効化する穴を塞ぐ。ここで弾く場合は Claude も
+  // ログ保存も行わない（攻撃時にログ／DB を汚さない）。DB 障害時は 'error' でフェイルオープン。
+  const gate = await checkChatGate(hashIp(ip));
+  if (gate === 'rate_limited') {
+    return Response.json(
+      { error: 'お話のペースが速すぎるみたいサン。少し時間をおいてね。', code: 'rate_limited' },
+      { status: 429 },
+    );
+  }
+  if (gate === 'daily_cap') {
+    // サイト全体の1日上限に到達。クライアントは定型FAQ（matchAnswer）へ自動フォールバックする。
+    return Response.json(
+      { error: '今はちょっと混み合ってるみたいサン。少し時間をおいてまた話しかけてサン。', code: 'daily_cap' },
+      { status: 503 },
+    );
   }
 
   // 質問ログ（マスキング済み・IP非保存）。応答可否に関わらず記録する。
