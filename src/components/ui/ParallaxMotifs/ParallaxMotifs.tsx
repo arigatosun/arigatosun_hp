@@ -40,23 +40,6 @@ export default function ParallaxMotifs() {
   // Service セクションがビューポートの上半分まで上がってきたら true。
   const [exited, setExited] = useState(false);
 
-  // リロード時にブラウザが自動でスクロール位置を復元すると、
-  // 「しかし、」が viewport 内に既にある状態で IO が即発火してアニメがスキップされる。
-  // ユーザーが自分でスクロールして演出を見られるよう、TOP では auto-restore を無効化し
-  // 初回マウント時にスクロールを最上部へ戻す。
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    if ('scrollRestoration' in window.history) {
-      window.history.scrollRestoration = 'manual';
-    }
-    // ブラウザが既に復元処理を始めている場合に備え、次フレームで再度 0 にする
-    window.scrollTo(0, 0);
-    const raf = requestAnimationFrame(() => {
-      window.scrollTo(0, 0);
-    });
-    return () => cancelAnimationFrame(raf);
-  }, []);
-
   // SP 用 combined SVG を inline 取得し、各 motif <g> に class を付与。
   // これで PC と同じく motif ごとにバラバラのフロート animation を当てられる。
   const [spInlineSvg, setSpInlineSvg] = useState<string>('');
