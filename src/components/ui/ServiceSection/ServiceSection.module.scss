@@ -83,15 +83,23 @@
   width: 50%;
   flex-shrink: 0;
   display: flex;
-  align-items: flex-start;
+  // テキストとカードの上下中心を揃える。
+  // カードは .right 内で上下中央寄せ（align-items: center + padding-top 30px）なので、
+  // .left にも同じ「中央寄せ + padding-top 30px」を与えると両者の中心が常に一致する。
+  // .left / .right はどちらも .inner の stretch で同じ高さになるため、
+  // ビューポートの幅・高さが変わっても中心が揃い続ける。
+  align-items: center;
   @include fluid(padding-left, 20, 200, 390, 1920);
-  @include fluid(padding-top, 40, 80, 390, 1920);
+  padding-top: 30px;
   padding-right: 2vw;
   opacity: calc(1 - var(--left-hidden, 0));
 
   @include sp {
     // Figma SP @390: section x=20 + 内側コンテンツ x=40 → page 端から 40px
     width: 100%;
+    // PC の中央寄せ（カードと中心を揃える指定）は SP では不要。sticky で上部に貼り付ける
+    // 縦積みレイアウトなので上揃えに戻す。
+    align-items: flex-start;
     // PC(1920 基準)の About と中間幅で左右余白が揃うよう、SP 補間も 390→1920 に統一
     @include fluid(padding-left, 40, 200, 390, 1920);
     @include fluid(padding-right, 40, 80, 390, 1920);
@@ -147,8 +155,13 @@
   }
 }
 
-.sectionTitle {
-  margin-top: 102px;
+// SectionTitle の .wrapper と詳細度が同点(0,1,0)だと、CSS の結合順で勝敗が決まってしまう。
+// production build では .wrapper が後ろに来て margin が上書きされ返し、左カラムが約86px
+// 上にずれて見出しがヘッダーに潜り込む（dev では順序が逆で再現しない）。
+// セレクタを自己連結して詳細度 0,2,0 に上げ、順序に依存せず必ず勝つようにする。
+.sectionTitle.sectionTitle {
+  // 縦位置は .left の padding-top（カード上端に追従）側で一括して取るため 0
+  margin-top: 0;
   margin-bottom: 0;
 
   img {
