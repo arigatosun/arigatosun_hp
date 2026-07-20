@@ -5,6 +5,16 @@
 // Figma 1920px フレーム基準（node 4059:5370 / 4059:5388）。
 // 全画面の赤テクスチャ背景に、中央 1000px の会話カラム + 入力欄 + 注意書き + コピーライト。
 
+// スクロールバーを視覚的に隠す（スクロール自体は従来どおり可能）。
+// 赤背景の上にブラウザ既定のバーが乗ると目立つため、この画面内のスクロール領域に当てる。
+@mixin hide-scrollbar {
+  scrollbar-width: none; // Firefox
+  -ms-overflow-style: none; // 旧 Edge / IE
+  &::-webkit-scrollbar {
+    display: none; // Chrome / Safari / Edge
+  }
+}
+
 .root {
   position: relative;
   display: flex;
@@ -47,6 +57,7 @@
   overflow-y: auto;
   display: flex;
   flex-direction: column;
+  @include hide-scrollbar;
 }
 
 // 会話前: ヒーローを上寄せにし（scrollArea は伸ばさない）、
@@ -201,6 +212,7 @@
     flex: 1 1 auto;
     min-height: 0;
     overflow-y: auto;
+    @include hide-scrollbar;
   }
 }
 
