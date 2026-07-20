@@ -20,6 +20,14 @@ const serviceSubmenu: SubItem[] = [
   { href: '/service/ip-creative', label: 'IP / CREATIVE' },
 ];
 
+// NEWS 配下（Header と同一構成）。/news ページのカテゴリ絞り込み（?category=<slug>）に紐づく。
+// slug は Supabase categories テーブル準拠。NEWS 本体は ALL = /news。
+const newsSubmenu: SubItem[] = [
+  { href: '/news?category=information', label: 'INFORMATION' },
+  { href: '/news?category=events', label: 'EVENTS' },
+  { href: '/news?category=column', label: 'COLUMN' },
+];
+
 // SNS 配下（すべて外部リンク）。hold:true はリンク先未確定（href='#'）。
 const snsSubmenu: SubItem[] = [
   { href: 'https://www.instagram.com/arigatosun_inc', label: 'INSTAGRAM', external: true },
@@ -195,13 +203,21 @@ export default function FooterNav() {
           </Link>
         </li>
         <li>
-          <Link href="/news" className={styles.mainMenuItem}>
-            NEWS
+          <Link href="/interview" className={styles.mainMenuItem}>
+            INTERVIEW
           </Link>
         </li>
+        <AccordionItem
+          itemKey="news"
+          label="NEWS"
+          labelHref="/news"
+          submenu={newsSubmenu}
+          open={!!openMenus.news}
+          onToggle={toggle}
+        />
         <li>
           <Link href="/contact" className={styles.mainMenuItem}>
-            CONTACT US
+            CONTACT
           </Link>
         </li>
         <AccordionItem
