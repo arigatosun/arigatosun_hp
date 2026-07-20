@@ -172,8 +172,10 @@ export default function ArigatoChat() {
     >
       <div className={styles.stage}>
         <div className={styles.scrollArea} ref={scrollRef}>
-          {!hasConversation ? (
-            // ── 会話開始前: キャラクター紹介ヒーロー ──
+          {
+            // ── キャラクター紹介ヒーロー ──
+            // 会話開始後も描画したままにして、スクロールを上まで戻すと再び見えるようにする
+            // （以前は会話開始と同時に DOM から外していたため初期画面に戻れなかった）。
             <div className={styles.welcome}>
               <div className={styles.welcomeChar}>
                 <Image
@@ -224,8 +226,9 @@ export default function ArigatoChat() {
                 </div>
               </div>
             </div>
-          ) : (
-            // ── 会話開始後: チャットバブル ──
+          }
+          {hasConversation && (
+            // ── 会話開始後: チャットバブル（ヒーローの下に積む） ──
             <div className={styles.messages}>
               {messages.map((m) =>
                 m.role === 'user' ? (

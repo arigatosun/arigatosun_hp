@@ -92,6 +92,36 @@
   z-index: 5;
 }
 
+// 会話中のヒーロー: 会話開始後もヒーローは描画したままにして、スクロールを上まで
+// 戻すと初期画面が再び見えるようにしている。会話前は scrollArea を満たす縦チェーン
+// （SP は welcomeBody だけ内部スクロール）だが、会話中はヒーローもバブルと一緒に
+// 外側スクロールへ流したいので、その伸長と内部スクロールを解除する。
+.chatting {
+  .welcome {
+    @include sp {
+      // 領域を満たさず自然な高さにして、下にバブルを積む
+      flex: 0 0 auto;
+      min-height: auto;
+    }
+  }
+
+  .welcomeText {
+    @include sp {
+      flex: 0 0 auto;
+      min-height: auto;
+    }
+  }
+
+  .welcomeBody {
+    @include sp {
+      // 内部スクロールを解除（外側 scrollArea と二重スクロールになるため）
+      flex: 0 0 auto;
+      min-height: auto;
+      overflow-y: visible;
+    }
+  }
+}
+
 // ── 会話開始前: キャラクター紹介ヒーロー ──
 .welcome {
   display: flex;
