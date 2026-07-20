@@ -83,22 +83,23 @@
   width: 50%;
   flex-shrink: 0;
   display: flex;
-  align-items: flex-start;
+  // テキストとカードの上下中心を揃える。
+  // カードは .right 内で上下中央寄せ（align-items: center + padding-top 30px）なので、
+  // .left にも同じ「中央寄せ + padding-top 30px」を与えると両者の中心が常に一致する。
+  // .left / .right はどちらも .inner の stretch で同じ高さになるため、
+  // ビューポートの幅・高さが変わっても中心が揃い続ける。
+  align-items: center;
   @include fluid(padding-left, 20, 200, 390, 1920);
-  // テキスト先頭をカード上端に合わせる（カード内側に収める）。
-  // カードは .right 内で上下中央寄せ（.right の padding-top 30px）なので
-  //   カード上端 = 30px + (100vh − 30px − カード高さ) / 2
-  //   カード高さ = 38.96vw（ServiceCard の Figma 612×748 / 1920 換算）
-  // → 15px + 50vh − 19.48vw。
-  // 幅基準の fluid だとカード（高さ基準）と揃うのが特定サイズだけになりズレるため、
-  // カードと同じ式で追従させる。極端に低いビューポートで負にならないよう max() で床を張る。
-  padding-top: max(0px, calc(15px + 50vh - 19.48vw));
+  padding-top: 30px;
   padding-right: 2vw;
   opacity: calc(1 - var(--left-hidden, 0));
 
   @include sp {
     // Figma SP @390: section x=20 + 内側コンテンツ x=40 → page 端から 40px
     width: 100%;
+    // PC の中央寄せ（カードと中心を揃える指定）は SP では不要。sticky で上部に貼り付ける
+    // 縦積みレイアウトなので上揃えに戻す。
+    align-items: flex-start;
     // PC(1920 基準)の About と中間幅で左右余白が揃うよう、SP 補間も 390→1920 に統一
     @include fluid(padding-left, 40, 200, 390, 1920);
     @include fluid(padding-right, 40, 80, 390, 1920);
