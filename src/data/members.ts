@@ -162,7 +162,6 @@ const allMembers: Member[] = [
     slug: 'hideya-mifuji',
     name: 'HIDEYA MIFUJI',
     role: 'ENGINEER',
-    hidden: true, // ← 再表示する時は false にするかこの行を削除
     photo: '/images/team/hideya-mifuji.webp',
     photoColor: '/images/team/hideya-mifuji-color.webp',
     catchphrase: '細部にこそ、本質が宿る。',
@@ -170,7 +169,7 @@ const allMembers: Member[] = [
     // Figma(3483:96679) は理念のみで 経歴・SNS・プロジェクトを持たないため非表示
     career: '',
     projects: [],
-    // Figma 3483:96679 準拠（hidden 中だが内容は実装済み）
+    // Figma 3483:96679 準拠
     roleJp: 'ENGINEER',
     quote: '挑戦する人の、いちばん近くで力になりたい。',
     introParagraphs: [
