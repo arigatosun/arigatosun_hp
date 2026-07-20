@@ -85,7 +85,14 @@
   display: flex;
   align-items: flex-start;
   @include fluid(padding-left, 20, 200, 390, 1920);
-  @include fluid(padding-top, 40, 80, 390, 1920);
+  // テキスト先頭をカード上端に合わせる（カード内側に収める）。
+  // カードは .right 内で上下中央寄せ（.right の padding-top 30px）なので
+  //   カード上端 = 30px + (100vh − 30px − カード高さ) / 2
+  //   カード高さ = 38.96vw（ServiceCard の Figma 612×748 / 1920 換算）
+  // → 15px + 50vh − 19.48vw。
+  // 幅基準の fluid だとカード（高さ基準）と揃うのが特定サイズだけになりズレるため、
+  // カードと同じ式で追従させる。極端に低いビューポートで負にならないよう max() で床を張る。
+  padding-top: max(0px, calc(15px + 50vh - 19.48vw));
   padding-right: 2vw;
   opacity: calc(1 - var(--left-hidden, 0));
 
@@ -152,7 +159,8 @@
 // 上にずれて見出しがヘッダーに潜り込む（dev では順序が逆で再現しない）。
 // セレクタを自己連結して詳細度 0,2,0 に上げ、順序に依存せず必ず勝つようにする。
 .sectionTitle.sectionTitle {
-  margin-top: 102px;
+  // 縦位置は .left の padding-top（カード上端に追従）側で一括して取るため 0
+  margin-top: 0;
   margin-bottom: 0;
 
   img {
