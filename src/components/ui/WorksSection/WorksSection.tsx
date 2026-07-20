@@ -1,11 +1,12 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { Fragment, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import styles from './WorksSection.module.scss';
 import Button from '@/components/ui/Button';
 import SectionTitle from '@/components/ui/SectionTitle';
+import { splitClientName } from '@/lib/client-name-segments';
 import type { WorkItem } from '@/types/work';
 
 type WorksSectionProps = {
@@ -63,14 +64,19 @@ export default function WorksSection({ works }: WorksSectionProps) {
           >
             {/* 左側: テキスト情報 */}
             <div className={styles.itemLeft}>
-              {/* クライアント名: 日本語は .clientName（Noto Sans JP の現状スタイル）、
-                  英語は CLIENT ラベルと完全一致させるため素のテキストで .client を継承させる。 */}
+              {/* クライアント名は文字種の変わり目で区切り、日本語は .clientName
+                  （Noto Sans JP / 18px / 400）、英字は素のテキストで .client
+                  （Mozaic GEO / 20px / 300 = CLIENT ラベルと同体裁）を継承させる。
+                  文字列全体で判定すると「株式会社YKT Innovation」の英字部分まで
+                  日本語の指定になり、英字だけ太く見えてしまう。 */}
               <p className={styles.client}>
                 CLIENT：
-                {/[぀-ヿ㐀-鿿ｦ-ﾟ]/.test(work.client) ? (
-                  <span className={styles.clientName}>{work.client}</span>
-                ) : (
-                  work.client
+                {splitClientName(work.client).map((seg, i) =>
+                  seg.isJa ? (
+                    <span key={i} className={styles.clientName}>{seg.text}</span>
+                  ) : (
+                    <Fragment key={i}>{seg.text}</Fragment>
+                  )
                 )}
               </p>
 

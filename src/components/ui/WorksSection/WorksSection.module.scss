@@ -132,15 +132,18 @@
   }
 }
 
+// クライアント名の日本語部分。Figma PC: Noto Sans JP / 18px / 400 / letter-spacing 2.34。
+// 英字部分は .client（Mozaic GEO / 20px / 300）をそのまま継承する。
 .clientName {
+  font-family: 'Noto Sans JP', var(--font-jp);
   @include fluid(font-size, 14, 18, 390, 1920);
   font-weight: var(--font-weight-regular);
-  @include fluid(letter-spacing, 1.5, 2.4, 390, 1920);
+  @include fluid(letter-spacing, 1.5, 2.34, 390, 1920);
 
   @include sp {
     // Figma SP: 14px / Noto Sans JP / line-height 18
     @include fluid(font-size, 14, 18);
-    @include fluid(letter-spacing, 1.82, 2.4);
+    @include fluid(letter-spacing, 1.82, 2.34);
   }
 }
 

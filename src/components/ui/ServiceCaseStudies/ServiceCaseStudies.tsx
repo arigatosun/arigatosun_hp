@@ -1,6 +1,8 @@
+import { Fragment } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import SectionHeader from '@/components/ui/SectionHeader';
+import { splitClientName } from '@/lib/client-name-segments';
 import type { ServiceCaseStudy } from '@/types/service';
 import styles from './ServiceCaseStudies.module.scss';
 
@@ -48,12 +50,16 @@ export default function ServiceCaseStudies({
               </div>
               <p className={styles.client}>
                 <span className={styles.clientLabel}>CLIENT : </span>
-                {/* TOP の WORKS と同様、英語のクライアント名は CLIENT ラベルと同サイズ(font-en)に。
-                    日本語(頂立輸入代行会社 等)は現状の .client スタイル(Noto Sans JP)を維持。 */}
-                {/[぀-ヿ㐀-鿿ｦ-ﾟ]/.test(c.client) ? (
-                  c.client
-                ) : (
-                  <span className={styles.clientValueEn}>{c.client}</span>
+                {/* クライアント名は文字種の変わり目で区切り、英字は .clientValueEn
+                    (font-en = CLIENT ラベルと同体裁)、日本語は .client(Noto Sans JP) を
+                    継承させる。文字列全体で判定すると日英混在名の英字部分まで日本語の
+                    指定になり、英字だけ太く見えてしまう。 */}
+                {splitClientName(c.client).map((seg, i) =>
+                  seg.isJa ? (
+                    <Fragment key={i}>{seg.text}</Fragment>
+                  ) : (
+                    <span key={i} className={styles.clientValueEn}>{seg.text}</span>
+                  )
                 )}
               </p>
               <p className={styles.text}>{c.text}</p>
