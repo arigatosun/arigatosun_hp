@@ -288,8 +288,7 @@ const CHORITZ_DETAIL: WorkDetailContent = {
             'CLIENT : 頂立輸入代行会社',
             'PROJECT MANAGEMENT : RYO YOSHIKAWA',
             'BRANDING / DESIGN : YUGO NISHIMOTO',
-            // hideya-mifuji が About で公開（members.ts の hidden 解除）された時だけ
-            // このクレジットも自動で表示する。getMemberBySlug は hidden 中 undefined を返す。
+            // About で公開中のメンバーのみクレジットに載せる（非公開に戻した場合は自動で消える）。
             ...(getMemberBySlug('hideya-mifuji')
               ? ['WEB DEVELOPMENT : HIDEYA MIFUJI']
               : []),
