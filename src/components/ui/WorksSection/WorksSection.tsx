@@ -63,16 +63,9 @@ export default function WorksSection({ works }: WorksSectionProps) {
           >
             {/* 左側: テキスト情報 */}
             <div className={styles.itemLeft}>
-              {/* クライアント名: 日本語は .clientName（Noto Sans JP の現状スタイル）、
-                  英語は CLIENT ラベルと完全一致させるため素のテキストで .client を継承させる。 */}
-              <p className={styles.client}>
-                CLIENT：
-                {/[぀-ヿ㐀-鿿ｦ-ﾟ]/.test(work.client) ? (
-                  <span className={styles.clientName}>{work.client}</span>
-                ) : (
-                  work.client
-                )}
-              </p>
+              {/* CLIENT 行はラベル・クライアント名を通して同じ体裁に統一する。日本語有無で
+                  ウェイトを出し分けると日英混在名で英字部分だけ太く見えてしまうため。 */}
+              <p className={styles.client}>CLIENT：{work.client}</p>
 
               <h3 className={styles.itemTitle}>
                 {work.title.split('|').map((part, i, arr) => (

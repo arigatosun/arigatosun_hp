@@ -50,15 +50,12 @@ export default function WorksCard({
         )}
       </div>
 
+      {/* CLIENT 行はラベル・クライアント名を通して同じ体裁（font-primary / light / 同サイズ）に
+          統一する。日本語有無で書体やウェイトを出し分けると、「株式会社YKT Innovation」のような
+          日英混在名で英字部分だけ太く見えてしまうため。 */}
       <p className={styles.client}>
         <span className={styles.clientLabel}>CLIENT：</span>
-        {/* TOP/SERVICE と同様、英語のクライアント名は CLIENT ラベルと同サイズ(font-en)に。
-            日本語名は現状の .clientName(Noto Sans JP/小さめ)を維持。SP は元々一律16pxで不変。 */}
-        {/[぀-ヿ㐀-鿿ｦ-ﾟ]/.test(client) ? (
-          <span className={styles.clientName}>{client}</span>
-        ) : (
-          <span className={styles.clientValueEn}>{client}</span>
-        )}
+        {client}
       </p>
 
       <p className={styles.body}>

@@ -46,15 +46,11 @@ export default function ServiceCaseStudies({
                   />
                 )}
               </div>
+              {/* CLIENT 行はラベル・クライアント名を通して同じ体裁に統一する。日本語有無で
+                  書体やウェイトを出し分けると日英混在名で英字部分だけ太く見えてしまうため。 */}
               <p className={styles.client}>
                 <span className={styles.clientLabel}>CLIENT : </span>
-                {/* TOP の WORKS と同様、英語のクライアント名は CLIENT ラベルと同サイズ(font-en)に。
-                    日本語(頂立輸入代行会社 等)は現状の .client スタイル(Noto Sans JP)を維持。 */}
-                {/[぀-ヿ㐀-鿿ｦ-ﾟ]/.test(c.client) ? (
-                  c.client
-                ) : (
-                  <span className={styles.clientValueEn}>{c.client}</span>
-                )}
+                {c.client}
               </p>
               <p className={styles.text}>{c.text}</p>
             </Link>

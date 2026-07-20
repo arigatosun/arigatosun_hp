@@ -36,7 +36,9 @@
 .client {
   @include fluid(margin-top, 28, 35);
   color: var(--color-text-secondary);
-  font-family: var(--font-en);
+  // 日英混在のクライアント名でも書体が切り替わらないよう、日本語フォールバックを持つ
+  // font-primary（mozaic-geo-variable → Noto Sans JP）を行全体に当てる。
+  font-family: var(--font-primary);
   font-weight: var(--font-weight-light);
   // 1512px で大きく感じるため、PC中間域(1512)→Figma max(1920)で縮小（1920は維持）
   @include fluid(font-size, 14.5, 17, 1512, 1920);
@@ -54,26 +56,6 @@
 
 .clientLabel {
   font-family: var(--font-en);
-}
-
-// 英語のクライアント名は CLIENT ラベルと同体裁（font-en）にする。サイズ/ウェイト/字間は
-// .client から継承するためラベルと完全一致。日本語名は .clientName のまま維持。
-.clientValueEn {
-  font-family: var(--font-en);
-}
-
-.clientName {
-  font-family: 'Noto Sans JP', var(--font-jp);
-  font-weight: var(--font-weight-regular);
-  // 1512px で大きく感じるため、PC中間域(1512)→Figma max(1920)で縮小（1920は維持）
-  @include fluid(font-size, 13.5, 15, 1512, 1920);
-  @include fluid(letter-spacing, 1.5, 2.6);
-
-  // Figma SP は ・CLIENT ラベル含め一律 16px / letter-spacing 2.08
-  @include sp {
-    font-size: 16px;
-    letter-spacing: 2.08px;
-  }
 }
 
 // ── 本文（Figma: CLIENT→16px / 18px / line-height 36 / letter-spacing 2.34 / Noto Sans JP） ──

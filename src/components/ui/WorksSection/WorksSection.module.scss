@@ -114,7 +114,9 @@
 
 .client {
   color: var(--color-text-secondary);
-  font-family: var(--font-en);
+  // 日英混在のクライアント名でも書体が切り替わらないよう、日本語フォールバックを持つ
+  // font-primary（mozaic-geo-variable → Noto Sans JP）を行全体に当てる。
+  font-family: var(--font-primary);
   @include fluid(font-size, 15, 20, 390, 1920);
   font-style: normal;
   font-weight: var(--font-weight-light);
@@ -129,18 +131,6 @@
     @include fluid(font-size, 16, 20);
     @include fluid(line-height, 18, 28);
     @include fluid(letter-spacing, 2.08, 2.6);
-  }
-}
-
-.clientName {
-  @include fluid(font-size, 14, 18, 390, 1920);
-  font-weight: var(--font-weight-regular);
-  @include fluid(letter-spacing, 1.5, 2.4, 390, 1920);
-
-  @include sp {
-    // Figma SP: 14px / Noto Sans JP / line-height 18
-    @include fluid(font-size, 14, 18);
-    @include fluid(letter-spacing, 1.82, 2.4);
   }
 }
 
