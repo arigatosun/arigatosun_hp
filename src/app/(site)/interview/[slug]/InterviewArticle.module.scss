@@ -172,11 +172,14 @@
 }
 
 // 太字だけの行（COMPANY PROFILE 等）の直後は、その行の説明文として詰める。
-// 上下が同じ 16px だと見出しが中間に浮いて独立して見えるため、下だけ .pointDesc と
-// 同じ「見出し→説明文」の間隔に揃える。
+// 上下が同じ 16px だと見出しが中間に浮いて独立して見えるため、下だけ大きく詰める。
+//
+// 行の line-height(28.2px) に対し font-size が 13.6px なので、各行の上下に約 7.3px の
+// 見えない余白が入る。見た目の隙間 = margin + 14.6px となり margin の変化が体感に
+// 出にくいため、いったん .pointDesc と同じ fluid(6, 8) にした上でさらに 5px 詰めている。
 // 詳細度を .profileLine と同点にしないよう、隣接セレクタで 0,2,0 にしている。
 .profileLineHeading + .profileLine {
-  @include fluid(margin-top, 6, 8);
+  @include fluid(margin-top, 1, 3);
 }
 
 // ── 質問（ー...）──
