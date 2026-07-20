@@ -534,6 +534,15 @@
   line-height: 1.83;
   color: var(--color-white);
   @include fluid(margin-top, 12, 18, 390, 1920);
+
+  // SP: 各文が 2 行に収まるようにする。
+  // 既定（10px / 字間 0.24em）だと枠幅に対して文が長く、末尾の「い。」だけが
+  // 3 行目に落ちて孤立していた。字間を詰めたうえで、詰めるだけでは足りない
+  // 狭い幅（320〜360）だけ文字も枠幅に比例して縮める。360 以上は 10px で頭打ち。
+  @include sp {
+    @include fluid(font-size, 7.5, 10, 320, 360);
+    letter-spacing: 0.1em;
+  }
 }
 
 .disclaimerLink {
