@@ -95,18 +95,25 @@
   @include fluid(margin-top, 28, 40);
   margin-bottom: 0;
   color: var(--color-text-secondary);
-  // 日英混在のクライアント名でも書体が切り替わらないよう、日本語フォールバックを持つ
-  // font-primary（mozaic-geo-variable → Noto Sans JP）を行全体に当て、ラベルと同じ
-  // サイズ・ウェイトで揃える。
-  font-family: var(--font-primary);
-  @include fluid(font-size, 16, 17);
-  font-weight: var(--font-weight-light);
+  font-family: 'Noto Sans JP', var(--font-jp);
+  @include fluid(font-size, 14, 15);
+  font-weight: var(--font-weight-regular);
   @include fluid(letter-spacing, 2.6, 3.4);
   line-height: 1.6;
 }
 
 .clientLabel {
   font-family: var(--font-en);
+  @include fluid(font-size, 16, 17);
+  font-weight: var(--font-weight-light);
+}
+
+// 英語のクライアント名は CLIENT ラベルと同じ体裁（font-en / 同サイズ / light）にする。
+// 日本語名は .client（Noto Sans JP / 小さめ）のまま維持。
+.clientValueEn {
+  font-family: var(--font-en);
+  @include fluid(font-size, 16, 17);
+  font-weight: var(--font-weight-light);
 }
 
 // 本文

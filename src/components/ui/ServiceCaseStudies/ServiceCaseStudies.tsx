@@ -1,6 +1,8 @@
+import { Fragment } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import SectionHeader from '@/components/ui/SectionHeader';
+import { splitClientName } from '@/lib/client-name-segments';
 import type { ServiceCaseStudy } from '@/types/service';
 import styles from './ServiceCaseStudies.module.scss';
 
@@ -46,11 +48,19 @@ export default function ServiceCaseStudies({
                   />
                 )}
               </div>
-              {/* CLIENT 行はラベル・クライアント名を通して同じ体裁に統一する。日本語有無で
-                  書体やウェイトを出し分けると日英混在名で英字部分だけ太く見えてしまうため。 */}
               <p className={styles.client}>
                 <span className={styles.clientLabel}>CLIENT : </span>
-                {c.client}
+                {/* クライアント名は文字種の変わり目で区切り、英字は .clientValueEn
+                    (font-en = CLIENT ラベルと同体裁)、日本語は .client(Noto Sans JP) を
+                    継承させる。文字列全体で判定すると日英混在名の英字部分まで日本語の
+                    指定になり、英字だけ太く見えてしまう。 */}
+                {splitClientName(c.client).map((seg, i) =>
+                  seg.isJa ? (
+                    <Fragment key={i}>{seg.text}</Fragment>
+                  ) : (
+                    <span key={i} className={styles.clientValueEn}>{seg.text}</span>
+                  )
+                )}
               </p>
               <p className={styles.text}>{c.text}</p>
             </Link>

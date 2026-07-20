@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { splitClientName } from '@/lib/client-name-segments';
 import styles from './WorksCard.module.scss';
 
 type WorksCardProps = {
@@ -50,12 +51,19 @@ export default function WorksCard({
         )}
       </div>
 
-      {/* CLIENT 行はラベル・クライアント名を通して同じ体裁（font-primary / light / 同サイズ）に
-          統一する。日本語有無で書体やウェイトを出し分けると、「株式会社YKT Innovation」のような
-          日英混在名で英字部分だけ太く見えてしまうため。 */}
       <p className={styles.client}>
         <span className={styles.clientLabel}>CLIENT：</span>
-        {client}
+        {/* クライアント名は文字種の変わり目で区切り、日本語は .clientName(Noto Sans JP)、
+            英字は .clientValueEn(font-en = CLIENT ラベルと同体裁) を当てる。文字列全体で
+            判定すると日英混在名の英字部分まで日本語の指定になり英字だけ太く見えるため。 */}
+        {splitClientName(client).map((seg, i) => (
+          <span
+            key={i}
+            className={seg.isJa ? styles.clientName : styles.clientValueEn}
+          >
+            {seg.text}
+          </span>
+        ))}
       </p>
 
       <p className={styles.body}>
