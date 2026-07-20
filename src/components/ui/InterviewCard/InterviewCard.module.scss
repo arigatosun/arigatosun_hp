@@ -44,6 +44,14 @@
   @include fluid(letter-spacing, 1.4, 2.08);
 }
 
+// クライアント名のうち英字部分。和文書体(Noto Sans JP)の Regular で描かれると
+// そこだけ太く見えるため、欧文書体の Light に切り替える。
+// サイズ・行間・字間は .client から継承し、日本語部分と共通のままにする。
+.clientEn {
+  font-family: var(--font-en);
+  font-weight: var(--font-weight-light);
+}
+
 // 見出し。会社名下 14。
 // サイズ・行間・字間は WORKS のタイトル(WorksSection の .itemTitle)と同じ値に揃える
 // （旧: 22 / lh36 / ls2.2 は他セクションより大きく浮いていた）。
