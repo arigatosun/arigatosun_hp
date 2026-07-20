@@ -76,11 +76,20 @@ function Block({ block }: { block: IvBlock }) {
       return (
         <div className={styles.profile}>
           <h3 className={styles.profileLabel}>{block.label}</h3>
-          {block.lines.map((line, i) => (
-            <p key={i} className={styles.profileLine}>
-              <Rich para={line} />
-            </p>
-          ))}
+          {block.lines.map((line, i) => {
+            // 全セグメントが太字の行（COMPANY PROFILE 等）は、直後の説明文の見出しとして扱う。
+            // 下側の余白だけ詰めて説明文とひとまとまりに見せる（従来は上下が等間隔で、
+            // 見出しが上の名前行との中間に浮いて独立して見えていた）。
+            const isHeading = line.length > 0 && line.every((s) => s.b);
+            return (
+              <p
+                key={i}
+                className={`${styles.profileLine}${isHeading ? ` ${styles.profileLineHeading}` : ''}`}
+              >
+                <Rich para={line} />
+              </p>
+            );
+          })}
         </div>
       );
 
