@@ -27,6 +27,10 @@ export const WELCOME = {
 export const INPUT_PLACEHOLDER =
   '“気になること”話しかけてみてください。ex.) アリガトサンって何？';
 
+// SP 用の短縮版。SP は入力欄の内側が 176〜246px しかなく、上の文言（35文字）は
+// 文字を 8px まで縮めても収まらないため、例示部分を落とした短い文言に差し替える。
+export const INPUT_PLACEHOLDER_SP = '“気になること”話しかけてみて！';
+
 // 下部コピーライト行（Figma node 3902:27063 / 27064）
 export const COPYRIGHT = {
   left: 'Arigatosun Inc.',

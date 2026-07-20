@@ -1,11 +1,12 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import {
   WELCOME,
   INPUT_PLACEHOLDER,
+  INPUT_PLACEHOLDER_SP,
   COPYRIGHT,
   matchAnswer,
 } from '@/data/arigato-chat';
@@ -95,6 +96,17 @@ export default function ArigatoChat() {
   const [isStreaming, setIsStreaming] = useState(false);
   const idRef = useRef(0);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  // SP は入力欄が狭く、PC 用の長い文言だと文字が切れるため短縮版に差し替える。
+  // 初期値は PC 用（SSR と初回描画を一致させ、ハイドレーション不整合を避ける）。
+  const [placeholder, setPlaceholder] = useState(INPUT_PLACEHOLDER);
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 1023px)');
+    const apply = () => setPlaceholder(mq.matches ? INPUT_PLACEHOLDER_SP : INPUT_PLACEHOLDER);
+    apply();
+    mq.addEventListener('change', apply);
+    return () => mq.removeEventListener('change', apply);
+  }, []);
 
   const hasConversation = messages.length > 0;
 
@@ -281,7 +293,7 @@ export default function ArigatoChat() {
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder={INPUT_PLACEHOLDER}
+            placeholder={placeholder}
             className={styles.input}
             aria-label="メッセージを入力"
             disabled={isStreaming}

@@ -488,6 +488,16 @@
     color: var(--color-text-secondary);
     opacity: 0.75;
   }
+
+  // SP: 入力欄の内側は 176〜246px しかなく、短縮版の文言でも 16px では入り切らない。
+  // プレースホルダーだけ枠幅に比例して縮める（320→390 で 10→12px、390 以上は 12px）。
+  // 入力欄本体の font-size は 16px のまま維持する（下げると iOS でフォーカス時に
+  // 自動ズームしてしまうため）。
+  @include sp {
+    &::placeholder {
+      @include fluid(font-size, 10, 12, 320, 390);
+    }
+  }
 }
 
 .sendButton {
