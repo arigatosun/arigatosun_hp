@@ -503,6 +503,14 @@
       // 入力欄の行ボックス（16px × 1.78）と同じ値を明示して揃える。
       line-height: 16px * 1.78;
     }
+
+    // 上の行ボックス揃えだけではまだ 2px ほど下寄りに見えるため微調整する。
+    // ::placeholder は transform を受け付けないので、プレースホルダー表示中
+    // （= 未入力）に限って入力欄ごと 2px 上へずらす。文字を入力すると
+    // :placeholder-shown が外れて元の位置に戻るため、入力中の文字位置は不変。
+    &:placeholder-shown {
+      transform: translateY(-2px);
+    }
   }
 }
 
