@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Fragment } from 'react';
+import { splitClientName } from '@/lib/client-name-segments';
 import type { InterviewItem } from '@/data/interviews';
 import styles from './InterviewCard.module.scss';
 
@@ -22,7 +23,19 @@ export default function InterviewCard({ item }: InterviewCardProps) {
           className={styles.image}
         />
       </div>
-      <p className={styles.client}>{item.client}</p>
+      {/* クライアント名は文字種の変わり目で区切り、英字だけ欧文書体(Mozaic GEO / Light)に
+          する。行全体を Noto Sans JP にすると「株式会社YKT Innovation 様」の英字部分が
+          和文書体の Regular で描かれ、そこだけ太く見えてしまう。
+          サイズ・行間・字間は日本語と共通のまま（.client を継承）。 */}
+      <p className={styles.client}>
+        {splitClientName(item.client).map((seg, i) =>
+          seg.isJa ? (
+            <Fragment key={i}>{seg.text}</Fragment>
+          ) : (
+            <span key={i} className={styles.clientEn}>{seg.text}</span>
+          )
+        )}
+      </p>
       <h3 className={styles.heading}>
         {item.heading.map((line, j) => (
           <Fragment key={j}>
