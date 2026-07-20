@@ -171,6 +171,14 @@
   @include fluid(margin-top, 12, 16);
 }
 
+// 太字だけの行（COMPANY PROFILE 等）の直後は、その行の説明文として詰める。
+// 上下が同じ 16px だと見出しが中間に浮いて独立して見えるため、下だけ .pointDesc と
+// 同じ「見出し→説明文」の間隔に揃える。
+// 詳細度を .profileLine と同点にしないよう、隣接セレクタで 0,2,0 にしている。
+.profileLineHeading + .profileLine {
+  @include fluid(margin-top, 6, 8);
+}
+
 // ── 質問（ー...）──
 .question {
   @include fluid(margin-top, 48, 80); // 回答→次の質問
