@@ -15,6 +15,15 @@
   }
 }
 
+// スマホ横向き（低い画面）。SP の縦積みだと高さが足りず崩れるため、この画面だけ
+// PC 風の横並び（キャラ左＋テキスト右）へ切り替えるための条件。
+// orientation: landscape かつ高さが低い端末だけを対象にし、タブレット/PC には効かせない。
+@mixin sp-landscape {
+  @media (orientation: landscape) and (max-height: 540px) {
+    @content;
+  }
+}
+
 .root {
   position: relative;
   display: flex;
@@ -569,6 +578,11 @@
     @include fluid(font-size, 7.5, 10, 320, 360);
     letter-spacing: 0.1em;
   }
+
+  // 横向き: ヒーローに縦の余白を回すため上マージンを詰める
+  @include sp-landscape {
+    margin-top: 8px;
+  }
 }
 
 .disclaimerLink {
@@ -604,8 +618,103 @@
     // SP: 左右余白を本文と同じ 40px に揃える（Figma node 4282:107267）
     @include fluid(padding-inline, 40, 40, 390, 1200);
   }
+
+  // 横向き: 上下マージンを詰めてヒーローへ縦の余白を回す。1行に戻して縦を節約。
+  @include sp-landscape {
+    flex-direction: row;
+    margin-top: 8px;
+    padding-bottom: 10px;
+  }
 }
 
 .copyrightLeft {
   opacity: 0.75;
+}
+
+// ════════════════════════════════════════════════════════════════════
+// スマホ横向き（低い画面）専用レイアウト
+// ────────────────────────────────────────────────────────────────────
+// SP の縦積み（キャラ→紹介文→入力欄）は横向きの低い画面（高さ ≈390px）だと
+// 入り切らず崩れる。この画面に限り PC 風の横並び（キャラ左＋テキスト右）に切り替え、
+// ヒーローが画面より高い時は外側 scrollArea をスクロールさせて全要素へ届くようにする。
+// SP のルールより後ろに置くことで（同詳細度・後勝ち）確実に上書きする。
+// ════════════════════════════════════════════════════════════════════
+
+// ヒーロー: 縦積み→横並び。低い画面に合わせて余白・キャラを圧縮する。
+.welcome {
+  @include sp-landscape {
+    flex-direction: row;
+    // 上揃え: キャラと見出し(OFFICIAL/名前)を画面上部で並べ、初期表示で両方見えるようにする
+    // （中央寄せだと長い紹介文の中央にキャラが来て初期表示から外れる）
+    align-items: flex-start;
+    justify-content: flex-start;
+    // scrollArea を満たさず自然な高さにする（あふれたら scrollArea 側でスクロール）
+    flex: 0 0 auto;
+    min-height: auto;
+    @include fluid(gap, 20, 32, 480, 900);
+    // 低い画面なので上余白は最小限に
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+}
+
+// キャラ: 画面の高さに追従して小さくする（短い画面ほど小さく）
+.welcomeChar {
+  @include sp-landscape {
+    width: clamp(96px, 32vh, 190px);
+  }
+}
+
+// テキスト: SP の縦チェーン（内部スクロール）を解除して素直に流す
+.welcomeText {
+  @include sp-landscape {
+    display: block;
+    max-width: none;
+    flex: 0 1 auto;
+    min-height: auto;
+  }
+}
+
+.welcomeHead {
+  @include sp-landscape {
+    display: contents;
+  }
+}
+
+// 内部スクロールを解除（外側 scrollArea 1本に集約）
+.welcomeBody {
+  @include sp-landscape {
+    display: contents;
+    overflow: visible;
+  }
+}
+
+.welcomeMode {
+  // 外側 scrollArea を有効化（SP は overflow:hidden で内部スクロールに委ねていた）。
+  // 横向きではヒーローが画面より高くなり得るため外側でスクロールさせる。
+  .scrollArea {
+    @include sp-landscape {
+      flex: 1 1 auto;
+      overflow-y: auto;
+    }
+  }
+
+  // ヒーロー末→入力欄の余白は低い画面に合わせて詰める
+  .inputBar {
+    @include sp-landscape {
+      margin-top: 12px;
+    }
+  }
+}
+
+// 会話中も同様に横並び＋外側スクロールへ（.welcome 側の切替で足りるが念のため明示）
+.chatting {
+  .welcome,
+  .welcomeText,
+  .welcomeBody {
+    @include sp-landscape {
+      flex: 0 0 auto;
+      min-height: auto;
+    }
+  }
 }
