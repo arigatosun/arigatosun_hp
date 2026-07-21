@@ -15,11 +15,12 @@
   }
 }
 
-// スマホ横向き（低い画面）。SP の縦積みだと高さが足りず崩れるため、この画面だけ
+// 横長（横 > 縦）の画面。SP の縦積みだとキャラが巨大化して崩れるため、この画面だけ
 // PC 風の横並び（キャラ左＋テキスト右）へ切り替えるための条件。
-// orientation: landscape かつ高さが低い端末だけを対象にし、タブレット/PC には効かせない。
+// 「幅 1023px 以下（＝SP 域）かつ横向き」を対象にする。1024px 以上は元々 PC 配置なので
+// 対象外（デスクトップの横長ウィンドウに誤適用しない）。縦向きの端末は従来の縦積みのまま。
 @mixin sp-landscape {
-  @media (orientation: landscape) and (max-height: 540px) {
+  @media (max-width: 1023px) and (orientation: landscape) {
     @content;
   }
 }
@@ -95,6 +96,9 @@
 
 // 会話中: 固定ヘッダー下にバブルが潜り込む際、上端を赤グラデーションでフェードさせる。
 // グラデーション(z5)は前面コンテンツより上・ヘッダー(z-header=100)より下に重なる。
+// 既定は非表示（opacity:0）にしておき、スクロールで下がった時（.scrolledDown）だけ表示する。
+// 先頭付近＝ヒーローが見えている時はバブルが潜らないため不要で、出しっぱなしだと
+// ヒーローの上に赤い帯が残って見えてしまう。
 .chatting::before {
   content: '';
   position: absolute;
@@ -110,6 +114,12 @@
   );
   pointer-events: none;
   z-index: 5;
+  opacity: 0;
+  transition: opacity var(--transition-base);
+}
+
+.chatting.scrolledDown::before {
+  opacity: 1;
 }
 
 // 会話中のヒーロー: 会話開始後もヒーローは描画したままにして、スクロールを上まで

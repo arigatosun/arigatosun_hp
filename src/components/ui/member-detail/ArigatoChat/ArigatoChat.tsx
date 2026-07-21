@@ -110,6 +110,13 @@ export default function ArigatoChat() {
 
   const hasConversation = messages.length > 0;
 
+  // 会話中に上端の赤グラデーション（固定ヘッダー下でバブルをフェードさせる装飾）を
+  // 出すかどうか。スクロールが先頭付近＝ヒーローが見えている時は不要なので消す。
+  const [scrolledDown, setScrolledDown] = useState(false);
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    setScrolledDown(e.currentTarget.scrollTop > 8);
+  };
+
   const scrollToBottom = () => {
     requestAnimationFrame(() => {
       const el = scrollRef.current;
@@ -179,11 +186,15 @@ export default function ArigatoChat() {
     <section
       className={`${styles.root} ${
         hasConversation ? styles.chatting : styles.welcomeMode
-      }`}
+      } ${scrolledDown ? styles.scrolledDown : ''}`}
       aria-label="アリガトくんチャット"
     >
       <div className={styles.stage}>
-        <div className={styles.scrollArea} ref={scrollRef}>
+        <div
+          className={styles.scrollArea}
+          ref={scrollRef}
+          onScroll={handleScroll}
+        >
           {
             // ── キャラクター紹介ヒーロー ──
             // 会話開始後も描画したままにして、スクロールを上まで戻すと再び見えるようにする
