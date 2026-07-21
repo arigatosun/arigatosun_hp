@@ -1,11 +1,12 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import {
   WELCOME,
   INPUT_PLACEHOLDER,
+  INPUT_PLACEHOLDER_SP,
   COPYRIGHT,
   matchAnswer,
 } from '@/data/arigato-chat';
@@ -96,7 +97,25 @@ export default function ArigatoChat() {
   const idRef = useRef(0);
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  // SP は入力欄が狭く、PC 用の長い文言だと文字が切れるため短縮版に差し替える。
+  // 初期値は PC 用（SSR と初回描画を一致させ、ハイドレーション不整合を避ける）。
+  const [placeholder, setPlaceholder] = useState(INPUT_PLACEHOLDER);
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 1023px)');
+    const apply = () => setPlaceholder(mq.matches ? INPUT_PLACEHOLDER_SP : INPUT_PLACEHOLDER);
+    apply();
+    mq.addEventListener('change', apply);
+    return () => mq.removeEventListener('change', apply);
+  }, []);
+
   const hasConversation = messages.length > 0;
+
+  // 会話中に上端の赤グラデーション（固定ヘッダー下でバブルをフェードさせる装飾）を
+  // 出すかどうか。スクロールが先頭付近＝ヒーローが見えている時は不要なので消す。
+  const [scrolledDown, setScrolledDown] = useState(false);
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    setScrolledDown(e.currentTarget.scrollTop > 8);
+  };
 
   const scrollToBottom = () => {
     requestAnimationFrame(() => {
@@ -167,13 +186,19 @@ export default function ArigatoChat() {
     <section
       className={`${styles.root} ${
         hasConversation ? styles.chatting : styles.welcomeMode
-      }`}
+      } ${scrolledDown ? styles.scrolledDown : ''}`}
       aria-label="アリガトくんチャット"
     >
       <div className={styles.stage}>
-        <div className={styles.scrollArea} ref={scrollRef}>
-          {!hasConversation ? (
-            // ── 会話開始前: キャラクター紹介ヒーロー ──
+        <div
+          className={styles.scrollArea}
+          ref={scrollRef}
+          onScroll={handleScroll}
+        >
+          {
+            // ── キャラクター紹介ヒーロー ──
+            // 会話開始後も描画したままにして、スクロールを上まで戻すと再び見えるようにする
+            // （以前は会話開始と同時に DOM から外していたため初期画面に戻れなかった）。
             <div className={styles.welcome}>
               <div className={styles.welcomeChar}>
                 <Image
@@ -224,8 +249,9 @@ export default function ArigatoChat() {
                 </div>
               </div>
             </div>
-          ) : (
-            // ── 会話開始後: チャットバブル ──
+          }
+          {hasConversation && (
+            // ── 会話開始後: チャットバブル（ヒーローの下に積む） ──
             <div className={styles.messages}>
               {messages.map((m) =>
                 m.role === 'user' ? (
@@ -278,7 +304,7 @@ export default function ArigatoChat() {
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder={INPUT_PLACEHOLDER}
+            placeholder={placeholder}
             className={styles.input}
             aria-label="メッセージを入力"
             disabled={isStreaming}

@@ -5,6 +5,26 @@
 // Figma 1920px フレーム基準（node 4059:5370 / 4059:5388）。
 // 全画面の赤テクスチャ背景に、中央 1000px の会話カラム + 入力欄 + 注意書き + コピーライト。
 
+// スクロールバーを視覚的に隠す（スクロール自体は従来どおり可能）。
+// 赤背景の上にブラウザ既定のバーが乗ると目立つため、この画面内のスクロール領域に当てる。
+@mixin hide-scrollbar {
+  scrollbar-width: none; // Firefox
+  -ms-overflow-style: none; // 旧 Edge / IE
+  &::-webkit-scrollbar {
+    display: none; // Chrome / Safari / Edge
+  }
+}
+
+// 横長（横 > 縦）の画面。SP の縦積みだとキャラが巨大化して崩れるため、この画面だけ
+// PC 風の横並び（キャラ左＋テキスト右）へ切り替えるための条件。
+// 「幅 1023px 以下（＝SP 域）かつ横向き」を対象にする。1024px 以上は元々 PC 配置なので
+// 対象外（デスクトップの横長ウィンドウに誤適用しない）。縦向きの端末は従来の縦積みのまま。
+@mixin sp-landscape {
+  @media (max-width: 1023px) and (orientation: landscape) {
+    @content;
+  }
+}
+
 .root {
   position: relative;
   display: flex;
@@ -47,6 +67,7 @@
   overflow-y: auto;
   display: flex;
   flex-direction: column;
+  @include hide-scrollbar;
 }
 
 // 会話前: ヒーローを上寄せにし（scrollArea は伸ばさない）、
@@ -75,6 +96,9 @@
 
 // 会話中: 固定ヘッダー下にバブルが潜り込む際、上端を赤グラデーションでフェードさせる。
 // グラデーション(z5)は前面コンテンツより上・ヘッダー(z-header=100)より下に重なる。
+// 既定は非表示（opacity:0）にしておき、スクロールで下がった時（.scrolledDown）だけ表示する。
+// 先頭付近＝ヒーローが見えている時はバブルが潜らないため不要で、出しっぱなしだと
+// ヒーローの上に赤い帯が残って見えてしまう。
 .chatting::before {
   content: '';
   position: absolute;
@@ -90,6 +114,42 @@
   );
   pointer-events: none;
   z-index: 5;
+  opacity: 0;
+  transition: opacity var(--transition-base);
+}
+
+.chatting.scrolledDown::before {
+  opacity: 1;
+}
+
+// 会話中のヒーロー: 会話開始後もヒーローは描画したままにして、スクロールを上まで
+// 戻すと初期画面が再び見えるようにしている。会話前は scrollArea を満たす縦チェーン
+// （SP は welcomeBody だけ内部スクロール）だが、会話中はヒーローもバブルと一緒に
+// 外側スクロールへ流したいので、その伸長と内部スクロールを解除する。
+.chatting {
+  .welcome {
+    @include sp {
+      // 領域を満たさず自然な高さにして、下にバブルを積む
+      flex: 0 0 auto;
+      min-height: auto;
+    }
+  }
+
+  .welcomeText {
+    @include sp {
+      flex: 0 0 auto;
+      min-height: auto;
+    }
+  }
+
+  .welcomeBody {
+    @include sp {
+      // 内部スクロールを解除（外側 scrollArea と二重スクロールになるため）
+      flex: 0 0 auto;
+      min-height: auto;
+      overflow-y: visible;
+    }
+  }
 }
 
 // ── 会話開始前: キャラクター紹介ヒーロー ──
@@ -171,6 +231,7 @@
     flex: 1 1 auto;
     min-height: 0;
     overflow-y: auto;
+    @include hide-scrollbar;
   }
 }
 
@@ -446,6 +507,32 @@
     color: var(--color-text-secondary);
     opacity: 0.75;
   }
+
+  // SP: 入力欄の内側は 176〜246px しかなく、短縮版の文言でも 16px では入り切らない。
+  // プレースホルダーだけ枠幅に比例して縮める（320→390 で 10→12px、390 以上は 12px）。
+  // 入力欄本体の font-size は 16px のまま維持する（下げると iOS でフォーカス時に
+  // 自動ズームしてしまうため）。
+  @include sp {
+    &::placeholder {
+      // 390px で 14px（指摘を受けて +2）。320px は入力欄の内側が 176px しかなく
+      // 12px では溢れるため、狭い幅だけ抑えて 10.5px まで落とす。
+      @include fluid(font-size, 10.5, 14, 320, 390);
+      // 入力欄本体と同じ行ボックスに揃えて上下中央に置く。
+      // ::placeholder の既定は line-height: normal で、フォントを小さくすると
+      // 行ボックスも縮む。入力欄のベースラインに合わせて描画されるため、
+      // 小さい文字ほど視覚的な中心が下へずれて「下寄り」に見えていた。
+      // 入力欄の行ボックス（16px × 1.78）と同じ値を明示して揃える。
+      line-height: 16px * 1.78;
+    }
+
+    // 上の行ボックス揃えだけではまだ 2px ほど下寄りに見えるため微調整する。
+    // ::placeholder は transform を受け付けないので、プレースホルダー表示中
+    // （= 未入力）に限って入力欄ごと 2px 上へずらす。文字を入力すると
+    // :placeholder-shown が外れて元の位置に戻るため、入力中の文字位置は不変。
+    &:placeholder-shown {
+      transform: translateY(-2px);
+    }
+  }
 }
 
 .sendButton {
@@ -492,6 +579,20 @@
   line-height: 1.83;
   color: var(--color-white);
   @include fluid(margin-top, 12, 18, 390, 1920);
+
+  // SP: 各文が 2 行に収まるようにする。
+  // 既定（10px / 字間 0.24em）だと枠幅に対して文が長く、末尾の「い。」だけが
+  // 3 行目に落ちて孤立していた。字間を詰めたうえで、詰めるだけでは足りない
+  // 狭い幅（320〜360）だけ文字も枠幅に比例して縮める。360 以上は 10px で頭打ち。
+  @include sp {
+    @include fluid(font-size, 7.5, 10, 320, 360);
+    letter-spacing: 0.1em;
+  }
+
+  // 横向き: ヒーローに縦の余白を回すため上マージンを詰める
+  @include sp-landscape {
+    margin-top: 8px;
+  }
 }
 
 .disclaimerLink {
@@ -527,8 +628,103 @@
     // SP: 左右余白を本文と同じ 40px に揃える（Figma node 4282:107267）
     @include fluid(padding-inline, 40, 40, 390, 1200);
   }
+
+  // 横向き: 上下マージンを詰めてヒーローへ縦の余白を回す。1行に戻して縦を節約。
+  @include sp-landscape {
+    flex-direction: row;
+    margin-top: 8px;
+    padding-bottom: 10px;
+  }
 }
 
 .copyrightLeft {
   opacity: 0.75;
+}
+
+// ════════════════════════════════════════════════════════════════════
+// スマホ横向き（低い画面）専用レイアウト
+// ────────────────────────────────────────────────────────────────────
+// SP の縦積み（キャラ→紹介文→入力欄）は横向きの低い画面（高さ ≈390px）だと
+// 入り切らず崩れる。この画面に限り PC 風の横並び（キャラ左＋テキスト右）に切り替え、
+// ヒーローが画面より高い時は外側 scrollArea をスクロールさせて全要素へ届くようにする。
+// SP のルールより後ろに置くことで（同詳細度・後勝ち）確実に上書きする。
+// ════════════════════════════════════════════════════════════════════
+
+// ヒーロー: 縦積み→横並び。低い画面に合わせて余白・キャラを圧縮する。
+.welcome {
+  @include sp-landscape {
+    flex-direction: row;
+    // 上揃え: キャラと見出し(OFFICIAL/名前)を画面上部で並べ、初期表示で両方見えるようにする
+    // （中央寄せだと長い紹介文の中央にキャラが来て初期表示から外れる）
+    align-items: flex-start;
+    justify-content: flex-start;
+    // scrollArea を満たさず自然な高さにする（あふれたら scrollArea 側でスクロール）
+    flex: 0 0 auto;
+    min-height: auto;
+    @include fluid(gap, 20, 32, 480, 900);
+    // 低い画面なので上余白は最小限に
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+}
+
+// キャラ: 画面の高さに追従して小さくする（短い画面ほど小さく）
+.welcomeChar {
+  @include sp-landscape {
+    width: clamp(96px, 32vh, 190px);
+  }
+}
+
+// テキスト: SP の縦チェーン（内部スクロール）を解除して素直に流す
+.welcomeText {
+  @include sp-landscape {
+    display: block;
+    max-width: none;
+    flex: 0 1 auto;
+    min-height: auto;
+  }
+}
+
+.welcomeHead {
+  @include sp-landscape {
+    display: contents;
+  }
+}
+
+// 内部スクロールを解除（外側 scrollArea 1本に集約）
+.welcomeBody {
+  @include sp-landscape {
+    display: contents;
+    overflow: visible;
+  }
+}
+
+.welcomeMode {
+  // 外側 scrollArea を有効化（SP は overflow:hidden で内部スクロールに委ねていた）。
+  // 横向きではヒーローが画面より高くなり得るため外側でスクロールさせる。
+  .scrollArea {
+    @include sp-landscape {
+      flex: 1 1 auto;
+      overflow-y: auto;
+    }
+  }
+
+  // ヒーロー末→入力欄の余白は低い画面に合わせて詰める
+  .inputBar {
+    @include sp-landscape {
+      margin-top: 12px;
+    }
+  }
+}
+
+// 会話中も同様に横並び＋外側スクロールへ（.welcome 側の切替で足りるが念のため明示）
+.chatting {
+  .welcome,
+  .welcomeText,
+  .welcomeBody {
+    @include sp-landscape {
+      flex: 0 0 auto;
+      min-height: auto;
+    }
+  }
 }
