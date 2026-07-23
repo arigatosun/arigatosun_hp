@@ -70,17 +70,16 @@
   @include hide-scrollbar;
 }
 
-// 会話前: ヒーローを上寄せにし（scrollArea は伸ばさない）、
+// 会話前: PC はヒーローを上寄せにし（scrollArea は伸ばさない）、
 // 入力欄をヒーロー本文の 88px 下に置く（Figma: intro末 y629 → 入力欄 y717）。
+// SP はキャラクター紹介全体を外側 scrollArea でスクロールし、本文を確実に読めるようにする。
 .welcomeMode {
   .scrollArea {
     flex: 0 1 auto;
 
-    // SP: キャラ+名前を固定し welcomeBody だけ内部スクロールさせるため、
-    // 外側スクロールは止めて高さを満たす（flex チェーンの起点）。
     @include sp {
       flex: 1 1 auto;
-      overflow: hidden;
+      overflow-y: auto;
     }
   }
 
@@ -123,9 +122,8 @@
 }
 
 // 会話中のヒーロー: 会話開始後もヒーローは描画したままにして、スクロールを上まで
-// 戻すと初期画面が再び見えるようにしている。会話前は scrollArea を満たす縦チェーン
-// （SP は welcomeBody だけ内部スクロール）だが、会話中はヒーローもバブルと一緒に
-// 外側スクロールへ流したいので、その伸長と内部スクロールを解除する。
+// 戻すと初期画面が再び見えるようにしている。バブルと同じ外側 scrollArea に流すため、
+// SP では伸長と内部スクロールを解除する。
 .chatting {
   .welcome {
     @include sp {
@@ -168,15 +166,14 @@
     // Figma SP(4282:107267): キャラ・テキストとも左寄せ（中央寄せにしない）
     flex-direction: column;
     align-items: flex-start;
-    // 固定ゾーン（キャラ+名前）＋スクロールゾーン（welcomeBody）のため scrollArea を満たす
-    flex: 1 1 auto;
-    min-height: 0;
+    // SP はキャラごとスクロールするため、ヒーロー自体は自然な高さで流す
+    flex: 0 0 auto;
+    min-height: auto;
     @include fluid(gap, 20, 32, 390, 1200);
-    // SP: ヘッダー下端 → OFFICIAL CHARACTER の「見た目の余白」を 62px にする。
-    // SPヘッダー実高さ ≈101px（=padding24 + ロゴ53 + padding24）と .root padding-top 80px の
-    // 21px 重なりを考慮し、見た目 62px = 62 + (101 - 80) ＝ padding-top 83px（390基準）。
-    // 320px でも見た目62pxになるよう min を 75 に逆算（320時ヘッダー≈93px）。
-    @include fluid(padding-top, 75, 83, 320, 390);
+    // SP: 初期表示で下の本文が少し見えるよう、キャラ紹介全体を従来より 40px 上げる。
+    // 元値は padding-top 75→83px（320→390）。ヘッダーとの重なりを差し引いた
+    // 見た目の余白は約 22px になる。
+    @include fluid(padding-top, 35, 43, 320, 390);
   }
 }
 
@@ -202,36 +199,31 @@
 
   @include sp {
     max-width: 100%;
-    // SP: welcomeHead（固定）+ welcomeBody（スクロール）の縦チェーン
-    display: flex;
-    flex-direction: column;
-    flex: 1 1 auto;
-    min-height: 0;
+    display: block;
+    flex: 0 0 auto;
+    min-height: auto;
   }
 }
 
-// SP: キャラ直後の固定ゾーン（OFFICIAL CHARACTER / 名前）。PC では透明ラッパー。
+// OFFICIAL CHARACTER / 名前のラッパー。表示上の余計な箱は作らない。
 .welcomeHead {
   display: contents;
 
   @include sp {
-    display: block;
+    display: contents;
     flex: 0 0 auto;
   }
 }
 
-// SP: ここ（区切り線・キャッチ・本文）だけが独立スクロール。上端で本文が切れる
-// ＝固定部との「区切り」（背景は付けない・クリーンな境界）。PC では透明ラッパー。
+// 区切り線・キャッチ・本文のラッパー。SP も外側 scrollArea でまとめてスクロールする。
 .welcomeBody {
   display: contents;
 
   @include sp {
-    display: flex;
-    flex-direction: column;
-    flex: 1 1 auto;
-    min-height: 0;
-    overflow-y: auto;
-    @include hide-scrollbar;
+    display: contents;
+    flex: 0 0 auto;
+    min-height: auto;
+    overflow: visible;
   }
 }
 
@@ -257,6 +249,11 @@
   @include fluid(gap, 16, 38, 390, 1920);
   // Figma: overline → name の余白 16px
   @include fluid(margin-top, 10, 16, 390, 1920);
+
+  @include sp {
+    flex-wrap: nowrap;
+    @include fluid(gap, 8, 12, 320, 390);
+  }
 }
 
 .welcomeNameJp {
@@ -268,8 +265,9 @@
 
   // Figma SP: 20px / 字間 0.08em
   @include sp {
-    @include fluid(font-size, 20, 20, 390, 1200);
+    @include fluid(font-size, 16, 20, 320, 390);
     letter-spacing: 0.08em;
+    white-space: nowrap;
   }
 }
 
@@ -280,9 +278,11 @@
   letter-spacing: 0.13em;
   line-height: 1.54;
 
-  // Figma SP: 20px
+  // SP: PC と同じく日本語名より少し小さくし、1 行に収める。
   @include sp {
-    @include fluid(font-size, 20, 20, 390, 1200);
+    @include fluid(font-size, 14, 18, 320, 390);
+    letter-spacing: 0.09em;
+    white-space: nowrap;
   }
 }
 
