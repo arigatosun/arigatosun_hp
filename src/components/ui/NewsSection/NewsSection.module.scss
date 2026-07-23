@@ -21,8 +21,8 @@
     // Figma SP @390: セクション padding-left/right 40px
     @include fluid(padding-left, 40, 200);
     @include fluid(padding-right, 40, 200);
-    // Figma SP @390: Works フッター末尾 y=6571 → News タイトル y=6747 = gap 176px
-    @include fluid(padding-top, 176, 180);
+    // TOP では InterviewSection が直前に入るため、SP の余白は他セクション間に合わせて詰める。
+    @include fluid(padding-top, 80, 120, 390, 1200);
     // base の padding-bottom は SP にも効くため、現状(1200)カーブに固定
     @include fluid(padding-bottom, 60, 120);
   }

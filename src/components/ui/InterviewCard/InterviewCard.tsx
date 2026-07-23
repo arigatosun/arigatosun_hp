@@ -9,8 +9,34 @@ type InterviewCardProps = {
   item: InterviewItem;
 };
 
+const NO_BREAK_TEXT_PATTERN = /(\d+(?:時間|年|ヶ月|月|日|人|社|件)|AI SaaS|Men’te|ケアGO)/g;
+const NO_BREAK_TEXT_EXACT = /^(?:\d+(?:時間|年|ヶ月|月|日|人|社|件)|AI SaaS|Men’te|ケアGO)$/;
+
+function renderNoBreakText(text: string) {
+  return text.split(NO_BREAK_TEXT_PATTERN).map((part, index) =>
+    NO_BREAK_TEXT_EXACT.test(part) ? (
+      <span key={`${part}-${index}`} className={styles.noBreak}>
+        {part}
+      </span>
+    ) : (
+      part
+    )
+  );
+}
+
+function renderLines(lines: string[]) {
+  return lines.map((line, j) => (
+    <Fragment key={j}>
+      {j > 0 && <br />}
+      {renderNoBreakText(line)}
+    </Fragment>
+  ));
+}
+
 // インタビューカード（TOP セクション / 一覧ページ共通）。カード全体が詳細ページへのリンク。
 export default function InterviewCard({ item }: InterviewCardProps) {
+  const hasBodySp = Boolean(item.bodySp);
+
   return (
     <Link href={`/interview/${item.slug}`} className={styles.card}>
       <div className={styles.imageWrap}>
@@ -37,21 +63,16 @@ export default function InterviewCard({ item }: InterviewCardProps) {
         )}
       </p>
       <h3 className={styles.heading}>
-        {item.heading.map((line, j) => (
-          <Fragment key={j}>
-            {j > 0 && <br />}
-            {line}
-          </Fragment>
-        ))}
+        {renderLines(item.heading)}
       </h3>
-      <p className={styles.body}>
-        {item.body.map((line, j) => (
-          <Fragment key={j}>
-            {j > 0 && <br />}
-            {line}
-          </Fragment>
-        ))}
+      <p className={`${styles.body} ${hasBodySp ? styles.bodyPc : ''}`}>
+        {renderLines(item.body)}
       </p>
+      {item.bodySp && (
+        <p className={`${styles.body} ${styles.bodySp}`}>
+          {renderLines(item.bodySp)}
+        </p>
+      )}
     </Link>
   );
 }

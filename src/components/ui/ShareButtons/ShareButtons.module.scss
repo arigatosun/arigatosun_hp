@@ -3,7 +3,7 @@
 );
 @use '@/styles/breakpoints' as *;
 
-// ニュース詳細のシェアと同仕様（右寄せ・同アイコン・同サイズ）。
+// ニュース詳細のシェアと同仕様（PC/SPとも右寄せ・同アイコン・同サイズ）。
 .share {
   @include fluid(margin-top, 20, 32, 390, 1920);
   display: flex;
@@ -12,7 +12,6 @@
   @include fluid(gap, 12, 18, 390, 1920);
 
   @include sp {
-    justify-content: center;
     @include fluid(gap, 14, 18, 320, 390);
   }
 }

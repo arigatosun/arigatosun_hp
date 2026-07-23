@@ -4,12 +4,20 @@
 );
 @use '@/styles/breakpoints' as *;
 
-// NEWS セクションの直上。左右 x=200 / SP 20。上下はサイト共通のセクション間リズムに合わせる。
+// NEWS セクションの直上。PC は左右 x=200、SP は WORKS / NEWS と同じ 40px 基準に揃える。
+// 上下はサイト共通のセクション間リズムに合わせる。
 .section {
   @include fluid(padding-left, 20, 200, 390, 1920);
   @include fluid(padding-right, 20, 200, 390, 1920);
   @include fluid(padding-top, 60, 180, 390, 1920);
   @include fluid(padding-bottom, 60, 120, 390, 1920);
+
+  @include sp {
+    @include fluid(padding-left, 40, 200, 390, 1200);
+    @include fluid(padding-right, 40, 200, 390, 1200);
+    // 次の NewsSection が SP 用の上余白を持つため、Interview 側の下余白は重ねない。
+    padding-bottom: 0;
+  }
 }
 
 // SectionTitle の wrapper margin を打ち消し（他セクション踏襲）。
