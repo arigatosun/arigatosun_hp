@@ -11,6 +11,8 @@ export type InterviewItem = {
   heading: string[];
   /** 本文抜粋。配列 = 明示改行。 */
   body: string[];
+  /** SP 用の本文抜粋。未指定なら body を使う。 */
+  bodySp?: string[];
   /** カード画像（480×293 基準・object-cover）。 */
   image: string;
   imageAlt?: string;
@@ -25,6 +27,9 @@ export const INTERVIEWS: InterviewItem[] = [
       '課題から生まれたアイデアが、現場で動く事業になるまで。',
       '弊社代表とリードエンジニアが岡田さまを訪ねてお聞きした、',
       '開発の舞台裏。',
+    ],
+    bodySp: [
+      '課題から生まれたアイデアが、現場で動く事業になるまで。弊社代表とリードエンジニアが岡田さまを訪ねてお聞きした、開発の舞台裏。',
     ],
     image: '/images/sections/interview/ykt.jpg',
   },

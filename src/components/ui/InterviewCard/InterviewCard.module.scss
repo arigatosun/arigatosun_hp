@@ -92,3 +92,21 @@
   @include fluid(line-height, 20, 24);
   @include fluid(letter-spacing, 1.4, 1.82);
 }
+
+.bodySp {
+  display: none;
+}
+
+@include sp {
+  .bodyPc {
+    display: none;
+  }
+
+  .bodySp {
+    display: block;
+  }
+}
+
+.noBreak {
+  white-space: nowrap;
+}

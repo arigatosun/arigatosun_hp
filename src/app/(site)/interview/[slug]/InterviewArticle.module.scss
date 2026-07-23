@@ -1,14 +1,24 @@
-// Figma フレーム 1920px 準拠（node 4408:31664）。content幅1200・中央寄せ（左右padding 360@1920）。
+// Figma フレーム 1920px 準拠（node 4408:31664）。
+// News 詳細と同じ max-width 1248（= content 1200 + 左右ガター 24）で中央寄せ。
 @use '@/styles/fluid' as * with (
   $fluid-max-viewport: 1920
 );
 @use '@/styles/breakpoints' as *;
 
 .page {
-  @include fluid(padding-left, 20, 360, 390, 1920);
-  @include fluid(padding-right, 20, 360, 390, 1920);
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1248px;
+  margin-inline: auto;
+  padding-inline: 24px;
   @include fluid(padding-top, 100, 168, 390, 1920);
   @include fluid(padding-bottom, 120, 200, 390, 1920);
+
+  @include sp {
+    max-width: none;
+    @include fluid(padding-left, 30, 42, 320, 390);
+    @include fluid(padding-right, 30, 42, 320, 390);
+  }
 }
 
 // ── ヒーロー（1200×733・object-bottom）──

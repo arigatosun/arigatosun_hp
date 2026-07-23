@@ -402,6 +402,7 @@
     a {
       color: var(--color-link-blue);
       text-decoration: underline;
+      overflow-wrap: anywhere;
       transition: opacity var(--transition-base);
 
       &:hover {
