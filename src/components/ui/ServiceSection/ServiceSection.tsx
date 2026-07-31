@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useRef, useCallback } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -231,18 +230,6 @@ export default function ServiceSection() {
 
   return (
     <section className={styles.service} ref={sectionRef} data-section="service">
-      {/* 上部装飾マスク */}
-      <div className={styles.decoTop}>
-        <Image
-          src="/images/sections/service/mask-top.png"
-          alt=""
-          width={1920}
-          height={420}
-          className={styles.decoImage}
-          aria-hidden="true"
-        />
-      </div>
-
       <div className={styles.inner}>
         {/* 左側: sticky コンテンツ */}
         <div className={styles.left}>
@@ -293,18 +280,6 @@ export default function ServiceSection() {
         <div className={styles.spButtonRow}>
           <Button href="/service" size="sm">VIEW SERVICE &gt;</Button>
         </div>
-      </div>
-
-      {/* 下部装飾マスク */}
-      <div className={styles.decoBottom}>
-        <Image
-          src="/images/sections/service/mask-bottom.png"
-          alt=""
-          width={1920}
-          height={420}
-          className={styles.decoImage}
-          aria-hidden="true"
-        />
       </div>
     </section>
   );
