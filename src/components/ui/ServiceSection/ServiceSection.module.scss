@@ -13,7 +13,7 @@
   position: relative;
   @include fluid(margin-top, 80, 250, 390, 1920);
   overflow-x: clip; // 横スクロールバー防止
-  overflow-y: visible; // 装飾マスクのはみ出しを許容
+  overflow-y: visible; // 子要素（sticky / pin）の縦方向のはみ出しを許容
 
   @include sp {
     // Figma SP @390: About ボタン下端 y=1998 → Service タイトル y=2239 = gap 241px
@@ -24,41 +24,6 @@
     // 震えの一因になり得る。SP では clip を解除して sticky の挙動を安定させる。
     overflow: visible;
   }
-}
-
-// ── 装飾マスク ──
-// 2項vw式: 1920pxで元の位置(-17.6vw/-18.35vw)を正確に再現し、
-// 小さいビューポートでは+171px補正分だけマスクがセクション内に寄る
-.decoTop {
-  position: absolute;
-  top: calc(-26.5vw + 197px);
-  left: 0;
-  width: 100%;
-  z-index: 4;
-  pointer-events: none;
-
-  @include sp {
-    display: none;
-  }
-}
-
-.decoBottom {
-  position: absolute;
-  bottom: calc(-27.3vw + 145px);
-  left: 0;
-  width: 100%;
-  z-index: 4;
-  pointer-events: none;
-
-  @include sp {
-    display: none;
-  }
-}
-
-.decoImage {
-  width: 100%;
-  height: auto;
-  display: block;
 }
 
 // ── メインレイアウト ──
