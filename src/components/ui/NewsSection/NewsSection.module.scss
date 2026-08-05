@@ -19,8 +19,10 @@
 
   @include sp {
     // Figma SP @390: セクション padding-left/right 40px
-    @include fluid(padding-left, 40, 200);
-    @include fluid(padding-right, 40, 200);
+    // 中間幅（iPad 等）で WORKS / ABOUT / MESSAGE と左右余白を揃えるため、
+    // 補間終点を 1200 ではなく 1920 にする（1200 カーブだと同幅でも余白が広く出る）。
+    @include fluid(padding-left, 40, 200, 390, 1920);
+    @include fluid(padding-right, 40, 200, 390, 1920);
     // TOP では InterviewSection が直前に入るため、SP の余白は他セクション間に合わせて詰める。
     @include fluid(padding-top, 80, 120, 390, 1200);
     // base の padding-bottom は SP にも効くため、現状(1200)カーブに固定
