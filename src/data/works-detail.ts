@@ -828,6 +828,37 @@ const MENTE_DETAIL: WorkDetailContent = {
         },
       ],
     },
+    // ■クライアントインタビュー（ケアGO 詳細と同構成: 見出し → 写真 → 記事リンク）。
+    {
+      type: 'textSection',
+      gap: 240,
+      spGap: 60,
+      level: 'main',
+      heading: '■クライアントインタビュー',
+    },
+    // インタビュー写真（PC 740px 幅で左寄せ）。w/h は元画像 1360×838 の実比率でトリミングなし。
+    {
+      type: 'mockupCard',
+      gap: 40,
+      src: `${MENTE}/interview.png`,
+      w: 1360,
+      h: 838,
+      width: 740,
+    },
+    // インタビュー記事リンク（リンク先は /interview/nj-mente）。
+    {
+      type: 'richText',
+      gap: 40,
+      spGap: 20,
+      segments: [
+        { text: '株式会社NJ様のインタビュー記事「' },
+        {
+          text: '開発だけをする会社ではなく、一緒に整理しながら共に進んでくれる会社。',
+          href: '/interview/nj-mente',
+        },
+        { text: '」はこちらからご覧いただけます。' },
+      ],
+    },
     { type: 'divider', gap: 200 },
     {
       type: 'creditList',
