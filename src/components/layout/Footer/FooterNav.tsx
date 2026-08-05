@@ -28,10 +28,11 @@ const newsSubmenu: SubItem[] = [
   { href: '/news?category=column', label: 'COLUMN' },
 ];
 
-// SNS 配下（すべて外部リンク）。hold:true はリンク先未確定（href='#'）。
+// SNS 配下（すべて外部リンク）。hold:true はリンク先未確定（href='#'）で新規タブを開かない。
+// YOUTUBE はリンク先未確定のため非表示。復活させる時はこの配列に
+// { href: '<チャンネルURL>', label: 'YOUTUBE', external: true } を INSTAGRAM の次に足す。
 const snsSubmenu: SubItem[] = [
   { href: 'https://www.instagram.com/arigatosun_inc', label: 'INSTAGRAM', external: true },
-  { href: '#', label: 'YOUTUBE', external: true, hold: true },
   { href: 'https://x.com/arigatosun_inc', label: 'X', external: true },
 ];
 
