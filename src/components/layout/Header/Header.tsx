@@ -50,6 +50,12 @@ const rightNav: NavItem[] = [
   { href: '/contact', label: 'CONTACT' },
 ];
 
+// SNS 配下のサブ項目（Footer の snsSubmenu と同一構成 / すべて外部リンク・別タブ）。
+const snsDropdown: DropdownItem[] = [
+  { href: 'https://www.instagram.com/arigatosun_inc', label: 'INSTAGRAM' },
+  { href: 'https://x.com/arigatosun_inc', label: 'X' },
+];
+
 // CREATIVE PROJECTS バナー（Footer と同じ構成 / SP メニュー用）
 const creativeProjects = [
   {
@@ -63,6 +69,29 @@ const creativeProjects = [
     href: 'https://aseave.co.jp/',
   },
 ];
+
+// 外部リンクを示す右上矢印アイコン（Footer と同一 SVG）。
+function ExternalIcon() {
+  return (
+    <svg
+      className={styles.externalIcon}
+      width="14"
+      height="14"
+      viewBox="0 0 10 10"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <path
+        d="M8 5.5V8.5C8 8.76522 7.89464 9.01957 7.70711 9.20711C7.51957 9.39464 7.26522 9.5 7 9.5H1.5C1.23478 9.5 0.98043 9.39464 0.792893 9.20711C0.605357 9.01957 0.5 8.76522 0.5 8.5V3C0.5 2.73478 0.605357 2.48043 0.792893 2.29289C0.98043 2.10536 1.23478 2 1.5 2H4.5M6.5 0.5H9.5M9.5 0.5V3.5M9.5 0.5L4 6"
+        stroke="currentColor"
+        strokeWidth="1"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
 
 // SP アコーディオンの開閉トグル（丸囲み ⊕ / ⊖）。Figma 支給 SVG をそのまま使用。
 // 閉＝ ⊕（縦横バー）、開＝ ⊖（横バーのみ）。色は currentColor（常時黒・タップで赤くしない）。
@@ -348,6 +377,49 @@ export default function Header() {
             >
               CONTACT
             </Link>
+
+            {/* SNS: 遷移先ページが無いためラベル自体もトグル（Footer と同一構成）。 */}
+            <div className={styles.spAccordion}>
+              <div className={styles.spAccordionHeader}>
+                <button
+                  type="button"
+                  className={styles.spAccordionLabel}
+                  onClick={() => toggleMenu('sns')}
+                  aria-expanded={!!openMenus.sns}
+                >
+                  SNS
+                </button>
+                <button
+                  type="button"
+                  className={styles.spAccordionToggle}
+                  onClick={() => toggleMenu('sns')}
+                  aria-expanded={!!openMenus.sns}
+                  aria-label={openMenus.sns ? 'SNS のサブメニューを閉じる' : 'SNS のサブメニューを開く'}
+                >
+                  <AccordionToggleIcon open={!!openMenus.sns} />
+                </button>
+              </div>
+              <div
+                className={`${styles.spAccordionPanel} ${openMenus.sns ? styles.spAccordionPanelOpen : ''}`}
+              >
+                <ul className={styles.serviceSubList}>
+                  {snsDropdown.map((sub) => (
+                    <li key={sub.href}>
+                      <a
+                        href={sub.href}
+                        className={styles.serviceSubLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        ・{sub.label}
+                        <ExternalIcon />
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
           </nav>
 
           {/* CREATIVE PROJECTS バナー */}
