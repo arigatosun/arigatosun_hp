@@ -35,9 +35,10 @@
     // SP: 連携図 bottom → メンバー title y までの実測ギャップ = 149
     //     本セクション padding-bottom 69 + Member padding-top 80 = 149
     padding-bottom: 69px;
-    // base の padding-left/right(vw) は SP にも効くため現状(1200)カーブに固定
-    @include fluid(padding-left, 40, 200, 390, 1200);
-    @include fluid(padding-right, 40, 200, 390, 1200);
+    // base の padding-left/right(vw) は SP にも効くため fluid で上書きする。
+    // 中間幅（iPad 等）で他セクションと左右余白を揃えるため補間終点は 1920。
+    @include fluid(padding-left, 40, 200, 390, 1920);
+    @include fluid(padding-right, 40, 200, 390, 1920);
   }
 }
 

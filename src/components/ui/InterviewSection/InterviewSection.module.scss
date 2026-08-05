@@ -13,8 +13,10 @@
   @include fluid(padding-bottom, 60, 120, 390, 1920);
 
   @include sp {
-    @include fluid(padding-left, 40, 200, 390, 1200);
-    @include fluid(padding-right, 40, 200, 390, 1200);
+    // 中間幅（iPad 等）で WORKS / ABOUT / MESSAGE と左右余白を揃えるため、
+    // 補間終点を 1200 ではなく 1920 にする（1200 カーブだと同幅でも余白が広く出る）。
+    @include fluid(padding-left, 40, 200, 390, 1920);
+    @include fluid(padding-right, 40, 200, 390, 1920);
     // 次の NewsSection が SP 用の上余白を持つため、Interview 側の下余白は重ねない。
     padding-bottom: 0;
   }

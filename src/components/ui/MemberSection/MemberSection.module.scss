@@ -17,9 +17,9 @@
   @include sp {
     // SP: BS.padding-bottom 69 + 本セクション padding-top 80 = 149
     padding-top: 80px;
-    // base の padding-left/right は SP にも効くため現状(1200)カーブに固定
-    @include fluid(padding-left, 40, 200, 390, 1200);
-    @include fluid(padding-right, 40, 200, 390, 1200);
+    // base と同じ 1920 カーブを維持する（中間幅で /about の他セクションと左右余白を揃える）。
+    @include fluid(padding-left, 40, 200, 390, 1920);
+    @include fluid(padding-right, 40, 200, 390, 1920);
   }
 }
 
