@@ -11,6 +11,13 @@
   // ヘッダー文字下端(79) → インタビュー文字上端 の距離を 157px に（= 79+157=236）。
   @include fluid(padding-top, 120, 236, 390, 1920);
   @include fluid(padding-bottom, 100, 240, 390, 1920);
+
+  @include sp {
+    // SP はフッター（アリガトくん）までの空きが目立つため、他の一覧ページ
+    // （/works・/news・/about）と同じ footer-gap 基準に合わせて 0 にする。
+    // 実測: 最終カード下端→アリガトくん上端が 195px → 95px（約半分）。
+    @include footer-gap;
+  }
 }
 
 // SectionTitle の wrapper margin を打ち消し。
