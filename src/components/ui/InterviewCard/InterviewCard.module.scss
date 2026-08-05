@@ -53,7 +53,7 @@
 }
 
 // 見出し。会社名下 14。
-// サイズ・行間・字間は WORKS のタイトル(WorksSection の .itemTitle)と同じ値に揃える
+// サイズ・字間は WORKS のタイトル(WorksSection の .itemTitle)と同じ値に揃える（行間のみ後述の通り詰める）
 // （旧: 22 / lh36 / ls2.2 は他セクションより大きく浮いていた）。
 // このファイルは $fluid-max-viewport: 1920 で読み込んでいるため、WORKS 側と同じ
 // 補間になるようビューポート範囲を毎回明示する（SP 域は WORKS と同じ 390→1200）。
@@ -64,19 +64,21 @@
   font-family: 'Noto Sans JP', var(--font-jp);
   font-weight: var(--font-weight-regular);
   @include fluid(font-size, 12, 20, 390, 1920);
-  @include fluid(line-height, 22, 40, 390, 1920);
+  // 行間（＝line-height − font-size のすき間）を従来の半分に詰める。
+  // 例: PC は 20px 文字 + すき間 20px（lh40）→ すき間 10px（lh30）。
+  @include fluid(line-height, 17, 30, 390, 1920);
   @include fluid(letter-spacing, 1.6, 3.2, 390, 1920);
 
-  // WORKS 同様、PC 域は Figma 実寸に固定する
+  // WORKS 同様、PC 域は文字サイズ・字間を Figma 実寸に固定する
   @include pc {
     font-size: 20px;
-    line-height: 40px;
+    line-height: 30px;
     letter-spacing: 3.2px;
   }
 
   @include sp {
     @include fluid(font-size, 16, 20, 390, 1200);
-    @include fluid(line-height, 28, 40, 390, 1200);
+    @include fluid(line-height, 22, 30, 390, 1200);
     @include fluid(letter-spacing, 2.56, 3.2, 390, 1200);
   }
 }
