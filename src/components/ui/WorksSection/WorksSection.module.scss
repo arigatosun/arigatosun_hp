@@ -18,9 +18,11 @@
 
   @include sp {
     // Figma SP @390: 画像（width 334）が左 x=28・右 x=362（左右 28px インセット）
-    // About と中間幅で左右余白を揃える: 補間範囲 390→1920 / 40→200(左)・40→80(右)
+    // PC(≥1024) は padding 200/183 + .itemRight の padding-right 17 で画像を左右 200 の
+    // 中央配置にしている。SP 側も同じ「左右対称」を保つため、右も左と同じ補間カーブにする。
+    // （旧: 右を 40→80 にしていたため iPad 幅で左 85 / 右 51 と中心がズレていた）
     @include fluid(padding-left, 40, 200, 390, 1920);
-    @include fluid(padding-right, 40, 80, 390, 1920);
+    @include fluid(padding-right, 40, 200, 390, 1920);
     // Figma SP @390: Service ボタン下端 y=4275 → Works タイトル y=4435 = gap 160px
     @include fluid(padding-top, 160, 240);
     // Figma SP @390: Works copyright 下端 → News タイトル = 176px は .news の padding-top で取る
