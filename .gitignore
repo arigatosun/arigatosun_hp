@@ -12,6 +12,9 @@
 
 # testing
 /coverage
+/artifacts/webmcp-eval/
+/test-results/
+/output/playwright/
 
 # next.js
 /.next/

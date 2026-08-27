@@ -1,0 +1,18 @@
+@use '@/styles/fluid' as *;
+@use '@/styles/breakpoints' as *;
+
+.dialog { width: min(calc(100% - 40px), 760px); max-height: 90vh; overflow: auto; padding: 0; border: 0; background: transparent; color: var(--color-black); }
+.dialog::backdrop { background: rgb(20 7 0 / 55%); }
+.panel { background: var(--color-white); border-radius: var(--border-radius-lg); @include fluid(padding, 24, 48); }
+.panel h2 { @include fluid(font-size, 20, 30); }
+.panel > p { @include fluid(margin-top, 12, 20); }
+.conflicts { display: grid; gap: 16px; @include fluid(margin-top, 20, 32); }
+.conflict { padding: 16px; border: 1px solid var(--color-gray-300); border-radius: var(--border-radius-md); }
+.conflict h3 { margin-bottom: 12px; @include fluid(font-size, 16, 20); }
+.conflict div { display: grid; grid-template-columns: minmax(100px, 0.3fr) 1fr; gap: 12px; padding-block: 8px; border-top: 1px solid var(--color-gray-200); }
+.conflict span { color: var(--color-gray-600); }
+.conflict p { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.actions { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 12px; @include fluid(margin-top, 20, 32); @include sp { flex-direction: column-reverse; } }
+.actions button { border: 1px solid var(--color-black); border-radius: var(--border-radius-full); padding: 12px 20px; background: var(--color-white); cursor: pointer; }
+.actions button:last-child { color: var(--color-white); border-color: var(--color-primary); background: var(--color-primary); }
+.actions button:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }

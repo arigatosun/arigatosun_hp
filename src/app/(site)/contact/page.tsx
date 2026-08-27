@@ -1,69 +1,57 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import SectionTitle from '@/components/ui/SectionTitle';
+import ContactConfirmationDialog from '@/components/contact/ContactConfirmationDialog';
+import AgentDraftReviewDialog from '@/components/contact/AgentDraftReviewDialog';
+import {
+  INITIAL_CONTACT_FORM,
+  PRIVACY_POLICY_VERSION,
+} from '@/lib/contact/constants';
+import type { ContactErrors, ContactFormData, ContactFormState } from '@/lib/contact/types';
+import { useContactWebMcp } from '@/lib/contact/useContactWebMcp';
+import { validateContactField, validateUntypedContact } from '@/lib/contact/validation';
 import styles from './page.module.scss';
 
-type FormField = 'company' | 'name' | 'nameKana' | 'email' | 'phone' | 'message';
-type FormState = Record<FormField, string>;
-type Errors = Partial<Record<FormField, string>>;
+type FormField = keyof ContactFormState;
+type FormState = ContactFormState;
+type Errors = ContactErrors;
 type Touched = Partial<Record<FormField, boolean>>;
-
-const INITIAL_STATE: FormState = {
-  company: '',
-  name: '',
-  nameKana: '',
-  email: '',
-  phone: '',
-  message: '',
-};
-
-// ── バリデーションルール ──
-// 必須項目: name / email / message。残りは任意だが、値があれば形式チェック。
-const validators: Record<FormField, (value: string) => string | undefined> = {
-  company: () => undefined,
-  name: (v) => (v.trim() ? undefined : 'お名前を入力してください。'),
-  nameKana: (v) => {
-    if (!v.trim()) return undefined;
-    // カタカナ / ひらがな / 長音 / 半角・全角スペース を許可
-    return /^[ァ-ヴーぁ-ゖ\s　]+$/.test(v.trim())
-      ? undefined
-      : 'カタカナまたはひらがなで入力してください。';
-  },
-  email: (v) => {
-    if (!v.trim()) return 'メールアドレスを入力してください。';
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim())
-      ? undefined
-      : '有効なメールアドレスを入力してください。';
-  },
-  phone: (v) => {
-    if (!v.trim()) return undefined;
-    return /^[\d\-+()\sー]+$/.test(v.trim())
-      ? undefined
-      : '電話番号は半角数字とハイフンで入力してください。';
-  },
-  message: (v) =>
-    v.trim() ? undefined : 'お問い合わせ内容を入力してください。',
-};
-
-function validateAll(data: FormState): Errors {
-  return (Object.keys(validators) as FormField[]).reduce<Errors>((errs, key) => {
-    const msg = validators[key](data[key]);
-    if (msg) errs[key] = msg;
-    return errs;
-  }, {});
-}
 
 export default function ContactPage() {
   const router = useRouter();
-  const [formData, setFormData] = useState<FormState>(INITIAL_STATE);
+  const [formData, setFormData] = useState<FormState>(INITIAL_CONTACT_FORM);
   const [errors, setErrors] = useState<Errors>({});
   const [touched, setTouched] = useState<Touched>({});
   const [agreed, setAgreed] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitErrorMessage, setSubmitErrorMessage] = useState('');
+  const [confirmationSnapshot, setConfirmationSnapshot] = useState<ContactFormData | null>(null);
+  const [agentPrepared, setAgentPrepared] = useState(false);
+  const formFieldsRef = useRef<HTMLDivElement>(null);
+
+  const openConfirmation = useCallback((contact: ContactFormData) => {
+    setConfirmationSnapshot({ ...contact });
+  }, []);
+
+  const handleAgentPrepared = useCallback((next: ContactFormState) => {
+    setAgentPrepared(true);
+    setErrors(validateUntypedContact(next));
+    requestAnimationFrame(() => {
+      formFieldsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      document.getElementById('company')?.focus({ preventScroll: true });
+    });
+  }, []);
+
+  const { pendingDraft, resolvePendingDraft } = useContactWebMcp({
+    formData,
+    setFormData,
+    confirmationInProgress: confirmationSnapshot !== null,
+    onAgentPrepared: handleAgentPrepared,
+    openConfirmation,
+  });
 
   // ── スパム対策（formData とは分離。バリデーション対象に含めない） ──
   // ハニーポット: 人間は触れない隠しフィールド。値が入っていればボット。
@@ -75,25 +63,26 @@ export default function ContactPage() {
   }, []);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
   ) => {
     const { name, value } = e.target;
     const field = name as FormField;
+    setAgentPrepared(false);
     setFormData((prev) => ({ ...prev, [field]: value }));
     // 一度 blur 済 or 既にエラー表示中 のフィールドはリアルタイムで再検証して
     // 修正中に正しい状態になれば即エラーを消す。未触のフィールドは静かにする。
     if (touched[field] || errors[field]) {
-      const msg = validators[field](value);
+      const msg = validateContactField(field, value);
       setErrors((prev) => ({ ...prev, [field]: msg }));
     }
   };
 
   const handleBlur = (
-    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>,
+    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
   ) => {
     const field = e.target.name as FormField;
     setTouched((prev) => ({ ...prev, [field]: true }));
-    const msg = validators[field](formData[field]);
+    const msg = validateContactField(field, formData[field]);
     setErrors((prev) => ({ ...prev, [field]: msg }));
   };
 
@@ -103,7 +92,8 @@ export default function ContactPage() {
     e.preventDefault();
     if (!agreed || isSubmitting) return;
 
-    const newErrors = validateAll(formData);
+    // 種別UIは表示しない方針のため、通常送信では inquiryType を検証・送信対象に含めない
+    const newErrors = validateUntypedContact(formData);
     if (Object.keys(newErrors).length > 0) {
       // 全フィールドを touched にしてエラーを表示
       const allTouched = (Object.keys(formData) as FormField[]).reduce<Touched>(
@@ -126,11 +116,18 @@ export default function ContactPage() {
     try {
       const res = await fetch('/api/contact', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Idempotency-Key': crypto.randomUUID() },
         body: JSON.stringify({
-          ...formData,
+          company: formData.company,
+          name: formData.name,
+          nameKana: formData.nameKana,
+          email: formData.email,
+          phone: formData.phone,
+          message: formData.message,
           website: honeypot, // ハニーポット（人間は空）
           _t: formStartRef.current, // フォーム表示時刻
+          privacyConsent: agreed,
+          privacyPolicyVersion: PRIVACY_POLICY_VERSION,
         }),
       });
 
@@ -208,7 +205,14 @@ export default function ContactPage() {
           </aside>
 
           {/* 右カラム: フォームフィールド */}
-          <div className={styles.formFields}>
+          <div className={styles.formFields} ref={formFieldsRef} data-contact-fields>
+            {agentPrepared && (
+              <div className={styles.agentPrepared} role="status" tabIndex={-1}>
+                AIが指定した項目をフォームへ反映しました。内容を確認し、必要に応じて修正してください。
+              </div>
+            )}
+            {/* 問い合わせ種別はサイト上に表示しない（オーナー方針）。
+                WebMCP経由のAI入力時だけ form state 内部で保持し、承認ダイアログで本人確認する。 */}
             <div className={styles.field}>
               <label htmlFor="company" className={styles.fieldLabel}>
                 御社名・部署名
@@ -391,6 +395,19 @@ export default function ContactPage() {
           </button>
         </div>
       </form>
+      {confirmationSnapshot && (
+        <ContactConfirmationDialog
+          open
+          contact={confirmationSnapshot}
+          privacyConsent={agreed}
+          onPrivacyConsentChange={setAgreed}
+          onClose={() => setConfirmationSnapshot(null)}
+        />
+      )}
+      <AgentDraftReviewDialog
+        conflicts={pendingDraft?.conflicts ?? []}
+        onResolve={resolvePendingDraft}
+      />
     </div>
   );
 }

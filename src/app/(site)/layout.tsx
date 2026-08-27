@@ -7,6 +7,7 @@ import { PRELOADER_SESSION_KEY } from '@/components/ui/Preloader/sessionKey';
 import ScrollAnchorOnResize from '@/components/ui/ScrollAnchorOnResize';
 import JsonLd from '@/components/seo/JsonLd';
 import Analytics from '@/components/analytics/Analytics';
+import WebMcpProvider from '@/components/layout/WebMcpProvider';
 import { SITE_URL } from '@/lib/site';
 
 // 全公開ページ共通の Organization 構造化データ。
@@ -53,6 +54,7 @@ export default function SiteLayout({
   return (
     <>
       <Analytics />
+      <WebMcpProvider />
       <JsonLd data={ORGANIZATION_JSONLD} />
       {/* 描画前に走らせる初期化スクリプト（FOUC / スクロールちらつき対策）。
           1. 再訪問（sessionStorage にフラグあり）ならオープニングを描画前に隠す。
