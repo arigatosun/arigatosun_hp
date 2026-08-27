@@ -110,7 +110,7 @@ export function useContactWebMcp({
   const prepareTool = useMemo<WebMCP.ModelContextTool>(() => ({
     name: 'prepare_contact_inquiry',
     title: 'お問い合わせフォームを準備',
-    description: '指定された項目だけをフォームへ入力します。既存入力と異なる値は本人に選択を求め、プライバシー同意は変更しません。送信前には必ず画面確認が必要です。',
+    description: '指定された項目だけをお問い合わせフォームへ入力します。内容が一部しか決まっていなくても、問い合わせ種別と分かっている項目だけで準備できます（不足項目は本人が画面で入力します）。既存入力と異なる値は本人に選択を求め、プライバシー同意は変更しません。送信前には必ず画面確認が必要です。',
     inputSchema,
     annotations: { readOnlyHint: false, untrustedContentHint: false },
     execute: (input) => {
