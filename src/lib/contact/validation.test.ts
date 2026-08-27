@@ -1,6 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import { INITIAL_CONTACT_FORM, canAutoSubmitInquiry } from './constants';
-import { parseContactForm, validateContact, validateContactField, validateSubmissionContact } from './validation';
+import {
+  parseContactForm,
+  parseManualContactForm,
+  validateContact,
+  validateContactField,
+  validateSubmissionContact,
+  validateUntypedContact,
+} from './validation';
 
 describe('contact policy and validation', () => {
   it('allows automatic submission only for requests and estimates', () => {
@@ -36,6 +43,25 @@ describe('contact policy and validation', () => {
     expect(validateContactField('phone', '電話番号')).toBeTruthy();
     expect(validateContactField('phone', '')).toBeUndefined();
     expect(validateContactField('message', '   ')).toBeTruthy();
+  });
+
+  it('accepts an untyped manual submission as the canonical form payload', () => {
+    expect(parseManualContactForm({
+      company: '', name: ' 利用者 ', nameKana: '',
+      email: ' user@example.com ', phone: '', message: ' 相談内容 ',
+    })).toEqual({
+      inquiryType: 'unspecified', company: '', name: '利用者', nameKana: '',
+      email: 'user@example.com', phone: '', message: '相談内容',
+    });
+    expect(parseManualContactForm({ name: 1 })).toBeNull();
+    expect(validateUntypedContact({
+      company: '', name: '利用者', nameKana: '',
+      email: 'user@example.com', phone: '', message: '相談内容',
+    })).toEqual({});
+    expect(validateSubmissionContact({
+      inquiryType: 'unspecified', company: '', name: '利用者', nameKana: '',
+      email: 'user@example.com', phone: '', message: '相談内容',
+    })).toEqual({});
   });
 
   it('supports the bounded legacy type without weakening current parsing', () => {

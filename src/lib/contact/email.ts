@@ -3,7 +3,7 @@ import 'server-only';
 import { Resend } from 'resend';
 import { SITE_URL } from '@/lib/site';
 import { getInquiryTypeLabel } from './constants';
-import type { ContactSubmissionData, SubmissionSource } from './types';
+import { INQUIRY_TYPES, type ContactSubmissionData, type InquiryType, type SubmissionSource } from './types';
 
 const ADMIN_TO = 'info@arigatosun.com';
 const FROM_ADDRESS = '株式会社アリガトサン <noreply@arigatosun.com>';
@@ -19,8 +19,12 @@ function escapeHtml(value: string): string {
 }
 
 function contactTable(data: ContactSubmissionData): string {
+  // 種別UIはサイト上に出さない方針のため、実種別を持つWebMCP経由の時だけ行を追加し、
+  // 通常フォームのメールは従来と同じ構成を維持する。
   const rows = [
-    ['お問い合わせ種別', getInquiryTypeLabel(data.inquiryType)],
+    ...(INQUIRY_TYPES.includes(data.inquiryType as InquiryType)
+      ? [['お問い合わせ種別', getInquiryTypeLabel(data.inquiryType)]]
+      : []),
     ['御社名・部署名', data.company || '未入力'],
     ['お名前', data.name],
     ['ヨミガナ', data.nameKana || '未入力'],

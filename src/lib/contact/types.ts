@@ -8,8 +8,10 @@ export const INQUIRY_TYPES = [
 ] as const;
 
 export type InquiryType = (typeof INQUIRY_TYPES)[number];
-export type LegacyInquiryType = 'legacy_unspecified';
-export type AcceptedInquiryType = InquiryType | LegacyInquiryType;
+// 'unspecified' = 通常フォーム送信（種別UIは表示しない方針のため常に未指定）
+// 'legacy_unspecified' = デプロイ跨ぎの旧payload互換受付
+export type UntypedInquiryType = 'unspecified' | 'legacy_unspecified';
+export type AcceptedInquiryType = InquiryType | UntypedInquiryType;
 
 export type ContactFormData = {
   inquiryType: InquiryType;

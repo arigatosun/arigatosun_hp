@@ -7,13 +7,12 @@ import SectionTitle from '@/components/ui/SectionTitle';
 import ContactConfirmationDialog from '@/components/contact/ContactConfirmationDialog';
 import AgentDraftReviewDialog from '@/components/contact/AgentDraftReviewDialog';
 import {
-  INQUIRY_TYPE_OPTIONS,
   INITIAL_CONTACT_FORM,
   PRIVACY_POLICY_VERSION,
 } from '@/lib/contact/constants';
 import type { ContactErrors, ContactFormData, ContactFormState } from '@/lib/contact/types';
 import { useContactWebMcp } from '@/lib/contact/useContactWebMcp';
-import { validateContact, validateContactField } from '@/lib/contact/validation';
+import { validateContactField, validateUntypedContact } from '@/lib/contact/validation';
 import styles from './page.module.scss';
 
 type FormField = keyof ContactFormState;
@@ -39,10 +38,10 @@ export default function ContactPage() {
 
   const handleAgentPrepared = useCallback((next: ContactFormState) => {
     setAgentPrepared(true);
-    setErrors(validateContact(next));
+    setErrors(validateUntypedContact(next));
     requestAnimationFrame(() => {
       formFieldsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      document.getElementById('inquiryType')?.focus({ preventScroll: true });
+      document.getElementById('company')?.focus({ preventScroll: true });
     });
   }, []);
 
@@ -93,7 +92,8 @@ export default function ContactPage() {
     e.preventDefault();
     if (!agreed || isSubmitting) return;
 
-    const newErrors = validateContact(formData);
+    // 種別UIは表示しない方針のため、通常送信では inquiryType を検証・送信対象に含めない
+    const newErrors = validateUntypedContact(formData);
     if (Object.keys(newErrors).length > 0) {
       // 全フィールドを touched にしてエラーを表示
       const allTouched = (Object.keys(formData) as FormField[]).reduce<Touched>(
@@ -118,7 +118,12 @@ export default function ContactPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Idempotency-Key': crypto.randomUUID() },
         body: JSON.stringify({
-          ...formData,
+          company: formData.company,
+          name: formData.name,
+          nameKana: formData.nameKana,
+          email: formData.email,
+          phone: formData.phone,
+          message: formData.message,
           website: honeypot, // ハニーポット（人間は空）
           _t: formStartRef.current, // フォーム表示時刻
           privacyConsent: agreed,
@@ -206,30 +211,8 @@ export default function ContactPage() {
                 AIが指定した項目をフォームへ反映しました。内容を確認し、必要に応じて修正してください。
               </div>
             )}
-            <div className={styles.field}>
-              <label htmlFor="inquiryType" className={styles.fieldLabel}>お問い合わせ種別</label>
-              <select
-                id="inquiryType"
-                name="inquiryType"
-                value={formData.inquiryType}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                {...fieldA11y('inquiryType')}
-              >
-                <option value="">選択してください</option>
-                {INQUIRY_TYPE_OPTIONS.map((option) => (
-                  <option key={option.value} value={option.value}>{option.label}</option>
-                ))}
-              </select>
-              <p className={styles.fieldHint}>
-                ご依頼・お見積りはAI入力後に確認して自動送信できます。営業等は手動送信です。
-              </p>
-              {errors.inquiryType && (
-                <p id="inquiryType-error" className={styles.fieldErrorMessage}>
-                  {errors.inquiryType}
-                </p>
-              )}
-            </div>
+            {/* 問い合わせ種別はサイト上に表示しない（オーナー方針）。
+                WebMCP経由のAI入力時だけ form state 内部で保持し、承認ダイアログで本人確認する。 */}
             <div className={styles.field}>
               <label htmlFor="company" className={styles.fieldLabel}>
                 御社名・部署名

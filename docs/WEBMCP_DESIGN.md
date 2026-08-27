@@ -502,8 +502,8 @@ execute は `submitApprovedInquiry()` を呼ぶ。この関数は UI の承認�
 `ContactForm` の責務：
 
 - form state、touched、errors、agreed、isSubmitting
-- inquiryType の選択
-- 通常送信
+- inquiryType の内部保持（2026-08-27 オーナー決定によりサイト上に種別 UI は表示しない。WebMCP ツール入力からのみ設定）
+- 通常送信（種別なし payload）
 - WebMCP draft の適用と競合確認
 - approval の取得・無効化
 - WebMCP ツール登録
@@ -558,10 +558,10 @@ stateDiagram-v2
 
 | 種別 | UI |
 |---|---|
-| 制作・開発依頼、見積・相談 | WebMCP 準備後は「内容を確認して送信を許可」ボタンを表示 |
-| 営業、採用、協業、取材・その他 | 現行の `SEND MESSAGE >` を維持 |
+| 制作・開発依頼、見積・相談（WebMCP 入力時のみ） | 準備後に承認ダイアログを表示 |
+| 営業、採用、協業、取材・その他、通常利用（種別なし） | 現行の `SEND MESSAGE >` を維持 |
 
-通常ユーザーが WebMCP を使わず制作・開発依頼を入力した場合も、従来どおり通常送信できる。自動送信確認 UI は `preparedByAgent = true` の時だけ表示する。
+通常ユーザーの画面は WebMCP 導入前と同一とする（種別 UI・説明文なし）。自動送信確認 UI・競合レビュー UI・AI 入力バナーは WebMCP ツールがフォームを操作した時だけ表示する。
 
 ### 10.5 プライバシー同意
 
@@ -732,15 +732,15 @@ request：approval request の内容に `approvalToken` を加える。
 
 現行の手動送信 API として維持する。変更内容：
 
-- `inquiryType`、`privacyConsent`、`idempotencyKey` を追加する。
+- `privacyConsent`、`privacyPolicyVersion`、`Idempotency-Key` ヘッダーを追加する。`inquiryType` は受け取らず、種別なし（内部 `unspecified`）を正規形とする。
 - 共通 `validateContactForm()` と `sendContactEmails()` を使用する。
 - 分散 rate gate を追加する。
 - `contact_submission_receipts` の unique idempotency key を使用する。
 - DB 障害時はインメモリ制限を維持して fail open とし、運用 warning を出す。
 - 現行のハニーポットと最低入力時間判定は手動経路だけで維持する。
 - 管理者通知成功後だけ `success: true` とする。
-- UI と API を同一リリースで更新する。ただし旧画面を開いたままデプロイを跨ぐ利用者のため、1 リリースの互換期間だけ `inquiryType` 未指定を `legacy_unspecified` として手動送信に限定して受け付ける。
-- `legacy_unspecified` は WebMCP、自動送信、問い合わせ種別 UI の候補に含めない。互換期間終了後に API から削除し、最終状態では `inquiryType` を必須とする。
+- 旧画面を開いたままデプロイを跨ぐ利用者（`privacyConsent` を送らない旧 payload）は、`CONTACT_LEGACY_PAYLOAD_UNTIL` の期限内だけ `legacy_unspecified` として受け付ける。
+- `unspecified` / `legacy_unspecified` は WebMCP 自動送信の対象に含めない（自動送信は `project_request` / `estimate_consultation` のみ）。互換期限終了後、旧 payload は 400 とする。
 
 ## 13. 正規化・hash 設計
 

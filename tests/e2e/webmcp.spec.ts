@@ -46,7 +46,9 @@ test('does not fetch WebMCP config in an unsupported browser and keeps manual fo
   page.on('request', (request) => { if (request.url().includes('/api/webmcp/config')) configRequests += 1; });
   await page.route('**/api/contact', (route) => route.fulfill({ status: 200, contentType: 'application/json', body: '{"success":true}' }));
   await page.goto('/contact');
-  await page.selectOption('#inquiryType', 'sales_solicitation');
+  // オーナー方針: 問い合わせ種別のUIはサイト上に一切表示しない
+  await expect(page.locator('#inquiryType')).toHaveCount(0);
+  await expect(page.getByText('自動送信')).toHaveCount(0);
   await page.fill('#name', 'テスト利用者');
   await page.fill('#email', 'test@example.com');
   await page.fill('#message', '営業のご連絡です');

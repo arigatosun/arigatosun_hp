@@ -45,6 +45,7 @@ export function canAutoSubmitInquiry(type: InquiryType): boolean {
 }
 
 export function getInquiryTypeLabel(type: AcceptedInquiryType): string {
+  if (type === 'unspecified') return '未分類';
   if (type === 'legacy_unspecified') return '未分類（旧フォーム互換受付）';
   return INQUIRY_TYPE_OPTIONS.find((option) => option.value === type)?.label ?? type;
 }

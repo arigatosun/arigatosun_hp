@@ -10,7 +10,7 @@ import {
 import { parseLegacyContact } from '@/lib/contact/legacy';
 import { checkManualContactRate } from '@/lib/contact/rate-limit';
 import type { ContactSubmissionData, SubmissionSource } from '@/lib/contact/types';
-import { parseContactForm, validateSubmissionContact } from '@/lib/contact/validation';
+import { parseManualContactForm, validateSubmissionContact } from '@/lib/contact/validation';
 import { HttpInputError, readJsonObject } from '@/lib/http/read-json';
 import { writeWebMcpAudit } from '@/lib/webmcp/audit';
 import { isValidManualMutationRequest } from '@/lib/webmcp/request';
@@ -40,7 +40,8 @@ export async function POST(request: Request) {
     let privacyPolicyVersion: string;
     let privacyConsentedAt: string;
 
-    const current = parseContactForm(body);
+    // 種別UIはサイト上に表示しない方針のため、通常フォームは種別なしのpayloadが正規形。
+    const current = 'privacyConsent' in body ? parseManualContactForm(body) : null;
     if (current) {
       if (body.privacyConsent !== true || body.privacyPolicyVersion !== PRIVACY_POLICY_VERSION) {
         return json({ error: 'プライバシーポリシーへの同意が必要です。' }, 400);
