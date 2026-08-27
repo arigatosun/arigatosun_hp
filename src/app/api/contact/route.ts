@@ -1,313 +1,110 @@
 import { NextResponse } from 'next/server';
-import { Resend } from 'resend';
-import { SITE_URL } from '@/lib/site';
+import { hashContact } from '@/lib/contact/canonicalize';
+import { PRIVACY_POLICY_VERSION } from '@/lib/contact/constants';
+import { sendContactEmails } from '@/lib/contact/email';
+import {
+  claimManualSubmission,
+  completeManualSubmission,
+  normalizeIdempotencyKey,
+} from '@/lib/contact/idempotency';
+import { parseLegacyContact } from '@/lib/contact/legacy';
+import { checkManualContactRate } from '@/lib/contact/rate-limit';
+import type { ContactSubmissionData, SubmissionSource } from '@/lib/contact/types';
+import { parseContactForm, validateSubmissionContact } from '@/lib/contact/validation';
+import { HttpInputError, readJsonObject } from '@/lib/http/read-json';
+import { writeWebMcpAudit } from '@/lib/webmcp/audit';
+import { isValidManualMutationRequest } from '@/lib/webmcp/request';
 
-interface ContactFormData {
-  company: string;
-  name: string;
-  nameKana: string;
-  email: string;
-  phone: string;
-  message: string;
-}
-
-/** クライアントから届く実際のペイロード（ボット対策用フィールドを含む）。 */
-interface ContactPayload extends ContactFormData {
-  /** ハニーポット。人間は空のまま。値があればボットとみなす。 */
-  website?: string;
-  /** フォーム表示時刻(ms epoch)。極端に速い送信を弾く。 */
-  _t?: number;
-}
-
-const ADMIN_TO = 'info@arigatosun.com';
-const FROM_ADDRESS = '株式会社アリガトサン <noreply@arigatosun.com>';
-const COMPANY_NAME = '株式会社アリガトサン';
-const COMPANY_URL = SITE_URL;
-
-// ── スパム/濫用対策 ──
-// 入力長の上限（巨大ペイロード対策）。
-const FIELD_LIMITS: Record<keyof ContactFormData, number> = {
-  company: 200,
-  name: 100,
-  nameKana: 100,
-  email: 200,
-  phone: 50,
-  message: 5000,
-};
-// これより速い送信はボットとみなす（フォーム表示〜送信の最低ミリ秒）。
 const MIN_SUBMIT_MS = 2000;
-// 同一 IP のレート制限（ベストエフォート。インメモリのため厳密保証はないが、
-// サーバーレスでもインスタンス再利用中は有効に働く。厳格な制限が要る場合は
-// Upstash 等の外部ストアに置き換える）。
-const RATE_MAX = 5;
-const RATE_WINDOW_MS = 10 * 60 * 1000;
-const rateHits = new Map<string, number[]>();
+const NO_STORE = { 'Cache-Control': 'private, no-store, max-age=0' };
 
-function getClientIp(request: Request): string {
-  const xff = request.headers.get('x-forwarded-for');
-  return xff ? xff.split(',')[0].trim() : 'unknown';
+function json(body: Record<string, unknown>, status = 200) {
+  return NextResponse.json(body, { status, headers: NO_STORE });
 }
 
-function isRateLimited(ip: string): boolean {
-  const now = Date.now();
-  const arr = (rateHits.get(ip) ?? []).filter((t) => now - t < RATE_WINDOW_MS);
-  if (arr.length >= RATE_MAX) {
-    rateHits.set(ip, arr);
-    return true;
-  }
-  arr.push(now);
-  rateHits.set(ip, arr);
-  return false;
-}
-
-/**
- * お問い合わせフォーム送信エンドポイント。
- *
- * 動作:
- *  1. 入力値のバリデーション（name / email / message が必須）
- *  2. Resend で 2 通並列送信:
- *     - 管理者宛通知メール ({@link ADMIN_TO})
- *     - 送信者宛 自動返信メール（受付確認）
- *  3. 管理者通知が失敗したら全体を 500 で返す。
- *     自動返信のみ失敗した場合はサーバーログに残し、ユーザーには success を返す
- *     （受付自体は成立しているため）。
- */
 export async function POST(request: Request) {
-  try {
-    const body: ContactPayload = await request.json();
-
-    // ボット: ハニーポットが埋まっている / 送信が速すぎる →
-    // 受け付けたフリ（200）で静かに終了し、メールは送らない（攻撃者に気取らせない）。
-    if (
-      (typeof body.website === 'string' && body.website.trim() !== '') ||
-      (typeof body._t === 'number' && Date.now() - body._t < MIN_SUBMIT_MS)
-    ) {
-      return NextResponse.json({ success: true });
-    }
-
-    // 同一 IP のレート制限。
-    if (isRateLimited(getClientIp(request))) {
-      return NextResponse.json(
-        { error: '送信回数が多すぎます。時間をおいて再度お試しください。' },
-        { status: 429 },
-      );
-    }
-
-    // 入力長の上限チェック。
-    for (const [key, max] of Object.entries(FIELD_LIMITS)) {
-      const v = body[key as keyof ContactFormData];
-      if (typeof v === 'string' && v.length > max) {
-        return NextResponse.json(
-          { error: '入力内容が長すぎます。' },
-          { status: 400 },
-        );
-      }
-    }
-
-    if (!body.name || !body.email || !body.message) {
-      return NextResponse.json(
-        { error: '必須項目を入力してください。' },
-        { status: 400 },
-      );
-    }
-
-    if (!process.env.RESEND_API_KEY) {
-      return NextResponse.json(
-        { error: 'メール送信先が設定されていません。' },
-        { status: 500 },
-      );
-    }
-
-    const resend = new Resend(process.env.RESEND_API_KEY);
-
-    const [adminResult, autoReplyResult] = await Promise.allSettled([
-      sendAdminNotification(resend, body),
-      sendAutoReply(resend, body),
-    ]);
-
-    // 管理者通知が失敗したら全体エラー扱い（受付が確定しないため）
-    const adminOk =
-      adminResult.status === 'fulfilled' && !adminResult.value.error;
-    if (!adminOk) {
-      console.error(
-        '[contact] admin notification failed:',
-        adminResult.status === 'rejected'
-          ? adminResult.reason
-          : adminResult.value.error,
-      );
-      return NextResponse.json(
-        { error: 'メールの送信に失敗しました。' },
-        { status: 500 },
-      );
-    }
-
-    // 自動返信のみ失敗時はログ通知のみ。ユーザーには成功として返す
-    if (
-      autoReplyResult.status === 'rejected' ||
-      autoReplyResult.value.error
-    ) {
-      console.warn(
-        '[contact] auto-reply failed (admin notification still sent):',
-        autoReplyResult.status === 'rejected'
-          ? autoReplyResult.reason
-          : autoReplyResult.value.error,
-      );
-    }
-
-    return NextResponse.json({ success: true });
-  } catch (err) {
-    console.error('Contact API error:', err);
-    return NextResponse.json(
-      { error: 'サーバーエラーが発生しました。' },
-      { status: 500 },
-    );
+  if (!isValidManualMutationRequest(request)) {
+    await writeWebMcpAudit({ event: 'manual_origin_rejected', result: 'ORIGIN_REJECTED' });
+    return json({ error: 'リクエスト元を確認できませんでした。' }, 403);
   }
-}
 
-/** HTML メール本文に含める文字列を XSS 安全にエスケープする。 */
-function escapeHtml(value: string): string {
-  return value
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-}
+  try {
+    const body = await readJsonObject(request);
+    if ((typeof body.website === 'string' && body.website.trim()) ||
+        (typeof body._t === 'number' && Date.now() - body._t < MIN_SUBMIT_MS)) {
+      return json({ success: true });
+    }
 
-/** 管理者宛: お問い合わせ受信通知メール。 */
-async function sendAdminNotification(resend: Resend, body: ContactFormData) {
-  const e = {
-    company: escapeHtml(body.company),
-    name: escapeHtml(body.name),
-    nameKana: escapeHtml(body.nameKana),
-    email: escapeHtml(body.email),
-    phone: escapeHtml(body.phone),
-    message: escapeHtml(body.message),
-  };
+    let contact: ContactSubmissionData;
+    let source: Extract<SubmissionSource, 'manual_form' | 'legacy_manual'>;
+    let privacyPolicyVersion: string;
+    let privacyConsentedAt: string;
 
-  const cell =
-    'padding: 8px 16px; border: 1px solid #ddd;';
-  const head =
-    'padding: 8px 16px; border: 1px solid #ddd; background: #f5f5f5; font-weight: bold; width: 150px;';
+    const current = parseContactForm(body);
+    if (current) {
+      if (body.privacyConsent !== true || body.privacyPolicyVersion !== PRIVACY_POLICY_VERSION) {
+        return json({ error: 'プライバシーポリシーへの同意が必要です。' }, 400);
+      }
+      contact = current;
+      source = 'manual_form';
+      privacyPolicyVersion = PRIVACY_POLICY_VERSION;
+      privacyConsentedAt = new Date().toISOString();
+    } else {
+      const legacy = parseLegacyContact(body);
+      if (!legacy) return json({ error: '入力内容を確認してください。ページを再読み込みすると解消する場合があります。' }, 400);
+      contact = legacy.contact;
+      source = 'legacy_manual';
+      privacyPolicyVersion = legacy.privacyPolicyVersion;
+      privacyConsentedAt = legacy.privacyConsentedAt;
+      await writeWebMcpAudit({ event: 'legacy_contact_accepted', result: 'LEGACY_CONTACT_ACCEPTED' });
+    }
 
-  const html = `
-    <h2>お問い合わせがありました</h2>
-    <table style="border-collapse: collapse; width: 100%; max-width: 600px;">
-      <tr>
-        <td style="${head}">御社名・部署名</td>
-        <td style="${cell}">${e.company || '未入力'}</td>
-      </tr>
-      <tr>
-        <td style="${head}">お名前</td>
-        <td style="${cell}">${e.name}</td>
-      </tr>
-      <tr>
-        <td style="${head}">ヨミガナ</td>
-        <td style="${cell}">${e.nameKana || '未入力'}</td>
-      </tr>
-      <tr>
-        <td style="${head}">メールアドレス</td>
-        <td style="${cell}">${e.email}</td>
-      </tr>
-      <tr>
-        <td style="${head}">電話番号</td>
-        <td style="${cell}">${e.phone || '未入力'}</td>
-      </tr>
-      <tr>
-        <td style="${head}">お問い合わせ内容</td>
-        <td style="${cell} white-space: pre-wrap;">${e.message}</td>
-      </tr>
-    </table>
-    <p style="margin-top: 24px; color: #555; font-size: 12px;">
-      ${COMPANY_NAME} お問い合わせフォームより自動送信
-    </p>
-  `;
+    if (Object.keys(validateSubmissionContact(contact)).length > 0) {
+      return json({ error: '入力内容を確認してください。' }, 400);
+    }
 
-  return resend.emails.send({
-    from: FROM_ADDRESS,
-    to: [ADMIN_TO],
-    subject: `【お問い合わせ】${body.name}様より`,
-    replyTo: body.email,
-    html,
-  });
-}
+    const idempotencyKey = normalizeIdempotencyKey(request.headers.get('idempotency-key'));
+    if (!idempotencyKey) return json({ error: '送信識別子が不正です。' }, 400);
+    if (!(await checkManualContactRate(request))) {
+      return json({ error: '送信回数が多すぎます。時間をおいて再度お試しください。' }, 429);
+    }
 
-/** 送信者宛: 受付完了の自動返信メール。 */
-async function sendAutoReply(resend: Resend, body: ContactFormData) {
-  const e = {
-    company: escapeHtml(body.company),
-    name: escapeHtml(body.name),
-    nameKana: escapeHtml(body.nameKana),
-    email: escapeHtml(body.email),
-    phone: escapeHtml(body.phone),
-    message: escapeHtml(body.message),
-  };
+    const payloadHash = hashContact(contact);
+    const claim = await claimManualSubmission({
+      idempotencyKey,
+      payloadHash,
+      source,
+      privacyPolicyVersion,
+      privacyConsentedAt,
+    });
+    if (claim.status === 'duplicate_sent') {
+      return json({ success: true, duplicate: true, receiptId: claim.publicReceiptId });
+    }
+    if (claim.status === 'duplicate_pending') {
+      return json({ error: '同じ送信処理が未完了です。時間をおいて再度お試しください。' }, 409);
+    }
+    if (claim.status === 'conflict') {
+      return json({ error: '同じ送信識別子が別の内容で使用されています。ページを再読み込みしてください。' }, 409);
+    }
 
-  const cell =
-    'padding: 6px 12px; border: 1px solid #e5e5e5; vertical-align: top;';
-  const head =
-    'padding: 6px 12px; border: 1px solid #e5e5e5; background: #f7f5f3; color: #555; font-weight: bold; width: 140px; vertical-align: top;';
-
-  const html = `
-    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Noto Sans JP', sans-serif; color: #1c1411; line-height: 1.8; max-width: 600px;">
-      <p>${e.name} 様</p>
-      <p>
-        このたびは ${COMPANY_NAME} へお問い合わせをいただき、誠にありがとうございます。<br>
-        下記の内容でお問い合わせを承りました。
-      </p>
-      <p>
-        担当者より <strong>2〜3 営業日以内</strong> にご返信差し上げます。<br>
-        ※土日祝日・年末年始休業日を除く営業日のご対応となります。<br>
-        ※お急ぎの場合や、しばらく経ってもご連絡が届かない場合はお手数ですが再度ご連絡ください。
-      </p>
-
-      <h3 style="margin-top: 28px; border-left: 3px solid #DA2719; padding-left: 10px; font-size: 15px;">
-        お問い合わせ内容
-      </h3>
-      <table style="border-collapse: collapse; width: 100%; font-size: 14px;">
-        <tr>
-          <td style="${head}">御社名・部署名</td>
-          <td style="${cell}">${e.company || '—'}</td>
-        </tr>
-        <tr>
-          <td style="${head}">お名前</td>
-          <td style="${cell}">${e.name}</td>
-        </tr>
-        <tr>
-          <td style="${head}">ヨミガナ</td>
-          <td style="${cell}">${e.nameKana || '—'}</td>
-        </tr>
-        <tr>
-          <td style="${head}">メールアドレス</td>
-          <td style="${cell}">${e.email}</td>
-        </tr>
-        <tr>
-          <td style="${head}">電話番号</td>
-          <td style="${cell}">${e.phone || '—'}</td>
-        </tr>
-        <tr>
-          <td style="${head}">お問い合わせ内容</td>
-          <td style="${cell} white-space: pre-wrap;">${e.message}</td>
-        </tr>
-      </table>
-
-      <p style="margin-top: 32px; padding-top: 16px; border-top: 1px solid #e5e5e5; color: #555; font-size: 12px;">
-        ${COMPANY_NAME}<br>
-        <a href="${COMPANY_URL}" style="color: #DA2719;">${COMPANY_URL}</a>
-      </p>
-      <p style="color: #999; font-size: 11px;">
-        このメールは自動返信です。本メールに直接ご返信いただいても担当者には届きません。<br>
-        追加のご連絡が必要な場合は、お問い合わせフォームより改めてご送信いただくか、サイトに掲載の連絡先までご連絡ください。
-      </p>
-    </div>
-  `;
-
-  return resend.emails.send({
-    from: FROM_ADDRESS,
-    to: [body.email],
-    subject: `【受付完了】お問い合わせを承りました - ${COMPANY_NAME}`,
-    // 自動返信に対する返信を info@ に流したい場合は replyTo を有効化
-    replyTo: ADMIN_TO,
-    html,
-  });
+    try {
+      const { autoReplySent } = await sendContactEmails(contact, source);
+      await completeManualSubmission(claim, 'sent');
+      if (!autoReplySent) {
+        await writeWebMcpAudit({ event: 'manual_auto_reply_failed', result: 'AUTO_REPLY_FAILED', payloadHash });
+      }
+      return json({ success: true, receiptId: claim.publicReceiptId });
+    } catch (error) {
+      await completeManualSubmission(claim, 'failed');
+      await writeWebMcpAudit({
+        event: 'manual_email_failed', result: 'EMAIL_ERROR', payloadHash,
+        errorCode: error instanceof Error ? error.name : 'EMAIL_ERROR',
+      });
+      throw error;
+    }
+  } catch (error) {
+    if (error instanceof HttpInputError) return json({ error: error.message, code: error.code }, error.status);
+    console.error(`[contact] request failed: ${error instanceof Error ? error.name : 'UNKNOWN_ERROR'}`);
+    return json({ error: 'メールの送信に失敗しました。' }, 500);
+  }
 }

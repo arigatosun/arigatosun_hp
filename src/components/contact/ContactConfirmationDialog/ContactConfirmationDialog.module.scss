@@ -1,0 +1,20 @@
+@use '@/styles/fluid' as *;
+@use '@/styles/breakpoints' as *;
+
+.dialog { width: min(calc(100% - 40px), 680px); max-height: 90vh; overflow: auto; padding: 0; border: 0; background: transparent; color: var(--color-black); }
+.dialog::backdrop { background: rgb(20 7 0 / 55%); }
+.panel { background: var(--color-white); border-radius: var(--border-radius-lg); @include fluid(padding, 24, 48); }
+.dialog h2 { color: var(--color-black); @include fluid(font-size, 20, 30); }
+.dialog p { @include fluid(margin-top, 12, 20); }
+.dialog dl { @include fluid(margin-top, 20, 32); border-top: 1px solid var(--color-gray-200); }
+.dialog dl div { display: grid; grid-template-columns: minmax(90px, 0.3fr) 1fr; gap: 8px; padding: 12px 0; border-bottom: 1px solid var(--color-gray-200); }
+.dialog dd { margin: 0; overflow-wrap: anywhere; }
+.message { white-space: pre-wrap; }
+.consent { display: flex; align-items: flex-start; gap: 8px; @include fluid(margin-top, 16, 24); }
+.consent a { color: var(--color-primary); text-decoration: underline; }
+.actions { display: flex; justify-content: flex-end; @include fluid(gap, 8, 16); @include fluid(margin-top, 20, 32); @include sp { flex-direction: column-reverse; } }
+.actions button { border: 1px solid var(--color-black); border-radius: 999px; padding: 12px 20px; background: var(--color-white); cursor: pointer; }
+.actions button:last-child { color: var(--color-white); background: var(--color-primary); border-color: var(--color-primary); }
+.actions button:disabled { cursor: not-allowed; opacity: 0.5; }
+.error { color: var(--color-primary); }
+.status { min-height: 1.5em; }

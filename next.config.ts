@@ -2,6 +2,8 @@ import type { NextConfig } from "next";
 import path from "node:path";
 
 const nextConfig: NextConfig = {
+  // Playwright とローカル確認は loopback から dev server へ接続する。
+  allowedDevOrigins: ['127.0.0.1'],
   // worktree 配下で動かす時に親リポジトリ側を root と誤検知させない
   turbopack: {
     root: path.resolve(__dirname),
@@ -15,6 +17,7 @@ const nextConfig: NextConfig = {
     },
   },
   images: {
+    qualities: [75, 90],
     remotePatterns: [
       {
         protocol: 'http',
@@ -33,7 +36,17 @@ const nextConfig: NextConfig = {
   // 開発では差し替え（モデル更新）を即反映させたいので no-cache にしておく。
   async headers() {
     const isProd = process.env.NODE_ENV === 'production';
+    const webMcpHeaders: { key: string; value: string }[] = [
+      { key: 'Permissions-Policy', value: 'tools=(self)' },
+    ];
+    if (process.env.WEBMCP_ORIGIN_TRIAL_TOKEN) {
+      webMcpHeaders.push({ key: 'Origin-Trial', value: process.env.WEBMCP_ORIGIN_TRIAL_TOKEN });
+    }
     return [
+      {
+        source: '/:path*',
+        headers: webMcpHeaders,
+      },
       {
         source: '/models/:path*',
         headers: [

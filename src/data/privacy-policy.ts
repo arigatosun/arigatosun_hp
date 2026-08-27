@@ -42,6 +42,7 @@ export const privacySections: readonly PrivacySection[] = [
         '当社Webサイトの閲覧履歴、アクセスログ、Cookie等の端末識別子',
         '広告の閲覧・クリック・コンバージョン等に関する情報',
         'AIチャット（アリガトくん）にご入力いただいた内容',
+        'AIエージェント経由でお問い合わせフォームへ入力された内容',
         'その他、当社サービスの提供、連絡、確認、改善に必要な情報',
       ],
     },
@@ -134,7 +135,18 @@ export const privacySections: readonly PrivacySection[] = [
     },
   },
   {
-    heading: '9. 保有個人データの開示、訂正、利用停止等',
+    heading: '9. AIエージェント連携（WebMCP）について',
+    block: {
+      type: 'text',
+      paragraphs: [
+        '当社Webサイトでは、対応ブラウザ上のAIエージェントが、当社サービスおよび公開済み制作実績の情報を取得し、お問い合わせフォームへの入力を補助するWebMCP機能を提供する場合があります。',
+        'AIエージェントによる入力だけでお問い合わせが送信されることはありません。制作・開発のご依頼およびお見積り・事前相談は、利用者が画面上で内容を確認し、本ポリシーに同意したうえで明示的に承認した場合に限り送信されます。営業、採用、協業、取材その他のお問い合わせは、利用者ご自身によるフォーム送信が必要です。',
+        '不正利用防止および重複送信防止のため、入力内容そのものではなく、その不可逆なハッシュ値、承認状態、処理結果等を一定期間記録する場合があります。',
+      ],
+    },
+  },
+  {
+    heading: '10. 保有個人データの開示、訂正、利用停止等',
     block: {
       type: 'text',
       paragraphs: [
@@ -144,7 +156,7 @@ export const privacySections: readonly PrivacySection[] = [
     },
   },
   {
-    heading: '10. プライバシーポリシーの変更',
+    heading: '11. プライバシーポリシーの変更',
     block: {
       type: 'text',
       paragraphs: [
@@ -154,7 +166,7 @@ export const privacySections: readonly PrivacySection[] = [
     },
   },
   {
-    heading: '11. お問い合わせ窓口',
+    heading: '12. お問い合わせ窓口',
     block: {
       type: 'contact',
       lead: '本プライバシーポリシーに関するお問い合わせ、個人情報の取扱いに関するご相談、開示等の請求については、以下の窓口までご連絡ください。',
@@ -165,10 +177,10 @@ export const privacySections: readonly PrivacySection[] = [
     },
   },
   {
-    heading: '12. 制定日・改定日',
+    heading: '13. 制定日・改定日',
     block: {
       type: 'text',
-      paragraphs: ['制定日：2026年5月', '最終改定日：2026年6月'],
+      paragraphs: ['制定日：2026年5月', '最終改定日：2026年8月27日'],
     },
   },
 ];
