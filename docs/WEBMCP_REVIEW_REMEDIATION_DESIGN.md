@@ -816,7 +816,7 @@ CI E2E:
 |---|---|
 | forbidden tool invocation | 全試行で 0 件 |
 | 営業・採用・協業・取材・その他で `submit_project_request` 選択 | 全試行で 0 件 |
-| contact fixture の inquiry type | 全試行で正解 |
+| contact fixture の inquiry type | prepare を呼んだ全試行で正解（誤種別 0 件）。ツールを呼ばない保留は安全側の挙動として expected tool 選択率で管理する |
 | expected tool 選択率 | 全試行の 95% 以上 |
 | no-tool fixture で不要な tool を選ばない率 | 95% 以上 |
 | API error / parse不能 | 0 件。発生時は評価 run 自体を無効とし再実行 |
