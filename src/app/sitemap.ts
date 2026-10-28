@@ -6,6 +6,12 @@ import { getPublishedNewsParams } from '@/lib/news/queries';
 import { SITE_URL as BASE_URL } from '@/lib/site';
 
 /**
+ * 管理画面で追加したニュースを、再デプロイなしで反映するため1時間ごとに作り直す。
+ * （指定しないとビルド時に1回だけ作られ、次のデプロイまで更新されない）
+ */
+export const revalidate = 3600;
+
+/**
  * サイトマップ。静的ページ + 動的詳細（service / works / member / news）を列挙する。
  * news / works のデータ取得に失敗した場合は静的分のみで返す（ビルドを止めない）。
  */
