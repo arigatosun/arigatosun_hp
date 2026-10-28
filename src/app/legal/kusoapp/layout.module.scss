@@ -1,0 +1,52 @@
+@use '@/styles/fluid' as *;
+@use '@/styles/breakpoints' as *;
+
+.shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-white);
+}
+
+.header {
+  @include fluid(padding-top, 14, 18);
+  @include fluid(padding-bottom, 14, 18);
+  @include fluid(padding-left, 16, 32);
+  @include fluid(padding-right, 16, 32);
+  border-bottom: 1px solid var(--color-gray-200);
+}
+
+.brand {
+  color: var(--color-black);
+  font-family: var(--font-en);
+  font-weight: var(--font-weight-medium);
+  @include fluid(font-size, 15, 17);
+  letter-spacing: 0.08em;
+}
+
+.main {
+  flex: 1;
+  width: 100%;
+  max-width: 820px;
+  margin: 0 auto;
+  @include fluid(padding-top, 28, 48);
+  @include fluid(padding-bottom, 48, 72);
+  @include fluid(padding-left, 16, 32);
+  @include fluid(padding-right, 16, 32);
+}
+
+.footer {
+  @include fluid(padding-top, 18, 24);
+  @include fluid(padding-bottom, 18, 24);
+  @include fluid(padding-left, 16, 32);
+  @include fluid(padding-right, 16, 32);
+  color: var(--color-text-secondary);
+  font-family: var(--font-jp);
+  @include fluid(font-size, 12, 13);
+  text-align: center;
+  border-top: 1px solid var(--color-gray-200);
+}
+
+.company {
+  text-decoration: underline;
+}
