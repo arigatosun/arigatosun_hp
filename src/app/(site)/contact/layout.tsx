@@ -8,6 +8,7 @@ const description =
 export const metadata: Metadata = {
   title: 'Contact',
   description,
+  alternates: { canonical: '/contact' },
   openGraph: {
     title: 'Contact | 株式会社アリガトサン',
     description,

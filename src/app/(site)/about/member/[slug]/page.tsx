@@ -58,6 +58,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `${member.name} | ${member.role}`,
     description,
+    alternates: { canonical: `/about/member/${slug}` },
     openGraph: { title: `${member.name} | 株式会社アリガトサン`, description },
   };
 }

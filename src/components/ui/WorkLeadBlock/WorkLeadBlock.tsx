@@ -14,7 +14,8 @@ export default function WorkLeadBlock({
 }: WorkLeadBlockProps) {
   return (
     <section className={styles.lead}>
-      <h2 className={styles.heading}>{heading}</h2>
+      {/* 作品詳細ページの冒頭に1つだけ置くため、ページの主見出し（h1）にする */}
+      <h1 className={styles.heading}>{heading}</h1>
       <p className={styles.subheading}>{subheading}</p>
       <span className={styles.divider} aria-hidden="true" />
       <p className={styles.body}>

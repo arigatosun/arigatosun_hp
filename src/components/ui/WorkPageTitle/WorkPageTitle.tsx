@@ -10,7 +10,8 @@ type WorkPageTitleProps = {
 export default function WorkPageTitle({ label, subtitle }: WorkPageTitleProps) {
   return (
     <section className={styles.pageTitle}>
-      <h2 className={styles.label}>{label}</h2>
+      {/* 作品詳細ページの冒頭に1つだけ置くため、ページの主見出し（h1）にする */}
+      <h1 className={styles.label}>{label}</h1>
       <p className={styles.subtitle}>{subtitle}</p>
       <span className={styles.divider} aria-hidden="true" />
     </section>

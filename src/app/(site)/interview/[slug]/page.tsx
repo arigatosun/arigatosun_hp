@@ -21,6 +21,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   return {
     title: `Interview | ${item.client}`,
     description: item.heading.join(''),
+    alternates: { canonical: `/interview/${slug}` },
   };
 }
 

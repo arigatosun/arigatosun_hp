@@ -45,6 +45,7 @@ export async function generateMetadata({
   return {
     title: data.titleEn,
     description,
+    alternates: { canonical: `/service/${slug}` },
     openGraph: { title: `${data.titleEn} | 株式会社アリガトサン`, description },
   };
 }

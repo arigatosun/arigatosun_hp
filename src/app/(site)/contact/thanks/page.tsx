@@ -5,6 +5,8 @@ import styles from './page.module.scss';
 
 export const metadata: Metadata = {
   title: 'Thank You',
+  // 親の contact/layout の canonical（/contact）を引き継がないよう自ページを指す
+  alternates: { canonical: '/contact/thanks' },
   robots: { index: false, follow: false },
 };
 

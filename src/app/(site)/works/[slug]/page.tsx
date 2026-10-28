@@ -47,6 +47,7 @@ export async function generateMetadata({
   return {
     title: `${work.client} | WORKS`,
     description,
+    alternates: { canonical: `/works/${slug}` },
     openGraph: { title: `${work.client} | WORKS | 株式会社アリガトサン`, description },
   };
 }
