@@ -33,9 +33,20 @@
     opacity var(--transition-fast),
     transform var(--transition-fast);
   z-index: 1;
+
+  // SP はボタンが画面右端に来るため、中央寄せだと画面外にはみ出す。右端揃えにする
+  @include sp {
+    left: auto;
+    right: 0;
+    transform: translateY(4px);
+  }
 }
 
 .tooltipVisible {
   opacity: 1;
   transform: translateX(-50%) translateY(0);
+
+  @include sp {
+    transform: translateY(0);
+  }
 }

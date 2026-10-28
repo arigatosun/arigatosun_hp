@@ -5,6 +5,7 @@ import styles from './page.module.scss';
 
 export const metadata: Metadata = {
   title: 'Service',
+  alternates: { canonical: '/service' },
 };
 
 export default function ServicePage() {

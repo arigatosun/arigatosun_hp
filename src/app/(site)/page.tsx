@@ -11,7 +11,12 @@ import LogoSlider from '@/components/ui/LogoSlider';
 import MessageSection from '@/components/ui/MessageSection';
 import GlobalCanvasLoader from '@/components/three/GlobalCanvasLoader';
 import HeroResponsiveCharacter from '@/components/three/HeroResponsiveCharacter';
+import type { Metadata } from 'next';
 import { getAllWorks } from '@/data/works';
+
+export const metadata: Metadata = {
+  alternates: { canonical: '/' },
+};
 
 export default async function Home() {
   const works = await getAllWorks();

@@ -3,6 +3,7 @@ import InterviewList from './InterviewList';
 
 export const metadata: Metadata = {
   title: 'Interview',
+  alternates: { canonical: '/interview' },
   description:
     '株式会社アリガトサンのクライアントインタビュー一覧。AI開発・デザイン・ブランディングをともに進めたクライアントの声をご紹介します。',
 };

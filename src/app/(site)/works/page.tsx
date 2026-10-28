@@ -5,6 +5,7 @@ import styles from './page.module.scss';
 
 export const metadata: Metadata = {
   title: 'Works',
+  alternates: { canonical: '/works' },
   description:
     '株式会社アリガトサンの実績一覧。AI開発・デザイン・ブランディング・IPコンテンツ等のクリエイティブワークをご紹介します。',
 };

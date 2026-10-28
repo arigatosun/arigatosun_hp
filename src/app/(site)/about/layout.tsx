@@ -8,6 +8,7 @@ const description =
 export const metadata: Metadata = {
   title: 'About',
   description,
+  alternates: { canonical: '/about' },
   openGraph: {
     title: 'About | 株式会社アリガトサン',
     description,
