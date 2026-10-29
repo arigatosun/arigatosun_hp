@@ -41,6 +41,8 @@
     "next": "^16.3.3",
     "react": "19.2.3",
     "react-dom": "19.2.3",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1",
     "resend": "^6.24.0",
     "sass": "^1.97.3",
     "server-only": "^0.0.1",

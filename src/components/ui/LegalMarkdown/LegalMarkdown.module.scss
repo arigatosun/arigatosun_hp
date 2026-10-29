@@ -1,0 +1,124 @@
+@use '@/styles/fluid' as *;
+@use '@/styles/breakpoints' as *;
+
+// 規約・ポリシー本文。アプリ内 WebView でも読めるよう本文 16px 前後・行間広め。
+.body {
+  color: var(--color-text);
+  font-family: var(--font-jp);
+  @include fluid(font-size, 15, 16);
+  line-height: 1.9;
+  overflow-wrap: anywhere;
+
+  h2 {
+    @include fluid(margin-top, 40, 56);
+    @include fluid(margin-bottom, 16, 20);
+    @include fluid(padding-bottom, 8, 10);
+    @include fluid(font-size, 18, 21);
+    font-weight: var(--font-weight-bold);
+    line-height: 1.5;
+    border-bottom: 1px solid var(--color-gray-300);
+  }
+
+  h3 {
+    @include fluid(margin-top, 28, 36);
+    @include fluid(margin-bottom, 12, 14);
+    @include fluid(font-size, 16, 18);
+    font-weight: var(--font-weight-bold);
+    line-height: 1.5;
+  }
+
+  h4 {
+    @include fluid(margin-top, 20, 24);
+    margin-bottom: 8px;
+    @include fluid(font-size, 15, 16);
+    font-weight: var(--font-weight-bold);
+  }
+
+  > :first-child {
+    margin-top: 0;
+  }
+
+  p {
+    @include fluid(margin-bottom, 12, 16);
+  }
+
+  ul,
+  ol {
+    @include fluid(margin-bottom, 12, 16);
+    @include fluid(padding-left, 22, 26);
+  }
+
+  ul {
+    list-style: disc;
+  }
+
+  ol {
+    list-style: decimal;
+  }
+
+  li + li {
+    margin-top: 4px;
+  }
+
+  li > ul,
+  li > ol {
+    margin-top: 4px;
+    margin-bottom: 0;
+  }
+
+  blockquote {
+    @include fluid(margin-bottom, 12, 16);
+    @include fluid(padding-left, 12, 16);
+    color: var(--color-gray-600);
+    border-left: 3px solid var(--color-gray-300);
+  }
+
+  strong {
+    font-weight: var(--font-weight-bold);
+  }
+
+  a {
+    color: var(--color-link-blue);
+    text-decoration: underline;
+  }
+
+  hr {
+    @include fluid(margin-top, 32, 40);
+    @include fluid(margin-bottom, 32, 40);
+    border: 0;
+    border-top: 1px solid var(--color-gray-300);
+  }
+}
+
+// 表はスマホ幅で横スクロール
+.tableWrap {
+  @include fluid(margin-bottom, 16, 20);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+
+  table {
+    width: 100%;
+    @include fluid(min-width, 520, 560);
+    border-collapse: collapse;
+    @include fluid(font-size, 14, 15);
+    line-height: 1.7;
+  }
+
+  th,
+  td {
+    @include fluid(padding, 8, 12);
+    text-align: left;
+    vertical-align: top;
+    border: 1px solid var(--color-gray-300);
+  }
+
+  th {
+    font-weight: var(--font-weight-bold);
+    background-color: var(--color-gray-100);
+    white-space: nowrap;
+  }
+
+  td {
+    background-color: var(--color-white);
+  }
+}
