@@ -17,7 +17,7 @@ export const KUSOAPP_LEGAL_DOCS: KusoappLegalDoc[] = [
   { slug: 'external-transmission', title: '外部送信に関する公表事項', established: '2026-10-29', lastRevised: '2026-10-29' },
   { slug: 'commerce', title: '特定商取引法に基づく表記', established: '2026-10-29', lastRevised: '2026-10-29' },
   { slug: 'payment-services', title: '資金決済法に基づく表示', established: '2026-10-29', lastRevised: '2026-10-29' },
-  { slug: 'gacha-rates', title: 'ガチャ提供割合', established: '2026-10-29', lastRevised: '2026-10-29' },
+  { slug: 'gacha-rates', title: 'ガチャ提供割合', established: '2026-10-29', lastRevised: '2026-10-31' },
   { slug: 'community-guidelines', title: 'コミュニティガイドライン', established: '2026-10-29', lastRevised: '2026-10-29' },
   { slug: 'account-deletion', title: 'アカウントの削除について', established: '2026-10-29', lastRevised: '2026-10-29' },
   { slug: 'support', title: 'サポート', established: '2026-10-29', lastRevised: '2026-10-29' },
