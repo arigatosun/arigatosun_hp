@@ -364,6 +364,9 @@
 
 // ── ページネーション（コンテンツ全幅で中央配置） ──
 .pagination {
+  // PC では Footer が margin-top:-51px でページ末尾に重なるため、ボタンをフッターより手前に置いてクリックを受けられるようにする。
+  position: relative;
+  z-index: 1;
   // SP（vw < 1024）は元の挙動: fluid(60, 170) の min 60 にクランプ
   @include fluid(margin-top, 60, 170);
   @include fluid(padding-left, 20, 200, 390, 1920);
