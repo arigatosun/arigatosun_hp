@@ -21,7 +21,7 @@ export default function WorksSection({ works }: WorksSectionProps) {
     const section = sectionRef.current;
     if (!section) return;
 
-    const viewMoreElements = section.querySelectorAll(`.${styles.viewMoreText}`);
+    const viewMoreElements = section.querySelectorAll(`.${CSS.escape(styles.viewMoreText)}`);
 
     const observer = new IntersectionObserver(
       (entries) => {

@@ -45,7 +45,7 @@ export default function RevealText({ children, className }: RevealTextProps) {
       }
     }
 
-    const lines = container.querySelectorAll(`.${styles.line}`);
+    const lines = container.querySelectorAll(`.${CSS.escape(styles.line)}`);
 
     const observer = new IntersectionObserver(
       (entries) => {

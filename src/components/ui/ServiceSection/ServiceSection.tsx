@@ -54,7 +54,7 @@ export default function ServiceSection() {
       // 終了位置: 3カード（カードコンテンツ）の中心がビューポート中央と一致するよう
       // トラックを translateX する。画面幅に追従（invalidateOnRefresh で resize 対応）。
       const getScrollAmount = () => {
-        const rightArea = section.querySelector(`.${styles.right}`) as HTMLElement | null;
+        const rightArea = section.querySelector(`.${CSS.escape(styles.right)}`) as HTMLElement | null;
         if (!rightArea) return 0;
         const rightRect = rightArea.getBoundingClientRect();
         // .cardsTrack の padding-right は最後のカード後の余白なので、
@@ -118,7 +118,7 @@ export default function ServiceSection() {
             // タイミング = ユーザーの「完全に重なってから消える」基準に合わせる。
             // カード間の 16px ギャップは原理的に常に残るので、上限は ~97.8%。
             const leftContentEl = section.querySelector<HTMLElement>(
-              `.${styles.leftContent}`
+              `.${CSS.escape(styles.leftContent)}`
             );
             const cards = leftContentEl
               ? (Array.from(track.children) as HTMLElement[])
@@ -188,7 +188,7 @@ export default function ServiceSection() {
     // カード列の先頭が文字最上部を越えている間は非表示を維持し（隙間でチラつかせない）、
     // スクロールを戻して先頭カードが下へ退けば即再表示する。
     mm.add('(max-width: 1023px)', () => {
-      const leftContentEl = section.querySelector<HTMLElement>(`.${styles.leftContent}`);
+      const leftContentEl = section.querySelector<HTMLElement>(`.${CSS.escape(styles.leftContent)}`);
       if (!leftContentEl) return;
 
       // 直近に書いた値のキャッシュ。実機 iOS(WebKit)ではスクロール毎フレームの
