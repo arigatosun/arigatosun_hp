@@ -4,6 +4,9 @@
 @use '@/styles/breakpoints' as *;
 
 .section {
+  // WORKS 詳細の末尾に置くと PC で Footer(margin-top:-51px) がカード下端に重なるため、フッターより手前に置いてクリックを受けられるようにする。
+  position: relative;
+  z-index: 1;
   // SP: サービスカード群と同じ左右 40px 基準に揃える
   // Figma PC (1920): 左右 200。
   @include fluid(padding-left, 40, 200);
