@@ -24,7 +24,7 @@ export default function MessageSection() {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     const chars = Array.from(
-      section.querySelectorAll<HTMLElement>(`.${styles.char}`)
+      section.querySelectorAll<HTMLElement>(`.${CSS.escape(styles.char)}`)
     );
     if (chars.length === 0) return;
 
